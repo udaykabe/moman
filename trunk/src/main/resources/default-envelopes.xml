@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<moman>
+  <envelopes>
+    <envelope id="081ec426-978b-3a18-a3ef-b3ebe4f6e1ae">
+      <editable>false</editable>
+      <selected>false</selected>
+      <enabled>true</enabled>
+      <available>true</available>
+      <name>Available</name>
+      <index>0</index>
+      <frequency>BIWEEKLY</frequency>
+      <budget>0.0</budget>
+      <dueDay>0</dueDay>
+      <transactions/>
+    </envelope>
+    <envelope id="081ec426-978b-3a18-a3ef-b3ebe4f6e1af">
+      <editable>false</editable>
+      <selected>false</selected>
+      <enabled>true</enabled>
+      <unassigned>true</unassigned>
+      <name>Unassigned</name>
+      <index>1</index>
+      <frequency>NONE</frequency>
+      <budget>0.0</budget>
+      <dueDay>0</dueDay>
+      <transactions/>
+    </envelope>
+    <envelope id="3ff65048-fd83-301d-9154-3353e684659f">
+      <editable>false</editable>
+      <selected>false</selected>
+      <expanded>true</expanded>
+      <enabled>true</enabled>
+      <monthly>true</monthly>
+      <name>Monthly</name>
+      <index>2</index>
+      <frequency>MONTHLY</frequency>
+      <budget>0.0</budget>
+      <dueDay>0</dueDay>
+      <transactions/>
+    </envelope>
+    <envelope id="8fe52b38-23d2-343b-9377-b6ede8a8cd2b">
+      <editable>false</editable>
+      <selected>false</selected>
+      <expanded>true</expanded>
+      <enabled>true</enabled>
+      <root>true</root>
+      <name>Envelopes</name>
+      <index>3</index>
+      <frequency>NONE</frequency>
+      <budget>0.0</budget>
+      <dueDay>0</dueDay>
+      <transactions/>
+    </envelope>
+    <envelope id="8784ff66-9825-3827-bf97-93c3ae5fe386">
+      <editable>true</editable>
+      <selected>false</selected>
+      <expanded>false</expanded>
+      <enabled>true</enabled>
+      <name>Bi-Weekly</name>
+      <index>4</index>
+      <frequency>NONE</frequency>
+      <budget>0.0</budget>
+      <dueDay>0</dueDay>
+      <parent id="8fe52b38-23d2-343b-9377-b6ede8a8cd2b"/>
+      <transactions/>
+    </envelope>
+    <envelope id="4cbbc3d3-9870-3f92-b7b4-267dff2cde82">
+      <editable>true</editable>
+      <selected>false</selected>
+      <enabled>true</enabled>
+      <name>Periodic Expenses</name>
+      <index>5</index>
+      <frequency>NONE</frequency>
+      <budget>0.0</budget>
+      <dueDay>0</dueDay>
+      <parent id="8fe52b38-23d2-343b-9377-b6ede8a8cd2b"/>
+      <transactions/>
+    </envelope>
+    <envelope id="774e4556-ae1c-378c-90ab-5ef98ecc8892">
+      <editable>true</editable>
+      <selected>false</selected>
+      <expanded>false</expanded>
+      <enabled>true</enabled>
+      <name>Savings Goals</name>
+      <index>6</index>
+      <frequency>NONE</frequency>
+      <budget>0.0</budget>
+      <dueDay>0</dueDay>
+      <parent id="8fe52b38-23d2-343b-9377-b6ede8a8cd2b"/>
+      <transactions/>
+    </envelope>
+    <envelope id="a5e4cb76-0c95-3c34-8b81-ffc4521de8ac">
+      <editable>true</editable>
+      <selected>false</selected>
+      <enabled>true</enabled>
+      <name>Auto Fuel</name>
+      <index>7</index>
+      <frequency>BIWEEKLY</frequency>
+      <budget>0.0</budget>
+      <dueDay>0</dueDay>
+      <parent id="8784ff66-9825-3827-bf97-93c3ae5fe386"/>
+      <transactions/>
+    </envelope>
+    <envelope id="c722afab-9733-3d2c-bf78-b75254db7ae7">
+      <editable>true</editable>
+      <selected>false</selected>
+      <enabled>true</enabled>
+      <name>Auto Registration</name>
+      <index>8</index>
+      <frequency>ANNUALLY</frequency>
+      <budget>0.0</budget>
+      <dueDay>0</dueDay>
+      <parent id="4cbbc3d3-9870-3f92-b7b4-267dff2cde82"/>
+      <transactions/>
+    </envelope>
+    <envelope id="0bc9ad01-3bb5-32ec-956d-559ec515be87">
+      <editable>true</editable>
+      <selected>false</selected>
+      <enabled>true</enabled>
+      <name>New Car</name>
+      <index>9</index>
+      <frequency>BIWEEKLY</frequency>
+      <budget>0.0</budget>
+      <dueDay>0</dueDay>
+      <parent id="774e4556-ae1c-378c-90ab-5ef98ecc8892"/>
+      <transactions/>
+    </envelope>
+    <envelope id="957a0613-bd91-3b3d-8b8a-447896b4ee8b">
+      <editable>true</editable>
+      <selected>false</selected>
+      <enabled>true</enabled>
+      <name>Auto Maintenance</name>
+      <index>10</index>
+      <frequency>BIWEEKLY</frequency>
+      <budget>0.0</budget>
+      <dueDay>0</dueDay>
+      <parent id="4cbbc3d3-9870-3f92-b7b4-267dff2cde82"/>
+      <transactions/>
+    </envelope>
+    <envelope id="5cf6c70d-60df-38bd-9c27-1696e0939fb7">
+      <editable>true</editable>
+      <selected>false</selected>
+      <enabled>true</enabled>
+      <name>Groceries</name>
+      <index>11</index>
+      <frequency>BIWEEKLY</frequency>
+      <budget>0.0</budget>
+      <dueDay>0</dueDay>
+      <parent id="8784ff66-9825-3827-bf97-93c3ae5fe386"/>
+      <transactions/>
+    </envelope>
+    <envelope id="a0eced40-1ad9-3f5c-92ac-e5305b0f50aa">
+      <editable>true</editable>
+      <selected>false</selected>
+      <enabled>true</enabled>
+      <name>Auto Insurance</name>
+      <index>12</index>
+      <frequency>MONTHLY</frequency>
+      <budget>0.0</budget>
+      <dueDay>0</dueDay>
+      <parent id="3ff65048-fd83-301d-9154-3353e684659f"/>
+      <transactions/>
+    </envelope>
+    <envelope id="dbb15377-2300-33f9-85b4-3097fe92b137">
+      <editable>true</editable>
+      <selected>false</selected>
+      <enabled>true</enabled>
+      <name>Rent</name>
+      <index>13</index>
+      <frequency>MONTHLY</frequency>
+      <budget>0.0</budget>
+      <dueDay>0</dueDay>
+      <parent id="3ff65048-fd83-301d-9154-3353e684659f"/>
+      <transactions/>
+    </envelope>
+    <envelope id="5f7a9ee3-4aa8-388b-b7aa-d38098570bdf">
+      <editable>true</editable>
+      <selected>false</selected>
+      <enabled>true</enabled>
+      <name>Household</name>
+      <index>14</index>
+      <frequency>MONTHLY</frequency>
+      <budget>0.0</budget>
+      <dueDay>0</dueDay>
+      <parent id="3ff65048-fd83-301d-9154-3353e684659f"/>
+      <transactions/>
+    </envelope>
+    <envelope id="069b99cd-104a-30bf-b095-9d630544fb68">
+      <editable>true</editable>
+      <selected>false</selected>
+      <enabled>true</enabled>
+      <name>Personal Care</name>
+      <index>15</index>
+      <frequency>MONTHLY</frequency>
+      <budget>0.0</budget>
+      <dueDay>0</dueDay>
+      <parent id="3ff65048-fd83-301d-9154-3353e684659f"/>
+      <transactions/>
+    </envelope>
+    <envelope id="b86578fa-39c4-3d4d-b878-a2dddd5d7922">
+      <editable>true</editable>
+      <selected>false</selected>
+      <enabled>true</enabled>
+      <name>Medical</name>
+      <index>16</index>
+      <frequency>MONTHLY</frequency>
+      <budget>0.0</budget>
+      <dueDay>0</dueDay>
+      <parent id="3ff65048-fd83-301d-9154-3353e684659f"/>
+      <transactions/>
+    </envelope>
+  </envelopes>
+</moman>

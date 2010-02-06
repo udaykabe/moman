@@ -1,0 +1,40 @@
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+    http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-2.5.xsd
+       ">
+
+	<context:component-scan base-package="net.deuce.moman"/>
+    <context:annotation-config/>
+	
+	<bean id="serviceContainer" class="net.deuce.moman.service.ServiceContainer">
+		<property name="services">
+			<list>
+				<ref bean="accountService"/>
+				<ref bean="envelopeService"/>
+				<ref bean="financialInstitutionService"/>
+				<ref bean="incomeService"/>
+				<ref bean="importService"/>
+				<ref bean="transactionRuleService"/>
+				<ref bean="transactionService"/>
+				<ref bean="payeeService"/>
+				<ref bean="allocationSetService"/>
+			</list>
+		</property>
+		<property name="builders">
+			<list>
+				<ref bean="accountBuilder"/>
+				<ref bean="incomeBuilder"/>
+				<ref bean="transactionBuilder"/>
+				<ref bean="envelopeBuilder"/>
+				<ref bean="transactionRuleBuilder"/>
+				<ref bean="payeeBuilder"/>
+				<ref bean="allocationSetBuilder"/>
+			</list>
+		</property>
+	</bean>
+	
+</beans>
