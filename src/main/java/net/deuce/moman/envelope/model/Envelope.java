@@ -1,0 +1,456 @@
+package net.deuce.moman.envelope.model;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import net.deuce.moman.Constants;
+import net.deuce.moman.account.model.Account;
+import net.deuce.moman.model.AbstractEntity;
+import net.deuce.moman.model.EntityProperty;
+import net.deuce.moman.model.Frequency;
+import net.deuce.moman.transaction.model.InternalTransaction;
+
+public class Envelope extends AbstractEntity<Envelope> {
+
+	private static final long serialVersionUID = 1L;
+	
+	public static final Envelope TOP_LEVEL = new Envelope("", Frequency.NONE, false);
+	
+	public static final Comparator<Envelope> CHILD_COMPARATOR = new ChildComparator();
+	public static final Comparator<Envelope> BILL_COMPARATOR = new BillComparator();
+	
+	public enum Properties implements EntityProperty {
+	    name(String.class), balance(Double.class), frequency(Frequency.class),
+	    budget(Double.class), parentId(String.class), parent(Envelope.class),
+	    children(List.class), transactions(List.class), editable(Boolean.class),
+	    selected(Boolean.class), expanded(Boolean.class), monthly(Boolean.class),
+	    enabled(Boolean.class), root(Boolean.class), available(Boolean.class),
+	    dueDay(Integer.class), unassigned(Boolean.class), index(Integer.class);
+	    
+		private Class<?> type;
+		
+		public Class<?> type() { return type; }
+		
+		private Properties(Class<?> type) { this.type = type; }
+	}
+
+	private String name;
+	private transient Double balance;
+	private Frequency frequency;
+	private Double budget;
+	private transient String parentId;
+	private Envelope parent;
+	private List<Envelope> children = new LinkedList<Envelope>();
+	private Map<Account, List<InternalTransaction>> transactions = new HashMap<Account, List<InternalTransaction>>();
+	private Boolean editable;
+	private Boolean selected = Boolean.FALSE;
+	private Boolean expanded = Boolean.TRUE;
+	private Boolean enabled = Boolean.TRUE;
+	private Boolean root = Boolean.FALSE;
+	private Boolean monthly = Boolean.FALSE;
+	private Boolean unassigned = Boolean.FALSE;
+	private Boolean available = Boolean.FALSE;
+	private Integer dueDay = 0;
+	private Integer index = 0;
+	
+	public Envelope() {}
+	
+	public Envelope(String name, Frequency frequency, Boolean editable) {
+		this.name = name;
+		this.frequency = frequency;
+		this.editable = editable;
+	}
+	
+	public Integer getIndex() {
+		return index;
+	}
+
+	public void setIndex(Integer index) {
+		this.index = index;
+	}
+
+	public boolean isRoot() {
+		return evaluateBoolean(root);
+	}
+
+	public Boolean getRoot() {
+		return root;
+	}
+
+	public void setRoot(Boolean root) {
+		this.root = root;
+	}
+
+	public boolean isAvailable() {
+		return evaluateBoolean(available);
+	}
+
+	public Boolean getAvailable() {
+		return available;
+	}
+
+	public void setAvailable(Boolean available) {
+		this.available = available;
+	}
+
+	public boolean isMonthly() {
+		return evaluateBoolean(monthly);
+	}
+
+	public Boolean getMonthly() {
+		return monthly;
+	}
+
+	public void setMonthly(Boolean monthly) {
+		this.monthly = monthly;
+	}
+
+	public boolean isUnassigned() {
+		return evaluateBoolean(unassigned);
+	}
+
+	public Boolean getUnassigned() {
+		return unassigned;
+	}
+
+	public void setUnassigned(Boolean unassigned) {
+		this.unassigned = unassigned;
+	}
+
+	public boolean isBill() {
+		return dueDay > 0;
+	}
+	
+	public Frequency getFrequency() {
+		return frequency;
+	}
+
+	public void setFrequency(Frequency frequency) {
+		if (this.frequency != frequency) {
+			this.frequency = frequency;
+			getMonitor().fireEntityChanged(this, Properties.frequency);
+		}
+	}
+	
+	public Double getBudget() {
+		return getBudget(false);
+	}
+
+	public Double getBudget(boolean descend) {
+		if (budget == null) return 0.0;
+		
+		double value = budget;
+		if (descend) {
+			for (Envelope e : children) {
+				value += e.getBudget(true);
+			}
+		}
+		return value;
+	}
+
+	public void setBudget(Double budget) {
+		if (this.budget != budget) {
+			this.budget = budget;
+			getMonitor().fireEntityChanged(this, Properties.budget);
+		}
+	}
+
+	public int getLevel() {
+		if (parent != null) return parent.getLevel() + 1;
+		return 1;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		if (propertyChanged(this.name, name)) {
+			this.name = name;
+			getMonitor().fireEntityChanged(this, Properties.name);
+		}
+	}
+	
+	public String getChartLegendLabel() {
+		return name + " " + Constants.CURRENCY_VALIDATOR.format(getBalance());
+	}
+	
+	public String getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(String parentId) {
+		this.parentId = parentId;
+	}
+	
+	public void clearBalance() {
+		balance = null;
+	}
+	
+	private boolean isBalanceDirty() {
+		if (balance == null) return true;
+		for (Envelope child : children) {
+			if (child.isBalanceDirty()) return true;
+		}
+		return false;
+	}
+	
+	public Double getBalance() {
+		if (isBalanceDirty()) {
+			
+			double sum = 0;
+			for (List<InternalTransaction> list : transactions.values()) {
+				for (InternalTransaction it : list) {
+					System.out.println("Transaction: " + it.getDescription() + " - " + it.getAmount());
+					sum += it.getAmount();
+				}
+			}
+			
+			Double value = 0.0;
+			for (InternalTransaction t : getTransactions()) {
+				value += t.getAmount();
+			}
+			for (Envelope e : children) {
+				value += e.getBalance();
+			}
+			balance = value;
+			
+			/*
+			if (available) {
+				for (Account account : ServiceNeeder.instance().getAccountService().getSelectedAccounts()) {
+					if (account.isSelected() && account.getInitialBalance() != null) {
+						balance += account.getInitialBalance();
+					}
+				}
+				
+			}
+			*/
+		}
+		
+		return Math.round(balance*100)/100.0;
+	}
+	
+	public void setBalance(Double balance) {
+		this.balance = balance;
+	}
+
+	public Boolean isEditable() {
+		return editable;
+	}
+
+	public void setEditable(Boolean editable) {
+		this.editable = editable;
+	}
+	
+	public Boolean isSelected() {
+		return selected;
+	}
+
+	public void setSelected(Boolean selected) {
+		if (propertyChanged(this.selected, selected)) {
+			this.selected = selected;
+			Envelope oldEnvelope = getEnvelopeService().getSelectedEnvelope();
+			if (oldEnvelope != null) {
+				oldEnvelope.selected = false;
+			}
+			if (selected) {
+				getEnvelopeService().setSelectedEnvelope(this);
+			} else {
+				getEnvelopeService().setSelectedEnvelope(null);
+			}
+			getMonitor().fireEntityChanged(this, Properties.selected);
+		}
+	}
+	
+	public Boolean isExpanded() {
+		return expanded;
+	}
+
+	public void setExpanded(Boolean expanded) {
+		if (propertyChanged(this.expanded, expanded)) {
+			this.expanded = expanded;
+			getMonitor().fireEntityChanged(this, Properties.expanded);
+		}
+	}
+
+	public Envelope getParent() {
+		return parent;
+	}
+
+	public void setParent(Envelope parent) {
+		if (propertyChanged(this.parent, parent)) {
+			this.parent = parent;
+			getMonitor().fireEntityChanged(this, Properties.parent);
+		}
+	}
+	
+	public boolean hasChildren() {
+		return children.size() > 0;
+	}
+	
+	public List<Envelope> getChildren() {
+		List<Envelope> l = new LinkedList<Envelope>(children);
+		//Collections.sort(l, CHILD_COMPARATOR);
+		return l;
+	}
+	
+	public void addChild(Envelope child) {
+		children.add(child);
+		getMonitor().fireEntityChanged(this, Properties.children);
+	}
+	
+	public void removeChild(Envelope child) {
+		children.remove(child);
+		getMonitor().fireEntityChanged(this, Properties.children);
+	}
+	
+	private List<InternalTransaction> getAccountTransactions(Account account) {
+		List<InternalTransaction> list = transactions.get(account);
+		if (list == null) {
+			list = new ArrayList<InternalTransaction>();
+			transactions.put(account, list);
+		}
+		return list;
+	}
+
+	public void addTransaction(InternalTransaction transaction) {
+		addTransaction(transaction, true);
+	}
+	
+	private void resetBalance(Envelope envelope) {
+		if (envelope != null) {
+			envelope.setBalance(null);
+			resetBalance(envelope.getParent());
+		}
+	}
+	
+	public void addTransaction(InternalTransaction transaction, boolean notifyTransaction) {
+		Account account = transaction.getAccount();
+		getAccountTransactions(account).add(transaction);
+		resetBalance(this);
+		getMonitor().fireEntityChanged(this, Properties.transactions);
+		if (notifyTransaction) {
+			transaction.addSplit(this, false);
+		}
+	}
+
+	public void removeTransaction(InternalTransaction transaction) {
+		removeTransaction(transaction, true);
+	}
+	
+	public void removeTransaction(InternalTransaction transaction, boolean notifyTransaction) {
+		Account account = transaction.getAccount();
+		List<InternalTransaction> l = getAccountTransactions(account);
+		l.remove(transaction);
+		getMonitor().fireEntityChanged(this, Properties.transactions);
+		if (notifyTransaction) {
+			transaction.removeSplit(this, false);
+		}
+	}
+	
+	public List<InternalTransaction> getTransactions() {
+		List<Account> selectedAccounts = getAccountService().getSelectedAccounts();
+		List<InternalTransaction> list = new LinkedList<InternalTransaction>();
+		
+		for (Entry<Account, List<InternalTransaction>> entry : transactions.entrySet()) {
+			if (selectedAccounts.size() == 0 || selectedAccounts.contains(entry.getKey())) {
+				list.addAll(entry.getValue());
+			}
+		}
+		return list;
+	}
+	
+	public List<InternalTransaction> getAllTransactions() {
+		List<InternalTransaction> list = new LinkedList<InternalTransaction>();
+		
+		for (Entry<Account, List<InternalTransaction>> entry : transactions.entrySet()) {
+			list.addAll(entry.getValue());
+		}
+		return list;
+	}
+	
+	public boolean isSpecialEnvelope() {
+		return available || unassigned || root || monthly;
+	}
+	
+	@Override
+	public int compareTo(Envelope o) {
+		return compare(this, o);
+	}
+
+	@Override
+	public int compare(Envelope o1, Envelope o2) {
+		if (o1.isSpecialEnvelope() && o2.isSpecialEnvelope()) {
+			if (o1.isAvailable() || o2.isRoot()) return -1;
+			if (o1.isRoot() || o2.isAvailable()) return 1;
+			if (o1.isUnassigned()) return -1;
+			return 1;
+		}
+				
+		if (!o1.hasChildren() && o2.hasChildren()) return -1;
+		if (o1.hasChildren() && !o2.hasChildren()) return 1;
+		return o1.name.compareTo(o2.getName());
+	}
+	
+	@Override
+	public String toString() {
+		return "Envelope("+name+")";
+	}
+	
+	public Boolean isEnabled() {
+		return enabled;
+	}
+	public void setEnabled(Boolean enabled) {
+		if (this.enabled != enabled) {
+			this.enabled = enabled;
+			getMonitor().fireEntityChanged(this, Properties.enabled);
+		}
+	}
+	public Integer getDueDay() {
+		return dueDay;
+	}
+	public void setDueDay(Integer dueDay) {
+		if (propertyChanged(this.dueDay, dueDay)) {
+			this.dueDay = dueDay;
+			getMonitor().fireEntityChanged(this, Properties.dueDay);
+		}
+	}
+	public Double getAmount() {
+		return getBudget();
+	}
+	public void setAmount(Double amount) {
+		setBudget(amount);
+	}
+
+	private static class ChildComparator implements Comparator<Envelope> {
+		@Override
+		public int compare(Envelope e1, Envelope e2) {
+			if (!e1.hasChildren() && e2.hasChildren()) return -1;
+			if (e1.hasChildren() && !e2.hasChildren()) return 1;
+			return e1.getName().compareTo(e2.getName());
+		}
+	}
+	
+	private static class BillComparator implements Comparator<Envelope> {
+		@Override
+		public int compare(Envelope e1, Envelope e2) {
+			if (!e1.getFrequency().equals(e2.getFrequency())) {
+				return e1.getFrequency().compareTo(e2.getFrequency());
+			}
+			int val = new Integer(e1.getDueDay()).compareTo(new Integer(e2.getDueDay()));
+			if (val == 0) {
+				val = e1.getName().compareTo(e2.getName());
+				if (val == 0) {
+					val = new Integer(e1.getIndex()).compareTo(new Integer(e2.getIndex()));
+				}
+			}
+			return val;
+		}
+	}
+	
+}

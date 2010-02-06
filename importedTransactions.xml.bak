@@ -1,0 +1,3966 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<moman>
+  <transactions>
+    <transaction id="b46340d2-c701-3462-841d-b2bf25ddc123">
+      <amount>-9.95</amount>
+      <type>DEBIT</type>
+      <date>2009-09-22 05:00:00 AM</date>
+      <desc>Financial</desc>
+      <extid>200909220</extid>
+      <memo>Monthly Service Fee</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="d1119103-bf36-3ca4-acf6-70670c08ff00">
+      <amount>-23.98</amount>
+      <type>DEBIT</type>
+      <date>2009-09-22 05:00:00 AM</date>
+      <desc>Safeway</desc>
+      <extid>200909221</extid>
+      <memo>09/21SAFEWAY</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="12d6ccf5-414e-3125-a048-2c5ecd5fd20f">
+      <amount>-19.9</amount>
+      <type>DEBIT</type>
+      <date>2009-09-22 05:00:00 AM</date>
+      <desc>HSBC CARD SRVCS Online Pmt 0000</desc>
+      <extid>200909222</extid>
+      <memo>00488832876 WEB ID: 2000000510</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="a15c9dc3-3cf8-3904-a032-1edb034d2906">
+      <amount>-173.42</amount>
+      <type>DEBIT</type>
+      <date>2009-09-23 05:00:00 AM</date>
+      <desc>Woooo</desc>
+      <extid>200909230</extid>
+      <memo>9097 WEB ID: 2510407970</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="8c22f518-3f13-3114-844f-5debe66e6dc3">
+      <amount>-80.0</amount>
+      <type>CHECK</type>
+      <date>2009-09-23 05:00:00 AM</date>
+      <desc>Weeeee</desc>
+      <extid>200909231</extid>
+      <memo></memo>
+      <check>245</check>
+      <ref></ref>
+    </transaction>
+    <transaction id="ce7e45e4-2b16-3942-9556-5911c7e6feac">
+      <amount>-40.0</amount>
+      <type>DEBIT</type>
+      <date>2009-09-24 05:00:00 AM</date>
+      <desc>JOSEPH SCOTT SALON LLC P424222</desc>
+      <extid>200909240</extid>
+      <memo>09/23JOSEPH SC</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="ecc5435d-586f-3526-bd4b-ecbcbc2f6d80">
+      <amount>-35.45</amount>
+      <type>DEBIT</type>
+      <date>2009-09-24 05:00:00 AM</date>
+      <desc>QT 425 PHOENIX AZ 633689</desc>
+      <extid>200909241</extid>
+      <memo>09/23QT 425 PH</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="8010dcbf-e8a0-3634-9aec-fc6f21af3357">
+      <amount>-2.0</amount>
+      <type>DEBIT</type>
+      <date>2009-09-25 05:00:00 AM</date>
+      <desc>NON-CHASE ATM FEE-WITH</desc>
+      <extid>200909250</extid>
+      <memo></memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="1b4d81d9-2065-30bc-94e0-20c57547a2ff">
+      <amount>-80.0</amount>
+      <type>CHECK</type>
+      <date>2009-09-25 05:00:00 AM</date>
+      <desc>CHECK 247</desc>
+      <extid>200909251</extid>
+      <memo></memo>
+      <check>247</check>
+      <ref></ref>
+    </transaction>
+    <transaction id="6c88d717-6f30-37d1-9dcc-715aef170279">
+      <amount>-23.0</amount>
+      <type>DEBIT</type>
+      <date>2009-09-25 05:00:00 AM</date>
+      <desc>NON-CHASE ATM WITHDRAW 757342</desc>
+      <extid>200909252</extid>
+      <memo>09/242525 E CA</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="e667c9fc-3c93-34ce-b278-2e2ed7956965">
+      <amount>-113.32</amount>
+      <type>DEBIT</type>
+      <date>2009-09-28 05:00:00 AM</date>
+      <desc>Whole Foods</desc>
+      <extid>200909280</extid>
+      <memo>09/25WHOLE FOO</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="693a6e19-9e30-3dc4-a4ef-5c4485dbdba6">
+      <amount>-49.0</amount>
+      <type>DEBIT</type>
+      <date>2009-09-28 05:00:00 AM</date>
+      <desc>MASSAGE ENVY 0011 480-83</desc>
+      <extid>200909281</extid>
+      <memo>09/25MASSAGE E</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="18bb5237-6871-39ca-88ae-73a221645979">
+      <amount>-20.93</amount>
+      <type>DEBIT</type>
+      <date>2009-09-28 05:00:00 AM</date>
+      <desc>SPROUTS FARMERS MKT # 0 267916</desc>
+      <extid>200909282</extid>
+      <memo>09/25SPROUTS F</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="293af602-c7d0-3971-a336-2bf80dda5eb0">
+      <amount>-20.0</amount>
+      <type>DEBIT</type>
+      <date>2009-09-28 05:00:00 AM</date>
+      <desc>QT 425 PHOENIX AZ 240933</desc>
+      <extid>200909283</extid>
+      <memo>09/26QT 425 PH</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="f0240c5b-3420-3912-a20e-414105b02afd">
+      <amount>-15.37</amount>
+      <type>DEBIT</type>
+      <date>2009-09-28 05:00:00 AM</date>
+      <desc>DEEMOS PHOENIX AZ</desc>
+      <extid>200909284</extid>
+      <memo>09/25DEEMOS PH</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="68f2d0b7-e1f2-3710-a018-02e8f20f3289">
+      <amount>-9.72</amount>
+      <type>DEBIT</type>
+      <date>2009-09-28 05:00:00 AM</date>
+      <desc>NFI*WWW.NETFLIX.COM/ NET</desc>
+      <extid>200909285</extid>
+      <memo>09/25NFI*WWW.N</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="fed69f63-e716-3f1e-bb2a-a5d19bf452a2">
+      <amount>-4.88</amount>
+      <type>DEBIT</type>
+      <date>2009-09-28 05:00:00 AM</date>
+      <desc>COFFEE BEAN #197 PHOENIX</desc>
+      <extid>200909286</extid>
+      <memo>09/24COFFEE BE</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="97d341c4-5bd7-3d49-b1d2-7621c21470a5">
+      <amount>-308.0</amount>
+      <type>CHECK</type>
+      <date>2009-10-01 05:00:00 AM</date>
+      <desc>CHECK 248</desc>
+      <extid>200910010</extid>
+      <memo></memo>
+      <check>248</check>
+      <ref></ref>
+    </transaction>
+    <transaction id="90f76f09-0eed-3cfa-9714-f5a603a7b5a8">
+      <amount>2187.21</amount>
+      <type>CREDIT</type>
+      <date>2009-10-02 05:00:00 AM</date>
+      <desc>VILLAGE VOICE ME DIRECT DEP</desc>
+      <extid>200910020</extid>
+      <memo>PPD ID: 9111111101</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="09a008bb-ac0a-3e4a-8daa-a902773e8db4">
+      <amount>-790.91</amount>
+      <type>DEBIT</type>
+      <date>2009-10-02 05:00:00 AM</date>
+      <desc>LOANSERVICING AUTOMATIC</desc>
+      <extid>200910021</extid>
+      <memo>PPD ID: 1231694840</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="398455b1-ab91-32d3-9d93-124b9b1987eb">
+      <amount>-118.71</amount>
+      <type>DEBIT</type>
+      <date>2009-10-02 05:00:00 AM</date>
+      <desc>STATE FARM RO 27 SFPP</desc>
+      <extid>200910022</extid>
+      <memo>PPD ID: 9000307001</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="c7726653-9632-339d-9615-f913e11a424a">
+      <amount>-80.0</amount>
+      <type>CHECK</type>
+      <date>2009-10-02 05:00:00 AM</date>
+      <desc>CHECK 249</desc>
+      <extid>200910023</extid>
+      <memo></memo>
+      <check>249</check>
+      <ref></ref>
+    </transaction>
+    <transaction id="8e0b287f-8765-3565-aec1-445df585e369">
+      <amount>400.0</amount>
+      <type>CREDIT</type>
+      <date>2009-10-05 05:00:00 AM</date>
+      <desc>ATM CHECK DEPOSIT</desc>
+      <extid>200910050</extid>
+      <memo></memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="30692e07-dd6f-35ec-8621-38ad9a20dbde">
+      <amount>27.68</amount>
+      <type>CREDIT</type>
+      <date>2009-10-05 05:00:00 AM</date>
+      <desc>ATM CHECK DEPOSIT</desc>
+      <extid>200910051</extid>
+      <memo></memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="9354571e-9291-3ada-ac2a-f077214cb915">
+      <amount>-1275.1</amount>
+      <type>DEBIT</type>
+      <date>2009-10-05 05:00:00 AM</date>
+      <desc>BARCLAYCARD US CREDITCARD 7368</desc>
+      <extid>200910052</extid>
+      <memo>8770 WEB ID: 2510407970</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="b6cc820a-e11f-369d-91fc-6c76712b0174">
+      <amount>-155.26</amount>
+      <type>DEBIT</type>
+      <date>2009-10-05 05:00:00 AM</date>
+      <desc>Whole Foods</desc>
+      <extid>200910053</extid>
+      <memo>10/02WHOLE FOO Purcha</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="50ff8eee-9bd5-31be-ad23-fdfe7fcd3a2f">
+      <amount>-60.0</amount>
+      <type>CHECK</type>
+      <date>2009-10-05 05:00:00 AM</date>
+      <desc>CHECK 250</desc>
+      <extid>200910054</extid>
+      <memo></memo>
+      <check>250</check>
+      <ref></ref>
+    </transaction>
+    <transaction id="70eaab7e-a657-3c4c-b3b9-69465ee93630">
+      <amount>-34.65</amount>
+      <type>DEBIT</type>
+      <date>2009-10-05 05:00:00 AM</date>
+      <desc>Whole Foods</desc>
+      <extid>200910055</extid>
+      <memo>10/02WHOLE FOO</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="53005a8e-2477-34e4-8701-c4f0d2167608">
+      <amount>-14.75</amount>
+      <type>DEBIT</type>
+      <date>2009-10-05 05:00:00 AM</date>
+      <desc>SPROUTS FARMERS MKT # 0 869893</desc>
+      <extid>200910056</extid>
+      <memo>10/02SPROUTS F</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="01c46b45-7ab4-37d3-a48a-446a412b928f">
+      <amount>-14.01</amount>
+      <type>DEBIT</type>
+      <date>2009-10-05 05:00:00 AM</date>
+      <desc>SPROUTS FARMERS MKT # 0 453981</desc>
+      <extid>200910057</extid>
+      <memo>10/02SPROUTS F</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="163700a7-d08c-3bb7-9c5d-8d7908362731">
+      <amount>-7.75</amount>
+      <type>DEBIT</type>
+      <date>2009-10-05 05:00:00 AM</date>
+      <desc>AMC ESPLANADE 04000998 P</desc>
+      <extid>200910058</extid>
+      <memo>10/03AMC ESPLA</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="f91a666b-05aa-3566-8ad7-8c01446466ca">
+      <amount>-5.28</amount>
+      <type>DEBIT</type>
+      <date>2009-10-05 05:00:00 AM</date>
+      <desc>TACO BELL #22366 TEMPE A</desc>
+      <extid>200910059</extid>
+      <memo>10/03TACO BELL</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="d62c886b-45fb-33ab-90e1-811a2dd5093f">
+      <amount>-587.68</amount>
+      <type>DEBIT</type>
+      <date>2009-10-07 05:00:00 AM</date>
+      <desc>BARCLAYCARD US CREDITCARD 7393</desc>
+      <extid>200910070</extid>
+      <memo>5446 WEB ID: 2510407970</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="face2f88-bc6a-3616-9891-c7d1cffbe1f6">
+      <amount>-6.68</amount>
+      <type>DEBIT</type>
+      <date>2009-10-07 05:00:00 AM</date>
+      <desc>TACO BELL 00080 Q67 P</desc>
+      <extid>200910071</extid>
+      <memo>10/05TACO BELL</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="1477b8f4-b6e1-3c32-875f-4a62e7ca47ed">
+      <amount>-35.65</amount>
+      <type>DEBIT</type>
+      <date>2009-10-08 05:00:00 AM</date>
+      <desc>CIRCLE K 08596 Q47 P</desc>
+      <extid>200910080</extid>
+      <memo>10/05CIRCLE K</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="96c81fb4-bbf7-3164-9e9a-833ea89460c4">
+      <amount>-9.97</amount>
+      <type>DEBIT</type>
+      <date>2009-10-08 05:00:00 AM</date>
+      <desc>SPROUTS FARMERS MKT # 0 554738</desc>
+      <extid>200910081</extid>
+      <memo>10/07SPROUTS F</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="cade940a-0bb2-37cd-a3af-db6ab53ac087">
+      <amount>-309.33</amount>
+      <type>DEBIT</type>
+      <date>2009-10-13 05:00:00 AM</date>
+      <desc>VW CREDIT, INC. AUTO DEBIT WE</desc>
+      <extid>200910130</extid>
+      <memo>B 852539481 WEB ID: 1382362409</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="182f0da2-1bdc-3dcd-ac32-813b12d9d5d0">
+      <amount>-55.16</amount>
+      <type>DEBIT</type>
+      <date>2009-10-13 05:00:00 AM</date>
+      <desc>JOSEPH SCOTT SALON LLC P054846</desc>
+      <extid>200910131</extid>
+      <memo>10/10JOSEPH SC</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="d45edc97-9451-3b90-9b9b-3691c3ea3bc1">
+      <amount>-3.27</amount>
+      <type>DEBIT</type>
+      <date>2009-10-13 05:00:00 AM</date>
+      <desc>7-ELEVEN PHOENIX AZ 357481</desc>
+      <extid>2009101310</extid>
+      <memo>10/117-ELEVEN</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="ec17f33a-4e02-32bd-b809-95565057bebd">
+      <amount>-3.24</amount>
+      <type>DEBIT</type>
+      <date>2009-10-13 05:00:00 AM</date>
+      <desc>WALGREEN COMPANY 4111 N 311196</desc>
+      <extid>2009101311</extid>
+      <memo>10/10WALGREEN</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="62b3beb7-8357-32f3-b993-00a89bef2385">
+      <amount>-46.82</amount>
+      <type>DEBIT</type>
+      <date>2009-10-13 05:00:00 AM</date>
+      <desc>SPROUTS FARMERS MKT # 0</desc>
+      <extid>200910132</extid>
+      <memo>10/09SPROUTS F Purcha</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="262ff5bb-5cb7-393d-8b4f-20911d5b3632">
+      <amount>-27.24</amount>
+      <type>DEBIT</type>
+      <date>2009-10-13 05:00:00 AM</date>
+      <desc>SPROUTS FARMERS MKT # 0 259067</desc>
+      <extid>200910133</extid>
+      <memo>10/10SPROUTS F</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="9edb3186-24f3-3f1f-b4b7-f4577f948d6c">
+      <amount>-20.19</amount>
+      <type>DEBIT</type>
+      <date>2009-10-13 05:00:00 AM</date>
+      <desc>FAST EDDIE'S DINER PHOEN</desc>
+      <extid>200910134</extid>
+      <memo>10/11FAST EDDI</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="cc367275-3521-3b26-a451-45162ebc5881">
+      <amount>-20.0</amount>
+      <type>DEBIT</type>
+      <date>2009-10-13 05:00:00 AM</date>
+      <desc>CIRCLE K 02857 PHOENIX A557334</desc>
+      <extid>200910135</extid>
+      <memo>10/09CIRCLE K</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="5a9a7da5-083c-3077-a8cf-b7acb8b356e7">
+      <amount>-17.98</amount>
+      <type>DEBIT</type>
+      <date>2009-10-13 05:00:00 AM</date>
+      <desc>SYLVIA'S LA CANASTA PHOE</desc>
+      <extid>200910136</extid>
+      <memo>10/11SYLVIA'S</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="e79f1975-d6c2-3bcd-a5d0-ded8efa3978f">
+      <amount>-13.0</amount>
+      <type>DEBIT</type>
+      <date>2009-10-13 05:00:00 AM</date>
+      <desc>MERC BAR PHOENIX AZ</desc>
+      <extid>200910137</extid>
+      <memo>10/10MERC BAR</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="9109b6df-d2a0-34d9-9b14-17c22dfc9dd7">
+      <amount>-6.78</amount>
+      <type>DEBIT</type>
+      <date>2009-10-13 05:00:00 AM</date>
+      <desc>Safeway</desc>
+      <extid>200910138</extid>
+      <memo>10/09SAFEWAY</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="8a7ae643-7560-307a-8110-ddcaa85420cc">
+      <amount>-6.75</amount>
+      <type>DEBIT</type>
+      <date>2009-10-13 05:00:00 AM</date>
+      <desc>MARGARITAVILLE OF PHOEN</desc>
+      <extid>200910139</extid>
+      <memo>10/09MARGARITA</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="0122008b-9616-34f0-81ef-3341bb01640a">
+      <amount>-31.9</amount>
+      <type>DEBIT</type>
+      <date>2009-10-14 05:00:00 AM</date>
+      <desc>SRR*SIRIUS RADIO 888-539</desc>
+      <extid>200910140</extid>
+      <memo>10/13SRR*SIRIU</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="89e0f249-ed9c-3b68-b1c1-e3505adc502a">
+      <amount>-35.46</amount>
+      <type>DEBIT</type>
+      <date>2009-10-15 05:00:00 AM</date>
+      <desc>CIRCLE K 08596 Q47 P</desc>
+      <extid>200910150</extid>
+      <memo>10/12CIRCLE K</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="499e6d49-4c9d-3e70-8c79-bc32a90cd77a">
+      <amount>-11.36</amount>
+      <type>DEBIT</type>
+      <date>2009-10-15 05:00:00 AM</date>
+      <desc>WALGREEN COMPANY 4111 N 604778</desc>
+      <extid>200910151</extid>
+      <memo>10/14WALGREEN</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="7224fe23-5f0d-36f1-88fe-27288611b86b">
+      <amount>2187.22</amount>
+      <type>CREDIT</type>
+      <date>2009-10-16 05:00:00 AM</date>
+      <desc>VILLAGE VOICE ME DIRECT DEP</desc>
+      <extid>200910160</extid>
+      <memo>PPD ID: 9111111101</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="2aa1d319-b4aa-30f0-80fb-4d531df61ce3">
+      <amount>-29.99</amount>
+      <type>DEBIT</type>
+      <date>2009-10-16 05:00:00 AM</date>
+      <desc>24 HOUR FITNESS 800-432-</desc>
+      <extid>200910161</extid>
+      <memo>10/1524 HOUR F</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="28ea7a30-bf80-322b-82b1-14f6d0b112c0">
+      <amount>-14.97</amount>
+      <type>DEBIT</type>
+      <date>2009-10-16 05:00:00 AM</date>
+      <desc>EASYNEWS.COM 866-396-397</desc>
+      <extid>200910162</extid>
+      <memo>10/15EASYNEWS.</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="accdf288-855a-3317-8328-c65c05b646a8">
+      <amount>-175.0</amount>
+      <type>DEBIT</type>
+      <date>2009-10-19 05:00:00 AM</date>
+      <desc>IRS USATAXPYMT 2709</desc>
+      <extid>200910190</extid>
+      <memo>69200547747 WEB ID: 3387702000</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="6812dcc7-ccf9-3b39-a19b-f5158365e243">
+      <amount>-90.69</amount>
+      <type>DEBIT</type>
+      <date>2009-10-19 05:00:00 AM</date>
+      <desc>Whole Foods</desc>
+      <extid>200910191</extid>
+      <memo>10/18WHOLE FOO</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="5f3cda8e-774a-31d0-8301-5edec7b9d78d">
+      <amount>-74.73</amount>
+      <type>DEBIT</type>
+      <date>2009-10-19 05:00:00 AM</date>
+      <desc>QWEST 8004238994 AUTO PAY</desc>
+      <extid>200910192</extid>
+      <memo>PPD ID: ATPPHX6005</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="6151183c-14d2-302e-93bf-8892e9109d8a">
+      <amount>-49.0</amount>
+      <type>DEBIT</type>
+      <date>2009-10-19 05:00:00 AM</date>
+      <desc>MASSAGE ENVY 0011 480-83</desc>
+      <extid>200910193</extid>
+      <memo>10/16MASSAGE E</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="566e57d4-c5d2-3d03-95fc-42828a2f08ca">
+      <amount>-36.51</amount>
+      <type>DEBIT</type>
+      <date>2009-10-19 05:00:00 AM</date>
+      <desc>SPROUTS FARMERS MKT # 0 488197</desc>
+      <extid>200910194</extid>
+      <memo>10/18SPROUTS F</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="8505ed99-adc2-39ff-9b5e-234e552c3708">
+      <amount>-32.74</amount>
+      <type>DEBIT</type>
+      <date>2009-10-19 05:00:00 AM</date>
+      <desc>QT 425 PHOENIX AZ 390709</desc>
+      <extid>200910195</extid>
+      <memo>10/18QT 425 PH</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="117d124c-df24-3dc9-ba71-496e64bdf516">
+      <amount>-15.29</amount>
+      <type>DEBIT</type>
+      <date>2009-10-19 05:00:00 AM</date>
+      <desc>FAST EDDIE'S DINER PHOEN</desc>
+      <extid>200910196</extid>
+      <memo>10/17FAST EDDI</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="666a6554-8068-3fad-b930-36a7a965150c">
+      <amount>-8.98</amount>
+      <type>DEBIT</type>
+      <date>2009-10-19 05:00:00 AM</date>
+      <desc>SPROUTS FARMERS MKT # 0 889010</desc>
+      <extid>200910197</extid>
+      <memo>10/18SPROUTS F</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="41f46250-57a2-39b7-b6f3-00acd5e5b56c">
+      <amount>-3.44</amount>
+      <type>DEBIT</type>
+      <date>2009-10-19 05:00:00 AM</date>
+      <desc>SPROUTS FARMERS MKT # 0 892056</desc>
+      <extid>200910198</extid>
+      <memo>10/18SPROUTS F</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="8691c33e-93c6-3589-bc64-dc71801b5aa2">
+      <amount>-39.0</amount>
+      <type>DEBIT</type>
+      <date>2009-10-20 05:00:00 AM</date>
+      <desc>HSBC CARD SRVCS Online Pmt 0000</desc>
+      <extid>200910200</extid>
+      <memo>00497686557 WEB ID: 2000000510</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="f1ac1c01-19ac-3984-94ad-3695fe47e7bb">
+      <amount>-32.65</amount>
+      <type>DEBIT</type>
+      <date>2009-10-20 05:00:00 AM</date>
+      <desc>SPROUTS FARMERS MKT # 0 495670</desc>
+      <extid>200910201</extid>
+      <memo>10/19SPROUTS F</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="9f267983-759b-3ca6-a456-24ac3b465da3">
+      <amount>-14.0</amount>
+      <type>DEBIT</type>
+      <date>2009-10-20 05:00:00 AM</date>
+      <desc>HARKINS METRO CENTERQ90</desc>
+      <extid>200910202</extid>
+      <memo>10/18HARKINS M</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="9819575e-644a-325c-8651-d3b126385397">
+      <amount>-13.75</amount>
+      <type>DEBIT</type>
+      <date>2009-10-20 05:00:00 AM</date>
+      <desc>HARKINS METRO CENTERQ90</desc>
+      <extid>200910203</extid>
+      <memo>10/18HARKINS M</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="c24e034a-9327-3377-9a44-3dd7289f4c60">
+      <amount>-6.81</amount>
+      <type>DEBIT</type>
+      <date>2009-10-20 05:00:00 AM</date>
+      <desc>QDOBA 428 11404282 P</desc>
+      <extid>200910204</extid>
+      <memo>10/18QDOBA 428</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="f188761b-04ac-3cd0-bc5b-8d40ace99b1b">
+      <amount>-44.72</amount>
+      <type>DEBIT</type>
+      <date>2009-10-21 05:00:00 AM</date>
+      <desc>WALGREEN COMPANY 4111 N 715265</desc>
+      <extid>200910210</extid>
+      <memo>10/20WALGREEN</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="709728b6-4766-36e0-8028-7656e44361a9">
+      <amount>-27.98</amount>
+      <type>DEBIT</type>
+      <date>2009-10-21 05:00:00 AM</date>
+      <desc>ARROWHEAD WATER 800-950-</desc>
+      <extid>200910211</extid>
+      <memo>10/20ARROWHEAD</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="5eff50b6-4f1a-33a8-8253-cccc6b10ff54">
+      <amount>-23.77</amount>
+      <type>DEBIT</type>
+      <date>2009-10-21 05:00:00 AM</date>
+      <desc>PIE ZANOS KITCHEN PHOENI</desc>
+      <extid>200910212</extid>
+      <memo>10/19PIE ZANOS</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="9fad977e-53d7-3afd-89f8-316a9ddd63dd">
+      <amount>-21.95</amount>
+      <type>DEBIT</type>
+      <date>2009-10-21 05:00:00 AM</date>
+      <desc>NNT LINDSTROMS FAMI9611 212966</desc>
+      <extid>200910213</extid>
+      <memo>10/20NNT LINDS</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="66934201-4f26-31f3-b399-be547ec06127">
+      <amount>-9.95</amount>
+      <type>DEBIT</type>
+      <date>2009-10-22 05:00:00 AM</date>
+      <desc>Financial</desc>
+      <extid>200910220</extid>
+      <memo>Monthly Service Fee</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="f243b9a6-8ff9-32c3-9484-2ca02c375fd2">
+      <amount>-80.0</amount>
+      <type>DEBIT</type>
+      <date>2009-10-22 05:00:00 AM</date>
+      <desc>ATM WITHDRAWAL 003541</desc>
+      <extid>200910221</extid>
+      <memo>10/213150 E IN</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="5e0ca550-8479-3704-b756-3d22474060ae">
+      <amount>-9.72</amount>
+      <type>DEBIT</type>
+      <date>2009-10-22 05:00:00 AM</date>
+      <desc>NFI*WWW.NETFLIX.COM/ NET</desc>
+      <extid>200910222</extid>
+      <memo>10/21NFI*WWW.N</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="d6d68e81-257e-3b6d-bdab-1d8ed48de0e6">
+      <amount>-40.0</amount>
+      <type>DEBIT</type>
+      <date>2009-10-23 05:00:00 AM</date>
+      <desc>JOSEPH SCOTT SALON LLC P200361</desc>
+      <extid>200910230</extid>
+      <memo>10/22JOSEPH SC</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="4532f428-81af-314d-84f5-6da6f2ef33a4">
+      <amount>-11.9</amount>
+      <type>DEBIT</type>
+      <date>2009-10-23 05:00:00 AM</date>
+      <desc>WALGREEN COMPANY 4111 N 416954</desc>
+      <extid>200910231</extid>
+      <memo>10/22WALGREEN</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="7be5f526-e3aa-383e-b6e3-34501eb6b9ca">
+      <amount>-63.74</amount>
+      <type>DEBIT</type>
+      <date>2009-10-26 05:00:00 AM</date>
+      <desc>SPROUTS FARMERS MKT # 0</desc>
+      <extid>200910260</extid>
+      <memo>10/23SPROUTS F Purcha</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="53a4d0c4-2852-3808-82f2-ada2c943c35f">
+      <amount>-24.86</amount>
+      <type>DEBIT</type>
+      <date>2009-10-26 05:00:00 AM</date>
+      <desc>SPROUTS FARMERS MKT # 0 288065</desc>
+      <extid>200910261</extid>
+      <memo>10/24SPROUTS F</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="01dd444f-fb75-3e45-8632-11a2750625c1">
+      <amount>-20.0</amount>
+      <type>DEBIT</type>
+      <date>2009-10-26 05:00:00 AM</date>
+      <desc>QT 425 PHOENIX AZ 026341</desc>
+      <extid>200910262</extid>
+      <memo>10/23QT 425 PH</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="6d72bb6b-95e0-38ba-a901-c6d239a4221a">
+      <amount>-18.09</amount>
+      <type>DEBIT</type>
+      <date>2009-10-26 05:00:00 AM</date>
+      <desc>CHIPOTLE 0253 PHOENIX AZ</desc>
+      <extid>200910263</extid>
+      <memo>10/25CHIPOTLE</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="eb9ecb63-0efb-3ef7-8347-5ae274b5bf8a">
+      <amount>-15.98</amount>
+      <type>DEBIT</type>
+      <date>2009-10-26 05:00:00 AM</date>
+      <desc>Gluten Free Creations Ph</desc>
+      <extid>200910264</extid>
+      <memo>10/24Gluten Fr</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="b668e7c5-559a-336b-b825-ee1492b8d8f9">
+      <amount>-12.96</amount>
+      <type>DEBIT</type>
+      <date>2009-10-26 05:00:00 AM</date>
+      <desc>FRYS FOOD &amp; DRUG 1815 G 449790</desc>
+      <extid>200910265</extid>
+      <memo>10/24FRYS FOOD</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="5707c78b-f858-384f-946a-d3a9591755ca">
+      <amount>-11.22</amount>
+      <type>DEBIT</type>
+      <date>2009-10-26 05:00:00 AM</date>
+      <desc>EL TACO TOTE MESA AZ</desc>
+      <extid>200910266</extid>
+      <memo>10/23EL TACO T</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="b99d3875-8776-32d2-94b7-90e67a2759c8">
+      <amount>-6.65</amount>
+      <type>DEBIT</type>
+      <date>2009-10-26 05:00:00 AM</date>
+      <desc>SOU BLOCKBUSTER VID3322 932979</desc>
+      <extid>200910267</extid>
+      <memo>10/24SOU BLOCK</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="b1744952-ceda-3b8b-b107-4e66dff81276">
+      <amount>-6.46</amount>
+      <type>DEBIT</type>
+      <date>2009-10-26 05:00:00 AM</date>
+      <desc>EL TACO TOTE MESA AZ</desc>
+      <extid>200910268</extid>
+      <memo>10/23EL TACO T</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="031e2154-9d3f-39e6-94f9-faeb97791ba0">
+      <amount>-4.86</amount>
+      <type>DEBIT</type>
+      <date>2009-10-26 05:00:00 AM</date>
+      <desc>WALGREEN COMPANY 4111 N 228549</desc>
+      <extid>200910269</extid>
+      <memo>10/24WALGREEN</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="5a0f9906-740f-3514-9ec4-da0447ba5daf">
+      <amount>-120.0</amount>
+      <type>DEBIT</type>
+      <date>2009-10-27 05:00:00 AM</date>
+      <desc>ATM WITHDRAWAL 004712</desc>
+      <extid>200910270</extid>
+      <memo>10/263150 E IN</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="d8a89058-6f30-34de-9008-2696ec572b75">
+      <amount>-29.3</amount>
+      <type>DEBIT</type>
+      <date>2009-10-27 05:00:00 AM</date>
+      <desc>IHOP #1507 PHOENIX AZ</desc>
+      <extid>200910271</extid>
+      <memo>10/25IHOP #150</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="2f7aaebc-9096-3fc3-ac9f-b18f28766ff3">
+      <amount>-12.27</amount>
+      <type>DEBIT</type>
+      <date>2009-10-28 05:00:00 AM</date>
+      <desc>SPROUTS FARMERS MKT #7 P595404</desc>
+      <extid>200910280</extid>
+      <memo>10/27SPROUTS F</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="e3003188-27ac-35d5-a9fa-a77976cfb9fa">
+      <amount>-92.12</amount>
+      <type>DEBIT</type>
+      <date>2009-10-29 05:00:00 AM</date>
+      <desc>IRS USATAXPYMT 2709</desc>
+      <extid>200910290</extid>
+      <memo>70200796244 WEB ID: 3387702000</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="cf8b8963-aaab-3179-8304-9904586b3145">
+      <amount>2224.63</amount>
+      <type>CREDIT</type>
+      <date>2009-10-30 05:00:00 AM</date>
+      <desc>VILLAGE VOICE ME DIRECT DEP</desc>
+      <extid>200910300</extid>
+      <memo>PPD ID: 9111111101</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="f5c096d3-8330-3431-aba7-2182619c4387">
+      <amount>-175.0</amount>
+      <type>DEBIT</type>
+      <date>2009-11-02 05:00:00 AM</date>
+      <desc>IRS USATAXPYMT 2709</desc>
+      <extid>200911020</extid>
+      <memo>70600034614 WEB ID: 3387702000</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="6e548ea7-7ffa-3dfd-b789-c6f0ce91901f">
+      <amount>-40.0</amount>
+      <type>DEBIT</type>
+      <date>2009-11-02 05:00:00 AM</date>
+      <desc>ATM WITHDRAWAL 006104</desc>
+      <extid>200911021</extid>
+      <memo>11/023150 E IN</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="8d637f9c-c566-3808-9998-f84d7757ea36">
+      <amount>-21.95</amount>
+      <type>DEBIT</type>
+      <date>2009-11-02 05:00:00 AM</date>
+      <desc>NNT LINDSTROMS FAMI0316 553580</desc>
+      <extid>200911022</extid>
+      <memo>11/01NNT LINDS</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="b8177e9d-25f0-300f-a1f2-c058f6cd4578">
+      <amount>-32.19</amount>
+      <type>DEBIT</type>
+      <date>2009-11-03 05:00:00 AM</date>
+      <desc>CHECKING SUPPLIES</desc>
+      <extid>200911030</extid>
+      <memo></memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="c98b757c-3499-3bee-9422-5ade23bbaa12">
+      <amount>-790.91</amount>
+      <type>DEBIT</type>
+      <date>2009-11-03 05:00:00 AM</date>
+      <desc>LOANSERVICING AUTOMATIC</desc>
+      <extid>200911031</extid>
+      <memo>PPD ID: 1231694840</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="632bb1eb-1b11-3f92-8ded-804622479e63">
+      <amount>-118.71</amount>
+      <type>DEBIT</type>
+      <date>2009-11-03 05:00:00 AM</date>
+      <desc>STATE FARM RO 27 SFPP</desc>
+      <extid>200911032</extid>
+      <memo>PPD ID: 9000307001</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="58e8e699-c47f-3175-babf-5041b164f3c6">
+      <amount>-31.0</amount>
+      <type>DEBIT</type>
+      <date>2009-11-03 05:00:00 AM</date>
+      <desc>HSBC CARD SRVCS Online Pmt 0000</desc>
+      <extid>200911033</extid>
+      <memo>00502038685 WEB ID: 2000000510</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="d660b89d-d43b-3c9e-bfa4-4fb933b3d98e">
+      <amount>-13.46</amount>
+      <type>DEBIT</type>
+      <date>2009-11-03 05:00:00 AM</date>
+      <desc>SPROUTS FARMERS MKT # 0 572663</desc>
+      <extid>200911034</extid>
+      <memo>11/02SPROUTS F</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="5a3a9bb3-a9d6-371a-9561-8e95785d5b27">
+      <amount>-75.99</amount>
+      <type>DEBIT</type>
+      <date>2009-11-04 05:00:00 AM</date>
+      <desc>DTV*DIRECTV SERVICE 800-</desc>
+      <extid>200911040</extid>
+      <memo>11/03DTV*DIREC</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="f69701d4-587c-3067-89c8-146db2de5bba">
+      <amount>-53.0</amount>
+      <type>DEBIT</type>
+      <date>2009-11-04 05:00:00 AM</date>
+      <desc>SPROUTS FARMERS MKT # 0 580297</desc>
+      <extid>200911041</extid>
+      <memo>11/03SPROUTS F</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="983bc8e3-caac-3959-b31d-937c92e21819">
+      <amount>-34.62</amount>
+      <type>DEBIT</type>
+      <date>2009-11-04 05:00:00 AM</date>
+      <desc>QT 425 PHOENIX AZ 923857</desc>
+      <extid>200911042</extid>
+      <memo>11/03QT 425 PH</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="ae5421c8-4f74-3a04-84d8-f733464ab2d3">
+      <amount>-11.78</amount>
+      <type>DEBIT</type>
+      <date>2009-11-04 05:00:00 AM</date>
+      <desc>SPROUTS FARMERS MKT # 0 293761</desc>
+      <extid>200911043</extid>
+      <memo>11/03SPROUTS F</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="be386e7f-9f0f-37a2-8ee8-9a351003bc4d">
+      <amount>-4.81</amount>
+      <type>DEBIT</type>
+      <date>2009-11-04 05:00:00 AM</date>
+      <desc>SPROUTS FARMERS MKT # 0 064651</desc>
+      <extid>200911044</extid>
+      <memo>11/03SPROUTS F</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="e1fca475-3341-31a7-ad32-f49c63aa4463">
+      <amount>-35.0</amount>
+      <type>DEBIT</type>
+      <date>2009-11-05 05:00:00 AM</date>
+      <desc>PIHMA COLLEGE AND CL Pho293456</desc>
+      <extid>200911050</extid>
+      <memo>11/04PIHMA COL</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="a135cbed-934a-3db3-8567-6ae98bfd8266">
+      <amount>-30.0</amount>
+      <type>CHECK</type>
+      <date>2009-11-05 05:00:00 AM</date>
+      <desc>CHECK 281</desc>
+      <extid>200911051</extid>
+      <memo></memo>
+      <check>281</check>
+      <ref></ref>
+    </transaction>
+    <transaction id="1123c6f3-52ca-335a-aa40-ca746839b0ec">
+      <amount>-25.0</amount>
+      <type>DEBIT</type>
+      <date>2009-11-05 05:00:00 AM</date>
+      <desc>WALGREENS #4722 PHOENIX</desc>
+      <extid>200911052</extid>
+      <memo>11/03WALGREENS</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="a06cc295-937d-3b9a-9c4d-57ecf88418b0">
+      <amount>-75.3</amount>
+      <type>DEBIT</type>
+      <date>2009-11-06 05:00:00 AM</date>
+      <desc>WAL-MART #2113 CHRISTOWN872646</desc>
+      <extid>200911060</extid>
+      <memo>11/05WAL-MART</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="d7a502e7-13ac-3f9b-85cd-a92122199954">
+      <amount>-64.32</amount>
+      <type>DEBIT</type>
+      <date>2009-11-06 05:00:00 AM</date>
+      <desc>LEVIS STORE 01001668 J</desc>
+      <extid>200911061</extid>
+      <memo>11/04LEVIS STO</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="e50bad95-f1dc-3041-b677-d727893ad3ee">
+      <amount>-35.0</amount>
+      <type>DEBIT</type>
+      <date>2009-11-06 05:00:00 AM</date>
+      <desc>JOSEPH SCOTT SALON LLC P185216</desc>
+      <extid>200911062</extid>
+      <memo>11/05JOSEPH SC</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="1b71d20c-a457-3c70-a1ab-c87bd0633995">
+      <amount>-29.99</amount>
+      <type>DEBIT</type>
+      <date>2009-11-06 05:00:00 AM</date>
+      <desc>24HR FITNESS DUES 800-43</desc>
+      <extid>200911063</extid>
+      <memo>11/0524HR FITN</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="18c6ed74-bce3-33d4-a527-d792e1a92ff2">
+      <amount>-343.62</amount>
+      <type>DEBIT</type>
+      <date>2009-11-09 05:00:00 AM</date>
+      <desc>AZ MOTOR VEHICLE DIV 866</desc>
+      <extid>200911090</extid>
+      <memo>11/07AZ MOTOR</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="95226a84-f7a2-3493-b6a8-6f4fcc5e51c6">
+      <amount>-308.0</amount>
+      <type>CHECK</type>
+      <date>2009-11-09 05:00:00 AM</date>
+      <desc>CHECK 251</desc>
+      <extid>200911091</extid>
+      <memo></memo>
+      <check>251</check>
+      <ref></ref>
+    </transaction>
+    <transaction id="22c191e9-b2be-3c1e-8ff2-44c3fa776191">
+      <amount>-2.7</amount>
+      <type>DEBIT</type>
+      <date>2009-11-09 05:00:00 AM</date>
+      <desc>EINSTEIN BROS #2021 PHOE</desc>
+      <extid>2009110910</extid>
+      <memo>11/07EINSTEIN</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="f1cf3795-f27b-3731-bdf2-5449b938cdab">
+      <amount>-39.35</amount>
+      <type>DEBIT</type>
+      <date>2009-11-09 05:00:00 AM</date>
+      <desc>CHEVRON 00093808 PHOENIX</desc>
+      <extid>200911092</extid>
+      <memo>11/08CHEVRON 0</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="b02e514f-bebe-3178-963d-ec612301fd38">
+      <amount>-28.12</amount>
+      <type>DEBIT</type>
+      <date>2009-11-09 05:00:00 AM</date>
+      <desc>THE GOOD EGG PARK CENTR</desc>
+      <extid>200911093</extid>
+      <memo>11/08THE GOOD</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="c384aebe-4dd8-31bc-a2c0-45aafde0a69a">
+      <amount>-20.62</amount>
+      <type>DEBIT</type>
+      <date>2009-11-09 05:00:00 AM</date>
+      <desc>WALGREEN COMPANY NWC OF 105188</desc>
+      <extid>200911094</extid>
+      <memo>11/07WALGREEN</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="d4c65d22-d50e-37cd-9e2b-e513673eeab2">
+      <amount>-13.85</amount>
+      <type>DEBIT</type>
+      <date>2009-11-09 05:00:00 AM</date>
+      <desc>SPROUTS FARMERS MKT # 0 460613</desc>
+      <extid>200911095</extid>
+      <memo>11/07SPROUTS F</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="16f4ad2a-46b5-319e-bd14-224fa7e88643">
+      <amount>-11.64</amount>
+      <type>DEBIT</type>
+      <date>2009-11-09 05:00:00 AM</date>
+      <desc>FRESH &amp; EASY #1042 PHOEN079758</desc>
+      <extid>200911096</extid>
+      <memo>11/08FRESH &amp; E</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="3c7f7d96-4932-3879-b54b-9ed6fd5722e1">
+      <amount>-8.93</amount>
+      <type>DEBIT</type>
+      <date>2009-11-09 05:00:00 AM</date>
+      <desc>PEI WEI #0023 Q02 P</desc>
+      <extid>200911097</extid>
+      <memo>11/05PEI WEI #</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="145c3af1-2000-388b-88b7-6a3f267f754d">
+      <amount>-7.99</amount>
+      <type>DEBIT</type>
+      <date>2009-11-09 05:00:00 AM</date>
+      <desc>Gluten Free Creations Ph</desc>
+      <extid>200911098</extid>
+      <memo>11/07Gluten Fr</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="4e45353b-5b10-3812-b801-2e2d070450ac">
+      <amount>-3.73</amount>
+      <type>DEBIT</type>
+      <date>2009-11-09 05:00:00 AM</date>
+      <desc>SPROUTS FARMERS MKT # 0 862544</desc>
+      <extid>200911099</extid>
+      <memo>11/07SPROUTS F</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="fe52d5fd-d665-3549-a6fa-0f253db5073a">
+      <amount>-60.6</amount>
+      <type>DEBIT</type>
+      <date>2009-11-10 05:00:00 AM</date>
+      <desc>WALGREEN COMPANY 4111 N 104064</desc>
+      <extid>200911100</extid>
+      <memo>11/09WALGREEN</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="b2de5a78-7f14-3e5d-a0a9-684ee73bf75e">
+      <amount>-14.91</amount>
+      <type>DEBIT</type>
+      <date>2009-11-10 05:00:00 AM</date>
+      <desc>QDOBA 428 11404282 P</desc>
+      <extid>200911101</extid>
+      <memo>11/08QDOBA 428</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="f605619d-fd04-3d62-82fe-3100b48fbbe9">
+      <amount>-6.28</amount>
+      <type>DEBIT</type>
+      <date>2009-11-10 05:00:00 AM</date>
+      <desc>SPROUTS FARMERS MKT # 0 075971</desc>
+      <extid>200911102</extid>
+      <memo>11/10SPROUTS F</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="cede9224-255b-307c-8c72-f70b7575e06b">
+      <amount>-309.33</amount>
+      <type>DEBIT</type>
+      <date>2009-11-12 05:00:00 AM</date>
+      <desc>VW CREDIT, INC. AUTO DEBIT WE</desc>
+      <extid>200911120</extid>
+      <memo>B 852539481 WEB ID: 1382362409</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="8c32e178-16d8-389c-b2e9-3ae20fe2ec1f">
+      <amount>-27.98</amount>
+      <type>DEBIT</type>
+      <date>2009-11-12 05:00:00 AM</date>
+      <desc>ARROWHEAD WATER 800-950-</desc>
+      <extid>200911121</extid>
+      <memo>11/10ARROWHEAD</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="ae11f78b-e4c9-3b1e-9a49-e3e45672a2a5">
+      <amount>-21.39</amount>
+      <type>DEBIT</type>
+      <date>2009-11-12 05:00:00 AM</date>
+      <desc>GYROS HOUSE PHOENIX AZ</desc>
+      <extid>200911122</extid>
+      <memo>11/09GYROS HOU</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="6833d7cb-e594-37f5-a0e8-5d89deb7dc7e">
+      <amount>-20.0</amount>
+      <type>DEBIT</type>
+      <date>2009-11-12 05:00:00 AM</date>
+      <desc>CIRCLE K 05405 PHOENIX A946792</desc>
+      <extid>200911123</extid>
+      <memo>11/10CIRCLE K</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="f9457d7f-e172-3c93-b048-3177f8e8485d">
+      <amount>-12.0</amount>
+      <type>DEBIT</type>
+      <date>2009-11-12 05:00:00 AM</date>
+      <desc>CHINA CHILI PHOENIX AZ</desc>
+      <extid>200911124</extid>
+      <memo>11/09CHINA CHI</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="2c27dd70-6655-38e3-bfb8-d10ee166598a">
+      <amount>3104.82</amount>
+      <type>CREDIT</type>
+      <date>2009-11-13 05:00:00 AM</date>
+      <desc>ATM CHECK DEPOSIT</desc>
+      <extid>200911130</extid>
+      <memo></memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="1227c304-c3e0-30a7-8078-18da853eda83">
+      <amount>1397.33</amount>
+      <type>CREDIT</type>
+      <date>2009-11-13 05:00:00 AM</date>
+      <desc>VILLAGE VOICE ME DIRECT DEP</desc>
+      <extid>200911131</extid>
+      <memo>PPD ID: 9111111101</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="815f8704-f8b8-36a0-b618-1e8e2927e63e">
+      <amount>-31.9</amount>
+      <type>DEBIT</type>
+      <date>2009-11-13 05:00:00 AM</date>
+      <desc>SRR*SIRIUS RADIO 888-539</desc>
+      <extid>200911132</extid>
+      <memo>11/12SRR*SIRIU</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="995f1c2a-dffa-3362-ac1e-578d8a952217">
+      <amount>-8.95</amount>
+      <type>DEBIT</type>
+      <date>2009-11-13 05:00:00 AM</date>
+      <desc>Safeway</desc>
+      <extid>200911133</extid>
+      <memo>11/12SAFEWAY</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="8709d5de-2642-3d6b-bd49-b1ab32e72e6d">
+      <amount>-7.03</amount>
+      <type>DEBIT</type>
+      <date>2009-11-13 05:00:00 AM</date>
+      <desc>ROSITA'S TEMPE TEMPE AZ</desc>
+      <extid>200911134</extid>
+      <memo>11/12ROSITA'S</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="0973852f-6ca6-31f4-82ee-80c36e8e7693">
+      <amount>-4.63</amount>
+      <type>DEBIT</type>
+      <date>2009-11-13 05:00:00 AM</date>
+      <desc>IN-N-OUT BURGERS TEMPE A</desc>
+      <extid>200911135</extid>
+      <memo>11/11IN-N-OUT</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="ffe7443f-e3d1-341f-a316-b2dc1b6a8589">
+      <amount>-175.0</amount>
+      <type>DEBIT</type>
+      <date>2009-11-16 05:00:00 AM</date>
+      <desc>IRS USATAXPYMT 2709</desc>
+      <extid>200911160</extid>
+      <memo>72000266518 WEB ID: 3387702000</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="6fae8c42-6268-34ca-b463-8189a8cd9621">
+      <amount>-80.0</amount>
+      <type>CHECK</type>
+      <date>2009-11-16 05:00:00 AM</date>
+      <desc>CHECK 282</desc>
+      <extid>200911161</extid>
+      <memo></memo>
+      <check>282</check>
+      <ref></ref>
+    </transaction>
+    <transaction id="8dcc7910-fde0-364c-b0c5-1de7dcbaa42e">
+      <amount>-7.56</amount>
+      <type>DEBIT</type>
+      <date>2009-11-16 05:00:00 AM</date>
+      <desc>SOU BLOCKBUSTER VID7623 369790</desc>
+      <extid>2009111610</extid>
+      <memo>11/14SOU BLOCK</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="898608a2-3551-3c2d-a853-84555cfb4511">
+      <amount>-6.65</amount>
+      <type>DEBIT</type>
+      <date>2009-11-16 05:00:00 AM</date>
+      <desc>SOU BLOCKBUSTER VID8301 785204</desc>
+      <extid>2009111611</extid>
+      <memo>11/13SOU BLOCK</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="15a78c84-9199-34bb-85d9-8b8b8fd580db">
+      <amount>-5.25</amount>
+      <type>DEBIT</type>
+      <date>2009-11-16 05:00:00 AM</date>
+      <desc>WAL-MART #2113 CHRISTOWN670091</desc>
+      <extid>2009111612</extid>
+      <memo>11/14WAL-MART</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="74e759e8-c806-33cf-aea7-c9c8b7c92880">
+      <amount>-4.32</amount>
+      <type>DEBIT</type>
+      <date>2009-11-16 05:00:00 AM</date>
+      <desc>#00952 ALBERTSONS PHOENI788489</desc>
+      <extid>2009111613</extid>
+      <memo>11/14#00952 AL</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="c660910c-4360-3a08-99f2-c066ab31a331">
+      <amount>-66.27</amount>
+      <type>DEBIT</type>
+      <date>2009-11-16 05:00:00 AM</date>
+      <desc>REI 25 TEMPE TEMPE AZ</desc>
+      <extid>200911162</extid>
+      <memo>11/13REI 25 TE</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="1ab0bef0-a71d-3533-8347-f6f548fb3b7c">
+      <amount>-36.37</amount>
+      <type>DEBIT</type>
+      <date>2009-11-16 05:00:00 AM</date>
+      <desc>QT 405 PHOENIX AZ 078234</desc>
+      <extid>200911163</extid>
+      <memo>11/14QT 405 PH</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="42302512-814a-320b-a5f8-ac798a736b59">
+      <amount>-29.72</amount>
+      <type>DEBIT</type>
+      <date>2009-11-16 05:00:00 AM</date>
+      <desc>SPROUTS FARMERS MKT #7 P259061</desc>
+      <extid>200911164</extid>
+      <memo>11/14SPROUTS F</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="2eb5abc9-a32c-36ae-85ef-a61236570fd6">
+      <amount>-28.26</amount>
+      <type>DEBIT</type>
+      <date>2009-11-16 05:00:00 AM</date>
+      <desc>SYLVIA'S LA CANASTA PHOE</desc>
+      <extid>200911165</extid>
+      <memo>11/13SYLVIA'S</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="581e92e4-43e0-3be8-bbf5-d877d9cd8ba7">
+      <amount>-19.48</amount>
+      <type>DEBIT</type>
+      <date>2009-11-16 05:00:00 AM</date>
+      <desc>COSTCO WHSE #0665 PHOENI285803</desc>
+      <extid>200911166</extid>
+      <memo>11/14COSTCO WH</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="fd969ba7-7c84-3b0b-b9da-10aad3ac6c3f">
+      <amount>-15.53</amount>
+      <type>DEBIT</type>
+      <date>2009-11-16 05:00:00 AM</date>
+      <desc>SPROUTS FARMERS MKT # 0 262740</desc>
+      <extid>200911167</extid>
+      <memo>11/16SPROUTS F</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="067364d3-0882-3469-a921-a27194873c31">
+      <amount>-14.97</amount>
+      <type>DEBIT</type>
+      <date>2009-11-16 05:00:00 AM</date>
+      <desc>EASYNEWS.COM 866-396-397</desc>
+      <extid>200911168</extid>
+      <memo>11/14EASYNEWS.</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="01b0efe9-016a-3b20-b686-93e671aa9ecd">
+      <amount>-10.84</amount>
+      <type>DEBIT</type>
+      <date>2009-11-16 05:00:00 AM</date>
+      <desc>FAST EDDIE'S DINER PHOEN</desc>
+      <extid>200911169</extid>
+      <memo>11/14FAST EDDI</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="4fb63a1c-3bca-3d85-8cf6-06e509966c1a">
+      <amount>-19.0</amount>
+      <type>DEBIT</type>
+      <date>2009-11-17 05:00:00 AM</date>
+      <desc>HARKINS CHRISTOWN 14 PHO</desc>
+      <extid>200911170</extid>
+      <memo>11/15HARKINS C</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="a6d39ce6-29ec-3ccc-9d46-3d581c3eadf1">
+      <amount>-7.9</amount>
+      <type>DEBIT</type>
+      <date>2009-11-17 05:00:00 AM</date>
+      <desc>BOSTON MARKET #525 PHOEN</desc>
+      <extid>200911171</extid>
+      <memo>11/16BOSTON MA</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="ca727587-15be-333e-ac40-000e88a02018">
+      <amount>-49.0</amount>
+      <type>DEBIT</type>
+      <date>2009-11-18 05:00:00 AM</date>
+      <desc>MASSAGE ENVY 0011 480-83</desc>
+      <extid>200911180</extid>
+      <memo>11/16MASSAGE E</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="0bf1b82d-da19-3c89-9e30-e2028e258f3a">
+      <amount>-39.09</amount>
+      <type>DEBIT</type>
+      <date>2009-11-18 05:00:00 AM</date>
+      <desc>BARCLAYCARD US CREDITCARD 7708</desc>
+      <extid>200911181</extid>
+      <memo>5597 WEB ID: 2510407970</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="852e0ba1-e8da-3a42-ae4f-0f37582db6b9">
+      <amount>-12.0</amount>
+      <type>DEBIT</type>
+      <date>2009-11-18 05:00:00 AM</date>
+      <desc>MASSAGE ENVY 0020 602-22</desc>
+      <extid>200911182</extid>
+      <memo>11/16MASSAGE E</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="71354605-3648-3ae1-a2d4-16ae63f89e50">
+      <amount>-11.0</amount>
+      <type>DEBIT</type>
+      <date>2009-11-18 05:00:00 AM</date>
+      <desc>ROSITA'S PLACE PHOENIX A</desc>
+      <extid>200911183</extid>
+      <memo>11/17ROSITA'S</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="e2d62f97-3889-3256-994b-20e297ded727">
+      <amount>-9.29</amount>
+      <type>DEBIT</type>
+      <date>2009-11-18 05:00:00 AM</date>
+      <desc>Safeway</desc>
+      <extid>200911184</extid>
+      <memo>11/18SAFEWAY</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="5be1f56c-8371-341f-b50b-a42e31907b37">
+      <amount>-3.24</amount>
+      <type>DEBIT</type>
+      <date>2009-11-18 05:00:00 AM</date>
+      <desc>FRYS FOOD &amp; DRUG 1815 G 340744</desc>
+      <extid>200911185</extid>
+      <memo>11/17FRYS FOOD</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="2b32bfff-1571-308f-adf0-3cda69faf745">
+      <amount>-90.52</amount>
+      <type>DEBIT</type>
+      <date>2009-11-19 05:00:00 AM</date>
+      <desc>PIHMA COLLEGE AND CL Pho753806</desc>
+      <extid>200911190</extid>
+      <memo>11/18PIHMA COL</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="b198bc25-6907-3129-a4b8-d7dc30186bc8">
+      <amount>-74.73</amount>
+      <type>DEBIT</type>
+      <date>2009-11-19 05:00:00 AM</date>
+      <desc>QWEST 8004238994 AUTO PAY</desc>
+      <extid>200911191</extid>
+      <memo>PPD ID: ATPPHX6005</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="066ef77d-7d2b-3eba-981f-511fe96dfc2c">
+      <amount>-14.95</amount>
+      <type>DEBIT</type>
+      <date>2009-11-19 05:00:00 AM</date>
+      <desc>COX*PHOENIX COMM SER 602</desc>
+      <extid>200911192</extid>
+      <memo>11/18COX*PHOEN</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="a9e854ca-7e5a-364b-9e08-f94531e861e4">
+      <amount>-20.0</amount>
+      <type>DEBIT</type>
+      <date>2009-11-20 05:00:00 AM</date>
+      <desc>WITHDRAWAL</desc>
+      <extid>200911200</extid>
+      <memo></memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="ee7f7f23-e94f-3cb2-a167-251dc9521f0b">
+      <amount>-10.0</amount>
+      <type>DEBIT</type>
+      <date>2009-11-20 05:00:00 AM</date>
+      <desc>WALGREENS #4722 PHOENIX</desc>
+      <extid>200911201</extid>
+      <memo>11/19WALGREENS</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="7f14d869-b0bf-35c3-964f-03a684021ace">
+      <amount>-9.95</amount>
+      <type>DEBIT</type>
+      <date>2009-11-23 05:00:00 AM</date>
+      <desc>Financial</desc>
+      <extid>200911230</extid>
+      <memo>Monthly Service Fee</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="23774c36-9fb5-398c-9932-c237c08112f5">
+      <amount>-534.0</amount>
+      <type>DEBIT</type>
+      <date>2009-11-23 05:00:00 AM</date>
+      <desc>CNS IKEA TEMPE 9328 789139</desc>
+      <extid>200911231</extid>
+      <memo>11/21CNS IKEA</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="199e6f2b-5de6-31c7-aa7e-7db5d4982e32">
+      <amount>-1.25</amount>
+      <type>DEBIT</type>
+      <date>2009-11-23 05:00:00 AM</date>
+      <desc>CARTEL COFFEE LAB TEMPE</desc>
+      <extid>2009112310</extid>
+      <memo>11/19CARTEL CO</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="47c4dc3b-fabe-3820-b091-be8206960df6">
+      <amount>-98.81</amount>
+      <type>DEBIT</type>
+      <date>2009-11-23 05:00:00 AM</date>
+      <desc>FRYS FOOD &amp; DRUG 1815 G</desc>
+      <extid>200911232</extid>
+      <memo>11/22FRYS FOOD Purcha</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="4cad2fcf-493b-3ab3-9a8b-5bbe84e2ed24">
+      <amount>-75.67</amount>
+      <type>DEBIT</type>
+      <date>2009-11-23 05:00:00 AM</date>
+      <desc>CNS IKEA TEMPE 8315 847889</desc>
+      <extid>200911233</extid>
+      <memo>11/22CNS IKEA</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="169fad41-2fb9-3653-9cca-e62131341955">
+      <amount>-55.0</amount>
+      <type>DEBIT</type>
+      <date>2009-11-23 05:00:00 AM</date>
+      <desc>CNS IKEA TEMPE 0302 790757</desc>
+      <extid>200911234</extid>
+      <memo>11/21CNS IKEA</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="d7d10aef-c3fc-378b-a0d8-3ab619943ea5">
+      <amount>-38.17</amount>
+      <type>DEBIT</type>
+      <date>2009-11-23 05:00:00 AM</date>
+      <desc>CHEVRON 00210124 PHOENIX</desc>
+      <extid>200911235</extid>
+      <memo>11/19CHEVRON 0</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="d8757064-c406-3204-bb77-8c36479b4525">
+      <amount>-20.0</amount>
+      <type>DEBIT</type>
+      <date>2009-11-23 05:00:00 AM</date>
+      <desc>QT 425 PHOENIX AZ 814196</desc>
+      <extid>200911236</extid>
+      <memo>11/22QT 425 PH</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="3ff7c7c4-d390-36b6-b440-e6084fe1b125">
+      <amount>-11.86</amount>
+      <type>DEBIT</type>
+      <date>2009-11-23 05:00:00 AM</date>
+      <desc>PIE ZANOS KITCHEN PHOENI</desc>
+      <extid>200911237</extid>
+      <memo>11/20PIE ZANOS</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="c5006a49-653e-3d98-b8dc-a59e79938cb8">
+      <amount>-10.81</amount>
+      <type>DEBIT</type>
+      <date>2009-11-23 05:00:00 AM</date>
+      <desc>VERIZON WRLS W3277-01 TU</desc>
+      <extid>200911238</extid>
+      <memo>11/19VERIZON W</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="4324035d-f41a-3ce0-83cf-57ce2a1e7bee">
+      <amount>-10.57</amount>
+      <type>DEBIT</type>
+      <date>2009-11-23 05:00:00 AM</date>
+      <desc>QDOBA 428 11404282 P</desc>
+      <extid>200911239</extid>
+      <memo>11/21QDOBA 428</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="34800beb-7735-33fe-976c-aeae113288d9">
+      <amount>-6.6</amount>
+      <type>DEBIT</type>
+      <date>2009-11-24 05:00:00 AM</date>
+      <desc>SUBWAY 10923 Q16 P</desc>
+      <extid>200911240</extid>
+      <memo>11/21SUBWAY 10</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="291b02f3-8b71-312c-91ec-620f1463b02b">
+      <amount>-61.1</amount>
+      <type>DEBIT</type>
+      <date>2009-11-25 05:00:00 AM</date>
+      <desc>SPROUTS FARMERS MKT # 0</desc>
+      <extid>200911250</extid>
+      <memo>11/24SPROUTS F Purcha</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="6508758c-de47-36d0-968e-abc8ffcd5143">
+      <amount>-35.0</amount>
+      <type>DEBIT</type>
+      <date>2009-11-25 05:00:00 AM</date>
+      <desc>JOSEPH SCOTT SALON LLC P131651</desc>
+      <extid>200911251</extid>
+      <memo>11/24JOSEPH SC</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="2483103f-1049-35ab-9f34-c5ab0f9be531">
+      <amount>-21.0</amount>
+      <type>DEBIT</type>
+      <date>2009-11-25 05:00:00 AM</date>
+      <desc>MOVIETICKETS COM 888-440</desc>
+      <extid>200911252</extid>
+      <memo>11/24MOVIETICK</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="816f5deb-b54f-39f6-9f11-db7d4ec9d2fe">
+      <amount>2157.42</amount>
+      <type>CREDIT</type>
+      <date>2009-11-27 05:00:00 AM</date>
+      <desc>DIFFUSION GROUP PAYROLL</desc>
+      <extid>200911270</extid>
+      <memo>PPD ID: 1860988050</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="532c61dc-0616-3232-bde4-affa3b2b2231">
+      <amount>-204.78</amount>
+      <type>DEBIT</type>
+      <date>2009-11-27 05:00:00 AM</date>
+      <desc>VZWRLSS-MYACCT VW 800-92</desc>
+      <extid>200911271</extid>
+      <memo>11/26VZWRLSS-M</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="9102df1f-ead7-3186-8f5d-0609dd35f2fd">
+      <amount>-20.58</amount>
+      <type>DEBIT</type>
+      <date>2009-11-27 05:00:00 AM</date>
+      <desc>PEI WEI #0023 Q02 P</desc>
+      <extid>200911272</extid>
+      <memo>11/24PEI WEI #</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="4906c4aa-1cc0-3fa0-95cb-6aa85964c337">
+      <amount>-13.8</amount>
+      <type>DEBIT</type>
+      <date>2009-11-27 05:00:00 AM</date>
+      <desc>WAL-MART #2113 CHRISTOWN489449</desc>
+      <extid>200911273</extid>
+      <memo>11/26WAL-MART</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="d58857d4-59e2-31cb-8d1a-b4bc39cd7cdb">
+      <amount>-10.99</amount>
+      <type>DEBIT</type>
+      <date>2009-11-27 05:00:00 AM</date>
+      <desc>WAL-MART #5330 PHOENIX (897496</desc>
+      <extid>200911274</extid>
+      <memo>11/26WAL-MART</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="094ba824-5d4d-36ae-84b7-84a0a6fcb2e5">
+      <amount>-10.0</amount>
+      <type>DEBIT</type>
+      <date>2009-11-27 05:00:00 AM</date>
+      <desc>CIRCLE K 01541 PHOENIX A634392</desc>
+      <extid>200911275</extid>
+      <memo>11/26CIRCLE K</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="dda455f8-ddfe-3ab4-a8d0-aa6888bb3769">
+      <amount>-5.5</amount>
+      <type>DEBIT</type>
+      <date>2009-11-27 05:00:00 AM</date>
+      <desc>WAL-MART #2113 CHRISTOWN885288</desc>
+      <extid>200911276</extid>
+      <memo>11/26WAL-MART</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="d84b82c1-e06f-3c63-968e-3034e834e895">
+      <amount>-4.7</amount>
+      <type>DEBIT</type>
+      <date>2009-11-27 05:00:00 AM</date>
+      <desc>WAL-MART #5330 PHOENIX (679065</desc>
+      <extid>200911277</extid>
+      <memo>11/26WAL-MART</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="ff87453e-e67b-3268-b0ab-b641ee7c9b2f">
+      <amount>-325.0</amount>
+      <type>DEBIT</type>
+      <date>2009-11-30 05:00:00 AM</date>
+      <desc>A SMOOTH MOVE PEORIA AZ</desc>
+      <extid>200911300</extid>
+      <memo>11/28A SMOOTH</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="84eef4d0-b9b5-33b7-8d5d-e03bf19463ba">
+      <amount>-175.0</amount>
+      <type>DEBIT</type>
+      <date>2009-11-30 05:00:00 AM</date>
+      <desc>IRS USATAXPYMT 2709</desc>
+      <extid>200911301</extid>
+      <memo>73400908051 WEB ID: 3387702000</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="d1c67dbd-d332-32bd-b4b8-45ff059f5264">
+      <amount>-21.1</amount>
+      <type>DEBIT</type>
+      <date>2009-11-30 05:00:00 AM</date>
+      <desc>WAL-MART #2113 CHRISTOWN472837</desc>
+      <extid>2009113010</extid>
+      <memo>11/29WAL-MART</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="db81fe6a-7434-3352-b799-187c0cfe073d">
+      <amount>-21.0</amount>
+      <type>DEBIT</type>
+      <date>2009-11-30 05:00:00 AM</date>
+      <desc>MOVIETICKETS COM 888-440</desc>
+      <extid>2009113011</extid>
+      <memo>11/27MOVIETICK</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="56bbc13b-29ed-3697-a184-cf98cd503bf4">
+      <amount>-18.4</amount>
+      <type>DEBIT</type>
+      <date>2009-11-30 05:00:00 AM</date>
+      <desc>PETSMART INC 1120 PHOENI156477</desc>
+      <extid>2009113012</extid>
+      <memo>11/28PETSMART</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="8f1baecc-99c4-3de8-8ec7-7e9673a9466a">
+      <amount>-17.98</amount>
+      <type>DEBIT</type>
+      <date>2009-11-30 05:00:00 AM</date>
+      <desc>Gluten Free Creations Ph</desc>
+      <extid>2009113013</extid>
+      <memo>11/27Gluten Fr</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="2e20ae50-bbea-34c3-ae83-afb41f68e6d6">
+      <amount>-15.75</amount>
+      <type>DEBIT</type>
+      <date>2009-11-30 05:00:00 AM</date>
+      <desc>HARKINS SHEA CINEMAQ9 SC</desc>
+      <extid>2009113014</extid>
+      <memo>11/26HARKINS S</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="cf3ce59a-7db4-3925-80a2-c76b3b09c9cc">
+      <amount>-8.95</amount>
+      <type>DEBIT</type>
+      <date>2009-11-30 05:00:00 AM</date>
+      <desc>NNT CARNECERIA EL M2602 321217</desc>
+      <extid>2009113015</extid>
+      <memo>11/28NNT CARNE</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="bbfd654d-b63c-3ad6-aabb-f0a0f495340c">
+      <amount>-5.4</amount>
+      <type>DEBIT</type>
+      <date>2009-11-30 05:00:00 AM</date>
+      <desc>TACO BELL #18300183459 P</desc>
+      <extid>2009113016</extid>
+      <memo>11/28TACO BELL</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="6894d8f3-cfa7-36d0-bdff-b0155bbc60ee">
+      <amount>-5.06</amount>
+      <type>DEBIT</type>
+      <date>2009-11-30 05:00:00 AM</date>
+      <desc>TACO BELL 00080 Q67 P</desc>
+      <extid>2009113017</extid>
+      <memo>11/27TACO BELL</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="ee238443-01ad-33e1-8279-9f2cfbe007ea">
+      <amount>-96.28</amount>
+      <type>DEBIT</type>
+      <date>2009-11-30 05:00:00 AM</date>
+      <desc>PETSMART INC 1120 PHOENI</desc>
+      <extid>200911302</extid>
+      <memo>11/27PETSMART Purcha</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="3bcf5059-4107-3e30-b7f0-f3bd2530cae7">
+      <amount>-52.7</amount>
+      <type>DEBIT</type>
+      <date>2009-11-30 05:00:00 AM</date>
+      <desc>THE HOME DEPOT #0485 PHO</desc>
+      <extid>200911303</extid>
+      <memo>11/28THE HOME</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="25f81449-c7a5-3458-950f-8c2fcb771001">
+      <amount>-48.68</amount>
+      <type>DEBIT</type>
+      <date>2009-11-30 05:00:00 AM</date>
+      <desc>SPROUTS FARMERS MKT #7 P085284</desc>
+      <extid>200911304</extid>
+      <memo>11/27SPROUTS F</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="1a73879f-813f-3985-8e64-6acf3e00beb9">
+      <amount>-47.63</amount>
+      <type>DEBIT</type>
+      <date>2009-11-30 05:00:00 AM</date>
+      <desc>BEDBATH&amp;BEYOND# BEDBATH 514785</desc>
+      <extid>200911305</extid>
+      <memo>11/29BEDBATH&amp;B</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="de4f82bf-e136-3798-a147-565e963da308">
+      <amount>-35.65</amount>
+      <type>DEBIT</type>
+      <date>2009-11-30 05:00:00 AM</date>
+      <desc>SHELL OIL 57442276200 GL</desc>
+      <extid>200911306</extid>
+      <memo>11/28SHELL OIL</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="f715ddeb-3ad0-33f3-a9f4-06a70a2cbe5b">
+      <amount>-29.53</amount>
+      <type>DEBIT</type>
+      <date>2009-11-30 05:00:00 AM</date>
+      <desc>IHOP #1507 PHOENIX AZ</desc>
+      <extid>200911307</extid>
+      <memo>11/28IHOP #150</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="93cea44f-c76c-32aa-a96f-8fe25ebc8066">
+      <amount>-24.25</amount>
+      <type>DEBIT</type>
+      <date>2009-11-30 05:00:00 AM</date>
+      <desc>ROSITA'S PLACE PHOENIX A</desc>
+      <extid>200911308</extid>
+      <memo>11/29ROSITA'S</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="bc74e83b-a03a-3191-81ff-868f254ba9df">
+      <amount>-23.79</amount>
+      <type>DEBIT</type>
+      <date>2009-11-30 05:00:00 AM</date>
+      <desc>FRYS FOOD &amp; DRUG 1815 G 425763</desc>
+      <extid>200911309</extid>
+      <memo>11/28FRYS FOOD</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="4d00ce79-5bb3-3500-b6dc-c3183ee43270">
+      <amount>-10.8</amount>
+      <type>DEBIT</type>
+      <date>2009-12-01 05:00:00 AM</date>
+      <desc>CVS 09205 09205--802 SO 219781</desc>
+      <extid>200912010</extid>
+      <memo>11/30CVS 09205</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="8964dfc0-572d-3b37-8251-3e75e0d3d2c6">
+      <amount>-6.43</amount>
+      <type>DEBIT</type>
+      <date>2009-12-01 05:00:00 AM</date>
+      <desc>CHIPOTLE 1208 TEMPE AZ</desc>
+      <extid>200912011</extid>
+      <memo>11/30CHIPOTLE</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="9f9f97ec-6afc-3fc0-813e-3297bb7af065">
+      <amount>-1.0</amount>
+      <type>DEBIT</type>
+      <date>2009-12-01 05:00:00 AM</date>
+      <desc>USPS CHANGE OF661009 800</desc>
+      <extid>200912012</extid>
+      <memo>11/30USPS CHAN</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="7d23234b-f8bd-30bf-91cf-f8d1a15dadf3">
+      <amount>-790.91</amount>
+      <type>DEBIT</type>
+      <date>2009-12-02 05:00:00 AM</date>
+      <desc>LOANSERVICING AUTOMATIC</desc>
+      <extid>200912020</extid>
+      <memo>PPD ID: 1231694840</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="6e341836-cf39-3393-8adc-f06ddfdd6f4f">
+      <amount>-118.71</amount>
+      <type>DEBIT</type>
+      <date>2009-12-02 05:00:00 AM</date>
+      <desc>STATE FARM RO 27 SFPP</desc>
+      <extid>200912021</extid>
+      <memo>PPD ID: 9000307001</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="3d0e438c-f0c3-3110-8f0b-7c1711f588be">
+      <amount>-12.0</amount>
+      <type>DEBIT</type>
+      <date>2009-12-02 05:00:00 AM</date>
+      <desc>ROSITA'S PLACE PHOENIX A</desc>
+      <extid>200912022</extid>
+      <memo>12/01ROSITA'S</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="e2072d06-ac3f-3a51-b751-9f52a259ccd2">
+      <amount>-4.0</amount>
+      <type>DEBIT</type>
+      <date>2009-12-02 05:00:00 AM</date>
+      <desc>AZ MOTOR VEHICLE DIV 866</desc>
+      <extid>200912023</extid>
+      <memo>11/30AZ MOTOR</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="d0a550ad-5c6a-316a-8291-4a1d02e73ff6">
+      <amount>-80.0</amount>
+      <type>CHECK</type>
+      <date>2009-12-03 05:00:00 AM</date>
+      <desc>CHECK 254</desc>
+      <extid>200912030</extid>
+      <memo></memo>
+      <check>254</check>
+      <ref></ref>
+    </transaction>
+    <transaction id="85562e0a-d505-3ced-82c7-0ab613ca9b3f">
+      <amount>-60.0</amount>
+      <type>DEBIT</type>
+      <date>2009-12-03 05:00:00 AM</date>
+      <desc>ATM WITHDRAWAL 008882</desc>
+      <extid>200912031</extid>
+      <memo>12/027801 N 19</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="76822704-b513-35c5-8042-b7714f79ef40">
+      <amount>-21.61</amount>
+      <type>DEBIT</type>
+      <date>2009-12-03 05:00:00 AM</date>
+      <desc>CVS 09205 09205--802 SO 446866</desc>
+      <extid>200912032</extid>
+      <memo>12/02CVS 09205</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="bd49e286-4b40-36f7-9882-5f5f2fc797d6">
+      <amount>-17.27</amount>
+      <type>DEBIT</type>
+      <date>2009-12-03 05:00:00 AM</date>
+      <desc>WALGREEN COMPANY 2000 S 401706</desc>
+      <extid>200912033</extid>
+      <memo>12/02WALGREEN</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="12601a76-80a3-3288-b857-cc1717b4550f">
+      <amount>-7.3</amount>
+      <type>DEBIT</type>
+      <date>2009-12-03 05:00:00 AM</date>
+      <desc>CHIPOTLE 1208 TEMPE AZ</desc>
+      <extid>200912034</extid>
+      <memo>12/02CHIPOTLE</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="3d3534b3-605b-3ded-92c4-6b31bdb99790">
+      <amount>-2.5</amount>
+      <type>DEBIT</type>
+      <date>2009-12-03 05:00:00 AM</date>
+      <desc>NEOBUDGET.COM HOLLY SPRI</desc>
+      <extid>200912035</extid>
+      <memo>12/02NEOBUDGET</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="0db4b5bc-29cf-3318-a3c2-2c908bf6b8b6">
+      <amount>-1.0</amount>
+      <type>DEBIT</type>
+      <date>2009-12-03 05:00:00 AM</date>
+      <desc>FRYS FOOD &amp; DRUG 1815 G 921107</desc>
+      <extid>200912036</extid>
+      <memo>12/02FRYS FOOD</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="f26fc91d-cb6c-3618-9a42-d555f288ad43">
+      <amount>10.81</amount>
+      <type>CREDIT</type>
+      <date>2009-12-04 05:00:00 AM</date>
+      <desc>VERIZON WRLS 40000-50 FO</desc>
+      <extid>200912040</extid>
+      <memo>12/02VERIZON W</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="58c73e7f-cb5b-3fc0-8201-fdf9f9f42649">
+      <amount>-72.67</amount>
+      <type>DEBIT</type>
+      <date>2009-12-04 05:00:00 AM</date>
+      <desc>FRYS FOOD &amp; DRUG 1815 G 105290</desc>
+      <extid>200912041</extid>
+      <memo>12/03FRYS FOOD</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="d9acb108-b311-3f63-9d6f-8da1243b1e64">
+      <amount>1200.0</amount>
+      <type>CREDIT</type>
+      <date>2009-12-07 05:00:00 AM</date>
+      <desc>ATM CASH DEPOSIT</desc>
+      <extid>200912070</extid>
+      <memo></memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="eb983def-6617-3a5c-b648-b3fa571d01bb">
+      <amount>52.7</amount>
+      <type>CREDIT</type>
+      <date>2009-12-07 05:00:00 AM</date>
+      <desc>THE HOME DEPOT #0485 PHO</desc>
+      <extid>200912071</extid>
+      <memo>12/03THE HOME</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="7fc0f1e5-a3ac-3f64-8a47-2aa68806a16d">
+      <amount>-38.55</amount>
+      <type>DEBIT</type>
+      <date>2009-12-07 05:00:00 AM</date>
+      <desc>CHEVRON 00098544 PHOENIX</desc>
+      <extid>200912072</extid>
+      <memo>12/05CHEVRON 0</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="27645052-332f-3b89-95a6-def459a3d6ef">
+      <amount>-29.99</amount>
+      <type>DEBIT</type>
+      <date>2009-12-07 05:00:00 AM</date>
+      <desc>24HR FITNESS DUES 800-43</desc>
+      <extid>200912073</extid>
+      <memo>12/0524HR FITN</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="4edf7f73-7488-3e58-b6c0-10c475dccd9c">
+      <amount>-28.1</amount>
+      <type>DEBIT</type>
+      <date>2009-12-07 05:00:00 AM</date>
+      <desc>WAL-MART #2113 CHRISTOWN483957</desc>
+      <extid>200912074</extid>
+      <memo>12/05WAL-MART</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="83ba626d-ab2e-37d6-b994-9267875a6b9d">
+      <amount>-23.69</amount>
+      <type>DEBIT</type>
+      <date>2009-12-07 05:00:00 AM</date>
+      <desc>SPROUTS FARMERS MKT #7 P468284</desc>
+      <extid>200912075</extid>
+      <memo>12/05SPROUTS F</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="c42b278f-2ff0-3d9f-bc47-0351a0e38b4b">
+      <amount>-29.37</amount>
+      <type>DEBIT</type>
+      <date>2009-12-08 05:00:00 AM</date>
+      <desc>THE ORIGINAL WINEBURGER</desc>
+      <extid>200912080</extid>
+      <memo>12/05THE ORIGI</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="28df625d-4ce1-3221-a429-0326436f48f9">
+      <amount>-26.62</amount>
+      <type>DEBIT</type>
+      <date>2009-12-08 05:00:00 AM</date>
+      <desc>ATOMIC COMICS METRO C P</desc>
+      <extid>200912081</extid>
+      <memo>12/06ATOMIC CO</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="12bcb5c9-b95b-37f9-b584-1582ad15282a">
+      <amount>-3.25</amount>
+      <type>DEBIT</type>
+      <date>2009-12-09 05:00:00 AM</date>
+      <desc>24 HOUR FITNESS #869 CAR</desc>
+      <extid>200912090</extid>
+      <memo>12/0724 HOUR F</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="a11d2152-f691-3bd6-8f67-f35d3e32a02f">
+      <amount>-1.75</amount>
+      <type>DEBIT</type>
+      <date>2009-12-09 05:00:00 AM</date>
+      <desc>24 HOUR FITNESS #869 CAR</desc>
+      <extid>200912091</extid>
+      <memo>12/0724 HOUR F</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="50f00725-0b34-3381-8a65-10c0d1ff19c7">
+      <amount>-35.0</amount>
+      <type>DEBIT</type>
+      <date>2009-12-10 05:00:00 AM</date>
+      <desc>JOSEPH SCOTT SALON LLC P393003</desc>
+      <extid>200912100</extid>
+      <memo>12/09JOSEPH SC</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="60643640-5593-3037-a20a-07f9904f8571">
+      <amount>-10.66</amount>
+      <type>DEBIT</type>
+      <date>2009-12-10 05:00:00 AM</date>
+      <desc>ARROWHEAD WATER 800-950-</desc>
+      <extid>200912101</extid>
+      <memo>12/09ARROWHEAD</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="ea3303b5-344e-36e5-82b1-c8550f5914e8">
+      <amount>2157.42</amount>
+      <type>CREDIT</type>
+      <date>2009-12-11 05:00:00 AM</date>
+      <desc>DIFFUSION GROUP PAYROLL</desc>
+      <extid>200912110</extid>
+      <memo>PPD ID: 1860988050</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="1d2d5a3a-0f04-32c3-9713-ccee2797feea">
+      <amount>-309.33</amount>
+      <type>DEBIT</type>
+      <date>2009-12-11 05:00:00 AM</date>
+      <desc>VW CREDIT, INC. AUTO DEBIT WE</desc>
+      <extid>200912111</extid>
+      <memo>B 852539481 WEB ID: 1382362409</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="8825adee-6121-3780-9a07-0fa73ce5feb7">
+      <amount>-15.79</amount>
+      <type>DEBIT</type>
+      <date>2009-12-11 05:00:00 AM</date>
+      <desc>BOSTON MARKET #272 PHOEN</desc>
+      <extid>2009121110</extid>
+      <memo>12/10BOSTON MA</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="81f06244-44d5-3e21-8415-c0fe05f87e43">
+      <amount>-3.25</amount>
+      <type>DEBIT</type>
+      <date>2009-12-11 05:00:00 AM</date>
+      <desc>24 HOUR FITNESS #869 CAR</desc>
+      <extid>2009121111</extid>
+      <memo>12/0924 HOUR F</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="86ae20da-2cd5-3a93-a6e8-d6a62ce14bf8">
+      <amount>-3.24</amount>
+      <type>DEBIT</type>
+      <date>2009-12-11 05:00:00 AM</date>
+      <desc>BOSTON MARKET #272 PHOEN</desc>
+      <extid>2009121112</extid>
+      <memo>12/10BOSTON MA</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="3c8b8944-6740-3985-be75-dd96d8074002">
+      <amount>-100.0</amount>
+      <type>DEBIT</type>
+      <date>2009-12-11 05:00:00 AM</date>
+      <desc>WITHDRAWAL</desc>
+      <extid>200912112</extid>
+      <memo></memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="e540377b-6dbe-3179-a4ee-6249b4b656ae">
+      <amount>-60.0</amount>
+      <type>CHECK</type>
+      <date>2009-12-11 05:00:00 AM</date>
+      <desc>CHECK 256</desc>
+      <extid>200912113</extid>
+      <memo></memo>
+      <check>256</check>
+      <ref></ref>
+    </transaction>
+    <transaction id="318d6481-c38d-3bb6-bdac-a4773cf56d6e">
+      <amount>-54.14</amount>
+      <type>DEBIT</type>
+      <date>2009-12-11 05:00:00 AM</date>
+      <desc>FRYS FOOD &amp; DRUG 1815 G 664875</desc>
+      <extid>200912114</extid>
+      <memo>12/10FRYS FOOD</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="bd390dbc-b241-348e-a865-cbfd9c39c9a5">
+      <amount>-49.0</amount>
+      <type>DEBIT</type>
+      <date>2009-12-11 05:00:00 AM</date>
+      <desc>MASSAGE ENVY 0020 602-22</desc>
+      <extid>200912115</extid>
+      <memo>12/09MASSAGE E</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="74d06a8c-d5b5-346f-a748-e73a95d2eef6">
+      <amount>-39.7</amount>
+      <type>DEBIT</type>
+      <date>2009-12-11 05:00:00 AM</date>
+      <desc>LOWE'S #1204 PHOENIX AZ 945841</desc>
+      <extid>200912116</extid>
+      <memo>12/10LOWE'S #1</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="3f780033-9b38-3d96-876d-9d98a3b91bdc">
+      <amount>-34.62</amount>
+      <type>DEBIT</type>
+      <date>2009-12-11 05:00:00 AM</date>
+      <desc>BEDBATH&amp;BEYOND# BEDBATH 416746</desc>
+      <extid>200912117</extid>
+      <memo>12/10BEDBATH&amp;B</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="987d62b3-04ca-3844-9087-a4e1066e2466">
+      <amount>-21.02</amount>
+      <type>DEBIT</type>
+      <date>2009-12-11 05:00:00 AM</date>
+      <desc>NORDSTROM 381 3199 W CH 025376</desc>
+      <extid>200912118</extid>
+      <memo>12/10NORDSTROM</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="7b49e92c-b4c0-37da-9a1f-a714b394032b">
+      <amount>-19.15</amount>
+      <type>DEBIT</type>
+      <date>2009-12-11 05:00:00 AM</date>
+      <desc>SOU THE HOME DEPOT 8618 139350</desc>
+      <extid>200912119</extid>
+      <memo>12/10SOU THE H</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="b45a4bc5-c1a2-3542-ae27-64714cf1dec6">
+      <amount>20.2</amount>
+      <type>CREDIT</type>
+      <date>2009-12-14 05:00:00 AM</date>
+      <desc>PNCBANK_XTRANSFR TRANSFER</desc>
+      <extid>200912140</extid>
+      <memo>PPD ID: 1770527921</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="198f06b1-cc9e-3228-8be3-6a887f8bdd27">
+      <amount>-747.31</amount>
+      <type>DEBIT</type>
+      <date>2009-12-14 05:00:00 AM</date>
+      <desc>FLOOR SOURCE LLC PHOENIX</desc>
+      <extid>200912141</extid>
+      <memo>12/11FLOOR SOU</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="2bc8c43c-4574-32f5-aca3-2056f737c45b">
+      <amount>-51.93</amount>
+      <type>DEBIT</type>
+      <date>2009-12-14 05:00:00 AM</date>
+      <desc>BORDERS BKS&amp;MU01000546 P</desc>
+      <extid>2009121410</extid>
+      <memo>12/12BORDERS B</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="7b9e8c2c-a75e-3520-9268-e77451ae8d6c">
+      <amount>-37.84</amount>
+      <type>DEBIT</type>
+      <date>2009-12-14 05:00:00 AM</date>
+      <desc>SHELL OIL 57441534302 PH</desc>
+      <extid>2009121411</extid>
+      <memo>12/10SHELL OIL</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="337b1576-7ac4-363a-bb6d-497d964bfd88">
+      <amount>-31.9</amount>
+      <type>DEBIT</type>
+      <date>2009-12-14 05:00:00 AM</date>
+      <desc>SRR*SIRIUS RADIO 888-539</desc>
+      <extid>2009121412</extid>
+      <memo>12/11SRR*SIRIU</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="fa6e399e-ead2-31ec-80a6-8b741c2cd44a">
+      <amount>-28.03</amount>
+      <type>DEBIT</type>
+      <date>2009-12-14 05:00:00 AM</date>
+      <desc>GAME NIGHTZ PHOENIX AZ 481510</desc>
+      <extid>2009121413</extid>
+      <memo>12/12GAME NIGH</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="15196f27-767a-3982-bbfd-7308bc571946">
+      <amount>-25.79</amount>
+      <type>DEBIT</type>
+      <date>2009-12-14 05:00:00 AM</date>
+      <desc>WALGREENS #4722 PHOENIX</desc>
+      <extid>2009121414</extid>
+      <memo>12/11WALGREENS</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="2d5e0cb2-a777-3214-b569-d0b0328b2545">
+      <amount>-24.85</amount>
+      <type>DEBIT</type>
+      <date>2009-12-14 05:00:00 AM</date>
+      <desc>THE TURF IRISH PUB AND P</desc>
+      <extid>2009121415</extid>
+      <memo>12/12THE TURF</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="e20d6e04-2c36-3326-aef7-73186c52a279">
+      <amount>-21.61</amount>
+      <type>DEBIT</type>
+      <date>2009-12-14 05:00:00 AM</date>
+      <desc>TRAILS #27 PHOENIX AZ</desc>
+      <extid>2009121416</extid>
+      <memo>12/11TRAILS #2</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="d36a29bf-34e1-39df-85ab-3c8f9b23320a">
+      <amount>-20.43</amount>
+      <type>DEBIT</type>
+      <date>2009-12-14 05:00:00 AM</date>
+      <desc>FAST EDDIE'S DINER PHOEN</desc>
+      <extid>2009121417</extid>
+      <memo>12/13FAST EDDI</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="8b16da99-97fe-3c7a-9d14-a9a28b7ef525">
+      <amount>-16.76</amount>
+      <type>DEBIT</type>
+      <date>2009-12-14 05:00:00 AM</date>
+      <desc>FRYS FOOD &amp; DRUG 1815 G 464587</desc>
+      <extid>2009121418</extid>
+      <memo>12/12FRYS FOOD</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="7962cba4-4c5e-347a-a632-9da3c3cb12f2">
+      <amount>-16.71</amount>
+      <type>DEBIT</type>
+      <date>2009-12-14 05:00:00 AM</date>
+      <desc>GOLDEN RICE EXPRESS PHOE</desc>
+      <extid>2009121419</extid>
+      <memo>12/13GOLDEN RI</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="4ace7fec-28fc-3763-88c2-eb1f39992881">
+      <amount>-747.3</amount>
+      <type>DEBIT</type>
+      <date>2009-12-14 05:00:00 AM</date>
+      <desc>FLOOR SOURCE LLC PHOENIX</desc>
+      <extid>200912142</extid>
+      <memo>12/10FLOOR SOU</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="c78bd6c5-e646-3621-bfc3-ac0d28e7c004">
+      <amount>-16.29</amount>
+      <type>DEBIT</type>
+      <date>2009-12-14 05:00:00 AM</date>
+      <desc>CVS 09347 09347--1525 N 408146</desc>
+      <extid>2009121420</extid>
+      <memo>12/11CVS 09347</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="44cb3ff7-8bbd-384d-9d70-7c8be76d42bd">
+      <amount>-13.19</amount>
+      <type>DEBIT</type>
+      <date>2009-12-14 05:00:00 AM</date>
+      <desc>CVS 09347 09347--1525 N 203772</desc>
+      <extid>2009121421</extid>
+      <memo>12/11CVS 09347</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="2b73210d-9875-3139-9dfe-5b8c96e15dc8">
+      <amount>-13.0</amount>
+      <type>DEBIT</type>
+      <date>2009-12-14 05:00:00 AM</date>
+      <desc>MACY'S 462 9700 ME 753652</desc>
+      <extid>2009121422</extid>
+      <memo>12/12MACY'S</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="0b88f1d2-acff-3350-ae98-7aacb47a5975">
+      <amount>-12.97</amount>
+      <type>DEBIT</type>
+      <date>2009-12-14 05:00:00 AM</date>
+      <desc>SPROUTS FARMERS MKT #7 P099102</desc>
+      <extid>2009121423</extid>
+      <memo>12/12SPROUTS F</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="70578069-c8b8-3abc-aac3-82579d3563c4">
+      <amount>-10.79</amount>
+      <type>DEBIT</type>
+      <date>2009-12-14 05:00:00 AM</date>
+      <desc>ATOMIC COMICS METRO C P</desc>
+      <extid>2009121424</extid>
+      <memo>12/12ATOMIC CO</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="76aaffee-8d19-3ee9-bc06-349b41dc0ca0">
+      <amount>-7.19</amount>
+      <type>DEBIT</type>
+      <date>2009-12-14 05:00:00 AM</date>
+      <desc>QDOBA 428 11404282 P</desc>
+      <extid>2009121425</extid>
+      <memo>12/12QDOBA 428</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="bc3fbe69-3bf5-34fa-979a-d7299b9e0de7">
+      <amount>-4.31</amount>
+      <type>DEBIT</type>
+      <date>2009-12-14 05:00:00 AM</date>
+      <desc>GAME NIGHTZ PHOENIX AZ 483280</desc>
+      <extid>2009121426</extid>
+      <memo>12/12GAME NIGH</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="c9e9881f-3bad-31d8-b72a-6fdf0e86b31e">
+      <amount>-3.58</amount>
+      <type>DEBIT</type>
+      <date>2009-12-14 05:00:00 AM</date>
+      <desc>SPROUTS FARMERS MKT #7 P287259</desc>
+      <extid>2009121427</extid>
+      <memo>12/11SPROUTS F</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="954ae025-1a72-33c5-80da-642328d09172">
+      <amount>-2.88</amount>
+      <type>DEBIT</type>
+      <date>2009-12-14 05:00:00 AM</date>
+      <desc>TACO BELL #18300183459 P</desc>
+      <extid>2009121428</extid>
+      <memo>12/11TACO BELL</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="fcbfe6b8-5527-35f2-a7fa-e35db26c4e0b">
+      <amount>-300.0</amount>
+      <type>DEBIT</type>
+      <date>2009-12-14 05:00:00 AM</date>
+      <desc>ATM WITHDRAWAL 000307</desc>
+      <extid>200912143</extid>
+      <memo>12/12742 E GLE</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="b97e5282-3226-3b2b-ab09-846f3ccdd61c">
+      <amount>-268.53</amount>
+      <type>DEBIT</type>
+      <date>2009-12-14 05:00:00 AM</date>
+      <desc>APPLE STORE #R031 PHOENI</desc>
+      <extid>200912144</extid>
+      <memo>12/12APPLE STO</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="c5484d8c-bba9-358d-9b0b-5476c7bd55c7">
+      <amount>-116.99</amount>
+      <type>DEBIT</type>
+      <date>2009-12-14 05:00:00 AM</date>
+      <desc>HAYNEEDLE INC HTTP://WWW</desc>
+      <extid>200912145</extid>
+      <memo>12/13HAYNEEDLE</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="a577145c-41f8-3be5-9779-6eaa459966c6">
+      <amount>-80.16</amount>
+      <type>DEBIT</type>
+      <date>2009-12-14 05:00:00 AM</date>
+      <desc>FRYS FOOD &amp; DRUG 1815 G 824946</desc>
+      <extid>200912146</extid>
+      <memo>12/12FRYS FOOD</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="802e51c5-4f78-3aef-9c7d-4e44d7e75d63">
+      <amount>-68.11</amount>
+      <type>DEBIT</type>
+      <date>2009-12-14 05:00:00 AM</date>
+      <desc>SPINATOS PIZZA #3 PHOENI</desc>
+      <extid>200912147</extid>
+      <memo>12/12SPINATOS</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="490f56f4-9f03-39d3-9f5b-1f9c457ba6eb">
+      <amount>-64.93</amount>
+      <type>DEBIT</type>
+      <date>2009-12-14 05:00:00 AM</date>
+      <desc>TLF*PHOENIX FLOWER SHO P</desc>
+      <extid>200912148</extid>
+      <memo>12/12TLF*PHOEN</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="bc739ada-c65d-3bef-b87f-e95f1b752490">
+      <amount>-61.65</amount>
+      <type>DEBIT</type>
+      <date>2009-12-14 05:00:00 AM</date>
+      <desc>NORDSTROM #381 CHANDLER</desc>
+      <extid>200912149</extid>
+      <memo>12/10NORDSTROM</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="68aeb5fc-a8f7-34ee-b57c-0870ff8516ae">
+      <amount>-310.5</amount>
+      <type>DEBIT</type>
+      <date>2009-12-15 05:00:00 AM</date>
+      <desc>Rossmar &amp; Graham TENANT</desc>
+      <extid>200912150</extid>
+      <memo>WEB ID: W050568743</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="77d9ced1-ad80-3c4a-9b0f-d2e306e2dcb7">
+      <amount>-80.0</amount>
+      <type>CHECK</type>
+      <date>2009-12-15 05:00:00 AM</date>
+      <desc>CHECK 258</desc>
+      <extid>200912151</extid>
+      <memo></memo>
+      <check>258</check>
+      <ref></ref>
+    </transaction>
+    <transaction id="105e4d6e-b4f3-3c95-a2e0-6503f895f54d">
+      <amount>-75.76</amount>
+      <type>DEBIT</type>
+      <date>2009-12-15 05:00:00 AM</date>
+      <desc>FRY'S ELECTRONICS #0 020030</desc>
+      <extid>200912152</extid>
+      <memo>12/15FRY'S ELE</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="33ed5eab-6dbf-3c52-9b3f-570d7d5582a7">
+      <amount>-32.59</amount>
+      <type>DEBIT</type>
+      <date>2009-12-15 05:00:00 AM</date>
+      <desc>LOWE'S #1204 PHOENIX AZ 501276</desc>
+      <extid>200912153</extid>
+      <memo>12/14LOWE'S #1</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="c5523d6d-1266-30de-9251-d220939d0528">
+      <amount>-8.97</amount>
+      <type>DEBIT</type>
+      <date>2009-12-15 05:00:00 AM</date>
+      <desc>CHIPOTLE 1208 TEMPE AZ</desc>
+      <extid>200912154</extid>
+      <memo>12/14CHIPOTLE</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="2e4e31f7-a851-3448-af2b-4d0e4e452145">
+      <amount>-4.0</amount>
+      <type>DEBIT</type>
+      <date>2009-12-15 05:00:00 AM</date>
+      <desc>ARCO PAYPOINT 3093 131741</desc>
+      <extid>200912155</extid>
+      <memo>12/14ARCO PAYP</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="eb31a108-a03e-3135-b484-c5df356794f4">
+      <amount>-175.0</amount>
+      <type>DEBIT</type>
+      <date>2009-12-16 05:00:00 AM</date>
+      <desc>IRS USATAXPYMT 2709</desc>
+      <extid>200912160</extid>
+      <memo>75000625990 WEB ID: 3387702000</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="87a9930a-1a8d-35f0-8727-5c64fb4350d0">
+      <amount>-59.0</amount>
+      <type>CHECK</type>
+      <date>2009-12-16 05:00:00 AM</date>
+      <desc>CHECK 253</desc>
+      <extid>200912161</extid>
+      <memo></memo>
+      <check>253</check>
+      <ref></ref>
+    </transaction>
+    <transaction id="9c7737bc-b7b5-3b4f-82f2-ab40ae61603f">
+      <amount>-35.79</amount>
+      <type>DEBIT</type>
+      <date>2009-12-16 05:00:00 AM</date>
+      <desc>TAYLOR'S ON GLENDALE PHO063871</desc>
+      <extid>200912162</extid>
+      <memo>12/15TAYLOR'S</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="1ec9e5c2-7cbc-312d-9938-a0556f98b944">
+      <amount>160.28</amount>
+      <type>CREDIT</type>
+      <date>2009-12-17 05:00:00 AM</date>
+      <desc>APPLE STORE #R031 PHOENI</desc>
+      <extid>200912170</extid>
+      <memo>12/15APPLE STO</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="0fa32695-b5c6-3723-bdef-45701e7b7dca">
+      <amount>-240.47</amount>
+      <type>DEBIT</type>
+      <date>2009-12-17 05:00:00 AM</date>
+      <desc>EBAYS HALF.COM 800-545-9</desc>
+      <extid>200912171</extid>
+      <memo>12/16EBAYS HAL</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="046957ea-3e7f-3278-96e5-a38c97c6716f">
+      <amount>-100.0</amount>
+      <type>DEBIT</type>
+      <date>2009-12-17 05:00:00 AM</date>
+      <desc>HSBC CARD SRVCS Online Pmt 0000</desc>
+      <extid>200912172</extid>
+      <memo>00516073196 WEB ID: 2000000510</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="44744409-374c-3360-91f8-fa70c6dd3837">
+      <amount>-75.0</amount>
+      <type>DEBIT</type>
+      <date>2009-12-18 05:00:00 AM</date>
+      <desc>ATOMIC PEST CONTROL 480-</desc>
+      <extid>200912180</extid>
+      <memo>12/16ATOMIC PE</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="e22dff7c-8a36-36fd-95e5-a2da7dfe6833">
+      <amount>-49.0</amount>
+      <type>DEBIT</type>
+      <date>2009-12-18 05:00:00 AM</date>
+      <desc>MASSAGE ENVY 0011 480-83</desc>
+      <extid>200912181</extid>
+      <memo>12/16MASSAGE E</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="41944460-153d-3c8b-af88-87ae1b0ac335">
+      <amount>-36.49</amount>
+      <type>DEBIT</type>
+      <date>2009-12-18 05:00:00 AM</date>
+      <desc>EBAYS HALF.COM 800-545-9</desc>
+      <extid>200912182</extid>
+      <memo>12/17EBAYS HAL</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="bbd4edf9-f2b4-3c78-9226-71a07dcd68de">
+      <amount>-25.0</amount>
+      <type>DEBIT</type>
+      <date>2009-12-18 05:00:00 AM</date>
+      <desc>LDW GROUP 8006017097 MA</desc>
+      <extid>200912183</extid>
+      <memo>12/16LDW GROUP</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="800909f7-3432-312e-9f9b-d7c81d678af4">
+      <amount>-15.16</amount>
+      <type>DEBIT</type>
+      <date>2009-12-18 05:00:00 AM</date>
+      <desc>BUFFALO EXCHANGE AZ04 PH322690</desc>
+      <extid>200912184</extid>
+      <memo>12/17BUFFALO E</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="9598d449-af68-3c03-a832-8db3ace662a0">
+      <amount>150.0</amount>
+      <type>CREDIT</type>
+      <date>2009-12-21 05:00:00 AM</date>
+      <desc>ATM CHECK DEPOSIT</desc>
+      <extid>200912210</extid>
+      <memo></memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="c7b61a73-f26f-3e8f-82d1-3ede3589cbdc">
+      <amount>-74.99</amount>
+      <type>DEBIT</type>
+      <date>2009-12-21 05:00:00 AM</date>
+      <desc>QWEST 8004238994 AUTO PAY</desc>
+      <extid>200912211</extid>
+      <memo>PPD ID: ATPPHX6005</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="219f31d0-135f-31a0-a217-3857f50b3bb0">
+      <amount>-34.61</amount>
+      <type>DEBIT</type>
+      <date>2009-12-21 05:00:00 AM</date>
+      <desc>WALGREEN COMPANY 4111 N 737035</desc>
+      <extid>200912212</extid>
+      <memo>12/20WALGREEN</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="e26c4878-4734-3c2c-ba59-bc0405727b4e">
+      <amount>-16.79</amount>
+      <type>DEBIT</type>
+      <date>2009-12-21 05:00:00 AM</date>
+      <desc>PEI WEI #0023 Q02 P</desc>
+      <extid>200912213</extid>
+      <memo>12/19PEI WEI #</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="0b18b5b1-1338-3a56-a3fb-25feefaf558c">
+      <amount>-10.04</amount>
+      <type>DEBIT</type>
+      <date>2009-12-21 05:00:00 AM</date>
+      <desc>QDOBA 428 11404282 P</desc>
+      <extid>200912214</extid>
+      <memo>12/19QDOBA 428</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="9d7f795a-0121-3dbb-bfa8-afdc39b2493e">
+      <amount>-3.47</amount>
+      <type>DEBIT</type>
+      <date>2009-12-21 05:00:00 AM</date>
+      <desc>JACK IN THE BOX #1184 GL</desc>
+      <extid>200912215</extid>
+      <memo>12/20JACK IN T</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="59b8ed2d-1032-3631-87f4-8f769adcc39e">
+      <amount>-9.95</amount>
+      <type>DEBIT</type>
+      <date>2009-12-22 05:00:00 AM</date>
+      <desc>Financial</desc>
+      <extid>200912220</extid>
+      <memo>Monthly Service Fee</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="6fdff787-d566-3f54-9963-7353e7eeb589">
+      <amount>-38.4</amount>
+      <type>DEBIT</type>
+      <date>2009-12-22 05:00:00 AM</date>
+      <desc>CHEVRON 00308643 PHOENIX</desc>
+      <extid>200912221</extid>
+      <memo>12/20CHEVRON 0</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="5317f5b3-5180-3177-955e-cedc2cf055ce">
+      <amount>-20.28</amount>
+      <type>DEBIT</type>
+      <date>2009-12-22 05:00:00 AM</date>
+      <desc>SYLVIA'S LA CANASTA PHOE</desc>
+      <extid>200912222</extid>
+      <memo>12/21SYLVIA'S</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="86b83a10-d862-3cb2-adee-f998b461b80f">
+      <amount>-4.97</amount>
+      <type>DEBIT</type>
+      <date>2009-12-22 05:00:00 AM</date>
+      <desc>SUBWAY 24754 00247544 P</desc>
+      <extid>200912223</extid>
+      <memo>12/20SUBWAY 24</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="1c33bf02-de95-38fe-ab72-d803d8011b47">
+      <amount>-23.68</amount>
+      <type>DEBIT</type>
+      <date>2009-12-23 05:00:00 AM</date>
+      <desc>LOWE'S #1850 SCOTTSDALE 506253</desc>
+      <extid>200912230</extid>
+      <memo>12/22LOWE'S #1</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="fb0fc987-ca0d-347f-8268-25a679eea74c">
+      <amount>-23.02</amount>
+      <type>DEBIT</type>
+      <date>2009-12-23 05:00:00 AM</date>
+      <desc>FAST EDDIE'S DINER PHOEN</desc>
+      <extid>200912231</extid>
+      <memo>12/21FAST EDDI</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="1c371be8-77fe-3779-9db0-c0db740a1e5f">
+      <amount>-14.99</amount>
+      <type>DEBIT</type>
+      <date>2009-12-23 05:00:00 AM</date>
+      <desc>LOWE'S #1850 SCOTTSDALE 983889</desc>
+      <extid>200912232</extid>
+      <memo>12/22LOWE'S #1</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="afa83e2e-4a90-3497-8975-77085055e69f">
+      <amount>-158.09</amount>
+      <type>DEBIT</type>
+      <date>2009-12-24 05:00:00 AM</date>
+      <desc>EMPIRE PLUMBING PHOENIX</desc>
+      <extid>200912240</extid>
+      <memo>12/23EMPIRE PL</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="48aed2da-4312-3631-ac75-3e848b039823">
+      <amount>-35.0</amount>
+      <type>DEBIT</type>
+      <date>2009-12-24 05:00:00 AM</date>
+      <desc>JOSEPH SCOTT SALON LLC P082394</desc>
+      <extid>200912241</extid>
+      <memo>12/23JOSEPH SC</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="10afb06b-c3e3-3a21-ae53-6b291f3fd4db">
+      <amount>-10.63</amount>
+      <type>DEBIT</type>
+      <date>2009-12-24 05:00:00 AM</date>
+      <desc>WHATABURGER 756 Q26 P</desc>
+      <extid>200912242</extid>
+      <memo>12/22WHATABURG</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="ea85fb56-f947-3266-80ea-cb4f5a7b6fdf">
+      <amount>2157.42</amount>
+      <type>CREDIT</type>
+      <date>2009-12-28 05:00:00 AM</date>
+      <desc>DIFFUSION GROUP PAYROLL</desc>
+      <extid>200912280</extid>
+      <memo>PPD ID: 1860988050</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="ef75da3f-9de2-3927-b82d-c6e751300f02">
+      <amount>-175.0</amount>
+      <type>DEBIT</type>
+      <date>2009-12-28 05:00:00 AM</date>
+      <desc>IRS USATAXPYMT 2709</desc>
+      <extid>200912281</extid>
+      <memo>76200168759 WEB ID: 3387702000</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="be4f2b8f-39f4-39a9-9c5a-74501d930d4b">
+      <amount>-5.02</amount>
+      <type>DEBIT</type>
+      <date>2009-12-28 05:00:00 AM</date>
+      <desc>COLDSTN CREAM #1429 GLEN</desc>
+      <extid>2009122810</extid>
+      <memo>12/26COLDSTN C</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="db2ae48a-db27-3d2f-999b-05cfe5fd875f">
+      <amount>-2.16</amount>
+      <type>DEBIT</type>
+      <date>2009-12-28 05:00:00 AM</date>
+      <desc>WALGREEN COMPANY NWC OF 761522</desc>
+      <extid>2009122811</extid>
+      <memo>12/24WALGREEN</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="839d67b0-de61-3b5b-8a0c-bdccc394368f">
+      <amount>-84.05</amount>
+      <type>DEBIT</type>
+      <date>2009-12-28 05:00:00 AM</date>
+      <desc>BARCLAYCARD US CREDITCARD 7985</desc>
+      <extid>200912282</extid>
+      <memo>5126 WEB ID: 2510407970</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="1d1d9333-b4fb-3e83-96e1-9af0b9095b49">
+      <amount>-80.0</amount>
+      <type>CHECK</type>
+      <date>2009-12-28 05:00:00 AM</date>
+      <desc>CHECK 259</desc>
+      <extid>200912283</extid>
+      <memo></memo>
+      <check>259</check>
+      <ref></ref>
+    </transaction>
+    <transaction id="0fc04eb7-3839-3230-b7e1-9722dcfb87fa">
+      <amount>-59.92</amount>
+      <type>DEBIT</type>
+      <date>2009-12-28 05:00:00 AM</date>
+      <desc>SPROUTS FARMERS MKT #7 P058032</desc>
+      <extid>200912284</extid>
+      <memo>12/26SPROUTS F</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="ae02907b-4f08-314f-905a-4c150ba3a70f">
+      <amount>-34.23</amount>
+      <type>DEBIT</type>
+      <date>2009-12-28 05:00:00 AM</date>
+      <desc>7-ELEVEN PHOENIX AZ 361209</desc>
+      <extid>200912285</extid>
+      <memo>12/277-ELEVEN</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="8d313780-3284-3f14-b0ee-7b5ff3d6b8bc">
+      <amount>-27.04</amount>
+      <type>DEBIT</type>
+      <date>2009-12-28 05:00:00 AM</date>
+      <desc>THE GOOD EGG PARK CENTR</desc>
+      <extid>200912286</extid>
+      <memo>12/26THE GOOD</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="fbf9f7df-41e6-3bf4-95ce-d48f89cee563">
+      <amount>-25.0</amount>
+      <type>DEBIT</type>
+      <date>2009-12-28 05:00:00 AM</date>
+      <desc>LDW GROUP 8006017097 MA</desc>
+      <extid>200912287</extid>
+      <memo>12/25LDW GROUP</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="06c36016-b720-3c2f-9730-d26360fd6a3e">
+      <amount>-21.0</amount>
+      <type>DEBIT</type>
+      <date>2009-12-28 05:00:00 AM</date>
+      <desc>AMC DEER VALLE04001020 P</desc>
+      <extid>200912288</extid>
+      <memo>12/25AMC DEER</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="c0652f18-074f-3d31-8849-d784daab9f3b">
+      <amount>-16.41</amount>
+      <type>DEBIT</type>
+      <date>2009-12-28 05:00:00 AM</date>
+      <desc>FAST EDDIE'S DINER PHOEN</desc>
+      <extid>200912289</extid>
+      <memo>12/24FAST EDDI</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="0f424c0a-dd10-3f37-afc5-5586362f3d0d">
+      <amount>-128.89</amount>
+      <type>DEBIT</type>
+      <date>2009-12-29 05:00:00 AM</date>
+      <desc>WALGREENS #6400 PHOENIX</desc>
+      <extid>200912290</extid>
+      <memo>12/28WALGREENS</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="670f6e4f-4df0-3e0e-981d-942469e66076">
+      <amount>-49.9</amount>
+      <type>DEBIT</type>
+      <date>2009-12-29 05:00:00 AM</date>
+      <desc>AMERUSA SERVICES 727-467</desc>
+      <extid>200912291</extid>
+      <memo>12/27AMERUSA S</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="9d05c28c-f71a-3e1b-98c6-5be3b0b61899">
+      <amount>-30.5</amount>
+      <type>DEBIT</type>
+      <date>2009-12-29 05:00:00 AM</date>
+      <desc>AMC DEER VALLE04001020 P</desc>
+      <extid>200912292</extid>
+      <memo>12/27AMC DEER</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="fcdf4d6e-6978-3983-bc14-41badb72c623">
+      <amount>-13.5</amount>
+      <type>DEBIT</type>
+      <date>2009-12-29 05:00:00 AM</date>
+      <desc>AMC DEER VALLE04001020 P</desc>
+      <extid>200912293</extid>
+      <memo>12/27AMC DEER</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="7308d843-e7f0-3ea3-a10e-723a48da2dc8">
+      <amount>-11.64</amount>
+      <type>DEBIT</type>
+      <date>2009-12-29 05:00:00 AM</date>
+      <desc>SPROUTS FARMERS MKT #7 P469290</desc>
+      <extid>200912294</extid>
+      <memo>12/28SPROUTS F</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="343fe956-ce9c-3ff1-9b66-ed6615dc8d22">
+      <amount>-9.03</amount>
+      <type>DEBIT</type>
+      <date>2009-12-29 05:00:00 AM</date>
+      <desc>24 HOUR FITNESS 800-432-</desc>
+      <extid>200912295</extid>
+      <memo>12/2824 HOUR F</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="b735624a-556d-319a-9843-70007477680d">
+      <amount>-65.0</amount>
+      <type>DEBIT</type>
+      <date>2009-12-30 05:00:00 AM</date>
+      <desc>HEAVENSANGELSTHERAPEUT P</desc>
+      <extid>200912300</extid>
+      <memo>12/29HEAVENSAN</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="d291a0de-aa7e-353f-abab-dc12330c033d">
+      <amount>-17.8</amount>
+      <type>DEBIT</type>
+      <date>2009-12-30 05:00:00 AM</date>
+      <desc>QDOBA 428 11404282 P</desc>
+      <extid>200912301</extid>
+      <memo>12/28QDOBA 428</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="94287df5-166d-3785-821c-b05cad238c92">
+      <amount>-10.89</amount>
+      <type>DEBIT</type>
+      <date>2009-12-30 05:00:00 AM</date>
+      <desc>FRYS FOOD &amp; DRUG 1815 G 507323</desc>
+      <extid>200912302</extid>
+      <memo>12/29FRYS FOOD</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="13d836df-e983-3863-aa0b-a6bebb02fa79">
+      <amount>-9.74</amount>
+      <type>DEBIT</type>
+      <date>2009-12-30 05:00:00 AM</date>
+      <desc>WALGREEN COMPANY NWC OF 231140</desc>
+      <extid>200912303</extid>
+      <memo>12/29WALGREEN</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="22f14180-269e-318a-a214-3914d8346c6d">
+      <amount>-3.89</amount>
+      <type>DEBIT</type>
+      <date>2009-12-30 05:00:00 AM</date>
+      <desc>FRYS FOOD &amp; DRUG 1815 G 513955</desc>
+      <extid>200912304</extid>
+      <memo>12/29FRYS FOOD</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="a48b064e-ca5e-39cf-8248-b4abc9d4fa76">
+      <amount>-20.0</amount>
+      <type>DEBIT</type>
+      <date>2009-12-31 05:00:00 AM</date>
+      <desc>ATM WITHDRAWAL 004827</desc>
+      <extid>200912310</extid>
+      <memo>12/317801 N 19</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="10d10efa-9a14-3767-817a-023f299fb769">
+      <amount>-6.76</amount>
+      <type>DEBIT</type>
+      <date>2009-12-31 05:00:00 AM</date>
+      <desc>BLOCKBUSTER VIDEO #0400</desc>
+      <extid>200912311</extid>
+      <memo>12/29BLOCKBUST</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="a9e1f476-472d-3a98-94aa-bf1f8f6dd8df">
+      <amount>-3.5</amount>
+      <type>DEBIT</type>
+      <date>2009-12-31 05:00:00 AM</date>
+      <desc>TVM MONTEBELLO/19TH AVE 313411</desc>
+      <extid>200912312</extid>
+      <memo>12/30TVM MONTE</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="7037b88e-cbd7-3040-9b15-9f88e134695b">
+      <amount>-128.79</amount>
+      <type>DEBIT</type>
+      <date>2010-01-04 05:00:00 AM</date>
+      <desc>VZWRLSS-MYACCT VW 800-92</desc>
+      <extid>201001040</extid>
+      <memo>12/31VZWRLSS-M</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="638b4940-58f2-3248-a90b-fa681ce48357">
+      <amount>-33.36</amount>
+      <type>DEBIT</type>
+      <date>2010-01-04 05:00:00 AM</date>
+      <desc>LOWE'S #1204 PHOENIX AZ 760297</desc>
+      <extid>201001041</extid>
+      <memo>01/03LOWE'S #1</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="2fb70cc1-aa75-3ea2-9683-a880a0b45e9b">
+      <amount>-31.95</amount>
+      <type>DEBIT</type>
+      <date>2010-01-04 05:00:00 AM</date>
+      <desc>FRYS FOOD &amp; DRUG 1815 G 102459</desc>
+      <extid>201001042</extid>
+      <memo>12/31FRYS FOOD</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="d2831bbf-c32f-3fe9-b8b5-c2af537f02b9">
+      <amount>-31.85</amount>
+      <type>DEBIT</type>
+      <date>2010-01-04 05:00:00 AM</date>
+      <desc>HARD ROCK PHOENIX R PHOE</desc>
+      <extid>201001043</extid>
+      <memo>12/30HARD ROCK</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="b443d37e-cdc0-39ce-87fc-23256e762c5a">
+      <amount>-28.75</amount>
+      <type>DEBIT</type>
+      <date>2010-01-04 05:00:00 AM</date>
+      <desc>SPROUTS FARMERS MKT #7 P590160</desc>
+      <extid>201001044</extid>
+      <memo>01/02SPROUTS F</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="2d84355e-7880-3c4d-a03c-20a65beac737">
+      <amount>-24.9</amount>
+      <type>DEBIT</type>
+      <date>2010-01-04 05:00:00 AM</date>
+      <desc>WAG N WASH HEALTHY PET P</desc>
+      <extid>201001045</extid>
+      <memo>01/02WAG N WAS</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="d47a60f7-1060-3c2d-a2f0-3d1900eda15d">
+      <amount>-12.49</amount>
+      <type>DEBIT</type>
+      <date>2010-01-04 05:00:00 AM</date>
+      <desc>EINSTEIN BROS #2021 PHOE</desc>
+      <extid>201001046</extid>
+      <memo>12/30EINSTEIN</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="18ecbbbd-3754-3d02-ab0f-957d1c5c2e0f">
+      <amount>-10.29</amount>
+      <type>DEBIT</type>
+      <date>2010-01-04 05:00:00 AM</date>
+      <desc>PEI WEI #0023 Q02 P</desc>
+      <extid>201001047</extid>
+      <memo>12/31PEI WEI #</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="86780515-72aa-37c9-bba5-520caf564182">
+      <amount>-9.81</amount>
+      <type>DEBIT</type>
+      <date>2010-01-04 05:00:00 AM</date>
+      <desc>QDOBA 428 11404282 P</desc>
+      <extid>201001048</extid>
+      <memo>01/02QDOBA 428</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="69478390-7887-3a9e-820b-797af0159d62">
+      <amount>-790.91</amount>
+      <type>DEBIT</type>
+      <date>2010-01-05 05:00:00 AM</date>
+      <desc>LOANSERVICING AUTOMATIC</desc>
+      <extid>201001050</extid>
+      <memo>PPD ID: 1231694840</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="25b5831e-5993-337c-b665-753b015ffc9b">
+      <amount>-309.0</amount>
+      <type>DEBIT</type>
+      <date>2010-01-05 05:00:00 AM</date>
+      <desc>Rossmar &amp; Graham TENANT</desc>
+      <extid>201001051</extid>
+      <memo>WEB ID: W050568743</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="83aa2c13-aac5-36c7-bb1b-5b20e1faf13f">
+      <amount>-135.18</amount>
+      <type>DEBIT</type>
+      <date>2010-01-05 05:00:00 AM</date>
+      <desc>STATE FARM RO 27 SFPP</desc>
+      <extid>201001052</extid>
+      <memo>PPD ID: 9000307001</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="b8cf4cad-8f20-3ac9-b293-d5356e52ade2">
+      <amount>-50.79</amount>
+      <type>DEBIT</type>
+      <date>2010-01-05 05:00:00 AM</date>
+      <desc>QT 412 Phoenix AZ</desc>
+      <extid>201001053</extid>
+      <memo>01/04QT 412 Ph Purcha</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="cd6750be-6538-3e85-9663-ac4e0bc7cec8">
+      <amount>-3.68</amount>
+      <type>DEBIT</type>
+      <date>2010-01-05 05:00:00 AM</date>
+      <desc>ARCO PAYPOINT 2942 128231</desc>
+      <extid>201001054</extid>
+      <memo>01/04ARCO PAYP</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="adc2fe54-051c-378c-9efc-9d1846c56c83">
+      <amount>-36.0</amount>
+      <type>DEBIT</type>
+      <date>2010-01-06 05:00:00 AM</date>
+      <desc>ARCO PAYPOINT 2942 127717</desc>
+      <extid>201001060</extid>
+      <memo>01/05ARCO PAYP</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="affa0665-3fcf-35f4-9d2b-7d02ee132538">
+      <amount>-34.99</amount>
+      <type>DEBIT</type>
+      <date>2010-01-06 05:00:00 AM</date>
+      <desc>24HR FITNESS DUES 800-43</desc>
+      <extid>201001061</extid>
+      <memo>01/0524HR FITN</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="6fa712fa-505d-38bd-ab1d-506717f876e7">
+      <amount>2159.85</amount>
+      <type>CREDIT</type>
+      <date>2010-01-08 05:00:00 AM</date>
+      <desc>DIFFUSION GROUP PAYROLL</desc>
+      <extid>201001080</extid>
+      <memo>PPD ID: 1860988050</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="b0bd9ce5-e4b8-3f25-8a3b-4d783206153b">
+      <amount>-240.0</amount>
+      <type>DEBIT</type>
+      <date>2010-01-08 05:00:00 AM</date>
+      <desc>ATM WITHDRAWAL 006547</desc>
+      <extid>201001081</extid>
+      <memo>01/077801 N 19</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="139b5dc8-043f-3a6f-8df8-298f61f10828">
+      <amount>-42.56</amount>
+      <type>DEBIT</type>
+      <date>2010-01-08 05:00:00 AM</date>
+      <desc>Whole Foods</desc>
+      <extid>201001082</extid>
+      <memo>01/07WHOLE FOO</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="ebbb8884-e280-338a-8d60-e5b6c4172f57">
+      <amount>-18.16</amount>
+      <type>DEBIT</type>
+      <date>2010-01-08 05:00:00 AM</date>
+      <desc>TRADER JOE'S #282 PHOENI365500</desc>
+      <extid>201001083</extid>
+      <memo>01/07TRADER JO</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="547fd3a4-4407-36a2-a775-ae2baf9fa00b">
+      <amount>507.26</amount>
+      <type>CREDIT</type>
+      <date>2010-01-11 05:00:00 AM</date>
+      <desc>ATM CHECK DEPOSIT</desc>
+      <extid>201001110</extid>
+      <memo></memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="1bd5ee02-7853-3fcd-b01c-0afc8f00aab8">
+      <amount>-309.33</amount>
+      <type>DEBIT</type>
+      <date>2010-01-11 05:00:00 AM</date>
+      <desc>VW CREDIT, INC. AUTO DEBIT WE</desc>
+      <extid>201001111</extid>
+      <memo>B 852539481 WEB ID: 1382362409</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="e237caaa-1190-3e1d-b7ed-6fc85c065c12">
+      <amount>-27.98</amount>
+      <type>DEBIT</type>
+      <date>2010-01-11 05:00:00 AM</date>
+      <desc>ARROWHEAD WATER 800-950-</desc>
+      <extid>2010011110</extid>
+      <memo>01/08ARROWHEAD</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="997a6451-2782-33dd-a45c-4480e07072ba">
+      <amount>-15.0</amount>
+      <type>DEBIT</type>
+      <date>2010-01-11 05:00:00 AM</date>
+      <desc>BEVERLY HILLS CAR WASH T</desc>
+      <extid>2010011111</extid>
+      <memo>01/08BEVERLY H</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="13304c50-c6a1-3621-8947-5873a0eb5c5d">
+      <amount>-10.41</amount>
+      <type>DEBIT</type>
+      <date>2010-01-11 05:00:00 AM</date>
+      <desc>PAPA JOHN'S #1507 TEMPE</desc>
+      <extid>2010011112</extid>
+      <memo>01/08PAPA JOHN</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="3e5abe0e-7f97-3358-9e05-bc4a0b1a7c7b">
+      <amount>-10.09</amount>
+      <type>DEBIT</type>
+      <date>2010-01-11 05:00:00 AM</date>
+      <desc>HONEY BEARS BAR B-Q TEMP</desc>
+      <extid>2010011113</extid>
+      <memo>01/07HONEY BEA</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="06bf3bee-593d-316e-bc34-729cd099d408">
+      <amount>-8.69</amount>
+      <type>DEBIT</type>
+      <date>2010-01-11 05:00:00 AM</date>
+      <desc>MARY COYLE ICE CREAM PHO</desc>
+      <extid>2010011114</extid>
+      <memo>01/09MARY COYL</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="bbf398da-25e9-33f9-84bc-46eba9bbefd7">
+      <amount>-7.9</amount>
+      <type>DEBIT</type>
+      <date>2010-01-11 05:00:00 AM</date>
+      <desc>SOU THE HOME DEPOT 7308 678613</desc>
+      <extid>2010011115</extid>
+      <memo>01/09SOU THE H</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="58988638-5455-3f49-b90a-2932f54ffd4b">
+      <amount>-2.7</amount>
+      <type>DEBIT</type>
+      <date>2010-01-11 05:00:00 AM</date>
+      <desc>FEDEX KINKO'S #2306 PHOE</desc>
+      <extid>2010011116</extid>
+      <memo>01/08FEDEX KIN</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="2d946735-4466-3e8c-968b-7a096b028816">
+      <amount>-260.0</amount>
+      <type>DEBIT</type>
+      <date>2010-01-11 05:00:00 AM</date>
+      <desc>ATM WITHDRAWAL 001807</desc>
+      <extid>201001112</extid>
+      <memo>01/093150 E IN</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="229d2083-0613-37d4-95ab-dfcb19033eee">
+      <amount>-175.0</amount>
+      <type>DEBIT</type>
+      <date>2010-01-11 05:00:00 AM</date>
+      <desc>IRS USATAXPYMT 2700</desc>
+      <extid>201001113</extid>
+      <memo>41100759459 WEB ID: 3387702000</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="b2241572-2eb0-3bd5-bf0d-344a5086cc8b">
+      <amount>-149.43</amount>
+      <type>DEBIT</type>
+      <date>2010-01-11 05:00:00 AM</date>
+      <desc>SOU JCPENNEY STORE 3328 556722</desc>
+      <extid>201001114</extid>
+      <memo>01/09SOU JCPEN</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="5cb6131f-f870-3f74-9a25-81fb071a4325">
+      <amount>-97.83</amount>
+      <type>DEBIT</type>
+      <date>2010-01-11 05:00:00 AM</date>
+      <desc>BARCLAYCARD US CREDITCARD 8108</desc>
+      <extid>201001115</extid>
+      <memo>8390 WEB ID: 2510407970</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="a97cee0c-81e2-3777-9166-d7722e393f7b">
+      <amount>-80.0</amount>
+      <type>CHECK</type>
+      <date>2010-01-11 05:00:00 AM</date>
+      <desc>CHECK 260</desc>
+      <extid>201001116</extid>
+      <memo></memo>
+      <check>260</check>
+      <ref></ref>
+    </transaction>
+    <transaction id="6a668b7d-0640-3f78-bb92-4419fdd28232">
+      <amount>-60.52</amount>
+      <type>DEBIT</type>
+      <date>2010-01-11 05:00:00 AM</date>
+      <desc>BARCLAYCARD US CREDITCARD 8091</desc>
+      <extid>201001117</extid>
+      <memo>8847 WEB ID: 2510407970</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="78242a69-713d-364e-8f9c-201f2451a1b2">
+      <amount>-53.04</amount>
+      <type>DEBIT</type>
+      <date>2010-01-11 05:00:00 AM</date>
+      <desc>FRYS FOOD &amp; DRUG 1815 G</desc>
+      <extid>201001118</extid>
+      <memo>01/09FRYS FOOD Purcha</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="ecf8af74-e315-368c-90dc-54766142495e">
+      <amount>-35.0</amount>
+      <type>DEBIT</type>
+      <date>2010-01-11 05:00:00 AM</date>
+      <desc>JOSEPH SCOTT SALON LLC P095901</desc>
+      <extid>201001119</extid>
+      <memo>01/08JOSEPH SC</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="2808cd08-0933-3f39-a7e9-c6e5ef38e9c5">
+      <amount>-31.9</amount>
+      <type>DEBIT</type>
+      <date>2010-01-12 05:00:00 AM</date>
+      <desc>SRR*SIRIUS RADIO 888-539</desc>
+      <extid>201001120</extid>
+      <memo>01/11SRR*SIRIU</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="bac434aa-3efc-3415-878f-9b55c508c534">
+      <amount>-17.5</amount>
+      <type>DEBIT</type>
+      <date>2010-01-12 05:00:00 AM</date>
+      <desc>AMC DEER VALLE04001020 P</desc>
+      <extid>201001121</extid>
+      <memo>01/10AMC DEER</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="099c4bc3-6509-32fe-8bb8-064d74277743">
+      <amount>-15.78</amount>
+      <type>DEBIT</type>
+      <date>2010-01-12 05:00:00 AM</date>
+      <desc>EBAYS HALF.COM 800-545-9</desc>
+      <extid>201001122</extid>
+      <memo>01/11EBAYS HAL</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="7939c3f1-e78b-34f5-85a4-1ec8bd5c7ff3">
+      <amount>-15.0</amount>
+      <type>DEBIT</type>
+      <date>2010-01-12 05:00:00 AM</date>
+      <desc>HSBC CARD SRVCS Online Pmt 0000</desc>
+      <extid>201001123</extid>
+      <memo>00523619767 WEB ID: 2000000510</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="fb4c6dfe-c2a1-3c91-8e1b-a91a3a1fb64c">
+      <amount>-5.3</amount>
+      <type>DEBIT</type>
+      <date>2010-01-12 05:00:00 AM</date>
+      <desc>COLDSTN CREAM #41 PHOENI</desc>
+      <extid>201001124</extid>
+      <memo>01/10COLDSTN C</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="a0af73f4-68d9-3ddd-a473-2b573f1f29f1">
+      <amount>-81.58</amount>
+      <type>DEBIT</type>
+      <date>2010-01-13 05:00:00 AM</date>
+      <desc>DTV*DIRECTV SERVICE 800-</desc>
+      <extid>201001130</extid>
+      <memo>01/12DTV*DIREC</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="cb3d0ae1-3379-305b-be04-6ee8c9cab837">
+      <amount>-9.98</amount>
+      <type>DEBIT</type>
+      <date>2010-01-13 05:00:00 AM</date>
+      <desc>EASYNEWS HOL* WINTER PAR</desc>
+      <extid>201001131</extid>
+      <memo>01/12EASYNEWS</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="381976ce-723e-3651-8a38-aae3b8df5073">
+      <amount>-4.65</amount>
+      <type>DEBIT</type>
+      <date>2010-01-13 05:00:00 AM</date>
+      <desc>FRYS FOOD &amp; DRUG 1815 G 216588</desc>
+      <extid>201001132</extid>
+      <memo>01/12FRYS FOOD</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="74406449-1321-39dd-aee9-30dd7d268dfe">
+      <amount>74.99</amount>
+      <type>CREDIT</type>
+      <date>2010-01-14 05:00:00 AM</date>
+      <desc>ATM CHECK DEPOSIT</desc>
+      <extid>201001140</extid>
+      <memo></memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="a5f144f0-b610-30b3-8d52-654326591e65">
+      <amount>-37.18</amount>
+      <type>DEBIT</type>
+      <date>2010-01-14 05:00:00 AM</date>
+      <desc>CHEVRON 00098544 PHOENIX</desc>
+      <extid>201001141</extid>
+      <memo>01/12CHEVRON 0</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="db5e7250-f903-34ed-b0f2-3a33715ecf45">
+      <amount>-52.99</amount>
+      <type>DEBIT</type>
+      <date>2010-01-15 05:00:00 AM</date>
+      <desc>WALGREENS #6400 PHOENIX</desc>
+      <extid>201001150</extid>
+      <memo>01/14WALGREENS</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="f3413b60-b031-3d1c-a6b1-3894dc5716fa">
+      <amount>-18.69</amount>
+      <type>DEBIT</type>
+      <date>2010-01-15 05:00:00 AM</date>
+      <desc>PEI WEI #0023 Q02 P</desc>
+      <extid>201001151</extid>
+      <memo>01/13PEI WEI #</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="b5cf1ad5-922e-3413-ae6e-989b8c716f57">
+      <amount>53.79</amount>
+      <type>CREDIT</type>
+      <date>2010-01-19 05:00:00 AM</date>
+      <desc>ATM CHECK DEPOSIT</desc>
+      <extid>201001190</extid>
+      <memo></memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="c1a672eb-c9d8-30b3-9a77-a4d4ea1fec9e">
+      <amount>-49.0</amount>
+      <type>DEBIT</type>
+      <date>2010-01-19 05:00:00 AM</date>
+      <desc>MASSAGE ENVY 0011 480-83</desc>
+      <extid>201001191</extid>
+      <memo>01/16MASSAGE E</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="04801e13-266e-3192-9327-b8e98e48e0e7">
+      <amount>-35.7</amount>
+      <type>DEBIT</type>
+      <date>2010-01-19 05:00:00 AM</date>
+      <desc>WHITFILL NURSERY PHOENIX411299</desc>
+      <extid>201001192</extid>
+      <memo>01/17WHITFILL</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="b960759a-242d-30a1-aaf0-d6ef8741fb6b">
+      <amount>-35.45</amount>
+      <type>DEBIT</type>
+      <date>2010-01-19 05:00:00 AM</date>
+      <desc>FRYS FOOD &amp; DRUG 1815 G 025417</desc>
+      <extid>201001193</extid>
+      <memo>01/16FRYS FOOD</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="17552c47-7492-3767-abb6-b444bde66077">
+      <amount>-21.0</amount>
+      <type>DEBIT</type>
+      <date>2010-01-19 05:00:00 AM</date>
+      <desc>HARKINS CHRISTOWN 14 PHO</desc>
+      <extid>201001194</extid>
+      <memo>01/17HARKINS C</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="9aaf58b9-0340-38bd-b88f-904230fce18b">
+      <amount>-10.82</amount>
+      <type>DEBIT</type>
+      <date>2010-01-19 05:00:00 AM</date>
+      <desc>SOU ROSS STORES #571617 464265</desc>
+      <extid>201001195</extid>
+      <memo>01/16SOU ROSS</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="1d6f7846-4584-3b74-b80b-e0c3dfba8ecb">
+      <amount>-10.8</amount>
+      <type>DEBIT</type>
+      <date>2010-01-19 05:00:00 AM</date>
+      <desc>QDOBA 428 11404282 P</desc>
+      <extid>201001196</extid>
+      <memo>01/16QDOBA 428</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="2cdb2aa4-88b5-32f6-8213-d6dc80b5aee4">
+      <amount>-10.05</amount>
+      <type>DEBIT</type>
+      <date>2010-01-19 05:00:00 AM</date>
+      <desc>CHIPOTLE 0744 TEMPE AZ</desc>
+      <extid>201001197</extid>
+      <memo>01/15CHIPOTLE</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="f4916212-3621-3f6e-b422-f81f466c06bc">
+      <amount>-19.5</amount>
+      <type>DEBIT</type>
+      <date>2010-01-20 05:00:00 AM</date>
+      <desc>Rossmar &amp; Graham TENANT</desc>
+      <extid>201001200</extid>
+      <memo>WEB ID: W050568743</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="aa1b0eaf-a6b7-3af2-aee9-3265961bb3d5">
+      <amount>-20.0</amount>
+      <type>DEBIT</type>
+      <date>2010-01-21 05:00:00 AM</date>
+      <desc>CIRCLE K 01346 TEMPE AZ 110656</desc>
+      <extid>201001210</extid>
+      <memo>01/20CIRCLE K</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="fe8c067d-fae5-38b2-9854-f66a67ece6e4">
+      <amount>2159.85</amount>
+      <type>CREDIT</type>
+      <date>2010-01-22 05:00:00 AM</date>
+      <desc>DIFFUSION GROUP PAYROLL</desc>
+      <extid>201001220</extid>
+      <memo>PPD ID: 1860988050</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="3283a4ae-d18f-3b3d-888b-a1afe161f011">
+      <amount>-9.95</amount>
+      <type>DEBIT</type>
+      <date>2010-01-22 05:00:00 AM</date>
+      <desc>Financial</desc>
+      <extid>201001221</extid>
+      <memo>Monthly Service Fee</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="fe074640-274c-3259-b8af-c60ad13e8f48">
+      <amount>-41.35</amount>
+      <type>DEBIT</type>
+      <date>2010-01-22 05:00:00 AM</date>
+      <desc>CHEVRON 00206657 PHOENIX</desc>
+      <extid>201001222</extid>
+      <memo>01/20CHEVRON 0</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+  </transactions>
+</moman>
