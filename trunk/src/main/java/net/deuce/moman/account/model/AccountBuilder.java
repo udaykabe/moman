@@ -45,7 +45,8 @@ public class AccountBuilder extends AbstractBuilder {
 						n.elementText("username"),
 						n.elementText("password"),
 						AccountStatus.valueOf(n.elementText("status")),
-						Boolean.valueOf(n.elementText("supports-downloading"))
+						Boolean.valueOf(n.elementText("supports-downloading")),
+						Double.valueOf(n.elementText("balance"))
 						);
 				
 				String val = n.elementText("initial-balance");
@@ -83,7 +84,7 @@ public class AccountBuilder extends AbstractBuilder {
 			addElement(el, "username", account.getUsername());
 			addElement(el, "password", account.getPassword());
 			addElement(el, "nickname", account.getNickname());
-			addElement(el, "nickname", account.getNickname());
+			addElement(el, "balance", account.getBalance());
 			addOptionalElement(el, "status", account.getStatus().name());
 			addOptionalElement(el, "supports-downloading", account.isSupportsDownloading());
 			addOptionalElement(el, "initial-balance", account.getInitialBalance());

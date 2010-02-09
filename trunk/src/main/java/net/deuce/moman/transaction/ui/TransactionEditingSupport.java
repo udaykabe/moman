@@ -52,7 +52,7 @@ public class TransactionEditingSupport extends EditingSupport {
 		switch (this.column) {
 		case 1: return transaction.getCheck();
 		case 2: return transaction.getDescription();
-		case 4: return Double.toString(transaction.getAmount());
+		case 4: return Constants.CURRENCY_VALIDATOR.format(transaction.getAmount());
 		default:
 			break;
 		}

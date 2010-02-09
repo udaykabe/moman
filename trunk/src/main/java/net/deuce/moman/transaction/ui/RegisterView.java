@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import net.deuce.moman.Constants;
 import net.deuce.moman.account.model.Account;
 import net.deuce.moman.envelope.model.Envelope;
 import net.deuce.moman.envelope.service.EnvelopeService;
@@ -20,10 +21,19 @@ import net.deuce.moman.ui.DateSelectionDialog;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 
 public class RegisterView extends AbstractEntityTableView<InternalTransaction> {
 	
@@ -32,6 +42,8 @@ public class RegisterView extends AbstractEntityTableView<InternalTransaction> {
 	private AccountListener accountListener = new AccountListener();
 	private EnvelopeListener envelopeListener = new EnvelopeListener();
 	private EnvelopeService envelopeService;
+	private RegisterFilter filter = new RegisterFilter();
+	private Text searchText;
 
 	public RegisterView() {
 		super(ServiceNeeder.instance().getTransactionService());
@@ -41,8 +53,43 @@ public class RegisterView extends AbstractEntityTableView<InternalTransaction> {
 	}
 
 	@Override
+	protected Control createTopControl(Composite parent) {
+		final Composite container = new Composite(parent, SWT.NONE);
+		GridLayout gridLayout = new GridLayout();
+		gridLayout.numColumns = 2;
+		container.setLayout(gridLayout);
+		
+		GridData gridData = new GridData();
+		gridData.grabExcessHorizontalSpace = true;
+		gridData.horizontalAlignment = GridData.FILL;
+
+		Label searchLabel = new Label(container, SWT.NONE);
+		searchLabel.setText("Search:");
+		
+		searchText = new Text(container, SWT.BORDER);
+		searchText.setEditable(true);
+		searchText.setEnabled(true);
+		searchText.setLayoutData(gridData);
+		
+		
+		return container;
+	}
+
+	protected boolean hasTopControl() {
+		return true;
+	}
+
+	@Override
 	protected TableViewer createTableViewer(Composite parent) {
-		TableViewer tableViewer = new TableViewer(parent, SWT.MULTI | SWT.V_SCROLL | SWT.FULL_SELECTION);
+		final TableViewer tableViewer = new TableViewer(parent, SWT.MULTI | SWT.V_SCROLL | SWT.FULL_SELECTION);
+		tableViewer.addFilter(filter);
+		searchText.addKeyListener(new KeyAdapter() {
+			public void keyReleased(KeyEvent ke) {
+				filter.setSearchText(searchText.getText());
+				tableViewer.refresh();
+			}
+
+		});
 				
         TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.LEFT);
  		column.getColumn().setText("Date");
@@ -105,18 +152,15 @@ public class RegisterView extends AbstractEntityTableView<InternalTransaction> {
 						while (itr.hasNext()) {
 							InternalTransaction transaction = itr.next();
 							Envelope oldEnvelope = transaction.getSplit().get(0);
-							transaction.clearSplit();
-							transaction.addSplit(dialog.getEnvelope());
-							getViewer().refresh(transaction);
+							
+							// oldEnvelope to new Envelope move
+							transaction.removeSplit(oldEnvelope, true);
+							transaction.addSplit(dialog.getEnvelope(), true);
+							
 							oldEnvelope.clearBalance();
 							dialog.getEnvelope().clearBalance();
 							
-							// oldEnvelope to new Envelope transfer
-							Account account = transaction.getAccount();
-							envelopeService.transfer(account, account, 
-									oldEnvelope, dialog.getEnvelope(), 
-									-transaction.getAmount());
-							
+							getViewer().refresh(transaction);
 						}
 					} finally {
 						ServiceNeeder.instance().getServiceContainer().stopQueuingNotifications();
@@ -200,6 +244,46 @@ public class RegisterView extends AbstractEntityTableView<InternalTransaction> {
 
 		@Override
 		public void entityRemoved(EntityEvent<Account> event) {
+		}
+		
+	}
+	
+	private static class RegisterFilter extends ViewerFilter {
+
+		private String searchString;
+
+		public void setSearchText(String s) {
+			this.searchString = ".*" + s.toLowerCase() + ".*";
+		}
+		
+		@Override
+		public boolean select(Viewer viewer, Object parentElement,
+				Object element) {
+			if (searchString == null || searchString.length() == 0) {
+				return true;
+			}
+			
+			InternalTransaction transaction = (InternalTransaction)element;
+			
+			if (Constants.CURRENCY_VALIDATOR.format(transaction.getAmount()).matches(searchString)) {
+				return true;
+			}
+			if (transaction.getDescription().toLowerCase().matches(searchString)) {
+				return true;
+			}
+			if (transaction.getMemo().toLowerCase().matches(searchString)) {
+				return true;
+			}
+			if (transaction.getCheck().matches(searchString)) {
+				return true;
+			}
+			for (Envelope env : transaction.getSplit()) {
+				if (env.getName().toLowerCase().matches(searchString)) {
+					return true;
+				}
+			}
+
+			return false;
 		}
 		
 	}

@@ -46,10 +46,16 @@ public class TransactionRuleView extends AbstractEntityTableView<Rule> {
  	    column.setEditingSupport(new RuleEditingSupport(tableViewer, 2));
 		
         column = new TableViewerColumn(tableViewer, SWT.CENTER);
- 		column.getColumn().setText("Converted Value");
+ 		column.getColumn().setText("Amount");
  		column.getColumn().setAlignment(SWT.LEFT);
  	    column.getColumn().setWidth(200);
  	    column.setEditingSupport(new RuleEditingSupport(tableViewer, 3));
+		
+        column = new TableViewerColumn(tableViewer, SWT.CENTER);
+ 		column.getColumn().setText("Converted Value");
+ 		column.getColumn().setAlignment(SWT.LEFT);
+ 	    column.getColumn().setWidth(200);
+ 	    column.setEditingSupport(new RuleEditingSupport(tableViewer, 4));
 		
  		column = new TableViewerColumn(tableViewer, SWT.LEFT);
  		column.getColumn().setText("Use This Envelope");
@@ -88,7 +94,7 @@ public class TransactionRuleView extends AbstractEntityTableView<Rule> {
 
 	@Override
 	protected int[] getDoubleClickableColumns() {
-		return new int[]{4};
+		return new int[]{5};
 	}
 
 }

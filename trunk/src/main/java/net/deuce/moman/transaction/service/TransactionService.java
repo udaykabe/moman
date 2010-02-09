@@ -232,6 +232,10 @@ public class TransactionService extends EntityService<InternalTransaction> {
 	}
 	
 	public void addEntity(InternalTransaction transaction, boolean updateBalances) {
+		addEntity(transaction, updateBalances, true);
+	}
+	
+	public void addEntity(InternalTransaction transaction, boolean updateBalances, boolean notify) {
 		addExternalTransactionReference(transaction);
 		__getAccountTransactions(transaction.getAccount()).add(transaction);
 		if (transaction.isInitialBalance()) {
@@ -242,7 +246,9 @@ public class TransactionService extends EntityService<InternalTransaction> {
 		if (updateBalances) {
 			adjustBalances(transaction, false);
 		}
-		fireEntityAdded(transaction);
+		if (notify) {
+			fireEntityAdded(transaction);
+		}
 	}
 	
 	@Override

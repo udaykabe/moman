@@ -20,7 +20,7 @@ public class NewSet extends AbstractHandler {
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		try {
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPages()[0].showView(AllocationView.ID,null,IWorkbenchPage.VIEW_ACTIVATE);
-			AllocationSet allocationSet = ServiceNeeder.instance().getAllocationSetFactory().newEntity("Set Name");
+			AllocationSet allocationSet = ServiceNeeder.instance().getAllocationSetFactory().newEntity("Set Name", null);
 			new CreateEntityOperation<AllocationSet, AllocationSetService>(
 					allocationSet, ServiceNeeder.instance().getAllocationSetService()).execute();
 		} catch (Exception e) {

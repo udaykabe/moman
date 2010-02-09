@@ -35,6 +35,9 @@ public class TransactionRuleBuilder extends AbstractBuilder {
 		rule.setEnabled(Boolean.valueOf(e.elementText("enabled")));
 		rule.setExpression(e.elementText("expression"));
 		rule.setConversion(e.elementText("conversion"));
+		if (e.element("amount") != null) {
+			rule.setAmount(Double.valueOf(e.elementText("amount")));
+		}
 		rule.setCondition(Condition.valueOf(e.elementText("condition")));
 		rule.setEnvelope(envelopeService.getEntity(e.element("envelope").attributeValue("id")));
 		
@@ -51,6 +54,7 @@ public class TransactionRuleBuilder extends AbstractBuilder {
 			el = root.addElement("rule");
 			el.addAttribute("id", rule.getId());
 			addOptionalBooleanElement(el, "enabled", rule.isEnabled());
+			addOptionalElement(el, "amount", rule.getAmount());
 			addElement(el, "expression", rule.getExpression());
 			addElement(el, "conversion", rule.getConversion());
 			addElement(el, "condition", rule.getCondition().name());

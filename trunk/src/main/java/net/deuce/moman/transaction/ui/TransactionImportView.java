@@ -69,14 +69,22 @@ public class TransactionImportView extends AbstractEntityTableView<InternalTrans
 		Envelope envelope = transaction.getSplit().get(0);
 		EnvelopeSelectionDialog dialog = new EnvelopeSelectionDialog(shell, envelope);
 		
+		dialog.setAllowBills(true);
 		dialog.create();
 		dialog.open();
 		if (envelope != dialog.getEnvelope()) {
 			Iterator<InternalTransaction> itr = selection.iterator();
 			while (itr.hasNext()) {
 				transaction = itr.next();
-				transaction.clearSplit();
-				transaction.addSplit(dialog.getEnvelope());
+				Envelope oldEnvelope = transaction.getSplit().get(0);
+				
+				// oldEnvelope to new Envelope move
+				transaction.removeSplit(oldEnvelope, true);
+				transaction.addSplit(dialog.getEnvelope(), true);
+				
+				oldEnvelope.clearBalance();
+				dialog.getEnvelope().clearBalance();
+				
 				getViewer().refresh(transaction);
 			}
 		}

@@ -3,6 +3,7 @@ package net.deuce.moman.rule.ui;
 import net.deuce.moman.Constants;
 import net.deuce.moman.rule.model.Condition;
 import net.deuce.moman.rule.model.Rule;
+import net.deuce.moman.ui.CurrencyCellEditorValidator;
 
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
@@ -34,9 +35,14 @@ public class RuleEditingSupport extends EditingSupport {
 			editor.getControl().setFont(Constants.STANDARD_FONT);
 			break;
 		case 2:
-		case 3:
+		case 4:
 			editor = new TextCellEditor(((TableViewer)viewer).getTable());
 			editor.getControl().setFont(Constants.STANDARD_FONT);
+			break;
+		case 3:
+			editor = new TextCellEditor(((TableViewer) viewer).getTable());
+			editor.getControl().setFont(Constants.STANDARD_FONT);
+			editor.setValidator(CurrencyCellEditorValidator.instance());
 			break;
 		default:
 			editor = null;
@@ -62,7 +68,11 @@ public class RuleEditingSupport extends EditingSupport {
 		case 0: return rule.isEnabled();
 		case 1: return rule.getCondition().ordinal();
 		case 2: return rule.getExpression();
-		case 3: return rule.getConversion();
+		case 3: 
+			return rule.getAmount() != null ?
+				Constants.CURRENCY_VALIDATOR.format(
+						rule.getAmount()) : "";
+		case 4: return rule.getConversion();
 		default:
 			break;
 		}
@@ -80,7 +90,15 @@ public class RuleEditingSupport extends EditingSupport {
 			case 0: rule.executeChange(Rule.Properties.enabled, value); break;
 			case 1: rule.executeChange(Rule.Properties.condition, Condition.values()[(Integer)value]); break;
 			case 2: rule.executeChange(Rule.Properties.expression, value); break;
-			case 3: rule.executeChange(Rule.Properties.conversion, value); break;
+			case 3: 
+				String amount = (String)value;
+				if (amount != null && amount.length() > 0) {
+					rule.executeChange(Rule.Properties.amount, Constants.CURRENCY_VALIDATOR.validate(amount).doubleValue());
+				} else {
+					rule.executeChange(Rule.Properties.amount, null);
+				}
+				break;
+			case 4: rule.executeChange(Rule.Properties.conversion, value); break;
 			default:
 				break;
 			}

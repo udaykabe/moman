@@ -22,7 +22,11 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.IHandlerService;
@@ -102,10 +106,51 @@ implements EntityListener<E> {
 		};
 	}
 	
+	protected TableViewer getTableViewer() {
+		return tableViewer;
+	}
+
+	protected void setTableViewer(TableViewer tableViewer) {
+		this.tableViewer = tableViewer;
+	}
+	
+	protected Control createTopControl(Composite parent) {
+		return null;
+	}
+	
+	protected boolean hasTopControl() {
+		return false;
+	}
+
 	@Override
 	public void createPartControl(final Composite parent) {
 		
+		if (hasTopControl()) {
+			GridLayout gridLayout = new GridLayout();
+			gridLayout.numColumns = 1;
+			parent.setLayout(gridLayout);
+			
+			GridData gridData = new GridData();
+			gridData.grabExcessHorizontalSpace = true;
+			gridData.horizontalAlignment = GridData.FILL;
+				
+			Composite topContainer = new Composite(parent, SWT.NONE);
+			topContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
+			topContainer.setLayoutData(gridData);
+			
+			createTopControl(topContainer);
+		}
+		
 		tableViewer = createTableViewer(parent);
+		
+		if (hasTopControl()) {
+			GridData gridData = new GridData();
+			gridData.grabExcessHorizontalSpace = true;
+			gridData.horizontalAlignment = GridData.FILL;
+			gridData.grabExcessVerticalSpace = true;
+			gridData.verticalAlignment = GridData.FILL;
+			tableViewer.getTable().setLayoutData(gridData);
+		}
 		
 		if (isSettingServiceViewer()) {
 			service.setViewer(tableViewer);
@@ -192,8 +237,6 @@ implements EntityListener<E> {
 			if (event != null && event.getEntity() != null) {
 				tableViewer.setSelection(new StructuredSelection(new Object[]{event.getEntity()}));
 				tableViewer.reveal(event.getEntity());
-			} else {
-				refresh();
 			}
 		} catch (Throwable t) {
 			t.printStackTrace();

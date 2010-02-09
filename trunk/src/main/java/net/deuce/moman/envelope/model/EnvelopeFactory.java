@@ -49,6 +49,9 @@ public class EnvelopeFactory extends EntityFactory<Envelope> {
 		if (envelopeService.getUnassignedEnvelope() != null) {
 			topLevel.addChild(envelopeService.getUnassignedEnvelope());
 		}
+		if (envelopeService.getSavingsGoalsEnvelope() != null) {
+			topLevel.addChild(envelopeService.getSavingsGoalsEnvelope());
+		}
 		if (envelopeService.getRootEnvelope() != null) {
 			topLevel.addChild(envelopeService.getRootEnvelope());
 		}
@@ -59,9 +62,9 @@ public class EnvelopeFactory extends EntityFactory<Envelope> {
 		Envelope clone = new Envelope();
 		clone.setId(createUuid());
 		clone.setParent(parent);
-		clone.setEditable(envelope.isEditable() != null ? envelope.isEditable() : Boolean.FALSE);
-		clone.setExpanded(envelope.isExpanded() != null ? envelope.isExpanded() : Boolean.FALSE);
-		clone.setSelected(envelope.isSelected() != null ? envelope.isSelected() : Boolean.FALSE);
+		clone.setEditable(envelope.isEditable());
+		clone.setExpanded(envelope.isExpanded());
+		clone.setSelected(envelope.isSelected());
 		clone.setMonthly(envelope.isMonthly());
 		clone.setRoot(envelope.isRoot());
 		clone.setUnassigned(envelope.isUnassigned());
@@ -69,7 +72,7 @@ public class EnvelopeFactory extends EntityFactory<Envelope> {
 		clone.setName(envelope.getName() != null ? envelope.getName() : "");
 		clone.setFrequency(envelope.getFrequency() != null ? envelope.getFrequency() : Frequency.NONE);
 		clone.setBudget(envelope.getBudget() != null ? envelope.getBudget() : 0.0);
-		clone.setEnabled(envelope.isEnabled() != null ? envelope.isEnabled() : Boolean.FALSE);
+		clone.setEnabled(envelope.isEnabled());
 		clone.setDueDay(envelope.getDueDay() != null ? envelope.getDueDay() : 0);
 		return clone;
 	}

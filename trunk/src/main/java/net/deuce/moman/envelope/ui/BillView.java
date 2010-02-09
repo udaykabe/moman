@@ -79,7 +79,7 @@ public class BillView extends AbstractEntityTableView<Envelope> {
  		tableViewer.getTable().setHeaderVisible(true);
  		tableViewer.getTable().setLinesVisible(true);
  		
-	    tableViewer.setContentProvider(new BillContentProvider());
+	    tableViewer.setContentProvider(new EnvelopeListContentProvider());
 	    tableViewer.setLabelProvider(new BillLabelProvider());
 		return tableViewer;
 	}

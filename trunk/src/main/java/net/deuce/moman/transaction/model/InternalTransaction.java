@@ -329,5 +329,9 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
 		executeOperation(operation);
 	}
 
+	@Override
+	public String toString() {
+		return "InternalTransaction : " + getId() + " - " + description + " - " + amount;
+	}
 	
 }

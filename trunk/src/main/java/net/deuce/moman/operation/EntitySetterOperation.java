@@ -23,7 +23,12 @@ public class EntitySetterOperation<E extends AbstractEntity> extends AbstractOpe
 
 	public EntitySetterOperation(E entity, EntityProperty property, Object newValue) {
 		super("");
-		setLabel(((Class<E>)((ParameterizedType) entity.getClass().getGenericSuperclass()).getActualTypeArguments()[0]).getSimpleName() + " Setter");
+		
+		if (entity.getClass().getGenericSuperclass() instanceof ParameterizedType) {
+			setLabel(((Class<E>)((ParameterizedType) entity.getClass().getGenericSuperclass()).getActualTypeArguments()[0]).getSimpleName() + " Setter");
+		} else {
+			setLabel(entity.getClass().getSimpleName() + " Setter");
+		}
 		
 		if (entity == null) {
 			throw new RuntimeException("Missing parameter 'entity'");

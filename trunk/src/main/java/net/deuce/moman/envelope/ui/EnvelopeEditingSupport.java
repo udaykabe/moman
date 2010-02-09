@@ -56,7 +56,7 @@ public class EnvelopeEditingSupport extends EditingSupport {
 		
 		if (column == 2 && envelope.hasChildren()) return false;
 		
-		return (column != 0 || envelope.isEditable());
+		return envelope.isEditable();
 	}
 
 	@Override
@@ -70,7 +70,7 @@ public class EnvelopeEditingSupport extends EditingSupport {
 	
 		switch (this.column) {
 		case 0: return env.getName();
-		case 2: return Double.toString(env.getBudget());
+		case 2: return Constants.CURRENCY_VALIDATOR.format(env.getBudget());
 		case 3: return env.getFrequency().ordinal();
 		default:
 			break;
@@ -88,7 +88,7 @@ public class EnvelopeEditingSupport extends EditingSupport {
 			switch (this.column) {
 			case 0: env.executeChange(Envelope.Properties.name, value);
 				break;
-			case 2: env.executeChange(Envelope.Properties.budget, new Double((String)value));
+			case 2: env.executeChange(Envelope.Properties.budget, Constants.CURRENCY_VALIDATOR.validate((String)value).doubleValue());
 				break;
 			case 3: env.executeChange(Envelope.Properties.frequency, Frequency.values()[(Integer)value]);
 				break;

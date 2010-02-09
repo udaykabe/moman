@@ -273,6 +273,22 @@ public class Actions {
         }
     };
     
+    public static final ActionFactory NEW_REPEATING_TRANSACTION_ACTION = new ActionFactory(
+			net.deuce.moman.transaction.command.NewRepeating.ID,
+			net.deuce.moman.transaction.command.NewRepeating.ID) {
+        
+        public IWorkbenchAction create(IWorkbenchWindow window) {
+            if (window == null) {
+                throw new IllegalArgumentException();
+            }
+            MomanCommandAction action = new MomanCommandAction(window, getCommandId());
+            action.setId(getId());
+            action.setActionDefinitionId(getId());
+            action.setText(Messages.getString("ToolsMenu.newReleatingTransaction"));
+            return action;
+        }
+    };
+    
 	public static final ActionFactory NEW_ENVELOPE_ACTION = new ActionFactory(
 			net.deuce.moman.envelope.command.New.ID,
 			net.deuce.moman.envelope.command.New.ID) {
@@ -317,6 +333,22 @@ public class Actions {
             action.setId(getId());
             action.setActionDefinitionId(getId());
             action.setText(Messages.getString("ToolsMenu.newBill"));
+            return action;
+        }
+    };
+    
+	public static final ActionFactory NEW_SAVINGS_GOAL_ACTION = new ActionFactory(
+			net.deuce.moman.envelope.command.NewSavingsGoal.ID,
+			net.deuce.moman.envelope.command.NewSavingsGoal.ID) {
+        
+        public IWorkbenchAction create(IWorkbenchWindow window) {
+            if (window == null) {
+                throw new IllegalArgumentException();
+            }
+            MomanCommandAction action = new MomanCommandAction(window, getCommandId());
+            action.setId(getId());
+            action.setActionDefinitionId(getId());
+            action.setText(Messages.getString("ToolsMenu.newSavingsGoal"));
             return action;
         }
     };
@@ -413,6 +445,22 @@ public class Actions {
             action.setId(getId());
             action.setActionDefinitionId(getId());
             action.setText(Messages.getString("NavigateMenu.bills"));
+            return action;
+        }
+    };
+    
+	public static final ActionFactory NAVIGATE_SAVINGS_GOALS_ACTION = new ActionFactory(
+			net.deuce.moman.command.navigate.ActivateSavingsGoalsView.ID,
+			net.deuce.moman.command.navigate.ActivateSavingsGoalsView.ID) {
+        
+        public IWorkbenchAction create(IWorkbenchWindow window) {
+            if (window == null) {
+                throw new IllegalArgumentException();
+            }
+            MomanCommandAction action = new MomanCommandAction(window, getCommandId());
+            action.setId(getId());
+            action.setActionDefinitionId(getId());
+            action.setText(Messages.getString("NavigateMenu.savingsGoals"));
             return action;
         }
     };

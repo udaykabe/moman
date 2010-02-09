@@ -3,11 +3,14 @@ package net.deuce.moman.ui;
 import net.deuce.moman.account.ui.AccountView;
 import net.deuce.moman.allocation.ui.AllocationView;
 import net.deuce.moman.envelope.ui.BillView;
+import net.deuce.moman.envelope.ui.BudgetView;
 import net.deuce.moman.envelope.ui.EnvelopeAllocationsView;
 import net.deuce.moman.envelope.ui.EnvelopeView;
+import net.deuce.moman.envelope.ui.SavingsGoalsView;
 import net.deuce.moman.income.ui.IncomeView;
 import net.deuce.moman.rule.ui.TransactionRuleView;
 import net.deuce.moman.transaction.ui.RegisterView;
+import net.deuce.moman.transaction.ui.RepeatingTransactionView;
 import net.deuce.moman.transaction.ui.TransactionImportView;
 import net.deuce.moman.transaction.ui.TransferView;
 import net.deuce.moman.ui.demo.DemoView;
@@ -32,10 +35,12 @@ public class PerspectiveFactory implements IPerspectiveFactory {
 		layout.addStandaloneView(AccountView.ID, true, IPageLayout.LEFT, 0.25f, editorArea);
 		
 		IFolderLayout envelopeFolder = layout.createFolder("net.deuce.moman.rcp.view.envelopees", IPageLayout.TOP, 0.6f, editorArea);
-		envelopeFolder.addView(AllocationView.ID);
 		envelopeFolder.addView(EnvelopeView.ID);
 		envelopeFolder.addView(IncomeView.ID);
 		envelopeFolder.addView(BillView.ID);
+		envelopeFolder.addView(AllocationView.ID);
+		envelopeFolder.addView(SavingsGoalsView.ID);
+		envelopeFolder.addView(BudgetView.ID);
 		envelopeFolder.addView(DemoView.ID);
 		envelopeFolder.addView(DemoView2.ID);
 		envelopeFolder.addView(DemoView3.ID);
@@ -46,11 +51,12 @@ public class PerspectiveFactory implements IPerspectiveFactory {
 		envelopeFolder.addView(DemoView8.ID);
 		
 		IFolderLayout transactionsFolder = layout.createFolder("net.deuce.moman.rcp.view.transactions", IPageLayout.BOTTOM, 0.4f, editorArea);
-//		transactionsFolder.addView(EnvelopeAllocationsView.ID);
 		transactionsFolder.addView(RegisterView.ID);
+//		transactionsFolder.addView(EnvelopeAllocationsView.ID);
 		transactionsFolder.addView(TransactionImportView.ID);
 		transactionsFolder.addView(TransactionRuleView.ID);
 		transactionsFolder.addView(TransferView.ID);
+		transactionsFolder.addView(RepeatingTransactionView.ID);
 		
 		// prevent all views from being closed
 		layout.getViewLayout(AccountView.ID).setCloseable(false);

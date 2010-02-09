@@ -2,6 +2,7 @@ package net.deuce.moman.envelope.model;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,6 +15,7 @@ import net.deuce.moman.model.AbstractEntity;
 import net.deuce.moman.model.EntityProperty;
 import net.deuce.moman.model.Frequency;
 import net.deuce.moman.transaction.model.InternalTransaction;
+import net.deuce.moman.transaction.model.RepeatingTransaction;
 
 public class Envelope extends AbstractEntity<Envelope> {
 
@@ -23,6 +25,7 @@ public class Envelope extends AbstractEntity<Envelope> {
 	
 	public static final Comparator<Envelope> CHILD_COMPARATOR = new ChildComparator();
 	public static final Comparator<Envelope> BILL_COMPARATOR = new BillComparator();
+	public static final Comparator<Envelope> SAVINGS_GOAL_COMPARATOR = new SavingsGoalComparator();
 	
 	public enum Properties implements EntityProperty {
 	    name(String.class), balance(Double.class), frequency(Frequency.class),
@@ -30,7 +33,8 @@ public class Envelope extends AbstractEntity<Envelope> {
 	    children(List.class), transactions(List.class), editable(Boolean.class),
 	    selected(Boolean.class), expanded(Boolean.class), monthly(Boolean.class),
 	    enabled(Boolean.class), root(Boolean.class), available(Boolean.class),
-	    dueDay(Integer.class), unassigned(Boolean.class), index(Integer.class);
+	    dueDay(Integer.class), unassigned(Boolean.class), index(Integer.class),
+	    savingsGoalDate(Date.class);
 	    
 		private Class<?> type;
 		
@@ -47,16 +51,19 @@ public class Envelope extends AbstractEntity<Envelope> {
 	private Envelope parent;
 	private List<Envelope> children = new LinkedList<Envelope>();
 	private Map<Account, List<InternalTransaction>> transactions = new HashMap<Account, List<InternalTransaction>>();
+	private List<RepeatingTransaction> repeatingTransactions = new LinkedList<RepeatingTransaction>();
 	private Boolean editable;
 	private Boolean selected = Boolean.FALSE;
 	private Boolean expanded = Boolean.TRUE;
 	private Boolean enabled = Boolean.TRUE;
 	private Boolean root = Boolean.FALSE;
 	private Boolean monthly = Boolean.FALSE;
+	private Boolean savingsGoals = Boolean.FALSE;
 	private Boolean unassigned = Boolean.FALSE;
 	private Boolean available = Boolean.FALSE;
 	private Integer dueDay = 0;
 	private Integer index = 0;
+	private Date savingsGoalDate;
 	
 	public Envelope() {}
 	
@@ -66,6 +73,33 @@ public class Envelope extends AbstractEntity<Envelope> {
 		this.editable = editable;
 	}
 	
+	public Boolean isSavingsGoals() {
+		return evaluateBoolean(savingsGoals);
+	}
+
+	public Boolean getSavingsGoals() {
+		return savingsGoals;
+	}
+
+	public void setSavingsGoals(Boolean savingsGoal) {
+		this.savingsGoals = savingsGoal;
+	}
+
+	public boolean isSavingsGoal() {
+		return budget != null && savingsGoalDate != null;
+	}
+	
+	public Date getSavingsGoalDate() {
+		return savingsGoalDate;
+	}
+
+	public void setSavingsGoalDate(Date savingsGoalDate) {
+		if (this.savingsGoalDate != savingsGoalDate) {
+			this.savingsGoalDate = savingsGoalDate;
+			getMonitor().fireEntityChanged(this, Properties.savingsGoalDate);
+		}
+	}
+
 	public Integer getIndex() {
 		return index;
 	}
@@ -203,14 +237,6 @@ public class Envelope extends AbstractEntity<Envelope> {
 	public Double getBalance() {
 		if (isBalanceDirty()) {
 			
-			double sum = 0;
-			for (List<InternalTransaction> list : transactions.values()) {
-				for (InternalTransaction it : list) {
-					System.out.println("Transaction: " + it.getDescription() + " - " + it.getAmount());
-					sum += it.getAmount();
-				}
-			}
-			
 			Double value = 0.0;
 			for (InternalTransaction t : getTransactions()) {
 				value += t.getAmount();
@@ -239,7 +265,11 @@ public class Envelope extends AbstractEntity<Envelope> {
 		this.balance = balance;
 	}
 
-	public Boolean isEditable() {
+	public boolean isEditable() {
+		return evaluateBoolean(editable);
+	}
+
+	public Boolean getEditable() {
 		return editable;
 	}
 
@@ -248,6 +278,10 @@ public class Envelope extends AbstractEntity<Envelope> {
 	}
 	
 	public Boolean isSelected() {
+		return evaluateBoolean(selected);
+	}
+
+	public Boolean getSelected() {
 		return selected;
 	}
 
@@ -268,6 +302,10 @@ public class Envelope extends AbstractEntity<Envelope> {
 	}
 	
 	public Boolean isExpanded() {
+		return evaluateBoolean(expanded);
+	}
+
+	public Boolean getExpanded() {
 		return expanded;
 	}
 
@@ -330,6 +368,15 @@ public class Envelope extends AbstractEntity<Envelope> {
 	}
 	
 	public void addTransaction(InternalTransaction transaction, boolean notifyTransaction) {
+		if (transaction instanceof RepeatingTransaction) {
+			repeatingTransactions.add((RepeatingTransaction)transaction);
+			return;
+		}
+		
+		if ("State Farm Insurance".equals(name)) {
+			System.out.println();
+		}
+		
 		Account account = transaction.getAccount();
 		getAccountTransactions(account).add(transaction);
 		resetBalance(this);
@@ -344,6 +391,12 @@ public class Envelope extends AbstractEntity<Envelope> {
 	}
 	
 	public void removeTransaction(InternalTransaction transaction, boolean notifyTransaction) {
+		
+		if (transaction instanceof RepeatingTransaction) {
+			repeatingTransactions.remove((RepeatingTransaction)transaction);
+			return;
+		}
+		
 		Account account = transaction.getAccount();
 		List<InternalTransaction> l = getAccountTransactions(account);
 		l.remove(transaction);
@@ -365,6 +418,10 @@ public class Envelope extends AbstractEntity<Envelope> {
 		return list;
 	}
 	
+	public List<RepeatingTransaction> getRepeatingTransactions() {
+		return repeatingTransactions;
+	}
+
 	public List<InternalTransaction> getAllTransactions() {
 		List<InternalTransaction> list = new LinkedList<InternalTransaction>();
 		
@@ -375,7 +432,7 @@ public class Envelope extends AbstractEntity<Envelope> {
 	}
 	
 	public boolean isSpecialEnvelope() {
-		return available || unassigned || root || monthly;
+		return available || unassigned || root || monthly || savingsGoals;
 	}
 	
 	@Override
@@ -385,10 +442,11 @@ public class Envelope extends AbstractEntity<Envelope> {
 
 	@Override
 	public int compare(Envelope o1, Envelope o2) {
+			
 		if (o1.isSpecialEnvelope() && o2.isSpecialEnvelope()) {
 			if (o1.isAvailable() || o2.isRoot()) return -1;
 			if (o1.isRoot() || o2.isAvailable()) return 1;
-			if (o1.isUnassigned()) return -1;
+			if (o1.isUnassigned() || o2.isSavingsGoals()) return -1;
 			return 1;
 		}
 				
@@ -402,9 +460,14 @@ public class Envelope extends AbstractEntity<Envelope> {
 		return "Envelope("+name+")";
 	}
 	
-	public Boolean isEnabled() {
+	public boolean isEnabled() {
+		return evaluateBoolean(enabled);
+	}
+	
+	public Boolean getEnabled() {
 		return enabled;
 	}
+	
 	public void setEnabled(Boolean enabled) {
 		if (this.enabled != enabled) {
 			this.enabled = enabled;
@@ -430,8 +493,23 @@ public class Envelope extends AbstractEntity<Envelope> {
 	private static class ChildComparator implements Comparator<Envelope> {
 		@Override
 		public int compare(Envelope e1, Envelope e2) {
+			
+			if (e1.isSpecialEnvelope() && e2.isSpecialEnvelope()) {
+				if (e1.isAvailable() || e2.isRoot()) return -1;
+				if (e1.isRoot() || e2.isAvailable()) return 1;
+				if (e1.isUnassigned() || e2.isSavingsGoals()) return -1;
+				return 1;
+			}
+			
 			if (!e1.hasChildren() && e2.hasChildren()) return -1;
 			if (e1.hasChildren() && !e2.hasChildren()) return 1;
+			return e1.getName().compareTo(e2.getName());
+		}
+	}
+	
+	private static class SavingsGoalComparator implements Comparator<Envelope> {
+		@Override
+		public int compare(Envelope e1, Envelope e2) {
 			return e1.getName().compareTo(e2.getName());
 		}
 	}

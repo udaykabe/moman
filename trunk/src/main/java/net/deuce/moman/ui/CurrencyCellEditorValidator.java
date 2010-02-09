@@ -1,8 +1,7 @@
 package net.deuce.moman.ui;
 
 
-import java.text.DecimalFormat;
-import java.text.ParseException;
+import net.deuce.moman.Constants;
 
 import org.eclipse.jface.viewers.ICellEditorValidator;
 
@@ -10,12 +9,7 @@ public class CurrencyCellEditorValidator implements ICellEditorValidator {
 	
 	private static CurrencyCellEditorValidator __instance = new CurrencyCellEditorValidator();
 	
-	private DecimalFormat format = new DecimalFormat();
-	
 	private CurrencyCellEditorValidator() {
-		format.setGroupingUsed(true);
-		format.setMaximumFractionDigits(2);
-		format.setMinimumFractionDigits(0);
 	}
 	
 	public static CurrencyCellEditorValidator instance() {
@@ -28,9 +22,7 @@ public class CurrencyCellEditorValidator implements ICellEditorValidator {
 			return "Not a valid value type: " + value.getClass().getName();
 		}
 		
-		try {
-			format.parse((String)value);
-		} catch (ParseException e) {
+		if (!Constants.CURRENCY_VALIDATOR.isValid((String)value)) {
 			return "Please enter a currency value";
 		}
 		return null;

@@ -1,5 +1,6 @@
 package net.deuce.moman.account.ui;
 
+import net.deuce.moman.Constants;
 import net.deuce.moman.account.model.Account;
 import net.deuce.moman.ui.Activator;
 
@@ -31,7 +32,8 @@ public class AccountLabelProvider implements ITableLabelProvider {
 	public String getColumnText(Object element, int columnIndex) {
 		Account account = (Account) element;
 		switch (columnIndex) {
-		case 1: return account.getNickname();
+		case 1: return account.getNickname() + " (" +
+			Constants.CURRENCY_VALIDATOR.format(account.getBalance()) + ")";
 		case 2: return account.getAccountId();
 		default:
 			break;

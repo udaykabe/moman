@@ -1,13 +1,17 @@
 package net.deuce.moman.envelope.model;
 
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.deuce.moman.Constants;
 import net.deuce.moman.envelope.service.EnvelopeService;
 import net.deuce.moman.model.AbstractBuilder;
 import net.deuce.moman.model.Frequency;
 import net.deuce.moman.transaction.model.InternalTransaction;
+import net.deuce.moman.transaction.model.RepeatingTransaction;
+import net.deuce.moman.transaction.service.RepeatingTransactionService;
 import net.deuce.moman.transaction.service.TransactionService;
 
 import org.dom4j.Document;
@@ -23,6 +27,9 @@ public class EnvelopeBuilder extends AbstractBuilder {
 	
 	@Autowired
 	private TransactionService transactionService;
+
+	@Autowired
+	private RepeatingTransactionService repeatingTransactionService;
 
 	@SuppressWarnings("unchecked")
 	public void parseXml(Element e) {
@@ -48,13 +55,20 @@ public class EnvelopeBuilder extends AbstractBuilder {
 				envelopeService.setAvailableEnvelope(envelope);
 			} else if (envelope.isMonthly()) {
 				envelopeService.setMonthlyEnvelope(envelope);
+			} else if (envelope.isSavingsGoals()) {
+				envelopeService.setSavingsGoalsEnvelope(envelope);
 			}
 
+			InternalTransaction trans;
 			List<Element> transactionElements = n.selectNodes("transactions/transaction");
 			if (transactionElements != null) {
 				for (Element t : transactionElements) {
 					tid = t.attributeValue("id");
-					envelope.addTransaction(transactionService.getEntity(tid), false);
+					trans = transactionService.findEntity(tid);
+					if (trans == null) {
+						trans = repeatingTransactionService.getEntity(tid);
+					}
+					envelope.addTransaction(trans, false);
 				}
 			}
 			
@@ -87,23 +101,33 @@ public class EnvelopeBuilder extends AbstractBuilder {
 	}
 	
 	protected Envelope processEnvelopeElement(Element e) {
-		dumpElement(e);
-		Envelope envelope = new Envelope();
-		envelope.setId(e.attributeValue("id"));
-		envelope.setEditable(Boolean.valueOf(e.elementText("editable")));
-		envelope.setExpanded(Boolean.valueOf(e.elementText("expanded")));
-		envelope.setSelected(Boolean.valueOf(e.elementText("selected")));
-		envelope.setMonthly(Boolean.valueOf(e.elementText("monthly")));
-		envelope.setRoot(Boolean.valueOf(e.elementText("root")));
-		envelope.setUnassigned(Boolean.valueOf(e.elementText("unassigned")));
-		envelope.setAvailable(Boolean.valueOf(e.elementText("available")));
-		envelope.setIndex(Integer.valueOf(e.elementText("index")));
-		envelope.setName(e.elementText("name"));
-		envelope.setFrequency(Frequency.valueOf(e.elementText("frequency")));
-		envelope.setBudget(Double.valueOf(e.elementText("budget")));
-		envelope.setEnabled(Boolean.valueOf(e.elementText("enabled")));
-		envelope.setDueDay(Integer.valueOf(e.elementText("dueDay")));
-		return envelope;
+			try {
+//				dumpElement(e);
+				Envelope envelope = new Envelope();
+				envelope.setId(e.attributeValue("id"));
+				envelope.setEditable(Boolean.valueOf(e.elementText("editable")));
+				envelope.setExpanded(Boolean.valueOf(e.elementText("expanded")));
+				envelope.setSelected(Boolean.valueOf(e.elementText("selected")));
+				envelope.setMonthly(Boolean.valueOf(e.elementText("monthly")));
+				envelope.setSavingsGoals(Boolean.valueOf(e.elementText("savings-goals")));
+				envelope.setRoot(Boolean.valueOf(e.elementText("root")));
+				envelope.setUnassigned(Boolean.valueOf(e.elementText("unassigned")));
+				envelope.setAvailable(Boolean.valueOf(e.elementText("available")));
+				envelope.setIndex(Integer.valueOf(e.elementText("index")));
+				envelope.setName(e.elementText("name"));
+				envelope.setFrequency(Frequency.valueOf(e.elementText("frequency")));
+				envelope.setBudget(Double.valueOf(e.elementText("budget")));
+				envelope.setEnabled(Boolean.valueOf(e.elementText("enabled")));
+				envelope.setDueDay(Integer.valueOf(e.elementText("dueDay")));
+				String val = e.elementText("savings-goal-date");
+				if (val != null) {
+					envelope.setSavingsGoalDate(Constants.SHORT_DATE_FORMAT.parse(val));
+				}
+				return envelope;
+		} catch (ParseException pe) {
+			pe.printStackTrace();
+			throw new RuntimeException(pe);
+		}
 	}
 	
 	protected Element buildEnvelope(Envelope env, Element root, String name) {
@@ -112,11 +136,12 @@ public class EnvelopeBuilder extends AbstractBuilder {
 		
 		el = root.addElement(name);
 		el.addAttribute("id", env.getId());
-		addOptionalBooleanElement(el, "editable", env.isEditable());
+		addElement(el, "editable", env.isEditable());
 		addOptionalBooleanElement(el, "selected", env.isSelected());
 		addOptionalBooleanElement(el, "root", env.isRoot());
 		addOptionalBooleanElement(el, "unassigned", env.isUnassigned());
 		addOptionalBooleanElement(el, "monthly", env.isMonthly());
+		addOptionalBooleanElement(el, "savings-goals", env.isSavingsGoals());
 		addOptionalBooleanElement(el, "available", env.isAvailable());
 		addOptionalBooleanElement(el, "expanded", env.isEnabled());
 		addOptionalBooleanElement(el, "enabled", env.isEnabled());
@@ -126,12 +151,18 @@ public class EnvelopeBuilder extends AbstractBuilder {
 		addElement(el, "budget", env.getBudget().toString());
 		
 		addElement(el, "dueDay", env.getDueDay().toString());
+		if (env.getSavingsGoalDate() != null) {
+			addElement(el, "savings-goal-date", Constants.SHORT_DATE_FORMAT.format(env.getSavingsGoalDate()));
+		}
 		
 		if (env.getParent() != null) {
 			el.addElement("parent").addAttribute("id", env.getParent().getId());
 		}
 		tel = el.addElement("transactions");
 		for (InternalTransaction trans : env.getAllTransactions()) {
+			tel.addElement("transaction").addAttribute("id", trans.getId());
+		}
+		for (RepeatingTransaction trans : env.getRepeatingTransactions()) {
 			tel.addElement("transaction").addAttribute("id", trans.getId());
 		}
 		

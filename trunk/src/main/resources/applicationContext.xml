@@ -22,6 +22,7 @@
 				<ref bean="transactionService"/>
 				<ref bean="payeeService"/>
 				<ref bean="allocationSetService"/>
+				<ref bean="repeatingTransactionService"/>
 			</list>
 		</property>
 		<property name="builders">
@@ -29,6 +30,7 @@
 				<ref bean="accountBuilder"/>
 				<ref bean="incomeBuilder"/>
 				<ref bean="transactionBuilder"/>
+				<ref bean="repeatingTransactionBuilder"/>
 				<ref bean="envelopeBuilder"/>
 				<ref bean="transactionRuleBuilder"/>
 				<ref bean="payeeBuilder"/>

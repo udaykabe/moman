@@ -15,6 +15,7 @@ import net.deuce.moman.rule.model.Rule;
 import net.deuce.moman.rule.service.TransactionRuleService;
 import net.deuce.moman.service.EntityService;
 import net.deuce.moman.transaction.model.InternalTransaction;
+import net.deuce.moman.transaction.model.RepeatingTransaction;
 import net.deuce.moman.transaction.model.TransactionFactory;
 import net.deuce.moman.transaction.service.TransactionService;
 import net.sf.ofx4j.domain.data.common.TransactionType;
@@ -39,6 +40,7 @@ public class EnvelopeService extends EntityService<Envelope> {
 	private TransactionFactory transactionFactory;
 
 	private Map<String, Envelope> bills = new HashMap<String, Envelope>();
+	private Map<String, Envelope> savingsGoals = new HashMap<String, Envelope>();
 	private Envelope defaultRootEnvelope;
 	private Envelope defaultAvailableEnvelope;
 	private Envelope defaultUnassignedEnvelope;
@@ -48,7 +50,9 @@ public class EnvelopeService extends EntityService<Envelope> {
 	private Envelope availableEnvelope;
 	private Envelope selectedEnvelope;
 	private Envelope monthlyEnvelope;
+	private Envelope savingsGoalsEnvelope;
 	private TableViewer billViewer;
+	private TableViewer savingsGoalViewer;
 	private int maxIndex = 0;
 	
 	public TableViewer getBillViewer() {
@@ -57,6 +61,14 @@ public class EnvelopeService extends EntityService<Envelope> {
 
 	public void setBillViewer(TableViewer billViewer) {
 		this.billViewer = billViewer;
+	}
+
+	public TableViewer getSavingsGoalViewer() {
+		return savingsGoalViewer;
+	}
+
+	public void setSavingsGoalViewer(TableViewer savingsGoalViewer) {
+		this.savingsGoalViewer = savingsGoalViewer;
 	}
 
 	public Envelope getSelectedEnvelope() {
@@ -83,6 +95,14 @@ public class EnvelopeService extends EntityService<Envelope> {
 		return rootEnvelope;
 	}
 	
+	public Envelope getSavingsGoalsEnvelope() {
+		return savingsGoalsEnvelope;
+	}
+
+	public void setSavingsGoalsEnvelope(Envelope savingsGoalsEnvelope) {
+		this.savingsGoalsEnvelope = savingsGoalsEnvelope;
+	}
+
 	public Envelope getUnassignedEnvelope() {
 		return unassignedEnvelope;
 	}
@@ -97,6 +117,11 @@ public class EnvelopeService extends EntityService<Envelope> {
 
 	public void setAvailableEnvelope(Envelope availableEnvelope) {
 		this.availableEnvelope = availableEnvelope;
+	}
+	
+	public void moveTransaction(Account account, Envelope source,
+			Envelope target, InternalTransaction transaction) {
+		
 	}
 	
 	public void transfer(Account sourceAccount, Account targetAccount,
@@ -123,6 +148,8 @@ public class EnvelopeService extends EntityService<Envelope> {
 		sTransaction.setTransferTransaction(tTransaction);
 		tTransaction.setTransferTransaction(sTransaction);
 		
+		fireEntityChanged(source);
+		fireEntityChanged(target);
 	}
 	
 	public void importDefaultEnvelopes() {
@@ -187,8 +214,16 @@ public class EnvelopeService extends EntityService<Envelope> {
 			monthlyEnvelope = envelope;
 		}
 		
+		if (envelope.isSavingsGoals()) {
+			savingsGoalsEnvelope = envelope;
+		}
+		
 		if (envelope.isBill()) {
 			bills.put(envelope.getId(), envelope);
+		}
+		
+		if (envelope.isSavingsGoal()) {
+			savingsGoals.put(envelope.getId(), envelope);
 		}
 		
 		if (envelope.getIndex() > maxIndex) {
@@ -221,11 +256,48 @@ public class EnvelopeService extends EntityService<Envelope> {
 				rule.setEnvelope(unassignedEnvelope);
 			}
 		}
+		
 		if (envelope.isBill()) {
 			bills.remove(envelope.getId());
 		}
 		
+		if (envelope.isSavingsGoal()) {
+			savingsGoals.remove(envelope.getId());
+		}
+		
 		super.removeEntity(envelope);
+	}
+	
+	public List<Envelope> getSavingsGoals() {
+		return new LinkedList<Envelope>(savingsGoals.values());
+	}
+	
+	public List<Envelope> getOrderedSavingsGoals(boolean reverse) {
+		List<Envelope> list = getSavingsGoals();
+		if (list.size() > 0) {
+			Envelope entity = list.get(0);
+			Comparator<Envelope> comparator = reverse ? entity.getReverseComparator() :
+				entity.getForwardComparator();
+			Collections.sort(list, comparator);
+		}
+		return list;
+	}
+	
+	public List<Envelope> getOrderedBudgetedEnvelopes(boolean reverse) {
+		List<Envelope> list = new LinkedList<Envelope>();
+		for (Envelope env : getEntities()) {
+			if (env.isEnabled() && env.getBudget() != null && env.getBudget() > 0.0) {
+				list.add(env);
+			}
+		}
+		
+		if (list.size() > 0) {
+			Envelope entity = list.get(0);
+			Comparator<Envelope> comparator = reverse ? entity.getReverseComparator() :
+				entity.getForwardComparator();
+			Collections.sort(list, comparator);
+		}
+		return list;
 	}
 	
 	public List<Envelope> getBills() {
@@ -271,7 +343,19 @@ public class EnvelopeService extends EntityService<Envelope> {
 				
 			}
 			
+			if (env.isBill()) {
+				bills.put(env.getId(), env);
+			}
+			
+			if (env.isSavingsGoal()) {
+				savingsGoals.put(env.getId(), env);
+			}
+			
 			for (InternalTransaction t : env.getAllTransactions()) {
+				t.addSplit(env, false);
+			}
+			
+			for (RepeatingTransaction t : env.getRepeatingTransactions()) {
 				t.addSplit(env, false);
 			}
 		}
