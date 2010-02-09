@@ -16,8 +16,10 @@ import net.deuce.moman.payee.service.PayeeService;
 import net.deuce.moman.rule.model.RuleFactory;
 import net.deuce.moman.rule.service.TransactionRuleService;
 import net.deuce.moman.spring.BeanContainer;
+import net.deuce.moman.transaction.model.RepeatingTransactionFactory;
 import net.deuce.moman.transaction.model.TransactionFactory;
 import net.deuce.moman.transaction.service.ImportService;
+import net.deuce.moman.transaction.service.RepeatingTransactionService;
 import net.deuce.moman.transaction.service.TransactionService;
 
 public class ServiceNeeder {
@@ -36,6 +38,7 @@ public class ServiceNeeder {
 	private TransactionRuleService transactionRuleService;
 	private AllocationSetService allocationSetService;
 	private PayeeService payeeService;
+	private RepeatingTransactionService repeatingTransactionService;
 	
 	private AccountFactory accountFactory;
 	private EnvelopeFactory envelopeFactory;
@@ -46,6 +49,7 @@ public class ServiceNeeder {
 	private AllocationFactory allocationFactory;
 	private RuleFactory ruleFactory;
 	private PayeeFactory payeeFactory;
+	private RepeatingTransactionFactory repeatingTransactionFactory;
 	
 	protected ServiceNeeder() {
 		try {
@@ -67,6 +71,8 @@ public class ServiceNeeder {
 				"payeeService", PayeeService.class);
 		allocationSetService = (AllocationSetService)BeanContainer.instance().getBean(
 				"allocationSetService", AllocationSetService.class);
+		repeatingTransactionService = (RepeatingTransactionService)BeanContainer.instance().getBean(
+				"repeatingTransactionService", RepeatingTransactionService.class);
 		accountFactory = (AccountFactory)BeanContainer.instance().getBean(
 				"accountFactory", AccountFactory.class);
 		envelopeFactory = (EnvelopeFactory)BeanContainer.instance().getBean(
@@ -85,6 +91,8 @@ public class ServiceNeeder {
 				"allocationSetFactory", AllocationSetFactory.class);
 		allocationFactory = (AllocationFactory)BeanContainer.instance().getBean(
 				"allocationFactory", AllocationFactory.class);
+		repeatingTransactionFactory = (RepeatingTransactionFactory)BeanContainer.instance().getBean(
+				"repeatingTransactionFactory", RepeatingTransactionFactory.class);
 		serviceContainer = (ServiceContainer)BeanContainer.instance().getBean(
 				"serviceContainer", ServiceContainer.class);
 		
@@ -93,6 +101,24 @@ public class ServiceNeeder {
 		}
 	}
 	
+	public RepeatingTransactionService getRepeatingTransactionService() {
+		return repeatingTransactionService;
+	}
+
+	public void setRepeatingTransactionService(
+			RepeatingTransactionService repeatingTransactionService) {
+		this.repeatingTransactionService = repeatingTransactionService;
+	}
+
+	public RepeatingTransactionFactory getRepeatingTransactionFactory() {
+		return repeatingTransactionFactory;
+	}
+
+	public void setRepeatingTransactionFactory(
+			RepeatingTransactionFactory repeatingTransactionFactory) {
+		this.repeatingTransactionFactory = repeatingTransactionFactory;
+	}
+
 	public AccountService getAccountService() {
 		return accountService;
 	}

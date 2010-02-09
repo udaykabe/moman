@@ -104,7 +104,10 @@ public class AccountDialog extends AbstractModelDialog<Account> {
 					initialBalance = Constants.CURRENCY_VALIDATOR.validate(initialBalanceText.getText()).doubleValue();
 				}
 				account = ServiceNeeder.instance().getAccountFactory().newEntity(
-						true, null, null, null, null, null, null, false);
+						true, null, null, null, null, null, null, false, 0.0);
+				if (initialBalance != null) {
+					account.setBalance(initialBalance);
+				}
 			} 
 			account.setAccountId(getFieldText(accountIdText));
 			account.setBankId(getFieldText(bankIdText));

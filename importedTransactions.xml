@@ -2,63 +2,123 @@
 
 <moman>
   <transactions>
-    <transaction id="60b60e5b-2c94-37c7-be66-2f4fda7b3340">
-      <amount>925.0</amount>
-      <type>CREDIT</type>
-      <date>2010-02-03 05:00:00 AM</date>
-      <desc>ATM CHECK DEPOSIT</desc>
-      <extid>201002030</extid>
+    <transaction id="9d21b43d-0c41-3040-9652-fd7c507ad839">
+      <amount>-13.61</amount>
+      <type>DEBIT</type>
+      <date>2010-02-08 05:00:00 AM</date>
+      <desc>BOSTON MARKET #272 PHOEN</desc>
+      <extid>2010020810</extid>
+      <memo>02/05BOSTON MA</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="470832ab-dfab-3be3-b54c-d2bbfd5a51ad">
+      <amount>-118.84</amount>
+      <type>DEBIT</type>
+      <date>2010-02-08 05:00:00 AM</date>
+      <desc>BARCLAYCARD US CREDITCARD 8295</desc>
+      <extid>201002083</extid>
+      <memo>2753 WEB ID: 2510407970</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="429504bf-3e5c-3c89-8a8e-50638fcbb2df">
+      <amount>-34.99</amount>
+      <type>DEBIT</type>
+      <date>2010-02-08 05:00:00 AM</date>
+      <desc>24HR FITNESS DUES 800-43</desc>
+      <extid>201002087</extid>
+      <memo>02/0524HR FITN</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="8c7589e3-5bb4-35d4-97b5-4c1f1bb1ce08">
+      <amount>-80.0</amount>
+      <type>DEBIT</type>
+      <date>2010-02-08 05:00:00 AM</date>
+      <desc>Annette Trijillo</desc>
+      <extid>201002085</extid>
       <memo></memo>
+      <check>265</check>
+      <ref></ref>
+    </transaction>
+    <transaction id="505efe73-1943-3804-9af3-8f31bdcaa81d">
+      <amount>-48.7</amount>
+      <type>DEBIT</type>
+      <date>2010-02-08 05:00:00 AM</date>
+      <desc>DELHI PALACE TEMPE AZ</desc>
+      <extid>201002086</extid>
+      <memo>02/06DELHI PAL</memo>
       <check></check>
       <ref></ref>
     </transaction>
-    <transaction id="e967c94d-a675-3356-96f1-2bdd3e2ba1fd">
-      <amount>-309.0</amount>
+    <transaction id="68ee6f06-e2e5-3ea5-8e13-8a387aec81de">
+      <amount>-5.48</amount>
       <type>DEBIT</type>
-      <date>2010-02-02 05:00:00 AM</date>
+      <date>2010-02-08 05:00:00 AM</date>
+      <desc>TACO BELL 21245 Q53 T</desc>
+      <extid>2010020811</extid>
+      <memo>02/04TACO BELL</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="cc301919-258f-3baf-b192-3353b12dbee1">
+      <amount>-116.58</amount>
+      <type>DEBIT</type>
+      <date>2010-02-08 05:00:00 AM</date>
+      <desc>FRYS FOOD &amp; DRUG 1815 G</desc>
+      <extid>201002084</extid>
+      <memo>02/06FRYS FOOD Purcha</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="83fb1b16-ccb5-39ba-a3f2-31ece87276e7">
+      <amount>-30.0</amount>
+      <type>DEBIT</type>
+      <date>2010-02-08 05:00:00 AM</date>
+      <desc>CHECK 264</desc>
+      <extid>201002088</extid>
+      <memo></memo>
+      <check>264</check>
+      <ref></ref>
+    </transaction>
+    <transaction id="333b4319-ebdc-3914-98fe-5c565a1fce99">
+      <amount>-249.99</amount>
+      <type>DEBIT</type>
+      <date>2010-02-08 05:00:00 AM</date>
+      <desc>PAYPAL ECHECK 4E82</desc>
+      <extid>201002081</extid>
+      <memo>243V8J9GS WEB ID: PAYPALEC77</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="458e3324-2674-392c-bf83-aa58fff7dc23">
+      <amount>-175.0</amount>
+      <type>DEBIT</type>
+      <date>2010-02-08 05:00:00 AM</date>
+      <desc>IRS USATAXPYMT 2700</desc>
+      <extid>201002082</extid>
+      <memo>43900902209 WEB ID: 3387702000</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="4931b297-ee42-3cdf-a3ee-f1c9ce0eef41">
+      <amount>50.0</amount>
+      <type>CREDIT</type>
+      <date>2010-02-08 05:00:00 AM</date>
+      <desc>INTOWN SUITES MCDOWELL P</desc>
+      <extid>201002080</extid>
+      <memo>02/05INTOWN SU</memo>
+      <check></check>
+      <ref></ref>
+    </transaction>
+    <transaction id="237cb23d-b4ab-3073-9edd-ea43c671f33e">
+      <amount>-19.5</amount>
+      <type>DEBIT</type>
+      <date>2010-02-08 05:00:00 AM</date>
       <desc>Rossmar &amp; Graham RESIDENT</desc>
-      <extid>201002021</extid>
+      <extid>201002089</extid>
       <memo>WEB ID: W050568743</memo>
-      <check></check>
-      <ref></ref>
-    </transaction>
-    <transaction id="8600ef7b-2fbd-3701-b4e2-be6ce31c7da6">
-      <amount>-129.01</amount>
-      <type>DEBIT</type>
-      <date>2010-02-02 05:00:00 AM</date>
-      <desc>VZWRLSS*APOCC VISW 800-9</desc>
-      <extid>201002023</extid>
-      <memo>02/01VZWRLSS*A</memo>
-      <check></check>
-      <ref></ref>
-    </transaction>
-    <transaction id="50d02c1b-a901-3920-909f-b0353cf4346e">
-      <amount>-33.89</amount>
-      <type>DEBIT</type>
-      <date>2010-02-03 05:00:00 AM</date>
-      <desc>THAI ELEPHANT BISTRO TEM</desc>
-      <extid>201002031</extid>
-      <memo>02/01THAI ELEP</memo>
-      <check></check>
-      <ref></ref>
-    </transaction>
-    <transaction id="f0bb9e77-31d2-33fb-b19b-d782505d9de9">
-      <amount>-154.11</amount>
-      <type>DEBIT</type>
-      <date>2010-02-02 05:00:00 AM</date>
-      <desc>STATE FARM RO 27 SFPP</desc>
-      <extid>201002022</extid>
-      <memo>PPD ID: 9000307001</memo>
-      <check></check>
-      <ref></ref>
-    </transaction>
-    <transaction id="551357df-05c1-349e-8def-0b043aac71ed">
-      <amount>-790.91</amount>
-      <type>DEBIT</type>
-      <date>2010-02-02 05:00:00 AM</date>
-      <desc>LOANSERVICING AUTOMATIC</desc>
-      <extid>201002020</extid>
-      <memo>PPD ID: 1231694840</memo>
       <check></check>
       <ref></ref>
     </transaction>

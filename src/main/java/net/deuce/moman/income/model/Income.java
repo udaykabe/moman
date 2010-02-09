@@ -2,6 +2,7 @@ package net.deuce.moman.income.model;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import net.deuce.moman.model.AbstractEntity;
 import net.deuce.moman.model.EntityProperty;
@@ -115,4 +116,16 @@ public class Income extends AbstractEntity<Income> {
 		}
 	}
 
+	public int calcPaycheckCountUntilDate(Date d) {
+		Frequency freq = getFrequency();
+		Calendar cal = new GregorianCalendar();
+		cal.setTime(getNextPayday());
+		int count = 0;
+		while (d.after(cal.getTime())) {
+			count++;
+			cal.add(freq.getCalendarFrequency(), freq.getCardinality());
+		}
+		
+		return count;
+	}
 }

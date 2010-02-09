@@ -1,5 +1,6 @@
 package net.deuce.moman.rule.ui;
 
+import net.deuce.moman.Constants;
 import net.deuce.moman.rule.model.Rule;
 import net.deuce.moman.ui.Activator;
 
@@ -33,8 +34,9 @@ public class RuleLabelProvider implements ITableLabelProvider {
 		switch (columnIndex) {
 		case 1: return rule.getCondition().name();
 		case 2: return rule.getExpression();
-		case 3: return rule.getConversion();
-		case 4: return rule.getEnvelope().getName();
+		case 3: return rule.getAmount() != null ? Constants.CURRENCY_VALIDATOR.format(rule.getAmount()) : "";
+		case 4: return rule.getConversion();
+		case 5: return rule.getEnvelope().getName();
 		default:
 			break;
         }
@@ -43,26 +45,19 @@ public class RuleLabelProvider implements ITableLabelProvider {
 
 	@Override
 	public void addListener(ILabelProviderListener listener) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public boolean isLabelProperty(Object element, String property) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public void removeListener(ILabelProviderListener listener) {
-		// TODO Auto-generated method stub
-
 	}
 
 }

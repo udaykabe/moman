@@ -25,7 +25,7 @@ public abstract class AbstractAccountHandler extends AbstractHandler {
 		if (!(selection instanceof StructuredSelection)) return null;
 		
 		StructuredSelection ss = (StructuredSelection)selection;
-		if (ss.size() == 0) return null;
+		if (ss.size() == 0) return ss.toList();
 		
 		if (!multiSelection && ss.size() > 1) {
 			MessageDialog.openError(window.getShell(), "Error", "Select only one account.");

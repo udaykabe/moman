@@ -4,6 +4,8 @@ import java.util.List;
 
 import net.deuce.moman.allocation.service.AllocationSetService;
 import net.deuce.moman.envelope.service.EnvelopeService;
+import net.deuce.moman.income.model.Income;
+import net.deuce.moman.income.service.IncomeService;
 import net.deuce.moman.model.AbstractBuilder;
 
 import org.dom4j.Document;
@@ -16,6 +18,9 @@ public class AllocationSetBuilder extends AbstractBuilder {
 	
 	@Autowired
 	private EnvelopeService envelopeService;
+	
+	@Autowired
+	private IncomeService incomeService;
 	
 	@Autowired
 	private AllocationSetService allocationSetService;
@@ -50,13 +55,19 @@ public class AllocationSetBuilder extends AbstractBuilder {
 	}
 	
 	protected AllocationSet processAllocationSetElement(Element e) {
-		dumpElement(e);
+//		dumpElement(e);
+		
+		Income income = null;
+		Element el = e.element("income");
+		if (el != null) {
+			income = incomeService.getEntity(el.attributeValue("id"));
+		}
 		return allocationSetFactory.buildEntity(
-				e.attributeValue("id"), e.elementText("name"));
+				e.attributeValue("id"), e.elementText("name"), income );
 	}
 	
 	protected Allocation processAllocationElement(Element e, AllocationSet allocationSet) {
-		dumpElement(e);
+//		dumpElement(e);
 		Allocation allocation = allocationFactory.buildEntity(
 				e.attributeValue("id"),
 				Integer.valueOf(e.elementText("index")),
@@ -79,6 +90,9 @@ public class AllocationSetBuilder extends AbstractBuilder {
 		el = root.addElement(name);
 		el.addAttribute("id", allocationSet.getId());
 		addElement(el, "name", allocationSet.getName());
+		if (allocationSet.getIncome() != null) {
+			el.addElement("income").addAttribute("id", allocationSet.getIncome().getId());
+		}
 		
 		sel = el.addElement("allocations");
 		for (Allocation allocation : allocationSet.getAllocations()) {

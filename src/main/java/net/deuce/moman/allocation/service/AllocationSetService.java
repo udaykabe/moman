@@ -19,4 +19,10 @@ public class AllocationSetService extends EntityService<AllocationSet> {
 		this.allocationViewer = allocationViewer;
 	}
 
+	public boolean doesNameExist(String name) {
+		for (AllocationSet allocationSet : getEntities()) {
+			if (allocationSet.getName().equals(name)) return true;
+		}
+		return false;
+	}
 }

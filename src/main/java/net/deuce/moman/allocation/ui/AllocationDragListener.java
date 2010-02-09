@@ -36,7 +36,6 @@ public class AllocationDragListener implements DragSourceListener {
 				ids[i] = allocation.getIndex().byteValue();
 			}
 			
-			System.out.println("ZZZ drag index: " + ids[0]);
 			event.data = ids;
 		}
 	}

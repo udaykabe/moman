@@ -15,7 +15,7 @@ public class Rule extends AbstractEntity<Rule> {
 	private static final RuleExecutor ENDS_WITH_RULE_EXECUTOR = new EndsWithRuleExecutor();
 
     public enum Properties implements EntityProperty {
-        expression(String.class), conversion(String.class),
+        expression(String.class), conversion(String.class), amount(Double.class),
         condition(Condition.class), envelope(Envelope.class), enabled(Boolean.class);
         
 		private Class<?> type;
@@ -26,6 +26,7 @@ public class Rule extends AbstractEntity<Rule> {
     }
 
 	private String expression;
+	private Double amount;
 	private String conversion;
 	private Condition condition;
 	private Envelope envelope;
@@ -35,6 +36,21 @@ public class Rule extends AbstractEntity<Rule> {
 	
 	public Rule() {
 		super();
+	}
+
+	public Double getAmount() {
+		return amount;
+	}
+
+	public void setAmount(Double amount) {
+		if (propertyChanged(this.amount, amount)) {
+			this.amount = amount;
+			getMonitor().fireEntityChanged(this);
+		}
+	}
+	
+	public boolean amountEquals(Double value) {
+		return Math.round(value*100) == Math.round(amount*100);
 	}
 
 	public String getExpression() {

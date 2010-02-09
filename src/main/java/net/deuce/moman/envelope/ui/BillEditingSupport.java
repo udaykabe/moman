@@ -78,7 +78,7 @@ public class BillEditingSupport extends EditingSupport {
 		case 1: return bill.getName();
 		case 2: return bill.getDueDay()-1;
 		case 3: return bill.getFrequency().ordinal();
-		case 4: return Double.toString(bill.getAmount());
+		case 4: return Constants.CURRENCY_VALIDATOR.format(bill.getAmount());
 		default:
 			break;
 		}
@@ -100,7 +100,7 @@ public class BillEditingSupport extends EditingSupport {
 				break;
 			case 3: bill.executeChange(Envelope.Properties.frequency, Frequency.values()[(Integer)value]);
 				break;
-			case 4: bill.executeChange(Envelope.Properties.budget, new Double((String)value));
+			case 4: bill.executeChange(Envelope.Properties.budget, Constants.CURRENCY_VALIDATOR.validate((String)value).doubleValue());
 				break;
 			default:
 				break;

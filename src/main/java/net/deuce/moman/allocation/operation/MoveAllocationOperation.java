@@ -26,16 +26,17 @@ public class MoveAllocationOperation extends CreateEntityOperation<Allocation, E
 	@Override
 	protected void doExecute(IProgressMonitor monitor) {
 		target.getAllocationSet().moveAllocations(indexes, target, 
-				location == AllocationDropAdapter.LOCATION_BEFORE || location == AllocationDropAdapter.LOCATION_ON);	}
+				location == AllocationDropAdapter.LOCATION_BEFORE || location == AllocationDropAdapter.LOCATION_ON);
+	}
 
 	@Override
 	protected void doRedo(IProgressMonitor monitor) {
-		allocationSet.addAllocation(allocation);
+		target.getAllocationSet().moveAllocations(indexes, target, 
+				location == AllocationDropAdapter.LOCATION_BEFORE || location == AllocationDropAdapter.LOCATION_ON);
 	}
 
 	@Override
 	protected void doUndo(IProgressMonitor monitor) {
-		allocationSet.removeAllocation(allocation);
 	}
 
 }

@@ -11,7 +11,7 @@ public class AccountFactory extends EntityFactory<Account> {
 	public Account buildEntity(String id, Boolean selected,
 			String nickname, String bankId, String accountId,
 			String username, String password, AccountStatus status,
-			Boolean supportsDownloading) {
+			Boolean supportsDownloading, Double balance) {
 		Account entity = super.buildEntity(Account.class, id);
 		entity.setSelected(selected);
 		entity.setNickname(nickname);
@@ -21,15 +21,16 @@ public class AccountFactory extends EntityFactory<Account> {
 		entity.setPassword(password);
 		entity.setStatus(status);
 		entity.setSupportsDownloading(supportsDownloading);
+		entity.setBalance(balance);
 		return entity;
 	}
 	
 	public Account newEntity(Boolean selected,
 			String nickname, String bankId, String accountId,
 			String username, String password, AccountStatus status,
-			Boolean supportsDownloading) {
+			Boolean supportsDownloading, Double balance) {
 		return buildEntity(createUuid(), selected, nickname,
 			bankId, accountId, username, password, status,
-			supportsDownloading);
+			supportsDownloading, balance);
 	}
 }

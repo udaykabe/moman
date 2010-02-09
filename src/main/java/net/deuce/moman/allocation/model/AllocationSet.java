@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.deuce.moman.income.model.Income;
 import net.deuce.moman.model.AbstractEntity;
 import net.deuce.moman.model.EntityProperty;
 
@@ -13,7 +14,7 @@ public class AllocationSet extends AbstractEntity<AllocationSet> {
 	private static final long serialVersionUID = 1L;
 	
 	public enum Properties implements EntityProperty {
-	    name(String.class), allocations(List.class);
+	    name(String.class), allocations(List.class), income(Income.class);
 	    
 		private Class<?> type;
 		
@@ -23,6 +24,7 @@ public class AllocationSet extends AbstractEntity<AllocationSet> {
 	}
 
 	private String name;
+	private Income income;
 	private List<Allocation> allocations = new ArrayList<Allocation>();
 	
 	public AllocationSet() {}
@@ -42,6 +44,17 @@ public class AllocationSet extends AbstractEntity<AllocationSet> {
 		}
 	}
 	
+	public Income getIncome() {
+		return income;
+	}
+
+	public void setIncome(Income income) {
+		if (propertyChanged(this.income, income)) {
+			this.income = income;
+			getMonitor().fireEntityChanged(this, Properties.income);
+		}
+	}
+
 	public boolean hasAllocations() {
 		return allocations.size() > 0;
 	}

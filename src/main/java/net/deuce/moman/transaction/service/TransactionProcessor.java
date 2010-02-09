@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import net.deuce.moman.Constants;
 import net.deuce.moman.account.model.Account;
 import net.deuce.moman.envelope.model.Envelope;
 import net.deuce.moman.envelope.model.EnvelopeFactory;
@@ -169,8 +170,12 @@ public abstract class TransactionProcessor implements Runnable {
 						});
 						
 						account.setLastDownloadDate(result.getLastDownloadedDate());
+						account.setBalance(result.getStatementBalance());
 						if (processedTransactions != null && processedTransactions.size() > 0) {
 							InternalTransaction firstTransaction = processedTransactions.get(processedTransactions.size()-1);
+							if (firstTransaction.isMatched()) {
+								firstTransaction = firstTransaction.getMatchedTransaction();
+							}
 							ServiceNeeder.instance().getTransactionService().adjustBalances(firstTransaction, false);
 						}
 			
@@ -205,79 +210,95 @@ public abstract class TransactionProcessor implements Runnable {
 		List<Transaction> bankTransactions = result.getBankTransactions();
 		Double statementBalance = result.getStatementBalance();
 		
-		int taskCount = 4;
+		int taskCount = 5;
 		if (account.getLastDownloadDate() == null) {
 			taskCount++;
 		}
+		
+		int importCount = 0;
+		if (bankTransactions != null) {
+			importCount = bankTransactions.size();
+		}
 		monitor.beginTask("Processing transactions from " +
-				account.getFinancialInstitution().getName(), bankTransactions.size()*taskCount);
+				account.getFinancialInstitution().getName(), importCount*taskCount);
 		
 		List<InternalTransaction> transactions = new LinkedList<InternalTransaction>();
-		InternalTransaction maxTrans = null;
-		for (Transaction bt : bankTransactions) {
-			InternalTransaction t = ServiceNeeder.instance().getTransactionFactory().newEntity(
-					bt.getId(), bt.getAmount(), null, bt.getDatePosted(),
-					bt.getName(), bt.getMemo(), bt.getCheckNumber(),
-					bt.getReferenceNumber(), null, account);
-			
-			if (t.getAmount() > 0) {
-				t.clearSplit();
-				t.addSplit(envelopeService.getAvailableEnvelope());
-			} else {
-				t.addSplit(envelopeService.getUnassignedEnvelope());
-			}
-			
-			for (Rule rule : ServiceNeeder.instance().getTransactionRuleService().getEntities()) {
-				if (rule.isEnabled() && rule.evaluate(t.getDescription())) {
-					if (rule.getConversion() != null && rule.getConversion().length() > 0) {
-						t.setDescription(rule.getConversion());
-					}
+		
+		if (bankTransactions != null) {
+			InternalTransaction maxTrans = null;
+			for (Transaction bt : bankTransactions) {
+				InternalTransaction t = ServiceNeeder.instance().getTransactionFactory().newEntity(
+						bt.getId(), bt.getAmount(), null, bt.getDatePosted(),
+						bt.getName(), bt.getMemo(), bt.getCheckNumber(),
+						bt.getReferenceNumber(), null, account);
+				
+				if (t.getAmount() > 0) {
 					t.clearSplit();
-					t.addSplit(rule.getEnvelope());
-				}
-			}
-			
-			modifiedEnvelopes.addAll(t.getSplit());
-			
-			if (t.getType() == null) {
-				if (bt.getTransactionType() == TransactionType.OTHER) {
-					if (t.getCheck() != null && t.getCheck().length() > 0) {
-						t.setType(TransactionType.CHECK.name());
-					} else if (t.getAmount() >= 0) {
-						t.setType(TransactionType.CREDIT.name());
-					} else {
-						t.setType(TransactionType.DEBIT.name());
-					}
+					t.addSplit(envelopeService.getAvailableEnvelope());
 				} else {
-					t.setType(bt.getTransactionType().name());
+					t.addSplit(envelopeService.getUnassignedEnvelope());
 				}
+				
+				if (t.getType() == null) {
+					if (bt.getTransactionType() == TransactionType.OTHER) {
+						if (t.getCheck() != null && t.getCheck().length() > 0) {
+							t.setType(TransactionType.CHECK.name());
+						} else if (t.getAmount() >= 0) {
+							t.setType(TransactionType.CREDIT.name());
+						} else {
+							t.setType(TransactionType.DEBIT.name());
+						}
+					} else {
+						t.setType(bt.getTransactionType().name());
+					}
+				}
+				
+				transactions.add(t);
+				
+				if (maxTrans == null || maxTrans.compareTo(t) < 0) {
+					maxTrans = t;
+				}
+				
+				monitor.worked(1);
 			}
 			
-			transactions.add(t);
-			
-			if (maxTrans == null || maxTrans.compareTo(t) < 0) {
-				maxTrans = t;
+			if (maxTrans != null) {
+				maxTrans.setBalance(statementBalance);
 			}
 			
-			monitor.worked(1);
-		}
-		
-		if (maxTrans != null) {
-			maxTrans.setBalance(statementBalance);
-		}
-		
-		if (transactions.size() > 0) {
-			Collections.sort(transactions, transactions.get(0).getReverseComparator());
-		
-			initialDownloadCheck(transactions, monitor);
-			matchPreviouslyDownloadedTransactions(transactions, monitor);
-			findMatchedTransactions(transactions, monitor);
-			addUnmatchedTransactions(transactions, monitor);
+			if (transactions.size() > 0) {
+				Collections.sort(transactions, transactions.get(0).getReverseComparator());
+			
+				initialDownloadCheck(transactions, monitor);
+				matchPreviouslyDownloadedTransactions(transactions, monitor);
+				findMatchedTransactions(transactions, monitor);
+				applyRules(transactions, monitor);
+				addUnmatchedTransactions(transactions, monitor);
+			}
 		}
 		ServiceNeeder.instance().getImportService().setEntities(transactions);
 		ServiceNeeder.instance().getServiceContainer().saveImportTransactions(f);
 		
 		return transactions;
+	}
+	
+	private void applyRules(List<InternalTransaction> transactions, IProgressMonitor monitor) {
+		for (InternalTransaction t : transactions) {
+			for (Rule rule : ServiceNeeder.instance().getTransactionRuleService().getEntities()) {
+				if (rule.getExpression().contains("LOANSERVICING AUTOMATIC") && t.getDescription().contains("LOANSERVICING AUTOMATIC")) {
+					System.out.println("");
+				}
+				if (rule.isEnabled() && rule.evaluate(t.getDescription()) &&
+						(rule.getAmount() == null || rule.amountEquals(t.getAmount()))) {
+					if (rule.getConversion() != null && rule.getConversion().length() > 0) {
+						t.setDescription(rule.getConversion());
+					}
+					t.clearSplit();
+					t.addSplit(rule.getEnvelope(), !t.isMatched());
+				}
+			}
+			modifiedEnvelopes.addAll(t.getSplit());
+		}
 	}
 	
 	private void initialDownloadCheck(List<InternalTransaction> transactions, IProgressMonitor monitor) {
@@ -359,7 +380,10 @@ public abstract class TransactionProcessor implements Runnable {
 		for (InternalTransaction t : transactions) {
 			InternalTransaction existingTransaction =
 				ServiceNeeder.instance().getTransactionService().findTransactionByExternalId(t.getExternalId());
+			System.out.println("ZZZ checking downlaoded " + t);
+			System.out.println("ZZZ existing " + existingTransaction);
 			if (existingTransaction != null && t.getAmount().doubleValue() == existingTransaction.getAmount().doubleValue()) {
+				System.out.println("ZZZ matched " + t);
 				t.setMatchedTransaction(existingTransaction);
 			}
 			monitor.worked(1);
@@ -374,6 +398,8 @@ public abstract class TransactionProcessor implements Runnable {
 		List<InternalTransaction> register = transactionService.getAccountTransactions(account, true);
 		for (InternalTransaction importedTransaction : transactions) {
 			
+			System.out.println("ZZZ checking import " + importedTransaction);
+			
 			if (!importedTransaction.isMatched()) {
 				
 				Calendar lowerBound = CalendarUtil.convertToCalendar(importedTransaction.getDate());
@@ -381,8 +407,15 @@ public abstract class TransactionProcessor implements Runnable {
 				Calendar upperBound = CalendarUtil.convertToCalendar(importedTransaction.getDate());
 				upperBound.add(Calendar.DATE, threshold);
 				
+				System.out.println("ZZZ lowerBound " + Constants.SHORT_DATE_FORMAT.format(lowerBound.getTime()));
+				System.out.println("ZZZ upperBound " + Constants.SHORT_DATE_FORMAT.format(upperBound.getTime()));
 				for (InternalTransaction t : register) {
-					if (t.getDate().before(lowerBound.getTime()) || t.getDate().after(upperBound.getTime())) break;
+				System.out.println("ZZZ against " + t);
+					if (t.getDate().before(lowerBound.getTime()) || t.getDate().after(upperBound.getTime())) {
+					System.out.println("ZZZ out of range - imported: " + Constants.SHORT_DATE_FORMAT.format(importedTransaction.getDate())
+							+ " existing: " + Constants.SHORT_DATE_FORMAT.format(t.getDate()));
+						break;
+					}
 					
 					if (t.getAmount().doubleValue() == importedTransaction.getAmount().doubleValue() && !t.isEnvelopeTransfer()) {
 						importedTransaction.setMatchedTransaction(t);

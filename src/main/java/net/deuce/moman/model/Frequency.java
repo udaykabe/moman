@@ -7,14 +7,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum Frequency {
-	NONE(Calendar.DATE, 0, "None"),
-	WEEKLY(Calendar.DATE, 7, "Weekly"),
-	BIWEEKLY(Calendar.DATE, 14, "Bi-Weekly"),
-	MONTHLY(Calendar.MONTH, 1, "Monthly"),
-	BIMONTHLY(Calendar.MONTH, 2, "Bi-Monthly"),
-	QUARTERLY(Calendar.MONTH, 3, "Quarterly"),
-	SEMIANNUALLY(Calendar.MONTH, 6, "Semi-Annually"),
-	ANNUALLY(Calendar.YEAR, 1, "Annually");
+	NONE(Calendar.DATE, 0, 0, 0, "None"),
+	WEEKLY(Calendar.DATE, 7, 4, 52, "Weekly"),
+	BIWEEKLY(Calendar.DATE, 14, 2, 26, "Bi-Weekly"),
+	MONTHLY(Calendar.MONTH, 1, 1, 12, "Monthly"),
+	BIMONTHLY(Calendar.MONTH, 2, .5, 6, "Bi-Monthly"),
+	QUARTERLY(Calendar.MONTH, 3, .3333, 4, "Quarterly"),
+	SEMIANNUALLY(Calendar.MONTH, 6, .1667, 2, "Semi-Annually"),
+	ANNUALLY(Calendar.YEAR, 1, .0833, 1, "Annually");
 
 	private static Map<String, Frequency> map = new HashMap<String, Frequency>();
 
@@ -31,33 +31,27 @@ public enum Frequency {
 	private int calendarFrequency;
 	private int cardinality;
 	private String label;
+	private double ppm;  // periods per month
+	private int ppy; // periods per year
 
-	private Frequency(int calendarFrequency, int cardinality, String label) {
+	private Frequency(int calendarFrequency, int cardinality, double ppm, int ppy, String label) {
 		this.calendarFrequency = calendarFrequency;
 		this.cardinality = cardinality;
 		this.label = label;
+		this.ppm = ppm;
+		this.ppy = ppy;
 	}
 
-	public String label() {
-		return label;
-	}
-
-	public int getCalendarFrequency() {
-		return calendarFrequency;
-	}
-
-	public void setCalendarFrequency(int calendarFrequency) {
-		this.calendarFrequency = calendarFrequency;
-	}
-
-	public int getCardinality() {
-		return cardinality;
-	}
-
-	public void setCardinality(int cardinality) {
-		this.cardinality = cardinality;
-	}
+	public double ppm() { return ppm; }
 	
+	public int ppy() { return ppy; }
+	
+	public String label() { return label; }
+
+	public int getCalendarFrequency() { return calendarFrequency; }
+
+	public int getCardinality() { return cardinality; }
+
 	public void advanceCalendar(Calendar c) {
 		if (this == NONE) return;
 		c.add(calendarFrequency, cardinality);

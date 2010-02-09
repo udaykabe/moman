@@ -16,6 +16,7 @@ import net.deuce.moman.allocation.service.AllocationSetService;
 import net.deuce.moman.envelope.model.Envelope;
 import net.deuce.moman.envelope.service.EnvelopeService;
 import net.deuce.moman.envelope.ui.EnvelopeSelectionDialog;
+import net.deuce.moman.income.model.Income;
 import net.deuce.moman.model.EntityEvent;
 import net.deuce.moman.model.EntityListener;
 import net.deuce.moman.model.EntityMonitor;
@@ -33,6 +34,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TableViewerEditor;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.dnd.DND;
@@ -58,7 +60,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Sash;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.handlers.IHandlerService;
@@ -75,10 +76,13 @@ public class AllocationView extends ViewPart implements EntityListener<Allocatio
 	private AccountService accountService;
 	private boolean editingAllocation = false;
 	private AllocationSet allocationSet = null;
-	private Sash sash;
 	private Text availableAmountText;
 	private Text allocationAmountText;
-	EntityMonitor<Allocation> allocationMonitor = new EntityMonitor<Allocation>();
+	private Text paySourceRemainderText;
+	private Text allocationSetTotalText;
+	private Label paySourceAmountLabel;
+	private Text paySourceAmountText;
+	private EntityMonitor<Allocation> allocationMonitor = new EntityMonitor<Allocation>();
 
 	public AllocationView() {
 		allocationSetService = ServiceNeeder.instance().getAllocationSetService();
@@ -98,6 +102,21 @@ public class AllocationView extends ViewPart implements EntityListener<Allocatio
 			@Override
 			public void entityRemoved(EntityEvent<Envelope> event) {
 			}
+		});
+		
+		ServiceNeeder.instance().getIncomeService().addEntityListener(new EntityListener<Income>() {
+			@Override
+			public void entityAdded(EntityEvent<Income> event) {
+			}
+			@Override
+			public void entityChanged(EntityEvent<Income> event) {
+				resetAvailableAmounts();
+				adjustAllocations();
+			}
+			@Override
+			public void entityRemoved(EntityEvent<Income> event) {
+			}
+			
 		});
 		
 		allocationMonitor.addListener(new EntityListener<Allocation>() {
@@ -166,6 +185,26 @@ public class AllocationView extends ViewPart implements EntityListener<Allocatio
 				distributeFunds(parent.getShell());
 			}
 		});
+		
+		Button build = new Button(container, SWT.PUSH);
+		build.setText("Build Profile");
+		build.setToolTipText("Build profile based on bills and pay source");
+		build.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				buildProfile(parent.getShell());
+			}
+		});
+		
+	}
+	
+	protected void buildProfile(Shell shell) {
+		BuildProfileWizard wizard = new BuildProfileWizard();
+		WizardDialog dialog = new WizardDialog(shell, wizard);
+		dialog.open();
 	}
 	
 	protected void distributeFunds(Shell shell) {
@@ -231,6 +270,30 @@ public class AllocationView extends ViewPart implements EntityListener<Allocatio
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.horizontalAlignment = GridData.FILL;
 
+		paySourceAmountLabel = new Label(container, SWT.NONE);
+		paySourceAmountLabel.setText("Pay source amount:");
+		
+		paySourceAmountText = new Text(container, SWT.BORDER);
+		paySourceAmountText.setEditable(false);
+		paySourceAmountText.setEnabled(false);
+		paySourceAmountText.setLayoutData(gridData);
+		
+		Label allocationSetTotalLabel = new Label(container, SWT.NONE);
+		allocationSetTotalLabel.setText("Allocation Set Total: ");
+		
+		allocationSetTotalText = new Text(container, SWT.BORDER);
+		allocationSetTotalText.setEditable(false);
+		allocationSetTotalText.setEnabled(false);
+		allocationSetTotalText.setLayoutData(gridData);
+		
+		Label paySourceRemainderLabel = new Label(container, SWT.NONE);
+		paySourceRemainderLabel.setText("Pay Source Remainder: ");
+		
+		paySourceRemainderText = new Text(container, SWT.BORDER);
+		paySourceRemainderText.setEditable(false);
+		paySourceRemainderText.setEnabled(false);
+		paySourceRemainderText.setLayoutData(gridData);
+		
 		Label availableLabel = new Label(container, SWT.NONE);
 		availableLabel.setText("Available funds:");
 		availableAmountText = new Text(container, SWT.BORDER);
@@ -293,19 +356,35 @@ public class AllocationView extends ViewPart implements EntityListener<Allocatio
 					allocationAmountText.getText() != null && allocationAmountText.getText().length() > 0) {
 				depositAmount = Constants.CURRENCY_VALIDATOR.validate(allocationAmountText.getText()).doubleValue();
 			}
+			double paySourceRemainder = allocationSet.getIncome() != null ? allocationSet.getIncome().getAmount() : 0.0;
 			double allocationAmount = 0.0;
+			double allocationSetTotal = 0.0;
 			double available = depositAmount;
 			List<Allocation> allocations = allocationSet.getAllocations();
 			List<Allocation> percentRemainderAllocations = new LinkedList<Allocation>();
+			List<Allocation> savingsGoals = new LinkedList<Allocation>();
+			
+			// check for adjusted savings goals
+			for (Allocation allocation : allocations) {
+				Envelope env = allocation.getEnvelope();
+				if (env.isSavingsGoal()) {
+					int paycheckCount = allocationSet.getIncome().calcPaycheckCountUntilDate(env.getSavingsGoalDate());
+					if (paycheckCount > 0) {
+						allocation.setAmount((env.getBudget() - env.getBalance()) / paycheckCount);
+					}
+				}
+			}
+			
 			for (Allocation allocation : allocations) {
 				
 				if (available > 0) {
 					AmountType atype = allocation.getAmountType();
-					LimitType ltype = allocation.getLimitType();
 					
 					// allocation distribution
 					allocationAmount = 0.0;
-					if (atype == AmountType.FIXED) {
+					if (allocation.getEnvelope().isSavingsGoal()) {
+						savingsGoals.add(allocation);
+					} else if (atype == AmountType.FIXED) {
 						if (allocation.getAmount() < available) {
 							allocationAmount = allocation.getAmount();
 						} else {
@@ -325,12 +404,21 @@ public class AllocationView extends ViewPart implements EntityListener<Allocatio
 					allocation.setProposed(allocationAmount);
 					
 					available -= allocationAmount;
+					
 				} else {
 					allocation.setProposed(0.0);
 				}
+				
+				if (allocationSet.getIncome() != null) {
+					paySourceRemainder -= allocation.getAmount();
+				}
+				
+				allocationSetTotal += allocation.getAmount();
 			}
 			
 			double remainderAmount = available;
+			
+			remainderAmount = available;
 			for (Allocation allocation : percentRemainderAllocations) {
 				if (available > 0) {
 					allocationAmount = 0.0;
@@ -351,6 +439,9 @@ public class AllocationView extends ViewPart implements EntityListener<Allocatio
 				available -= allocation.getProposed();
 				allocation.setRemainder(available);
 			}
+			
+			allocationSetTotalText.setText(Constants.CURRENCY_VALIDATOR.format(allocationSetTotal));
+			paySourceRemainderText.setText(Constants.CURRENCY_VALIDATOR.format(paySourceRemainder));
 		}
 	}
 	
@@ -384,41 +475,16 @@ public class AllocationView extends ViewPart implements EntityListener<Allocatio
 		FormLayout form = new FormLayout ();
 		container.setLayout(form);
 		
-		//sash = new Sash (container, SWT.VERTICAL);
-		
 		profileListViewer = createProfileListViewer(container);
 		profileViewer = createProfileViewer(container);
 		
 		FormData profileListData = new FormData();
 		profileListData.left = new FormAttachment(0, 0);
-		//profileListData.right = new FormAttachment(sash, 0);
 		profileListData.top = new FormAttachment(0, 0);
 		profileListData.bottom = new FormAttachment(100, 0);
 		profileListViewer.getTable().setLayoutData(profileListData);
 
-		final int limit = 10, percent = 10;
-		//final FormData sashData = new FormData ();
-		//sashData.left = new FormAttachment (percent, 0);
-		//sashData.top = new FormAttachment (0, 0);
-		//sashData.bottom = new FormAttachment (100, 0);
-		//sash.setLayoutData (sashData);
-		/*
-		sash.addListener(SWT.Selection, new Listener () {
-			public void handleEvent(Event e) {
-				Rectangle sashRect = sash.getBounds();
-				Rectangle shellRect = container.getClientArea();
-				int right = shellRect.width - sashRect.width - limit;
-				e.x = Math.max(Math.min(e.x, right), limit);
-				if (e.x != sashRect.x)  {
-					sashData.left = new FormAttachment(0, e.x);
-					container.layout();
-				}
-			}
-		});
-		*/
-		
 		FormData profileData = new FormData();
-//		profileData.left = new FormAttachment(sash, 0);
 		profileData.right = new FormAttachment(100, 0);
 		profileData.top = new FormAttachment(0, 0);
 		profileData.bottom = new FormAttachment(100, 0);
@@ -447,6 +513,7 @@ public class AllocationView extends ViewPart implements EntityListener<Allocatio
 				StructuredSelection selection = (StructuredSelection) event.getSelection();
 				if (selection.size() == 1) {
 					allocationSet = (AllocationSet) selection.getFirstElement();
+					paySourceAmountText.setText(Constants.CURRENCY_VALIDATOR.format(allocationSet.getIncome().getAmount()));
 				} else {
 					allocationSet = null;
 				}
@@ -499,7 +566,7 @@ public class AllocationView extends ViewPart implements EntityListener<Allocatio
 	}
 	
 	private TableViewer createProfileViewer(Composite composite) {
-		final TableViewer tableViewer = new TableViewer (composite, SWT.BORDER);
+		final TableViewer tableViewer = new TableViewer (composite, SWT.MULTI | SWT.V_SCROLL | SWT.FULL_SELECTION);
 		
 		TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.CENTER);
  		column.getColumn().setText("Enabled");
@@ -624,7 +691,6 @@ public class AllocationView extends ViewPart implements EntityListener<Allocatio
 					Rectangle tableBounds = profileViewer.getTable().getBounds();
 					Rectangle parentBounds = profileViewer.getTable().getParent().getParent().getParent().getBounds();
 					Rectangle shellBounds = Display.getCurrent().getActiveShell().getBounds();
-					//Rectangle sashBounds = sash.getBounds();
 					
 					int x = cursorLocation.x;
 					
@@ -685,6 +751,13 @@ public class AllocationView extends ViewPart implements EntityListener<Allocatio
 	@Override
 	public void entityAdded(EntityEvent<AllocationSet> event) {
 		refreshProfileList();
+		setFocus();
+		if (event != null && event.getEntity() != null) {
+			profileListViewer.setSelection(new StructuredSelection(new Object[]{event.getEntity()}));
+			profileListViewer.reveal(event.getEntity());
+		} else {
+			refresh();
+		}
 	}
 
 	@Override

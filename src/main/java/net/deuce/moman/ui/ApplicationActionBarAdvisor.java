@@ -58,14 +58,17 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private IWorkbenchAction newEnvelopeAction;
     
     private IWorkbenchAction newBillAction;
+    private IWorkbenchAction newSavingsGoalAction;
     
     private IWorkbenchAction newTransactionAction;
+    private IWorkbenchAction newRepeatingTransactionAction;
     private IWorkbenchAction newTransactionRuleAction;
     
     private IWorkbenchAction accountViewAction;
     private IWorkbenchAction envelopeViewAction;
     private IWorkbenchAction paySourceViewAction;
     private IWorkbenchAction billViewAction;
+    private IWorkbenchAction savingsGoalsViewAction;
     private IWorkbenchAction registerViewAction;
     private IWorkbenchAction importViewAction;
     private IWorkbenchAction importRuleViewAction;
@@ -133,6 +136,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         newTransactionAction = Actions.NEW_TRANSACTION_ACTION.create( window );
         register( newTransactionAction );
 
+        newRepeatingTransactionAction = Actions.NEW_REPEATING_TRANSACTION_ACTION.create( window );
+        register( newRepeatingTransactionAction );
+
         newEnvelopeAction = Actions.NEW_ENVELOPE_ACTION.create( window );
         register( newEnvelopeAction );
 
@@ -141,6 +147,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
         newBillAction = Actions.NEW_BILL_ACTION.create( window );
         register( newBillAction );
+
+        newSavingsGoalAction = Actions.NEW_SAVINGS_GOAL_ACTION.create( window );
+        register( newSavingsGoalAction );
 
         newTransactionRuleAction = Actions.NEW_TRANSACTION_RULE_ACTION.create( window );
         register( newTransactionRuleAction );
@@ -156,6 +165,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
         billViewAction = Actions.NAVIGATE_BILLS_ACTION.create( window );
         register( billViewAction );
+
+        savingsGoalsViewAction = Actions.NAVIGATE_SAVINGS_GOALS_ACTION.create( window );
+        register( savingsGoalsViewAction );
 
         registerViewAction = Actions.NAVIGATE_REGISTER_ACTION.create( window );
         register( registerViewAction );
@@ -276,8 +288,10 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         accountMenu.add( exportAction );
         
         toolsMenu.add( newTransactionAction );
+        toolsMenu.add( newRepeatingTransactionAction );
         toolsMenu.add( newEnvelopeAction );
         toolsMenu.add( newBillAction );
+        toolsMenu.add( newSavingsGoalAction );
         toolsMenu.add( newPaySourceAction );
         toolsMenu.add( newTransactionRuleAction );
         toolsMenu.add( newAllocationProfileAction );
@@ -285,10 +299,11 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         toolsMenu.add( findTransactionAction );
         
         navigateMenu.add( accountViewAction );
-        navigateMenu.add( registerViewAction );
         navigateMenu.add( envelopeViewAction );
-        navigateMenu.add( billViewAction );
         navigateMenu.add( paySourceViewAction );
+        navigateMenu.add( billViewAction );
+        navigateMenu.add( savingsGoalsViewAction );
+        navigateMenu.add( registerViewAction );
         navigateMenu.add( importViewAction );
         navigateMenu.add( importRuleViewAction );
         

@@ -70,6 +70,7 @@ public class FinancialInstitutionService extends EntityService<FinancialInstitut
 		super.removeEntity(financialInstitution);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public TransactionFetchResult fetchTransactions(Account account, Date startDate, Date endDate) throws Exception {
 		
 		OFXApplicationContextHolder.setCurrentContext(new DefaultApplicationContext("QWIN", "1700"));
@@ -161,7 +162,9 @@ public class FinancialInstitutionService extends EntityService<FinancialInstitut
 				username,
 				password,
 				bankInfo.getStatus(),
-				bankInfo.getSupportsTransactionDetailOperations());
+				bankInfo.getSupportsTransactionDetailOperations(),
+				0.0
+				);
 			list.add(account);
 		}
 		return list;

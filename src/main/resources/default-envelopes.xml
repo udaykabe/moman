@@ -39,6 +39,19 @@
       <dueDay>0</dueDay>
       <transactions/>
     </envelope>
+     <envelope id="e7cd2398-1a02-3928-aa39-5fe9ca739463">
+      <editable>false</editable>
+      <selected>true</selected>
+      <expanded>true</expanded>
+      <savings-goals>true</savings-goals>
+      <enabled>true</enabled>
+      <name>Savings Goals</name>
+      <index>3</index>
+      <frequency>NONE</frequency>
+      <budget>0.0</budget>
+      <dueDay>0</dueDay>
+      <transactions/>
+    </envelope>
     <envelope id="8fe52b38-23d2-343b-9377-b6ede8a8cd2b">
       <editable>false</editable>
       <selected>false</selected>
@@ -46,7 +59,7 @@
       <enabled>true</enabled>
       <root>true</root>
       <name>Envelopes</name>
-      <index>3</index>
+      <index>4</index>
       <frequency>NONE</frequency>
       <budget>0.0</budget>
       <dueDay>0</dueDay>
@@ -58,7 +71,7 @@
       <expanded>false</expanded>
       <enabled>true</enabled>
       <name>Bi-Weekly</name>
-      <index>4</index>
+      <index>5</index>
       <frequency>NONE</frequency>
       <budget>0.0</budget>
       <dueDay>0</dueDay>
@@ -70,7 +83,7 @@
       <selected>false</selected>
       <enabled>true</enabled>
       <name>Periodic Expenses</name>
-      <index>5</index>
+      <index>6</index>
       <frequency>NONE</frequency>
       <budget>0.0</budget>
       <dueDay>0</dueDay>
@@ -83,7 +96,7 @@
       <expanded>false</expanded>
       <enabled>true</enabled>
       <name>Savings Goals</name>
-      <index>6</index>
+      <index>7</index>
       <frequency>NONE</frequency>
       <budget>0.0</budget>
       <dueDay>0</dueDay>
@@ -95,7 +108,7 @@
       <selected>false</selected>
       <enabled>true</enabled>
       <name>Auto Fuel</name>
-      <index>7</index>
+      <index>8</index>
       <frequency>BIWEEKLY</frequency>
       <budget>0.0</budget>
       <dueDay>0</dueDay>
@@ -107,7 +120,7 @@
       <selected>false</selected>
       <enabled>true</enabled>
       <name>Auto Registration</name>
-      <index>8</index>
+      <index>9</index>
       <frequency>ANNUALLY</frequency>
       <budget>0.0</budget>
       <dueDay>0</dueDay>
@@ -119,7 +132,7 @@
       <selected>false</selected>
       <enabled>true</enabled>
       <name>New Car</name>
-      <index>9</index>
+      <index>10</index>
       <frequency>BIWEEKLY</frequency>
       <budget>0.0</budget>
       <dueDay>0</dueDay>
@@ -131,7 +144,7 @@
       <selected>false</selected>
       <enabled>true</enabled>
       <name>Auto Maintenance</name>
-      <index>10</index>
+      <index>11</index>
       <frequency>BIWEEKLY</frequency>
       <budget>0.0</budget>
       <dueDay>0</dueDay>
@@ -143,7 +156,7 @@
       <selected>false</selected>
       <enabled>true</enabled>
       <name>Groceries</name>
-      <index>11</index>
+      <index>12</index>
       <frequency>BIWEEKLY</frequency>
       <budget>0.0</budget>
       <dueDay>0</dueDay>
@@ -155,7 +168,7 @@
       <selected>false</selected>
       <enabled>true</enabled>
       <name>Auto Insurance</name>
-      <index>12</index>
+      <index>13</index>
       <frequency>MONTHLY</frequency>
       <budget>0.0</budget>
       <dueDay>0</dueDay>
@@ -167,7 +180,7 @@
       <selected>false</selected>
       <enabled>true</enabled>
       <name>Rent</name>
-      <index>13</index>
+      <index>14</index>
       <frequency>MONTHLY</frequency>
       <budget>0.0</budget>
       <dueDay>0</dueDay>
@@ -179,7 +192,7 @@
       <selected>false</selected>
       <enabled>true</enabled>
       <name>Household</name>
-      <index>14</index>
+      <index>15</index>
       <frequency>MONTHLY</frequency>
       <budget>0.0</budget>
       <dueDay>0</dueDay>
@@ -191,7 +204,7 @@
       <selected>false</selected>
       <enabled>true</enabled>
       <name>Personal Care</name>
-      <index>15</index>
+      <index>16</index>
       <frequency>MONTHLY</frequency>
       <budget>0.0</budget>
       <dueDay>0</dueDay>
@@ -203,7 +216,7 @@
       <selected>false</selected>
       <enabled>true</enabled>
       <name>Medical</name>
-      <index>16</index>
+      <index>17</index>
       <frequency>MONTHLY</frequency>
       <budget>0.0</budget>
       <dueDay>0</dueDay>

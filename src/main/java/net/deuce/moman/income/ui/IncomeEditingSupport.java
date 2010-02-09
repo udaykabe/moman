@@ -68,7 +68,7 @@ public class IncomeEditingSupport extends EditingSupport {
 		switch (this.column) {
 		case 0: return income.isEnabled();
 		case 1: return income.getName();
-		case 2: return Double.toString(income.getAmount());
+		case 2: return Constants.CURRENCY_VALIDATOR.format(income.getAmount());
 		case 3: return income.getFrequency().ordinal();
 		default:
 			break;
@@ -88,7 +88,7 @@ public class IncomeEditingSupport extends EditingSupport {
 				break;
 			case 1: income.executeChange(Income.Properties.name, value);
 				break;
-			case 2: income.executeChange(Income.Properties.amount, new Double((String)value));
+			case 2:income.executeChange(Income.Properties.amount, Constants.CURRENCY_VALIDATOR.validate((String)value).doubleValue());
 				break;
 			case 3: income.executeChange(Income.Properties.frequency, Frequency.values()[(Integer)value]);
 				break;

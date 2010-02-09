@@ -17,7 +17,7 @@ public class Account extends AbstractEntity<Account> {
 		initialBalance(Double.class), selected(Boolean.class),
 		financialInstitution(FinancialInstitution.class),
 		lastDownloadDate(Date.class), status(AccountStatus.class),
-		supportsDownloading(Boolean.class);
+		supportsDownloading(Boolean.class), balance(Double.class);
 		
 		private Class<?> type;
 		
@@ -34,6 +34,7 @@ public class Account extends AbstractEntity<Account> {
 	private String password;
 	private String nickname;
 	private Double initialBalance;
+	private Double balance = 0.0;
 	private Boolean selected = Boolean.FALSE;
 
 	private FinancialInstitution financialInstitution;
@@ -55,6 +56,17 @@ public class Account extends AbstractEntity<Account> {
 		return o1.nickname.compareTo(o2.nickname);
 	}
 
+	public Double getBalance() {
+		return balance;
+	}
+
+	public void setBalance(Double balance) {
+		if (propertyChanged(this.balance, balance)) {
+			this.balance = balance;
+			getMonitor().fireEntityChanged(this, Properties.balance);
+		}
+	}
+
 	public AccountStatus getStatus() {
 		return status;
 	}
@@ -64,7 +76,6 @@ public class Account extends AbstractEntity<Account> {
 			this.status = status;
 			getMonitor().fireEntityChanged(this, Properties.status);
 		}
-		this.status = status;
 	}
 
 	public Boolean isSupportsDownloading() {

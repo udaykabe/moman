@@ -2,7 +2,6 @@ package net.deuce.moman.income.ui;
 
 import java.util.Date;
 
-import net.deuce.moman.Constants;
 import net.deuce.moman.income.command.Delete;
 import net.deuce.moman.income.model.Income;
 import net.deuce.moman.service.ServiceNeeder;
