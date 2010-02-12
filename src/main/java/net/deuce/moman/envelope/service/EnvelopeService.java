@@ -124,6 +124,24 @@ public class EnvelopeService extends EntityService<Envelope> {
 		
 	}
 	
+	private void addEnvelopeToList(Envelope env, List<Envelope> list) {
+		list.add(env);
+		for (Envelope child : env.getChildren()) {
+			addEnvelopeToList(child, list);
+		}
+	}
+	
+	public List<Envelope> getAllEnvelopes() {
+		List<Envelope> envelopes = new LinkedList<Envelope>();
+		envelopes.add(availableEnvelope);
+		envelopes.add(monthlyEnvelope);
+		envelopes.add(unassignedEnvelope);
+		envelopes.add(savingsGoalsEnvelope);
+		envelopes.add(unassignedEnvelope);
+		addEnvelopeToList(rootEnvelope, envelopes);
+		return envelopes;
+	}
+	
 	public void transfer(Account sourceAccount, Account targetAccount,
 			Envelope source, Envelope target, double amount) {
 		
