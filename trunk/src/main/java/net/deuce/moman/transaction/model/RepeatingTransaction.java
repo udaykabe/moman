@@ -96,7 +96,7 @@ public class RepeatingTransaction extends InternalTransaction {
 		
 		if (now.after(next)) {
 			while (now.after(next)) {
-				frequency.advanceCalendar(next);
+				frequency.advanceCalendar(next, false);
 			}
 			setDateDue(next.getTime());
 		}

@@ -44,6 +44,14 @@
          <view
                allowMultiple="false"
                category="moman.category"
+               class="net.deuce.moman.envelope.ui.EnvelopeSpendingView"
+               id="net.deuce.moman.envelope.ui.EnvelopeSpendingView"
+               name="Envelope Spending"
+               restorable="true">
+         </view>
+         <view
+               allowMultiple="false"
+               category="moman.category"
                class="net.deuce.moman.envelope.ui.BillView"
                id="net.deuce.moman.envelope.ui.BillView"
                name="Bills"
@@ -120,70 +128,6 @@
                class="net.deuce.moman.allocation.ui.AllocationView"
                id="net.deuce.moman.allocation.ui.AllocationView"
                name="Allocation Profiles"
-               restorable="true">
-         </view>
-         <view
-               allowMultiple="false"
-               category="moman.category"
-               class="net.deuce.moman.ui.demo.DemoView"
-               id="net.deuce.moman.ui.demo.DemoView"
-               name="Demo"
-               restorable="true">
-         </view>
-         <view
-               allowMultiple="false"
-               category="moman.category"
-               class="net.deuce.moman.ui.demo.DemoView2"
-               id="net.deuce.moman.ui.demo.DemoView2"
-               name="Demo"
-               restorable="true">
-         </view>
-         <view
-               allowMultiple="false"
-               category="moman.category"
-               class="net.deuce.moman.ui.demo.DemoView3"
-               id="net.deuce.moman.ui.demo.DemoView3"
-               name="Demo"
-               restorable="true">
-         </view>
-         <view
-               allowMultiple="false"
-               category="moman.category"
-               class="net.deuce.moman.ui.demo.DemoView4"
-               id="net.deuce.moman.ui.demo.DemoView4"
-               name="Demo"
-               restorable="true">
-         </view>
-         <view
-               allowMultiple="false"
-               category="moman.category"
-               class="net.deuce.moman.ui.demo.DemoView5"
-               id="net.deuce.moman.ui.demo.DemoView5"
-               name="Demo"
-               restorable="true">
-         </view>
-         <view
-               allowMultiple="false"
-               category="moman.category"
-               class="net.deuce.moman.ui.demo.DemoView6"
-               id="net.deuce.moman.ui.demo.DemoView6"
-               name="Demo"
-               restorable="true">
-         </view>
-         <view
-               allowMultiple="false"
-               category="moman.category"
-               class="net.deuce.moman.ui.demo.DemoView7"
-               id="net.deuce.moman.ui.demo.DemoView7"
-               name="Demo"
-               restorable="true">
-         </view>
-         <view
-               allowMultiple="false"
-               category="moman.category"
-               class="net.deuce.moman.ui.demo.DemoView8"
-               id="net.deuce.moman.ui.demo.DemoView8"
-               name="Demo"
                restorable="true">
          </view>
    </extension>
