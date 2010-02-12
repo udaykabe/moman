@@ -90,6 +90,7 @@ public class SWTViewer extends Composite implements ICallBackNotifier, PaintList
 		final PluginSettings ps = PluginSettings.instance( );
 		try
 		{
+			Envelope unassigned = ServiceNeeder.instance().getEnvelopeService().getUnassignedEnvelope();
 			envelope = ServiceNeeder.instance().getEnvelopeService().getRootEnvelope();
 			idr = ps.getDevice( "dv.SWT" );//$NON-NLS-1$
 			idr.setProperty( IDeviceRenderer.UPDATE_NOTIFIER, this );
