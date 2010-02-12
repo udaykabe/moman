@@ -76,7 +76,7 @@ public class Income extends AbstractEntity<Income> {
 		
 		if (now.after(next)) {
 			while (now.after(next)) {
-				frequency.advanceCalendar(next);
+				frequency.advanceCalendar(next, false);
 			}
 			setNextPayday(next.getTime());
 		}

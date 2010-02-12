@@ -52,9 +52,22 @@ public enum Frequency {
 
 	public int getCardinality() { return cardinality; }
 
-	public void advanceCalendar(Calendar c) {
+	public void advanceCalendar(Calendar c, boolean reverse) {
 		if (this == NONE) return;
-		c.add(calendarFrequency, cardinality);
+		if (reverse) {
+			c.add(calendarFrequency, -cardinality);
+		} else {
+			c.add(calendarFrequency, cardinality);
+		}
+	}
+
+	public Date calculatePreviousDate(Date date) {
+		if (this == NONE) return date;
+		
+		Calendar c = new GregorianCalendar();
+		c.setTime(date);
+		advanceCalendar(c, true);
+		return c.getTime();
 	}
 
 	public Date calculateNextDate(Date date) {
@@ -62,7 +75,7 @@ public enum Frequency {
 		
 		Calendar c = new GregorianCalendar();
 		c.setTime(date);
-		advanceCalendar(c);
+		advanceCalendar(c, false);
 		return c.getTime();
 	}
 }

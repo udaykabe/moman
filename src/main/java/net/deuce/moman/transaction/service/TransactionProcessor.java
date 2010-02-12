@@ -400,7 +400,7 @@ public abstract class TransactionProcessor implements Runnable {
 			
 			System.out.println("ZZZ checking import " + importedTransaction);
 			
-			if (!importedTransaction.isMatched()) {
+			if (!importedTransaction.isMatched() && !importedTransaction.isExternal()) {
 				
 				Calendar lowerBound = CalendarUtil.convertToCalendar(importedTransaction.getDate());
 				lowerBound.add(Calendar.DATE, -threshold);

@@ -219,6 +219,10 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
 			getMonitor().fireEntityChanged(this);
 		}
 	}
+	
+	public boolean isExternal() {
+		return externalId != null;
+	}
 
 	public String getExternalId() {
 		return externalId;

@@ -1,8 +1,10 @@
 package net.deuce.moman.envelope.model;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,6 +18,7 @@ import net.deuce.moman.model.EntityProperty;
 import net.deuce.moman.model.Frequency;
 import net.deuce.moman.transaction.model.InternalTransaction;
 import net.deuce.moman.transaction.model.RepeatingTransaction;
+import net.deuce.moman.util.CalendarUtil;
 
 public class Envelope extends AbstractEntity<Envelope> {
 
@@ -71,6 +74,45 @@ public class Envelope extends AbstractEntity<Envelope> {
 		this.name = name;
 		this.frequency = frequency;
 		this.editable = editable;
+	}
+	
+	public double expensesDuringPeriod(Account account, Frequency frequency) {
+		Calendar cal = new GregorianCalendar();
+		CalendarUtil.convertCalendarToMidnight(cal);
+		
+		frequency.advanceCalendar(cal, true);
+		
+		return calculateTransactionsSince(account, cal);
+	}
+	
+	public double expensesDuringLastNDays(Account account, int days) {
+		Calendar cal = new GregorianCalendar();
+		CalendarUtil.convertCalendarToMidnight(cal);
+		
+		cal.add(Calendar.DAY_OF_YEAR, -days);
+		
+		return calculateTransactionsSince(account, cal);
+	}
+	
+	public double calculateTransactionsSince(Account account, Calendar cal) {
+		List<InternalTransaction> transactions = null;
+		if (account != null) {
+			transactions = getAccountTransactions(account);
+		} else {
+			transactions = getAllTransactions();
+		}
+		
+		double sum = 0.0;
+		for (InternalTransaction it : transactions) {
+			Calendar tcal = new GregorianCalendar();
+			tcal.setTime(it.getDate());
+			CalendarUtil.convertCalendarToMidnight(tcal);
+			
+			if (tcal.after(cal)) {
+				sum += it.getAmount();
+			}
+		}
+		return sum;
 	}
 	
 	public Boolean isSavingsGoals() {
