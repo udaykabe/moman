@@ -58,8 +58,8 @@ public class UsernamePasswordPage extends WizardPage {
 			}
 		});
 		
-		usernameText.setText("fruptichase");
-		passwordText.setText("cqopklm7");
+//		usernameText.setText("fruptichase");
+//		passwordText.setText("cqopklm7");
 		
 		setControl(container);
 		setPageComplete(true);
