@@ -69,7 +69,7 @@ public class TransactionEditingSupport extends EditingSupport {
 			switch (this.column) {
 			case 1: transaction.executeChange(InternalTransaction.Properties.check, value); break;
 			case 2: transaction.executeChange(InternalTransaction.Properties.description, value); break;
-			case 4: transaction.executeSetAmount(new Double((String)value)); break;
+			case 4: transaction.executeSetAmount(Constants.CURRENCY_VALIDATOR.validate((String)value).doubleValue()); break;
 			default:
 				break;
 			}
