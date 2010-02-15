@@ -15,6 +15,7 @@ import net.deuce.moman.envelope.model.Envelope;
 import net.deuce.moman.envelope.service.EnvelopeService;
 import net.deuce.moman.service.EntityService;
 import net.deuce.moman.transaction.model.InternalTransaction;
+import net.deuce.moman.transaction.model.Split;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -255,8 +256,8 @@ public class TransactionService extends EntityService<InternalTransaction> {
 	public void removeEntity(InternalTransaction transaction) {
 		removeExternalTransactionReference(transaction);
 		
-		for (Envelope env : new LinkedList<Envelope>(transaction.getSplit())) {
-			env.removeTransaction(transaction);
+		for (Split item : new LinkedList<Split>(transaction.getSplit())) {
+			item.getEnvelope().removeTransaction(transaction);
 		}
 		
 		__getAccountTransactions(transaction.getAccount()).remove(transaction);

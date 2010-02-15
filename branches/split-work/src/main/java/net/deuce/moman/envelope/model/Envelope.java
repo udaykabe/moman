@@ -264,10 +264,6 @@ public class Envelope extends AbstractEntity<Envelope> {
 		this.parentId = parentId;
 	}
 	
-	public void clearBalance() {
-		balance = null;
-	}
-	
 	private boolean isBalanceDirty() {
 		if (balance == null) return true;
 		for (Envelope child : children) {
@@ -281,7 +277,7 @@ public class Envelope extends AbstractEntity<Envelope> {
 			
 			Double value = 0.0;
 			for (InternalTransaction t : getTransactions()) {
-				value += t.getAmount();
+				value += t.getSplitAmount(this);
 			}
 			for (Envelope e : children) {
 				value += e.getBalance();
@@ -402,6 +398,10 @@ public class Envelope extends AbstractEntity<Envelope> {
 		addTransaction(transaction, true);
 	}
 	
+	public void resetBalance() {
+		resetBalance(this);
+	}
+	
 	private void resetBalance(Envelope envelope) {
 		if (envelope != null) {
 			envelope.setBalance(null);
@@ -424,7 +424,7 @@ public class Envelope extends AbstractEntity<Envelope> {
 		resetBalance(this);
 		getMonitor().fireEntityChanged(this, Properties.transactions);
 		if (notifyTransaction) {
-			transaction.addSplit(this, false);
+			transaction.addSplit(this, transaction.getAmount(), false);
 		}
 	}
 
@@ -443,6 +443,7 @@ public class Envelope extends AbstractEntity<Envelope> {
 		List<InternalTransaction> l = getAccountTransactions(account);
 		l.remove(transaction);
 		getMonitor().fireEntityChanged(this, Properties.transactions);
+		resetBalance(this);
 		if (notifyTransaction) {
 			transaction.removeSplit(this, false);
 		}

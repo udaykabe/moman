@@ -119,7 +119,9 @@ public class SWTViewer extends Composite implements ICallBackNotifier, PaintList
 	    p.getClientArea().setBackground(ColorDefinitionImpl.create(255, 255, 225));
 	    p.getOutline().setVisible(false);
 	 
-	    cwaBar.getTitle().getLabel().getCaption().setValue(envelope.getChartLegendLabel());
+	    if (envelope != null) {
+		    cwaBar.getTitle().getLabel().getCaption().setValue(envelope.getChartLegendLabel());
+	    }
 	 
 	    // customize the legend
 	    Legend lg = cwaBar.getLegend();

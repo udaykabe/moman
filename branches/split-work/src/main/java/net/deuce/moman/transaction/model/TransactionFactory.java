@@ -4,6 +4,7 @@ import java.util.Date;
 
 import net.deuce.moman.account.model.Account;
 import net.deuce.moman.model.EntityFactory;
+import net.sf.ofx4j.domain.data.common.TransactionType;
 
 import org.springframework.stereotype.Component;
 
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Component;
 public class TransactionFactory extends EntityFactory<InternalTransaction> {
 
 	protected void setTransactionProperties(InternalTransaction entity, String externalId,
-			Double amount, String type, Date date, String description,
+			Double amount, TransactionType type, Date date, String description,
 			String memo, String check, String ref, Double balance,
 			Account account) {
 		
@@ -28,7 +29,7 @@ public class TransactionFactory extends EntityFactory<InternalTransaction> {
 	}
 	
 	public InternalTransaction buildEntity(String id, String externalId,
-		Double amount, String type, Date date, String description,
+		Double amount, TransactionType type, Date date, String description,
 		String memo, String check, String ref, Double balance,
 		Account account) {
 		InternalTransaction entity = super.buildEntity(InternalTransaction.class, id);
@@ -38,7 +39,7 @@ public class TransactionFactory extends EntityFactory<InternalTransaction> {
 	}
 	
 	public InternalTransaction newEntity(String externalId,
-			Double amount, String type, Date date, String description,
+			Double amount, TransactionType type, Date date, String description,
 			String memo, String check, String ref, Double balance,
 			Account account) {
 		return buildEntity(createUuid(), externalId, amount, type, date,

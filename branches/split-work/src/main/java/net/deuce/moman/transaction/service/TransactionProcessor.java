@@ -19,6 +19,7 @@ import net.deuce.moman.preference.AccountPage;
 import net.deuce.moman.rule.model.Rule;
 import net.deuce.moman.service.ServiceNeeder;
 import net.deuce.moman.transaction.model.InternalTransaction;
+import net.deuce.moman.transaction.model.Split;
 import net.deuce.moman.transaction.model.TransactionFactory;
 import net.deuce.moman.ui.Activator;
 import net.deuce.moman.util.CalendarUtil;
@@ -187,7 +188,7 @@ public abstract class TransactionProcessor implements Runnable {
 				}
 			} finally {
 				for (Envelope env : modifiedEnvelopes) {
-					env.clearBalance();
+					env.resetBalance();
 				}
 				ServiceNeeder.instance().getServiceContainer().stopQueuingNotifications();
 			}
@@ -234,22 +235,22 @@ public abstract class TransactionProcessor implements Runnable {
 				
 				if (t.getAmount() > 0) {
 					t.clearSplit();
-					t.addSplit(envelopeService.getAvailableEnvelope());
+					t.addSplit(envelopeService.getAvailableEnvelope(), t.getAmount());
 				} else {
-					t.addSplit(envelopeService.getUnassignedEnvelope());
+					t.addSplit(envelopeService.getUnassignedEnvelope(), t.getAmount());
 				}
 				
 				if (t.getType() == null) {
 					if (bt.getTransactionType() == TransactionType.OTHER) {
 						if (t.getCheck() != null && t.getCheck().length() > 0) {
-							t.setType(TransactionType.CHECK.name());
+							t.setType(TransactionType.CHECK);
 						} else if (t.getAmount() >= 0) {
-							t.setType(TransactionType.CREDIT.name());
+							t.setType(TransactionType.CREDIT);
 						} else {
-							t.setType(TransactionType.DEBIT.name());
+							t.setType(TransactionType.DEBIT);
 						}
 					} else {
-						t.setType(bt.getTransactionType().name());
+						t.setType(bt.getTransactionType());
 					}
 				}
 				
@@ -294,10 +295,14 @@ public abstract class TransactionProcessor implements Runnable {
 						t.setDescription(rule.getConversion());
 					}
 					t.clearSplit();
-					t.addSplit(rule.getEnvelope(), !t.isMatched());
+					for (Split item : rule.getSplit()) {
+						t.addSplit(item, !t.isMatched());
+					}
 				}
 			}
-			modifiedEnvelopes.addAll(t.getSplit());
+			for (Split item : t.getSplit()) {
+				modifiedEnvelopes.add(item.getEnvelope());
+			}
 		}
 	}
 	
@@ -324,10 +329,10 @@ public abstract class TransactionProcessor implements Runnable {
 				InternalTransaction transaction = transactionService.getInitialBalanceTransaction(account);
 				if (transaction == null) {
 					transaction = transactionFactory.newEntity(
-						null, balance, "OTHER", initialBalanceDate, "Initial Balance",
+						null, balance, TransactionType.OTHER, initialBalanceDate, "Initial Balance",
 						null, null, null, null, account);
 					transaction.setInitialBalance(true);
-					transaction.addSplit(envelopeService.getAvailableEnvelope());
+					transaction.addSplit(envelopeService.getAvailableEnvelope(), transaction.getAmount());
 					transactionService.addEntity(transaction);
 				} else {
 					transaction.setAmount(balance);
