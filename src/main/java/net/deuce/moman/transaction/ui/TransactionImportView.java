@@ -1,18 +1,21 @@
 package net.deuce.moman.transaction.ui;
 
 import java.util.Iterator;
+import java.util.List;
 
 import net.deuce.moman.command.importer.Delete;
-import net.deuce.moman.envelope.model.Envelope;
-import net.deuce.moman.envelope.ui.EnvelopeSelectionDialog;
+import net.deuce.moman.envelope.ui.SplitSelectionDialog;
 import net.deuce.moman.service.ServiceNeeder;
 import net.deuce.moman.transaction.model.InternalTransaction;
+import net.deuce.moman.transaction.model.Split;
 import net.deuce.moman.ui.AbstractEntityTableView;
 
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 
@@ -63,29 +66,36 @@ public class TransactionImportView extends AbstractEntityTableView<InternalTrans
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void doubleClickHandler(int column,
-			StructuredSelection selection, Shell shell) {
+			final StructuredSelection selection, Shell shell) {
 		InternalTransaction transaction = (InternalTransaction)selection.getFirstElement();
-		
-		Envelope envelope = transaction.getSplit().get(0);
-		EnvelopeSelectionDialog dialog = new EnvelopeSelectionDialog(shell, envelope);
+		List<Split> split = transaction.getSplit();
+		final SplitSelectionDialog dialog = new SplitSelectionDialog(shell, transaction.getAmount(), split);
 		
 		dialog.setAllowBills(true);
 		dialog.create();
-		dialog.open();
-		if (envelope != dialog.getEnvelope()) {
-			Iterator<InternalTransaction> itr = selection.iterator();
-			while (itr.hasNext()) {
-				transaction = itr.next();
-				Envelope oldEnvelope = transaction.getSplit().get(0);
-				
-				// oldEnvelope to new Envelope move
-				transaction.removeSplit(oldEnvelope, true);
-				transaction.addSplit(dialog.getEnvelope(), true);
-				
-				oldEnvelope.clearBalance();
-				dialog.getEnvelope().clearBalance();
-				
-				getViewer().refresh(transaction);
+		if (dialog.open() == Window.OK) {
+			if (split != dialog.getSplit()) {
+				BusyIndicator.showWhile(shell.getDisplay(), new Runnable() {
+					public void run() {
+						ServiceNeeder.instance().getServiceContainer().startQueuingNotifications();
+						try {
+							Iterator<InternalTransaction> itr = selection.iterator();
+							while (itr.hasNext()) {
+								InternalTransaction transaction = itr.next();
+							
+								transaction.clearSplit();
+								
+								for (Split item : dialog.getSplit()) {
+									transaction.addSplit(item, true);
+								}
+								
+								getViewer().refresh(transaction);
+							}
+						} finally {
+							ServiceNeeder.instance().getServiceContainer().stopQueuingNotifications();
+						}
+					}
+				});
 			}
 		}
 	}

@@ -1,7 +1,7 @@
 est-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Moman
-Bundle-SymbolicName: moman; singleton:=true
+Bundle-SymbolicName: moman;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: net.deuce.moman.ui.Activator
 Require-Bundle: org.eclipse.ui,

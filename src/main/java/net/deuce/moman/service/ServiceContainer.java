@@ -7,10 +7,12 @@ import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.deuce.moman.Constants;
 import net.deuce.moman.envelope.model.EnvelopeBuilder;
 import net.deuce.moman.envelope.service.EnvelopeService;
 import net.deuce.moman.fi.model.FinancialInstitutionBuilder;
 import net.deuce.moman.model.EntityBuilder;
+import net.deuce.moman.model.version.DocumentConverterFactory;
 import net.deuce.moman.transaction.model.TransactionBuilder;
 import net.deuce.moman.transaction.service.TransactionService;
 import net.sf.ofx4j.domain.data.common.Transaction;
@@ -183,6 +185,10 @@ public class ServiceContainer {
 			Document document = reader.read(new URL("file:///"+f.getAbsolutePath()));
 			Element root = document.getRootElement();
 			
+			DocumentConverterFactory.getInstance(
+					Integer.valueOf(root.attributeValue("version")),
+					Constants.MOMAN_DOCUMENT_VERSION).convert(document);
+			
 			for (EntityBuilder builder : builders) {
 				builder.parseXml(root);
 			}
@@ -230,7 +236,8 @@ public class ServiceContainer {
         
 		try {
 			Document doc = DocumentHelper.createDocument();
-			doc.addElement("moman");
+			Element root = doc.addElement("moman");
+			root.addAttribute("version", Constants.MOMAN_DOCUMENT_VERSION.toString());
 			
 			for (EntityBuilder builder : builders) {
 				builder.buildXml(doc);

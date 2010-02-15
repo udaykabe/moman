@@ -1,20 +1,23 @@
 package net.deuce.moman.envelope.ui;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import net.deuce.moman.Constants;
 import net.deuce.moman.envelope.model.Envelope;
-import net.deuce.moman.envelope.model.Split;
 import net.deuce.moman.envelope.service.EnvelopeService;
+import net.deuce.moman.model.EntityEvent;
+import net.deuce.moman.model.EntityListener;
 import net.deuce.moman.service.ServiceNeeder;
+import net.deuce.moman.transaction.model.Split;
 
-import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ColumnViewerEditor;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -22,31 +25,50 @@ import org.eclipse.jface.viewers.TableViewerEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
-public class SplitSelectionDialog extends Dialog {
+public class SplitSelectionDialog extends TitleAreaDialog implements EntityListener<Split> {
 	
 	private TableViewer splitViewer;
-	private List<Envelope> split = new LinkedList<Envelope>();
+	private List<Split> split = new LinkedList<Split>();
 	private List<Envelope> invalidSelections = new LinkedList<Envelope>();
 	private EnvelopeService envelopeService;
+	private Label totalLabel;
+	private Label remainingLabel;
+	private Double amount;
+	private Double remaining = 0.0;
 	private boolean allowBills;
-	private boolean editingEnvelope = false;
 
-	public SplitSelectionDialog(Shell parentShell, List<Envelope> split) {
+	public SplitSelectionDialog(Shell parentShell, Double amount, List<Split> split) {
 		super(parentShell);
-		this.split.addAll(split);
+		
+		for (Split item : split) {
+			item.setAmount(Math.abs(item.getAmount()));
+			this.split.add(item);
+			item.getMonitor().addListener(this);
+		}
+		
+		this.amount = Math.abs(amount);
 		envelopeService = ServiceNeeder.instance().getEnvelopeService();
+		setTitle("Envelope Split");
 	}
 	
+	@Override
+	protected void configureShell(Shell newShell) {
+		super.configureShell(newShell);
+	}
+
 	public boolean isAllowBills() {
 		return allowBills;
 	}
@@ -65,64 +87,170 @@ public class SplitSelectionDialog extends Dialog {
 		}
 	}
 	
-	public List<Envelope> getSplit() {
-		return split;
+	public List<Split> getSplit() {
+		List<Split> list = new LinkedList<Split>();
+		for (Split item : split) {
+			item.getMonitor().removeListener(this);
+			list.add(item);
+		}
+		return list;
 	}
 
-	public void setSplit(List<Envelope> split) {
+	public void setSplit(List<Split> split) {
 		this.split.clear();
 		this.split.addAll(split);
 	}
 	
 	@Override
 	protected Point getInitialLocation(Point initialSize) {
+		getShell().setSize(525, 250);
 		return Display.getCurrent().getCursorLocation();
 	}
 
 	@Override
+	protected Control createContents(Composite parent) {
+		// create the top level composite for the dialog
+		Composite composite = new Composite(parent, 0);
+		GridLayout layout = new GridLayout();
+		layout.marginHeight = 0;
+		layout.marginWidth = 0;
+		layout.verticalSpacing = 0;
+		composite.setLayout(layout);
+		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
+		applyDialogFont(composite);
+		// initialize the dialog units
+		initializeDialogUnits(composite);
+		// create the dialog area and button bar
+		dialogArea = createAddRemoveButtons(composite);
+		dialogArea = createDialogArea(composite);
+		createStatusBar(composite);
+		buttonBar = createButtonBar(composite);
+				
+		return composite;
+	}
+	
+	@Override
 	protected Control createDialogArea(Composite parent) {
-		
-		GridLayout gridLayout = new GridLayout();
-		gridLayout.numColumns = 1;
-		parent.setLayout(gridLayout);
-		
-		GridData gridData = new GridData();
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.horizontalAlignment = GridData.FILL;
-		Composite topContainer = createAddRemoveButtons(parent);
-		topContainer.setLayoutData(gridData);
-		
 		createSplitTable(parent);
-		
-		gridData = new GridData();
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.horizontalAlignment = GridData.FILL;
-		gridData.grabExcessVerticalSpace = true;
-		gridData.verticalAlignment = GridData.FILL;
-		
-		splitViewer.getTable().setLayoutData(gridData);
+		splitViewer.getTable().setLayoutData(new GridData(GridData.FILL_BOTH));
 		return parent;
+	}
+	
+	private void updateTotals() {
+		totalLabel.setText(Constants.CURRENCY_VALIDATOR.format(amount));
+		remainingLabel.setText(Constants.CURRENCY_VALIDATOR.format(remaining));
+	}
+	
+	private Composite createStatusBar(Composite parent) {
+		Composite composite = new Composite(parent, SWT.NONE);
+		// create a layout with spacing and margins appropriate for the font
+		// size.
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 2; // this is incremented by createButton
+		layout.makeColumnsEqualWidth = true;
+		layout.marginWidth = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_MARGIN);
+		layout.marginHeight = convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_MARGIN);
+		layout.horizontalSpacing = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_SPACING);
+		layout.verticalSpacing = convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_SPACING);
+		composite.setLayout(layout);
+		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING
+				| GridData.VERTICAL_ALIGN_CENTER);
+		composite.setLayoutData(data);
+		composite.setFont(parent.getFont());
+		
+		Label label = new Label(composite, SWT.NONE);
+		label.setText("Split Total: ");
+		totalLabel = new Label(composite, SWT.NONE);
+		totalLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		
+		label = new Label(composite, SWT.NONE);
+		label.setText("Remaining: ");
+		remainingLabel = new Label(composite, SWT.NONE);
+		remainingLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		updateTotals();
+		
+		return composite;
 	}
 	
 	private Composite createAddRemoveButtons(Composite parent) {
 		
-		GridData gridData = new GridData();
-		gridData.horizontalAlignment = GridData.END;
+		Composite composite = new Composite(parent, SWT.NONE);
+		// create a layout with spacing and margins appropriate for the font
+		// size.
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 0; // this is incremented by createButton
+		layout.makeColumnsEqualWidth = true;
+		layout.marginWidth = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_MARGIN);
+		layout.marginHeight = convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_MARGIN);
+		layout.horizontalSpacing = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_SPACING);
+		layout.verticalSpacing = convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_SPACING);
+		composite.setLayout(layout);
+		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING
+				| GridData.VERTICAL_ALIGN_CENTER);
+		composite.setLayoutData(data);
+		composite.setFont(parent.getFont());
 		
-		Composite container = new Composite(parent, SWT.NONE);
-		GridLayout gridLayout = new GridLayout();
-		gridLayout.numColumns = 2;
-		container.setLayout(gridLayout);
+		Button addButton = createButton(composite, 3, "Add", false);
+		setButtonLayoutData(addButton);
+		addButton.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				
+				if (remaining == 0.0) return;
+				
+				final EnvelopeSelectionDialog dialog = new EnvelopeSelectionDialog(
+						((Button)e.getSource()).getShell(), envelopeService.getRootEnvelope());
+				
+				dialog.setAllowBills(true);
+				dialog.create();
+				dialog.open();
+				boolean containsEnvelope = false;
+				
+				for (Split item : split) {
+					if (item.getEnvelope() == dialog.getEnvelope()) {
+						containsEnvelope = true;
+						break;
+					}
+				}
+				if (!containsEnvelope) {
+					Split splitItem = new Split(dialog.getEnvelope(), remaining);
+					splitItem.getMonitor().addListener(SplitSelectionDialog.this);
+					split.add(splitItem);
+					remaining = 0.0;
+					splitViewer.refresh();
+					updateTotals();
+				}
+			}
+		});
 		
-		Button addButton = new Button(container, SWT.PUSH);
-		addButton.setText("Add");
-		addButton.setLayoutData(gridData);
+		Button removeButton = createButton(composite, 4, "Remove", false);
+		setButtonLayoutData(removeButton);
+		removeButton.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+			@SuppressWarnings("unchecked")
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				StructuredSelection selection = (StructuredSelection) splitViewer.getSelection();
+				if (selection.size() > 0) {
+					Iterator<Split> itr = selection.iterator();
+					Split item;
+					while (itr.hasNext()) {
+						item = itr.next();
+						split.remove(item);
+						remaining += item.getAmount();
+					}
+					splitViewer.refresh();
+					updateTotals();
+				}
+			}
+		});
 		
-		Button removeButton = new Button(container, SWT.PUSH);
-		removeButton.setText("Remove");
-		removeButton.setLayoutData(gridData);
-		
-		return container;
+		return composite;
 	}
 	
 	private void createSplitTable(Composite parent) {
@@ -133,7 +261,7 @@ public class SplitSelectionDialog extends Dialog {
 		gridData.grabExcessVerticalSpace = true;
 		gridData.verticalAlignment = GridData.FILL;
 		
-		splitViewer = new TableViewer(parent, SWT.SINGLE | SWT.V_SCROLL | SWT.FULL_SELECTION);    
+		splitViewer = new TableViewer(parent, SWT.MULTI | SWT.V_SCROLL | SWT.FULL_SELECTION);    
 		   
         TableViewerColumn column = new TableViewerColumn(splitViewer, SWT.CENTER);
  		column.getColumn().setText("Envelope");
@@ -147,8 +275,6 @@ public class SplitSelectionDialog extends Dialog {
 	    splitViewer.setContentProvider(new SplitContentProvider());
 	    splitViewer.setLabelProvider(new SplitLabelProvider());
 
-	    splitViewer.addDoubleClickListener(getDoubleClickListener(parent.getShell()));
-		
  		splitViewer.getTable().addKeyListener(new KeyListener() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -169,58 +295,8 @@ public class SplitSelectionDialog extends Dialog {
  		splitViewer.getTable().setFont(Constants.STANDARD_FONT);
  		splitViewer.getTable().setHeaderVisible(true);
  		splitViewer.getTable().setLinesVisible(true);
-	}
-	
-	protected int[] getDoubleClickableColumns() {
-		return new int[]{0};
-	}
-	
-	protected IDoubleClickListener getDoubleClickListener(final Shell shell) {
-		return new IDoubleClickListener() {
-			@Override
-			public void doubleClick(DoubleClickEvent event) {
-				int[] columns = getDoubleClickableColumns();
-				if (columns.length == 0) return;
-				if (editingEnvelope) return;
-				editingEnvelope = true;
-				
-				try {
-					Point cursorLocation = Display.getCurrent().getCursorLocation();
-					Rectangle tableBounds = splitViewer.getTable().getParent().getParent().getBounds();
-					Rectangle shellBounds = Display.getCurrent().getActiveShell().getBounds();
-					
-					int x = cursorLocation.x;
-					
-					for (int i=0; i<columns.length; i++) {
-						Rectangle bounds = splitViewer.getTable().getItem(0).getBounds(columns[i]);
-						int minThreshold = tableBounds.x+shellBounds.x+bounds.x;
-						int maxThreshold = tableBounds.x+shellBounds.x+bounds.x+bounds.width;
-				
-						if (x >= minThreshold && x <= maxThreshold) {
-							StructuredSelection selection = (StructuredSelection)splitViewer.getSelection();
-							doubleClickHandler(columns[i], selection, shell);
-						}
-					}
-				} finally {
-					editingEnvelope = false;
-				}
-				
-			}
-
-		};
-	}
-	
-	protected void doubleClickHandler(int column, final StructuredSelection selection, Shell shell) {
-		Split split = (Split)selection.getFirstElement();
-		final EnvelopeSelectionDialog dialog = new EnvelopeSelectionDialog(shell, split.getEnvelope());
-		
-		dialog.setAllowBills(true);
-		dialog.create();
-		dialog.open();
-		if (split.getEnvelope() != dialog.getEnvelope()) {
-			split.setEnvelope(dialog.getEnvelope());
-			splitViewer.refresh(split);
-		}
+ 		
+ 		refresh();
 	}
 	
 	protected void setupTableViewerEditor(TableViewer tableViewer, ColumnViewerEditorActivationStrategy strategy) {
@@ -241,10 +317,78 @@ public class SplitSelectionDialog extends Dialog {
 			}
 		};
 	}
-	
+
 	@Override
-	protected Control createButtonBar(Composite parent) {
-		return parent;
+	protected void createButtonsForButtonBar(Composite parent) {
+		
+		createOkButton(parent);
+		Button cancelButton = createButton(parent, IDialogConstants.CANCEL_ID,
+				IDialogConstants.CANCEL_LABEL, false);
+		
+		// Add a SelectionListener
+		cancelButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				setReturnCode(CANCEL);
+				close();
+			}
+		});
+	}
+
+	protected Button createOkButton(Composite parent) {
+		// increment the number of columns in the button bar
+		((GridLayout) parent.getLayout()).numColumns++;
+		Button button = new Button(parent, SWT.PUSH);
+		button.setText(IDialogConstants.OK_LABEL);
+		button.setFont(JFaceResources.getDialogFont());
+		button.setData(new Integer(IDialogConstants.OK_ID));
+		button.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent event) {
+				if (isValidInput()) {
+					okPressed();
+				}
+			}
+		});
+		Shell shell = parent.getShell();
+		if (shell != null) {
+			shell.setDefaultButton(button);
+		}
+		setButtonLayoutData(button);
+		return button;
 	}
 	
+	private void refresh() {
+ 		splitViewer.setInput(split);
+	}
+	
+	protected boolean isValidInput() {
+		if (remaining != 0.0) {
+			setErrorMessage("Remaining amount must be zero.");
+			return false;
+		}
+		return true;
+	}
+	
+	protected void saveInput() {
+	}
+
+	@Override
+	public void entityAdded(EntityEvent<Split> event) {
+		remaining -= event.getEntity().getAmount();
+		updateTotals();
+	}
+
+	@Override
+	public void entityChanged(EntityEvent<Split> event) {
+		remaining = amount;
+		for (Split item : split) {
+			remaining -= item.getAmount();
+		}
+		updateTotals();
+	}
+
+	@Override
+	public void entityRemoved(EntityEvent<Split> event) {
+		remaining += event.getEntity().getAmount();
+		updateTotals();
+	}
 }

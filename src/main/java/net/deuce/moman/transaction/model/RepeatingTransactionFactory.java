@@ -5,6 +5,7 @@ import java.util.Date;
 import net.deuce.moman.account.model.Account;
 import net.deuce.moman.model.EntityFactory;
 import net.deuce.moman.model.Frequency;
+import net.sf.ofx4j.domain.data.common.TransactionType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,7 +17,7 @@ public class RepeatingTransactionFactory extends EntityFactory<RepeatingTransact
 	private TransactionFactory transactionFactory;
 	
 	public RepeatingTransaction buildEntity(String id, String externalId,
-			Double amount, String type, Date date, String description,
+			Double amount, TransactionType type, Date date, String description,
 			String memo, String check, String ref, Double balance,
 			Account account, Date originalDateDue, Date dateDue,
 			Frequency frequency, Integer count) {
@@ -38,7 +39,7 @@ public class RepeatingTransactionFactory extends EntityFactory<RepeatingTransact
 	}
 		
 	public RepeatingTransaction newEntity(String externalId,
-			Double amount, String type, Date date, String description,
+			Double amount, TransactionType type, Date date, String description,
 			String memo, String check, String ref, Double balance,
 			Account account, Date originalDateDue, Date dateDue,
 			Frequency frequency, Integer count) {

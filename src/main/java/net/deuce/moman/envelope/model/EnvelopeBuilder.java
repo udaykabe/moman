@@ -9,10 +9,6 @@ import net.deuce.moman.Constants;
 import net.deuce.moman.envelope.service.EnvelopeService;
 import net.deuce.moman.model.AbstractBuilder;
 import net.deuce.moman.model.Frequency;
-import net.deuce.moman.transaction.model.InternalTransaction;
-import net.deuce.moman.transaction.model.RepeatingTransaction;
-import net.deuce.moman.transaction.service.RepeatingTransactionService;
-import net.deuce.moman.transaction.service.TransactionService;
 
 import org.dom4j.Document;
 import org.dom4j.Element;
@@ -25,16 +21,9 @@ public class EnvelopeBuilder extends AbstractBuilder {
 	@Autowired
 	private EnvelopeService envelopeService;
 	
-	@Autowired
-	private TransactionService transactionService;
-
-	@Autowired
-	private RepeatingTransactionService repeatingTransactionService;
-
 	@SuppressWarnings("unchecked")
 	public void parseXml(Element e) {
 		
-		String tid;
 		Element el;
 		
 		List<Element> envelopeElements = e.selectNodes("envelopes/envelope");
@@ -59,19 +48,6 @@ public class EnvelopeBuilder extends AbstractBuilder {
 				envelopeService.setSavingsGoalsEnvelope(envelope);
 			}
 
-			InternalTransaction trans;
-			List<Element> transactionElements = n.selectNodes("transactions/transaction");
-			if (transactionElements != null) {
-				for (Element t : transactionElements) {
-					tid = t.attributeValue("id");
-					trans = transactionService.findEntity(tid);
-					if (trans == null) {
-						trans = repeatingTransactionService.getEntity(tid);
-					}
-					envelope.addTransaction(trans, false);
-				}
-			}
-			
 			envelopeService.addEntity(envelope);
 			if (envelope.isSelected()) {
 				envelopeService.setSelectedEnvelope(envelope);
@@ -132,7 +108,6 @@ public class EnvelopeBuilder extends AbstractBuilder {
 	
 	protected Element buildEnvelope(Envelope env, Element root, String name) {
 		Element el;
-		Element tel;
 		
 		el = root.addElement(name);
 		el.addAttribute("id", env.getId());
@@ -157,13 +132,6 @@ public class EnvelopeBuilder extends AbstractBuilder {
 		
 		if (env.getParent() != null) {
 			el.addElement("parent").addAttribute("id", env.getParent().getId());
-		}
-		tel = el.addElement("transactions");
-		for (InternalTransaction trans : env.getAllTransactions()) {
-			tel.addElement("transaction").addAttribute("id", trans.getId());
-		}
-		for (RepeatingTransaction trans : env.getRepeatingTransactions()) {
-			tel.addElement("transaction").addAttribute("id", trans.getId());
 		}
 		
 		return el;

@@ -9,11 +9,13 @@ import net.deuce.moman.account.model.Account;
 import net.deuce.moman.envelope.model.Envelope;
 import net.deuce.moman.envelope.service.EnvelopeService;
 import net.deuce.moman.envelope.ui.EnvelopeSelectionDialog;
+import net.deuce.moman.envelope.ui.SplitSelectionDialog;
 import net.deuce.moman.model.EntityEvent;
 import net.deuce.moman.model.EntityListener;
 import net.deuce.moman.service.ServiceNeeder;
 import net.deuce.moman.transaction.command.Delete;
 import net.deuce.moman.transaction.model.InternalTransaction;
+import net.deuce.moman.transaction.model.Split;
 import net.deuce.moman.transaction.service.TransactionService;
 import net.deuce.moman.ui.AbstractEntityTableView;
 import net.deuce.moman.ui.DateSelectionDialog;
@@ -23,6 +25,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.KeyAdapter;
@@ -35,7 +38,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-public class RegisterView extends AbstractEntityTableView<InternalTransaction> {
+public class RegisterView extends AbstractEntityTableView<InternalTransaction>  {
 	
 	public static final String ID = RegisterView.class.getName();
 	
@@ -44,6 +47,7 @@ public class RegisterView extends AbstractEntityTableView<InternalTransaction> {
 	private EnvelopeService envelopeService;
 	private RegisterFilter filter = new RegisterFilter();
 	private Text searchText;
+	private boolean shiftDown = false;
 
 	public RegisterView() {
 		super(ServiceNeeder.instance().getTransactionService());
@@ -84,11 +88,11 @@ public class RegisterView extends AbstractEntityTableView<InternalTransaction> {
 		final TableViewer tableViewer = new TableViewer(parent, SWT.MULTI | SWT.V_SCROLL | SWT.FULL_SELECTION);
 		tableViewer.addFilter(filter);
 		searchText.addKeyListener(new KeyAdapter() {
+			@Override
 			public void keyReleased(KeyEvent ke) {
 				filter.setSearchText(searchText.getText());
 				tableViewer.refresh();
 			}
-
 		});
 				
         TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.LEFT);
@@ -120,6 +124,20 @@ public class RegisterView extends AbstractEntityTableView<InternalTransaction> {
 		
 	    tableViewer.setContentProvider(new TransactionContentProvider());
 	    tableViewer.setLabelProvider(new TransactionLabelProvider());
+	    
+	    tableViewer.getTable().addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent ke) {
+				shiftDown = ke.keyCode == SWT.SHIFT;
+			}
+			@Override
+			public void keyReleased(KeyEvent ke) {
+				if (ke.keyCode == SWT.SHIFT) {
+					shiftDown = false;
+				}
+			}
+		});
+	    
 		return tableViewer;
 	}
 	
@@ -136,13 +154,22 @@ public class RegisterView extends AbstractEntityTableView<InternalTransaction> {
 	
 	private void handleEnvelopeDoubleClicked(final StructuredSelection selection, Shell shell) {
 		InternalTransaction transaction = (InternalTransaction)selection.getFirstElement();
-		Envelope envelope = transaction.getSplit().get(0);
-		final EnvelopeSelectionDialog dialog = new EnvelopeSelectionDialog(shell, envelope);
+		List<Split> split = transaction.getSplit();
 		
+		if (shiftDown || split.size() > 1) {
+			handleSplitSelectionDialog(selection, shell, transaction, split);
+		} else {
+			handleEnvelopeSelectionDialog(selection, shell, transaction, split);
+		}
+	}
+	
+	private void handleEnvelopeSelectionDialog(final StructuredSelection selection,
+			Shell shell, InternalTransaction transaction, List<Split> split) {
+		final EnvelopeSelectionDialog dialog = new EnvelopeSelectionDialog(shell, split.get(0).getEnvelope());
 		dialog.setAllowBills(true);
 		dialog.create();
 		dialog.open();
-		if (envelope != dialog.getEnvelope()) {
+		if (split.get(0).getEnvelope() != dialog.getEnvelope()) {
 			BusyIndicator.showWhile(shell.getDisplay(), new Runnable() {
 				@SuppressWarnings("unchecked")
 				public void run() {
@@ -151,14 +178,10 @@ public class RegisterView extends AbstractEntityTableView<InternalTransaction> {
 						Iterator<InternalTransaction> itr = selection.iterator();
 						while (itr.hasNext()) {
 							InternalTransaction transaction = itr.next();
-							Envelope oldEnvelope = transaction.getSplit().get(0);
+						
+							transaction.clearSplit();
 							
-							// oldEnvelope to new Envelope move
-							transaction.removeSplit(oldEnvelope, true);
-							transaction.addSplit(dialog.getEnvelope(), true);
-							
-							oldEnvelope.clearBalance();
-							dialog.getEnvelope().clearBalance();
+							transaction.addSplit(dialog.getEnvelope(), transaction.getAmount(), true);
 							
 							getViewer().refresh(transaction);
 						}
@@ -168,6 +191,44 @@ public class RegisterView extends AbstractEntityTableView<InternalTransaction> {
 				}
 			});
 		}
+	}
+	
+	private void handleSplitSelectionDialog(final StructuredSelection selection,
+			Shell shell, InternalTransaction transaction, List<Split> split) {
+		final SplitSelectionDialog dialog = new SplitSelectionDialog(shell, transaction.getAmount(), split);
+		
+		dialog.setAllowBills(true);
+		dialog.create();
+		if (dialog.open() == Window.OK) {
+			if (!split.equals(dialog.getSplit())) {
+				BusyIndicator.showWhile(shell.getDisplay(), new Runnable() {
+					@SuppressWarnings("unchecked")
+					public void run() {
+						ServiceNeeder.instance().getServiceContainer().startQueuingNotifications();
+						try {
+							Iterator<InternalTransaction> itr = selection.iterator();
+							while (itr.hasNext()) {
+								InternalTransaction transaction = itr.next();
+							
+								transaction.clearSplit();
+								
+								for (Split item : dialog.getSplit()) {
+									if (transaction.getAmount() < 0.0) {
+										item.setAmount(-item.getAmount());
+									}
+									transaction.addSplit(item, true);
+								}
+								
+								getViewer().refresh(transaction);
+							}
+						} finally {
+							ServiceNeeder.instance().getServiceContainer().stopQueuingNotifications();
+						}
+					}
+				});
+			}
+		}
+		shiftDown = false;
 	}
 
 	@Override
@@ -277,8 +338,8 @@ public class RegisterView extends AbstractEntityTableView<InternalTransaction> {
 			if (transaction.getCheck().matches(searchString)) {
 				return true;
 			}
-			for (Envelope env : transaction.getSplit()) {
-				if (env.getName().toLowerCase().matches(searchString)) {
+			for (Split item : transaction.getSplit()) {
+				if (item.getEnvelope().getName().toLowerCase().matches(searchString)) {
 					return true;
 				}
 			}

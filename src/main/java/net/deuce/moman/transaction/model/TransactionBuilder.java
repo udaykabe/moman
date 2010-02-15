@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.deuce.moman.Constants;
 import net.deuce.moman.account.service.AccountService;
+import net.deuce.moman.envelope.service.EnvelopeService;
 import net.deuce.moman.model.AbstractBuilder;
 import net.deuce.moman.transaction.service.ImportService;
 import net.deuce.moman.transaction.service.TransactionService;
@@ -23,16 +24,20 @@ public class TransactionBuilder extends AbstractBuilder {
 	private TransactionService transactionService;
 
 	@Autowired
+	private EnvelopeService envelopeService;
+
+	@Autowired
 	private AccountService accountService;
 	
 	@Autowired
 	private ImportService importService;
 	
+	@SuppressWarnings("unchecked")
 	protected void parseTransaction(InternalTransaction transaction, Element e) {
 		try {
 			transaction.setId(e.attributeValue("id"));
 			transaction.setAccount(accountService.getEntity(e.element("account").attributeValue("id")));
-			transaction.setType(e.elementText("type"));
+			transaction.setType(TransactionType.valueOf(e.elementText("type")));
 			transaction.setAmount(Double.valueOf(e.elementText("amount")));
 			
 			if (e.element("date") != null) {
@@ -58,6 +63,15 @@ public class TransactionBuilder extends AbstractBuilder {
 			if (el != null) {
 				transaction.setTransferTransactionId(el.attributeValue("id"));
 			}
+			
+			List<Element> envelopeElements = e.selectNodes("split/envelope");
+			if (envelopeElements != null) {
+				for (Element ee : envelopeElements) {
+					transaction.addSplit(
+							envelopeService.findEntity(ee.attributeValue("id")),
+							Double.valueOf(ee.attributeValue("amount")));
+				}
+			}
 		} catch (Exception pe) {
 			pe.printStackTrace();
 			throw new RuntimeException(pe);
@@ -80,7 +94,7 @@ public class TransactionBuilder extends AbstractBuilder {
 		el.addAttribute("id", trans.getId());
 		el.addElement("account").addAttribute("id", trans.getAccount().getId());
 		addElement(el, "amount", trans.getAmount().toString());
-		addElement(el, "type", trans.getType());
+		addElement(el, "type", trans.getType().name());
 		if (trans.getDate() != null) {
 			addElement(el, "date", Constants.DATE_FORMAT.format(trans.getDate()));
 		}
@@ -93,6 +107,13 @@ public class TransactionBuilder extends AbstractBuilder {
 		addElement(el, "ref", trans.getRef());
 		if (trans.getTransferTransaction() != null) {
 			el.addElement("etransfer").addAttribute("id", trans.getTransferTransaction().getId());
+		}
+		Element sel = el.addElement("split");
+		Element eel;
+		for (Split item : trans.getSplit()) {
+			eel = sel.addElement("envelope");
+			eel.addAttribute("id", item.getEnvelope().getId());
+			eel.addAttribute("amount", item.getAmount().toString());
 		}
 	}
 	
