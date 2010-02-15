@@ -1,7 +1,7 @@
 package net.deuce.moman.envelope.ui;
 
-import net.deuce.moman.envelope.model.Envelope;
-import net.deuce.moman.envelope.model.Split;
+import net.deuce.moman.Constants;
+import net.deuce.moman.transaction.model.Split;
 
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
@@ -16,12 +16,13 @@ public class SplitLabelProvider implements ITableLabelProvider {
 
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
-		Split split = (Split) element;
-		Envelope envelope = split.getEnvelope();
+		Split item = (Split) element;
 
 		switch (columnIndex) {
 		case 0:
-			return envelope.getName();
+			return item.getEnvelope().getName();
+		case 1:
+			return Constants.CURRENCY_VALIDATOR.format(item.getAmount());
 		default:
 			break;
 		}

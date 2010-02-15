@@ -51,7 +51,7 @@ public class NewRepeating extends AbstractAccountHandler {
 					null, 0.0, null, date, "Set Description", null, null,
 					null, null, accounts.get(0), date, date, Frequency.MONTHLY, 1);
 			transaction.setEnabled(true);
-			transaction.addSplit(envelopeService.getUnassignedEnvelope());
+			transaction.addSplit(envelopeService.getUnassignedEnvelope(), transaction.getAmount());
 			repeatingTransactionService.addEntity(transaction);
 		} catch (PartInitException e) {
 			e.printStackTrace();

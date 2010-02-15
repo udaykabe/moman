@@ -1,8 +1,10 @@
 package net.deuce.moman.transaction.model;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import net.deuce.moman.account.model.Account;
 import net.deuce.moman.envelope.model.Envelope;
@@ -16,10 +18,10 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
 	private static final long serialVersionUID = 1L;
 
     public enum Properties implements EntityProperty {
-        externalId(String.class), amount(Double.class), type(String.class),
+        externalId(String.class), amount(Double.class), type(TransactionType.class),
         date(Date.class), description(String.class), memo(String.class),
         check(String.class), ref(String.class), balance(Double.class),
-        account(Account.class), split(List.class), initialBalance(Double.class);
+        account(Account.class), split(Map.class), initialBalance(Double.class);
         
 		private Class<?> ptype;
 		
@@ -30,7 +32,7 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
 	
 	private String externalId;
 	private Double amount;
-	private String type;
+	private TransactionType type;
 	private Date date;
 	private String description;
 	private String memo;
@@ -41,7 +43,7 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
 
 	private InternalTransaction transferTransaction;
 	private Account account;
-	private List<Envelope> split = new LinkedList<Envelope>();
+	private Map<Envelope, Split> splitMap = new HashMap<Envelope, Split>();
 	
 	private transient InternalTransaction matchedTransaction;
 	private transient String transferTransactionId;
@@ -94,14 +96,14 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
 			}
 			this.amount = amount;
 			if (amount > 0) {
-				type = TransactionType.CREDIT.name();
-			} else if (type == null || !type.equals(TransactionType.CHECK)) {
-				type = TransactionType.DEBIT.name();
+				type = TransactionType.CREDIT;
+			} else if (type == null || type != TransactionType.CHECK) {
+				type = TransactionType.DEBIT;
 			}
 			if (difference != 0 && balance != null) {
 				setBalance(balance - difference);
-				for (Envelope env : split) {
-					env.clearBalance();
+				for (Split split : splitMap.values()) {
+					split.getEnvelope().resetBalance();
 				}
 				getMonitor().fireEntityChanged(this, Properties.amount);
 			}
@@ -146,14 +148,14 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
 		}
 	}
 
-	public String getType() {
+	public TransactionType getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(TransactionType type) {
 		if (propertyChanged(this.type, type)) {
 			this.type = type;
-			getMonitor().fireEntityChanged(this);
+			getMonitor().fireEntityChanged(this, Properties.type);
 		}
 	}
 
@@ -245,26 +247,44 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
 			getMonitor().fireEntityChanged(this);
 		}
 	}
+	
+	public Double getSplitAmount(Envelope env) {
+		Split split = splitMap.get(env);
+		if (split != null) {
+			return split.getAmount();
+		} 
+		return 0.0;
+	}
 
 	public void clearSplit() {
-		for (Envelope env : split) {
+		for (Envelope env : splitMap.keySet()) {
 			env.removeTransaction(this, false);
 		}
-		split.clear();
+		splitMap.clear();
 		getMonitor().fireEntityChanged(this, Properties.split);
 	}
 	
-	public void addSplit(Envelope envelope) {
-		addSplit(envelope, true);
+	public void addSplit(Split item) {
+		addSplit(item, true);
 	}
-
-	public void addSplit(Envelope envelope, boolean notifyEnvelope) {
-		if (notifyEnvelope) {
-			envelope.addTransaction(this, false);
+	
+	public void addSplit(Envelope envelope, Double amount) {
+		addSplit(new Split(envelope, amount), true);
+	}
+	
+	public void addSplit(Envelope envelope, Double amount, boolean notifyEnvelope) {
+		addSplit(new Split(envelope, amount), notifyEnvelope);
+	}
+	
+	public void addSplit(Split split, boolean notifyEnvelope) {
+		if (!splitMap.containsValue(split)) {
+			if (notifyEnvelope) {
+				split.getEnvelope().addTransaction(this, false);
+			}
+			splitMap.put(split.getEnvelope(), split);
+			split.getEnvelope().resetBalance();
+			getMonitor().fireEntityChanged(this, Properties.split);
 		}
-		split.add(envelope);
-		envelope.clearBalance();
-		getMonitor().fireEntityChanged(this, Properties.split);
 	}
 
 	public void removeSplit(Envelope envelope) {
@@ -275,13 +295,15 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
 		if (notifyEnvelope) {
 			envelope.removeTransaction(this, false);
 		}
-		split.remove(envelope);
-		envelope.clearBalance();
-		getMonitor().fireEntityChanged(this, Properties.split);
+		
+		if (splitMap.remove(envelope) != null) {
+			envelope.resetBalance();
+			getMonitor().fireEntityChanged(this, Properties.split);
+		}
 	}
 	
-	public List<Envelope> getSplit() {
-		return split;
+	public List<Split> getSplit() {
+		return new LinkedList<Split>(splitMap.values());
 	}
 	
 	@Override

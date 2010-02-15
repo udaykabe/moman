@@ -1,9 +1,6 @@
 package net.deuce.moman.transaction.ui;
 
-import java.util.List;
-
 import net.deuce.moman.Constants;
-import net.deuce.moman.envelope.model.Envelope;
 import net.deuce.moman.transaction.model.InternalTransaction;
 
 import org.eclipse.jface.viewers.ILabelProviderListener;
@@ -24,12 +21,12 @@ public class TransferLabelProvider implements ITableLabelProvider, ITableColorPr
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
 		InternalTransaction transaction = (InternalTransaction) element;
-		List<Envelope> split = transaction.getSplit();
 		
 		switch (columnIndex) {
 		case 0: return Constants.SHORT_DATE_FORMAT.format(transaction.getDate());
 		case 1: return transaction.getDescription();
-		case 2: return split != null && split.size() > 0 ? split.get(0).getName() : "";
+		case 2: return transaction.getSplit() != null && transaction.getSplit().size() > 0 ?
+				transaction.getSplit().get(0).getEnvelope().getName() : "";
 		case 3: return Constants.CURRENCY_VALIDATOR.format(transaction.getAmount());
 		default:
 			break;

@@ -27,13 +27,13 @@ public class PerspectiveFactory implements IPerspectiveFactory {
 		layout.addStandaloneView(AccountView.ID, true, IPageLayout.LEFT, 0.25f, editorArea);
 		
 		IFolderLayout envelopeFolder = layout.createFolder("net.deuce.moman.rcp.view.envelopees", IPageLayout.TOP, 0.6f, editorArea);
-		envelopeFolder.addView(EnvelopeSpendingView.ID);
 		envelopeFolder.addView(EnvelopeView.ID);
 		envelopeFolder.addView(IncomeView.ID);
 		envelopeFolder.addView(BillView.ID);
 		envelopeFolder.addView(AllocationView.ID);
 		envelopeFolder.addView(SavingsGoalsView.ID);
 		envelopeFolder.addView(BudgetView.ID);
+		envelopeFolder.addView(EnvelopeSpendingView.ID);
 		
 		IFolderLayout transactionsFolder = layout.createFolder("net.deuce.moman.rcp.view.transactions", IPageLayout.BOTTOM, 0.4f, editorArea);
 		transactionsFolder.addView(RegisterView.ID);
