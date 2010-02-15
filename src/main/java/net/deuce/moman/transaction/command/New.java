@@ -48,7 +48,7 @@ public class New extends AbstractAccountHandler {
 			InternalTransaction transaction = ServiceNeeder.instance().getTransactionFactory().newEntity(
 					null, 0.0, null, new Date(), "Set Description", null, null,
 					null, null, accounts.get(0));
-			transaction.addSplit(envelopeService.getUnassignedEnvelope());
+			transaction.addSplit(envelopeService.getUnassignedEnvelope(), transaction.getAmount());
 			transactionService.addEntity(transaction);
 		} catch (PartInitException e) {
 			e.printStackTrace();

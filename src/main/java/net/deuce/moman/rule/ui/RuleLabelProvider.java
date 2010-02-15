@@ -36,7 +36,7 @@ public class RuleLabelProvider implements ITableLabelProvider {
 		case 2: return rule.getExpression();
 		case 3: return rule.getAmount() != null ? Constants.CURRENCY_VALIDATOR.format(rule.getAmount()) : "";
 		case 4: return rule.getConversion();
-		case 5: return rule.getEnvelope().getName();
+		case 5: return rule.getSplit().size() > 1 ? "Split" : rule.getSplit().get(0).getEnvelope().getName();
 		default:
 			break;
         }

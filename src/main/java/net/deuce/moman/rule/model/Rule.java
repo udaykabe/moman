@@ -1,8 +1,13 @@
 package net.deuce.moman.rule.model;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
+
 import net.deuce.moman.envelope.model.Envelope;
 import net.deuce.moman.model.AbstractEntity;
 import net.deuce.moman.model.EntityProperty;
+import net.deuce.moman.transaction.model.Split;
 
 public class Rule extends AbstractEntity<Rule> {
 
@@ -16,7 +21,7 @@ public class Rule extends AbstractEntity<Rule> {
 
     public enum Properties implements EntityProperty {
         expression(String.class), conversion(String.class), amount(Double.class),
-        condition(Condition.class), envelope(Envelope.class), enabled(Boolean.class);
+        condition(Condition.class), split(List.class), enabled(Boolean.class);
         
 		private Class<?> type;
 		
@@ -29,7 +34,7 @@ public class Rule extends AbstractEntity<Rule> {
 	private Double amount;
 	private String conversion;
 	private Condition condition;
-	private Envelope envelope;
+	private List<Split> split = new LinkedList<Split>();
 	private Boolean enabled;
 	
 	private transient RuleExecutor ruleExecutor;
@@ -113,15 +118,35 @@ public class Rule extends AbstractEntity<Rule> {
 		}
 	}
 	
-	public Envelope getEnvelope() {
-		return envelope;
+	public void clearSplit() {
+		split.clear();
+		getMonitor().fireEntityChanged(this, Properties.split);
+	}
+	
+	public void addSplit(Envelope envelope, Double amount) {
+		addSplit(new Split(envelope, amount));
+	}
+	
+	public void addSplit(Split item) {
+		if (!split.contains(item)) {
+			split.add(item);
+			getMonitor().fireEntityChanged(this, Properties.split);
+		}
 	}
 
-	public void setEnvelope(Envelope envelope) {
-		if (propertyChanged(this.envelope, envelope)) {
-			this.envelope = envelope;
-			getMonitor().fireEntityChanged(this);
+	public void removeSplit(Envelope envelope) {
+		ListIterator<Split> itr = split.listIterator();
+		while (itr.hasNext()) {
+			if (itr.next().getEnvelope() == envelope) {
+				itr.remove();
+				getMonitor().fireEntityChanged(this, Properties.split);
+				break;
+			}
 		}
+	}
+	
+	public List<Split> getSplit() {
+		return split;
 	}
 	
 	public boolean evaluate(String s) {

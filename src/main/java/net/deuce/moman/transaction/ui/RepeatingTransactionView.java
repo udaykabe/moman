@@ -2,20 +2,21 @@ package net.deuce.moman.transaction.ui;
 
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
-import net.deuce.moman.account.model.Account;
-import net.deuce.moman.envelope.model.Envelope;
-import net.deuce.moman.envelope.service.EnvelopeService;
-import net.deuce.moman.envelope.ui.EnvelopeSelectionDialog;
+import net.deuce.moman.envelope.ui.SplitSelectionDialog;
 import net.deuce.moman.service.ServiceNeeder;
 import net.deuce.moman.transaction.command.DeleteRepeating;
+import net.deuce.moman.transaction.model.InternalTransaction;
 import net.deuce.moman.transaction.model.RepeatingTransaction;
+import net.deuce.moman.transaction.model.Split;
 import net.deuce.moman.ui.AbstractEntityTableView;
 import net.deuce.moman.ui.DateSelectionDialog;
 
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.widgets.Composite;
@@ -25,11 +26,8 @@ public class RepeatingTransactionView extends AbstractEntityTableView<RepeatingT
 	
 	public static final String ID = RepeatingTransactionView.class.getName();
 	
-	private EnvelopeService envelopeService;
-	
 	public RepeatingTransactionView() {
 		super(ServiceNeeder.instance().getRepeatingTransactionService());
-		envelopeService = ServiceNeeder.instance().getEnvelopeService();
 	}
 
 	@Override
@@ -98,41 +96,37 @@ public class RepeatingTransactionView extends AbstractEntityTableView<RepeatingT
 	}
 	
 	private void handleEnvelopeDoubleClicked(final StructuredSelection selection, Shell shell) {
-		RepeatingTransaction transaction = (RepeatingTransaction)selection.getFirstElement();
-		Envelope envelope = transaction.getSplit().get(0);
-		final EnvelopeSelectionDialog dialog = new EnvelopeSelectionDialog(shell, envelope);
+		InternalTransaction transaction = (InternalTransaction)selection.getFirstElement();
+		List<Split> split = transaction.getSplit();
+		final SplitSelectionDialog dialog = new SplitSelectionDialog(shell, transaction.getAmount(), split);
 		
 		dialog.setAllowBills(true);
 		dialog.create();
-		dialog.open();
-		if (envelope != dialog.getEnvelope()) {
-			BusyIndicator.showWhile(shell.getDisplay(), new Runnable() {
-				@SuppressWarnings("unchecked")
-				public void run() {
-					ServiceNeeder.instance().getServiceContainer().startQueuingNotifications();
-					try {
-						Iterator<RepeatingTransaction> itr = selection.iterator();
-						while (itr.hasNext()) {
-							RepeatingTransaction transaction = itr.next();
-							Envelope oldEnvelope = transaction.getSplit().get(0);
-							transaction.clearSplit();
-							transaction.addSplit(dialog.getEnvelope());
-							getViewer().refresh(transaction);
-							oldEnvelope.clearBalance();
-							dialog.getEnvelope().clearBalance();
+		if (dialog.open() == Window.OK) {
+			if (split != dialog.getSplit()) {
+				BusyIndicator.showWhile(shell.getDisplay(), new Runnable() {
+					@SuppressWarnings("unchecked")
+					public void run() {
+						ServiceNeeder.instance().getServiceContainer().startQueuingNotifications();
+						try {
+							Iterator<InternalTransaction> itr = selection.iterator();
+							while (itr.hasNext()) {
+								InternalTransaction transaction = itr.next();
 							
-							// oldEnvelope to new Envelope transfer
-							Account account = transaction.getAccount();
-							envelopeService.transfer(account, account, 
-									oldEnvelope, dialog.getEnvelope(), 
-									-transaction.getAmount());
-							
+								transaction.clearSplit();
+								
+								for (Split item : dialog.getSplit()) {
+									transaction.addSplit(item, true);
+								}
+								
+								getViewer().refresh(transaction);
+							}
+						} finally {
+							ServiceNeeder.instance().getServiceContainer().stopQueuingNotifications();
 						}
-					} finally {
-						ServiceNeeder.instance().getServiceContainer().stopQueuingNotifications();
 					}
-				}
-			});
+				});
+			}
 		}
 	}
 	

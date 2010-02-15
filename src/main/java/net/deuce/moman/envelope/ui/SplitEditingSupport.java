@@ -1,7 +1,7 @@
 package net.deuce.moman.envelope.ui;
 
 import net.deuce.moman.Constants;
-import net.deuce.moman.envelope.model.Split;
+import net.deuce.moman.transaction.model.Split;
 import net.deuce.moman.ui.CurrencyCellEditorValidator;
 
 import org.eclipse.jface.viewers.CellEditor;
@@ -42,10 +42,10 @@ public class SplitEditingSupport extends EditingSupport {
 
 	@Override
 	protected Object getValue(Object element) {
-		Split split = (Split)element;
+		Split item = (Split)element;
 	
 		switch (this.column) {
-		case 1: return Constants.CURRENCY_VALIDATOR.format(split.getAmount());
+		case 1: return Constants.CURRENCY_VALIDATOR.format(item.getAmount());
 		default:
 			break;
 		}
@@ -56,10 +56,10 @@ public class SplitEditingSupport extends EditingSupport {
 	protected void setValue(Object element, Object value) {
 		if (value != null) {
 
-			Split split = (Split)element;
+			Split item = (Split)element;
 		
 			switch (this.column) {
-			case 1: split.setAmount(Constants.CURRENCY_VALIDATOR.validate((String)value).doubleValue());
+			case 1: item.setAmount(Constants.CURRENCY_VALIDATOR.validate((String)value).doubleValue());
 				break;
 			default:
 				break;

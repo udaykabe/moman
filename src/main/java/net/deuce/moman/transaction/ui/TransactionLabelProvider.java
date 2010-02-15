@@ -1,9 +1,6 @@
 package net.deuce.moman.transaction.ui;
 
-import java.util.List;
-
 import net.deuce.moman.Constants;
-import net.deuce.moman.envelope.model.Envelope;
 import net.deuce.moman.service.ServiceNeeder;
 import net.deuce.moman.transaction.model.InternalTransaction;
 
@@ -25,13 +22,12 @@ public class TransactionLabelProvider implements ITableLabelProvider, ITableColo
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
 		InternalTransaction transaction = (InternalTransaction) element;
-		List<Envelope> split = transaction.getSplit();
 		
 		switch (columnIndex) {
 		case 0: return Constants.SHORT_DATE_FORMAT.format(transaction.getDate());
 		case 1: return transaction.getCheck() != null ? transaction.getCheck() : "";
 		case 2: return transaction.getDescription();
-		case 3: return split != null && split.size() > 0 ? split.get(0).getName() : "";
+		case 3: return transaction.getSplit().size() > 1 ? "Split" : transaction.getSplit().get(0).getEnvelope().getName();
 		case 4: return Constants.CURRENCY_VALIDATOR.format(transaction.getAmount());
 		case 5: 
 			if (ServiceNeeder.instance().getEnvelopeService().getSelectedEnvelope() == null) {

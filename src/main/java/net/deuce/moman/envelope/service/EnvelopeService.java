@@ -15,7 +15,6 @@ import net.deuce.moman.rule.model.Rule;
 import net.deuce.moman.rule.service.TransactionRuleService;
 import net.deuce.moman.service.EntityService;
 import net.deuce.moman.transaction.model.InternalTransaction;
-import net.deuce.moman.transaction.model.RepeatingTransaction;
 import net.deuce.moman.transaction.model.TransactionFactory;
 import net.deuce.moman.transaction.service.TransactionService;
 import net.sf.ofx4j.domain.data.common.TransactionType;
@@ -149,18 +148,18 @@ public class EnvelopeService extends EntityService<Envelope> {
 		
 		// source transaction
 		InternalTransaction sTransaction = transactionFactory.newEntity(
-				null, -amount, TransactionType.XFER.name(), date,
+				null, -amount, TransactionType.XFER, date,
 				"Transfer to " + target.getName(), null, null, null,
 				null, sourceAccount);
-		sTransaction.addSplit(source);
+		sTransaction.addSplit(source, -amount);
 		transactionService.addEntity(sTransaction);
 		
 		// target transaction
 		InternalTransaction tTransaction = transactionFactory.newEntity(
-				null, amount, TransactionType.XFER.name(), date,
+				null, amount, TransactionType.XFER, date,
 				"Transfer from " + source.getName(), null, null, null,
 				null, targetAccount);
-		tTransaction.addSplit(target);
+		tTransaction.addSplit(target, amount);
 		transactionService.addEntity(tTransaction);
 		
 		sTransaction.setTransferTransaction(tTransaction);
@@ -270,8 +269,9 @@ public class EnvelopeService extends EntityService<Envelope> {
 		}
 		
 		for (Rule rule : transactionRuleService.getEntities()) {
-			if (rule.getEnvelope().getId().equals(envelope.getId())) {
-				rule.setEnvelope(unassignedEnvelope);
+			if (rule.getSplit().contains(envelope)) {
+				rule.removeSplit(envelope);
+				rule.addSplit(unassignedEnvelope, null);
 			}
 		}
 		
@@ -369,13 +369,6 @@ public class EnvelopeService extends EntityService<Envelope> {
 				savingsGoals.put(env.getId(), env);
 			}
 			
-			for (InternalTransaction t : env.getAllTransactions()) {
-				t.addSplit(env, false);
-			}
-			
-			for (RepeatingTransaction t : env.getRepeatingTransactions()) {
-				t.addSplit(env, false);
-			}
 		}
 	}
 

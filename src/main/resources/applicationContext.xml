@@ -29,9 +29,9 @@
 			<list>
 				<ref bean="accountBuilder"/>
 				<ref bean="incomeBuilder"/>
+				<ref bean="envelopeBuilder"/>
 				<ref bean="transactionBuilder"/>
 				<ref bean="repeatingTransactionBuilder"/>
-				<ref bean="envelopeBuilder"/>
 				<ref bean="transactionRuleBuilder"/>
 				<ref bean="payeeBuilder"/>
 				<ref bean="allocationSetBuilder"/>
