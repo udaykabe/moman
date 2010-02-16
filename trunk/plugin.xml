@@ -218,6 +218,10 @@
             name="Delete Saving Goal">
       </command>
       <command
+            id="net.deuce.moman.envelope.command.fundNegative"
+            name="Fund Negative Envelopes">
+      </command>
+      <command
             id="net.deuce.moman.envelope.command.edit"
             name="Edit Envelope">
       </command>
@@ -470,6 +474,12 @@
             sequence="COMMAND+G">
       </key>
       <key
+            commandId="net.deuce.moman.envelope.command.fundNegative"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="net.deuce.moman.scheme.main"
+            sequence="SHIFT+COMMAND+F">
+      </key>
+      <key
             commandId="net.deuce.moman.transaction.command.new"
             contextId="org.eclipse.ui.contexts.window"
             schemeId="net.deuce.moman.scheme.main"
@@ -482,7 +492,7 @@
             sequence="SHIFT+COMMAND+R">
       </key>
       <key
-            commandId="net.deuce.moman.transaction.command.newRule"
+            commandId="net.deuce.moman.rule.command.new"
             contextId="org.eclipse.ui.contexts.window"
             schemeId="net.deuce.moman.scheme.main"
             sequence="COMMAND+R">
@@ -684,6 +694,10 @@
       <handler
             class="net.deuce.moman.envelope.command.DeleteBill"
             commandId="net.deuce.moman.envelope.command.deleteBill">
+      </handler>
+      <handler
+            class="net.deuce.moman.envelope.command.FundNegativeEnvelopes"
+            commandId="net.deuce.moman.envelope.command.fundNegative">
       </handler>
       <handler
             class="net.deuce.moman.transaction.command.New"

@@ -277,7 +277,8 @@ public class Envelope extends AbstractEntity<Envelope> {
 			
 			Double value = 0.0;
 			for (InternalTransaction t : getTransactions()) {
-				value += t.getSplitAmount(this);
+				double splitAmount = t.getSplitAmount(this);
+				value += splitAmount;
 			}
 			for (Envelope e : children) {
 				value += e.getBalance();
@@ -413,10 +414,6 @@ public class Envelope extends AbstractEntity<Envelope> {
 		if (transaction instanceof RepeatingTransaction) {
 			repeatingTransactions.add((RepeatingTransaction)transaction);
 			return;
-		}
-		
-		if ("State Farm Insurance".equals(name)) {
-			System.out.println();
 		}
 		
 		Account account = transaction.getAccount();

@@ -55,7 +55,11 @@ public class TransactionImportView extends AbstractEntityTableView<InternalTrans
  	    column.getColumn().setWidth(200);
 		
  		column = new TableViewerColumn(tableViewer, SWT.RIGHT);
- 		column.getColumn().setText("Amount");
+ 		column.getColumn().setText("Credit");
+ 	    column.getColumn().setWidth(87);
+		
+ 		column = new TableViewerColumn(tableViewer, SWT.RIGHT);
+ 		column.getColumn().setText("Debit");
  	    column.getColumn().setWidth(87);
 		
 	    tableViewer.setContentProvider(new TransactionContentProvider());
@@ -73,8 +77,10 @@ public class TransactionImportView extends AbstractEntityTableView<InternalTrans
 		
 		dialog.setAllowBills(true);
 		dialog.create();
-		if (dialog.open() == Window.OK) {
-			if (split != dialog.getSplit()) {
+		int status = dialog.open();
+		final List<Split> result = dialog.getSplit();
+		if (status == Window.OK) {
+			if (!split.equals(result)) {
 				BusyIndicator.showWhile(shell.getDisplay(), new Runnable() {
 					public void run() {
 						ServiceNeeder.instance().getServiceContainer().startQueuingNotifications();
@@ -85,7 +91,7 @@ public class TransactionImportView extends AbstractEntityTableView<InternalTrans
 							
 								transaction.clearSplit();
 								
-								for (Split item : dialog.getSplit()) {
+								for (Split item : result) {
 									transaction.addSplit(item, true);
 								}
 								

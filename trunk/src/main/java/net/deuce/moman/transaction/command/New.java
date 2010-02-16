@@ -16,7 +16,6 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 
@@ -50,7 +49,7 @@ public class New extends AbstractAccountHandler {
 					null, null, accounts.get(0));
 			transaction.addSplit(envelopeService.getUnassignedEnvelope(), transaction.getAmount());
 			transactionService.addEntity(transaction);
-		} catch (PartInitException e) {
+		} catch (Throwable e) {
 			e.printStackTrace();
 		}
 

@@ -353,6 +353,22 @@ public class Actions {
         }
     };
     
+	public static final ActionFactory FUND_NEGATIVE_ENVELOPES_ACTION = new ActionFactory(
+			net.deuce.moman.envelope.command.FundNegativeEnvelopes.ID,
+			net.deuce.moman.envelope.command.FundNegativeEnvelopes.ID) {
+        
+        public IWorkbenchAction create(IWorkbenchWindow window) {
+            if (window == null) {
+                throw new IllegalArgumentException();
+            }
+            MomanCommandAction action = new MomanCommandAction(window, getCommandId());
+            action.setId(getId());
+            action.setActionDefinitionId(getId());
+            action.setText(Messages.getString("ToolsMenu.fundNegative"));
+            return action;
+        }
+    };
+    
 	public static final ActionFactory NEW_TRANSACTION_RULE_ACTION = new ActionFactory(
 			net.deuce.moman.rule.command.New.ID,
 			net.deuce.moman.rule.command.New.ID) {

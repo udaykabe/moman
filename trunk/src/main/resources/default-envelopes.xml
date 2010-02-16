@@ -2,6 +2,20 @@
 
 <moman>
   <envelopes>
+    <envelope id="8fe52b38-23d2-343b-9377-b6ede8a8cd2b">
+      <editable>false</editable>
+      <selected>false</selected>
+      <expanded>true</expanded>
+      <enabled>true</enabled>
+      <root>true</root>
+      <name>Envelopes</name>
+      <index>4</index>
+      <frequency>NONE</frequency>
+      <budget>0.0</budget>
+      <dueDay>0</dueDay>
+      <parent id="8fe52b38-23d2-343b-9377-b6ede8a8cd2b"/>
+      <transactions/>
+    </envelope>
     <envelope id="081ec426-978b-3a18-a3ef-b3ebe4f6e1ae">
       <editable>false</editable>
       <selected>false</selected>
@@ -12,6 +26,7 @@
       <frequency>BIWEEKLY</frequency>
       <budget>0.0</budget>
       <dueDay>0</dueDay>
+      <parent id="8fe52b38-23d2-343b-9377-b6ede8a8cd2b"/>
       <transactions/>
     </envelope>
     <envelope id="081ec426-978b-3a18-a3ef-b3ebe4f6e1af">
@@ -24,6 +39,7 @@
       <frequency>NONE</frequency>
       <budget>0.0</budget>
       <dueDay>0</dueDay>
+      <parent id="8fe52b38-23d2-343b-9377-b6ede8a8cd2b"/>
       <transactions/>
     </envelope>
     <envelope id="3ff65048-fd83-301d-9154-3353e684659f">
@@ -37,6 +53,7 @@
       <frequency>MONTHLY</frequency>
       <budget>0.0</budget>
       <dueDay>0</dueDay>
+      <parent id="8fe52b38-23d2-343b-9377-b6ede8a8cd2b"/>
       <transactions/>
     </envelope>
      <envelope id="e7cd2398-1a02-3928-aa39-5fe9ca739463">
@@ -50,19 +67,7 @@
       <frequency>NONE</frequency>
       <budget>0.0</budget>
       <dueDay>0</dueDay>
-      <transactions/>
-    </envelope>
-    <envelope id="8fe52b38-23d2-343b-9377-b6ede8a8cd2b">
-      <editable>false</editable>
-      <selected>false</selected>
-      <expanded>true</expanded>
-      <enabled>true</enabled>
-      <root>true</root>
-      <name>Envelopes</name>
-      <index>4</index>
-      <frequency>NONE</frequency>
-      <budget>0.0</budget>
-      <dueDay>0</dueDay>
+      <parent id="8fe52b38-23d2-343b-9377-b6ede8a8cd2b"/>
       <transactions/>
     </envelope>
     <envelope id="8784ff66-9825-3827-bf97-93c3ae5fe386">

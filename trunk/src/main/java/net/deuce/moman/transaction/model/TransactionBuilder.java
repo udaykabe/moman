@@ -9,6 +9,7 @@ import net.deuce.moman.envelope.service.EnvelopeService;
 import net.deuce.moman.model.AbstractBuilder;
 import net.deuce.moman.transaction.service.ImportService;
 import net.deuce.moman.transaction.service.TransactionService;
+import net.deuce.moman.util.Utils;
 import net.sf.ofx4j.domain.data.common.Transaction;
 import net.sf.ofx4j.domain.data.common.TransactionType;
 
@@ -93,7 +94,7 @@ public class TransactionBuilder extends AbstractBuilder {
 	protected void buildTransactionXml(Element el, InternalTransaction trans) {
 		el.addAttribute("id", trans.getId());
 		el.addElement("account").addAttribute("id", trans.getAccount().getId());
-		addElement(el, "amount", trans.getAmount().toString());
+		addElement(el, "amount", Utils.formatDouble(trans.getAmount()));
 		addElement(el, "type", trans.getType().name());
 		if (trans.getDate() != null) {
 			addElement(el, "date", Constants.DATE_FORMAT.format(trans.getDate()));
@@ -101,7 +102,7 @@ public class TransactionBuilder extends AbstractBuilder {
 		addElement(el, "desc", trans.getDescription());
 		addOptionalElement(el, "extid", trans.getExternalId());
 		addOptionalBooleanElement(el, "initial-balance", trans.isInitialBalance());
-		addOptionalElement(el, "balance", trans.getBalance());
+		addOptionalElement(el, "balance", Utils.formatDouble(trans.getBalance()));
 		addElement(el, "memo", trans.getMemo());
 		addElement(el, "check", trans.getCheck());
 		addElement(el, "ref", trans.getRef());
@@ -113,7 +114,7 @@ public class TransactionBuilder extends AbstractBuilder {
 		for (Split item : trans.getSplit()) {
 			eel = sel.addElement("envelope");
 			eel.addAttribute("id", item.getEnvelope().getId());
-			eel.addAttribute("amount", item.getAmount().toString());
+			eel.addAttribute("amount", Utils.formatDouble(item.getAmount()));
 		}
 	}
 	
@@ -138,7 +139,7 @@ public class TransactionBuilder extends AbstractBuilder {
 			for (Element n : nodes) {
 				transaction = new Transaction();
 				transaction.setId(n.elementText("extid"));
-				transaction.setAmount(new Double(n.elementText("amount")));
+				transaction.setAmount(Double.valueOf(n.elementText("amount")));
 				transaction.setTransactionType(TransactionType.valueOf(n.elementText("type")));
 				transaction.setDatePosted(Constants.DATE_FORMAT.parse(n.elementText("date")));
 				transaction.setName(n.elementText("desc"));
@@ -163,7 +164,7 @@ public class TransactionBuilder extends AbstractBuilder {
 		for (InternalTransaction trans : importService.getEntities()) {
 			el = root.addElement("transaction");
 			el.addAttribute("id", trans.getId());
-			addElement(el, "amount", trans.getAmount().toString());
+			addElement(el, "amount", Utils.formatDouble(trans.getAmount()));
 			addElement(el, "type", trans.getType());
 			addElement(el, "date", Constants.DATE_FORMAT.format(trans.getDate()));
 			addElement(el, "desc", trans.getDescription());

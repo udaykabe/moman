@@ -8,10 +8,16 @@ import java.util.Map;
 
 import net.deuce.moman.account.model.Account;
 import net.deuce.moman.envelope.model.Envelope;
+import net.deuce.moman.envelope.ui.SplitSelectionDialog;
 import net.deuce.moman.model.AbstractEntity;
 import net.deuce.moman.model.EntityProperty;
+import net.deuce.moman.service.ServiceNeeder;
 import net.deuce.moman.transaction.operation.SetAmountOperation;
 import net.sf.ofx4j.domain.data.common.TransactionType;
+
+import org.eclipse.jface.window.Window;
+import org.eclipse.swt.custom.BusyIndicator;
+import org.eclipse.swt.widgets.Display;
 
 public class InternalTransaction extends AbstractEntity<InternalTransaction> {
 
@@ -88,27 +94,71 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
 		setAmount(amount, false);
 	}
 	
+	private boolean adjustSplits(double newAmount) {
+		if (splitMap.size() == 0) return true;
+		
+		List<Split> split = new LinkedList<Split>(splitMap.values());
+		if (split.size() == 1) {
+			split.get(0).setAmount(newAmount);
+		} else {
+			final SplitSelectionDialog dialog = new SplitSelectionDialog(
+					Display.getCurrent().getActiveShell(), newAmount, split);
+			
+			dialog.setAllowBills(true);
+			dialog.create();
+			int status = dialog.open();
+			final List<Split> result = dialog.getSplit();
+			if (status == Window.OK) {
+				if (!split.equals(result)) {
+					BusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
+						@SuppressWarnings("unchecked")
+						public void run() {
+							ServiceNeeder.instance().getServiceContainer().startQueuingNotifications();
+							try {
+								clearSplit();
+									
+								for (Split item : result) {
+									if (getAmount() < 0.0) {
+										item.setAmount(-item.getAmount());
+									}
+									addSplit(item, true);
+								}
+							} finally {
+								ServiceNeeder.instance().getServiceContainer().stopQueuingNotifications();
+							}
+						}
+					});
+				}
+			} else {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	public void setAmount(Double amount, boolean adjust) {
 		if (propertyChanged(this.amount, amount)) {
-			double difference = 0;
+			double difference = 0.0;
 			if (this.amount != null) {
 				difference = this.amount - amount;
 			}
-			this.amount = amount;
-			if (amount > 0) {
-				type = TransactionType.CREDIT;
-			} else if (type == null || type != TransactionType.CHECK) {
-				type = TransactionType.DEBIT;
-			}
-			if (difference != 0 && balance != null) {
-				setBalance(balance - difference);
-				for (Split split : splitMap.values()) {
-					split.getEnvelope().resetBalance();
+			if (adjustSplits(amount)) {
+				this.amount = amount;
+				if (amount > 0) {
+					type = TransactionType.CREDIT;
+				} else if (type == null || type != TransactionType.CHECK) {
+					type = TransactionType.DEBIT;
 				}
-				getMonitor().fireEntityChanged(this, Properties.amount);
-			}
-			if (adjust) {
-				getTransactionService().adjustBalances(this, false);
+				if (balance != null) {
+					setBalance(balance - difference);
+					for (Split split : splitMap.values()) {
+						split.getEnvelope().resetBalance();
+					}
+					getMonitor().fireEntityChanged(this, Properties.amount);
+				}
+				if (adjust) {
+					getTransactionService().adjustBalances(this, false);
+				}
 			}
 		}
 	}

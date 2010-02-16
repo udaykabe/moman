@@ -59,6 +59,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     
     private IWorkbenchAction newBillAction;
     private IWorkbenchAction newSavingsGoalAction;
+    private IWorkbenchAction fundNegativeEnvelopesAction;
     
     private IWorkbenchAction newTransactionAction;
     private IWorkbenchAction newRepeatingTransactionAction;
@@ -150,6 +151,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
         newSavingsGoalAction = Actions.NEW_SAVINGS_GOAL_ACTION.create( window );
         register( newSavingsGoalAction );
+
+        fundNegativeEnvelopesAction = Actions.FUND_NEGATIVE_ENVELOPES_ACTION.create( window );
+        register( fundNegativeEnvelopesAction );
 
         newTransactionRuleAction = Actions.NEW_TRANSACTION_RULE_ACTION.create( window );
         register( newTransactionRuleAction );

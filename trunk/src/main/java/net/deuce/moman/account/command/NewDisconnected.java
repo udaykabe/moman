@@ -3,6 +3,7 @@ package net.deuce.moman.account.command;
 import net.deuce.moman.account.model.Account;
 import net.deuce.moman.account.service.AccountService;
 import net.deuce.moman.account.ui.AccountDialog;
+import net.deuce.moman.envelope.service.EnvelopeService;
 import net.deuce.moman.service.ServiceNeeder;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -23,6 +24,7 @@ public class NewDisconnected extends AbstractHandler {
 		IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow(event);
 		
 		AccountService service = ServiceNeeder.instance().getAccountService();
+		EnvelopeService envelopeService = ServiceNeeder.instance().getEnvelopeService();
 		AccountDialog dialog = new AccountDialog(window.getShell(), false);
 		dialog.create();
 		if (dialog.open() == Window.OK) {
@@ -37,7 +39,15 @@ public class NewDisconnected extends AbstractHandler {
 			}
 			Account account = dialog.getAccount();
 			account.setSelected(true);
-			ServiceNeeder.instance().getAccountService().addEntity(account);
+			ServiceNeeder.instance().getServiceContainer().startQueuingNotifications();
+			try {
+				ServiceNeeder.instance().getAccountService().addEntity(account);
+				if (service.getEntities().size() == 1) {
+					envelopeService.importDefaultEnvelopes();
+				}
+			} finally {
+				ServiceNeeder.instance().getServiceContainer().stopQueuingNotifications();
+			}
 		}
 		return null;
 	}

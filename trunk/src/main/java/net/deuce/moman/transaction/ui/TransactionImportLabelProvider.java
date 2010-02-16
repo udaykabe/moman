@@ -36,7 +36,13 @@ public class TransactionImportLabelProvider implements ITableLabelProvider {
 		case 2: return transaction.getCheck() != null ? transaction.getCheck() : "";
 		case 3: return transaction.getDescription();
 		case 4: return transaction.getSplit().size() > 1 ? "Split" : transaction.getSplit().get(0).getEnvelope().getName();
-		case 5: return Constants.CURRENCY_VALIDATOR.format(transaction.getAmount());
+		case 5:
+			double amount = Math.round(transaction.getAmount()*100.0)/100.0;
+			return amount > 0.0 ? Constants.CURRENCY_VALIDATOR.format(amount) : "";
+		case 6:
+			amount = Math.round(transaction.getAmount()*100.0)/100.0;
+			return amount <= 0.0 ? (amount < 0.0 ? Constants.CURRENCY_VALIDATOR.format(-amount) :
+					Constants.CURRENCY_VALIDATOR.format(amount)) : "";
 		default:
 			break;
         }
@@ -45,26 +51,19 @@ public class TransactionImportLabelProvider implements ITableLabelProvider {
 
 	@Override
 	public void addListener(ILabelProviderListener listener) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public boolean isLabelProperty(Object element, String property) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public void removeListener(ILabelProviderListener listener) {
-		// TODO Auto-generated method stub
-
 	}
 
 }

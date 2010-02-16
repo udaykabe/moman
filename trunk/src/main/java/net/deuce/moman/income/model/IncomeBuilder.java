@@ -7,6 +7,7 @@ import net.deuce.moman.Constants;
 import net.deuce.moman.income.service.IncomeService;
 import net.deuce.moman.model.AbstractBuilder;
 import net.deuce.moman.model.Frequency;
+import net.deuce.moman.util.Utils;
 
 import org.dom4j.Document;
 import org.dom4j.Element;
@@ -50,7 +51,7 @@ public class IncomeBuilder extends AbstractBuilder {
 			el.addAttribute("id", income.getId());
 			addOptionalBooleanElement(el, "enabled", income.isEnabled());
 			addElement(el, "name", income.getName());
-			addElement(el, "amount", income.getAmount().toString());
+			addElement(el, "amount", Utils.formatDouble(income.getAmount()));
 			addElement(el, "frequency", income.getFrequency().name());
 			addElement(el, "next-payday", Constants.SHORT_DATE_FORMAT.format(income.getNextPayday()));
 		}

@@ -102,8 +102,10 @@ public class RepeatingTransactionView extends AbstractEntityTableView<RepeatingT
 		
 		dialog.setAllowBills(true);
 		dialog.create();
-		if (dialog.open() == Window.OK) {
-			if (split != dialog.getSplit()) {
+		int status = dialog.open();
+		final List<Split> result = dialog.getSplit();
+		if (status == Window.OK) {
+			if (!split.equals(result)) {
 				BusyIndicator.showWhile(shell.getDisplay(), new Runnable() {
 					@SuppressWarnings("unchecked")
 					public void run() {
@@ -115,7 +117,7 @@ public class RepeatingTransactionView extends AbstractEntityTableView<RepeatingT
 							
 								transaction.clearSplit();
 								
-								for (Split item : dialog.getSplit()) {
+								for (Split item : result) {
 									transaction.addSplit(item, true);
 								}
 								

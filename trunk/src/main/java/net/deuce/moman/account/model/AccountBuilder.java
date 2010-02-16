@@ -7,6 +7,7 @@ import net.deuce.moman.Constants;
 import net.deuce.moman.account.service.AccountService;
 import net.deuce.moman.fi.service.FinancialInstitutionService;
 import net.deuce.moman.model.AbstractBuilder;
+import net.deuce.moman.util.Utils;
 import net.sf.ofx4j.domain.data.common.AccountStatus;
 
 import org.dom4j.Document;
@@ -44,7 +45,7 @@ public class AccountBuilder extends AbstractBuilder {
 						n.elementText("accountId"),
 						n.elementText("username"),
 						n.elementText("password"),
-						AccountStatus.valueOf(n.elementText("status")),
+						n.element("status") != null ? AccountStatus.valueOf(n.elementText("status")) : null,
 						Boolean.valueOf(n.elementText("supports-downloading")),
 						Double.valueOf(n.elementText("balance"))
 						);
@@ -60,8 +61,10 @@ public class AccountBuilder extends AbstractBuilder {
 				}
 
 				el = n.element("financialInstitution");
-				fiid = el.attributeValue("id");
-				account.setFinancialInstitution(financialInsitutionService.getEntity(fiid));
+				if (el != null) {
+					fiid = el.attributeValue("id");
+					account.setFinancialInstitution(financialInsitutionService.getEntity(fiid));
+				}
 				accountService.addEntity(account);
 			}
 		} catch (ParseException pe) {
@@ -84,12 +87,18 @@ public class AccountBuilder extends AbstractBuilder {
 			addElement(el, "username", account.getUsername());
 			addElement(el, "password", account.getPassword());
 			addElement(el, "nickname", account.getNickname());
-			addElement(el, "balance", account.getBalance());
-			addOptionalElement(el, "status", account.getStatus().name());
-			addOptionalElement(el, "supports-downloading", account.isSupportsDownloading());
+			addElement(el, "balance", Utils.formatDouble(account.getBalance()));
+			if (account.getStatus() != null) {
+				addElement(el, "status", account.getStatus().name());
+			}
+			addElement(el, "supports-downloading", account.isSupportsDownloading());
 			addOptionalElement(el, "initial-balance", account.getInitialBalance());
-			addOptionalElement(el, "last-download-date", Constants.DATE_FORMAT.format(account.getLastDownloadDate()));
-			el.addElement("financialInstitution").addAttribute("id", account.getFinancialInstitution().getId());
+			if (account.getLastDownloadDate() != null) {
+				addElement(el, "last-download-date", Constants.DATE_FORMAT.format(account.getLastDownloadDate()));
+			}
+			if (account.getFinancialInstitution() != null) {
+				el.addElement("financialInstitution").addAttribute("id", account.getFinancialInstitution().getId());
+			}
 		}
 	}
 }

@@ -1,7 +1,6 @@
 package net.deuce.moman.transaction.ui;
 
 import net.deuce.moman.Constants;
-import net.deuce.moman.service.ServiceNeeder;
 import net.deuce.moman.transaction.model.InternalTransaction;
 
 import org.eclipse.jface.viewers.ILabelProviderListener;
@@ -28,12 +27,14 @@ public class TransactionLabelProvider implements ITableLabelProvider, ITableColo
 		case 1: return transaction.getCheck() != null ? transaction.getCheck() : "";
 		case 2: return transaction.getDescription();
 		case 3: return transaction.getSplit().size() > 1 ? "Split" : transaction.getSplit().get(0).getEnvelope().getName();
-		case 4: return Constants.CURRENCY_VALIDATOR.format(transaction.getAmount());
-		case 5: 
-			if (ServiceNeeder.instance().getEnvelopeService().getSelectedEnvelope() == null) {
-				return Constants.CURRENCY_VALIDATOR.format(transaction.getBalance());
-			}
-			return "";
+		case 4:
+			double amount = Math.round(transaction.getAmount()*100.0)/100.0;
+			return amount > 0.0 ? Constants.CURRENCY_VALIDATOR.format(amount) : "";
+		case 5:
+			amount = Math.round(transaction.getAmount()*100.0)/100.0;
+			return amount <= 0.0 ? (amount < 0.0 ? Constants.CURRENCY_VALIDATOR.format(-amount) :
+					Constants.CURRENCY_VALIDATOR.format(amount)) : "";
+		case 6: return Constants.CURRENCY_VALIDATOR.format(transaction.getBalance());
 		default:
 			break;
         }

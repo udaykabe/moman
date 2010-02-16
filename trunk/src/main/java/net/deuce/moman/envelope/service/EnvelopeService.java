@@ -41,9 +41,12 @@ public class EnvelopeService extends EntityService<Envelope> {
 	private Map<String, Envelope> bills = new HashMap<String, Envelope>();
 	private Map<String, Envelope> savingsGoals = new HashMap<String, Envelope>();
 	private Envelope defaultRootEnvelope;
+	
+	/*
 	private Envelope defaultAvailableEnvelope;
 	private Envelope defaultUnassignedEnvelope;
 	private Envelope defaultMonthlyEnvelope;
+	*/
 	private Envelope rootEnvelope;
 	private Envelope unassignedEnvelope;
 	private Envelope availableEnvelope;
@@ -132,11 +135,13 @@ public class EnvelopeService extends EntityService<Envelope> {
 	
 	public List<Envelope> getAllEnvelopes() {
 		List<Envelope> envelopes = new LinkedList<Envelope>();
+		/*
 		envelopes.add(availableEnvelope);
 		envelopes.add(monthlyEnvelope);
 		envelopes.add(unassignedEnvelope);
 		envelopes.add(savingsGoalsEnvelope);
 		envelopes.add(unassignedEnvelope);
+		*/
 		addEnvelopeToList(rootEnvelope, envelopes);
 		return envelopes;
 	}
@@ -170,9 +175,9 @@ public class EnvelopeService extends EntityService<Envelope> {
 	}
 	
 	public void importDefaultEnvelopes() {
-		importDefaultEnvelope(defaultAvailableEnvelope, null);
-		importDefaultEnvelope(defaultUnassignedEnvelope, null);
-		importDefaultEnvelope(defaultMonthlyEnvelope, null);
+//		importDefaultEnvelope(defaultAvailableEnvelope, null);
+//		importDefaultEnvelope(defaultUnassignedEnvelope, null);
+//		importDefaultEnvelope(defaultMonthlyEnvelope, null);
 		importDefaultEnvelope(defaultRootEnvelope, null);
 	}
 	
@@ -191,12 +196,14 @@ public class EnvelopeService extends EntityService<Envelope> {
 		}
 		if (envelope.isRoot()) {
 			defaultRootEnvelope = envelope;
+			/*
 		} else if (envelope.isMonthly()) {
 			defaultMonthlyEnvelope = envelope;
 		} else if (envelope.isAvailable()) {
 			defaultAvailableEnvelope = envelope;
 		} else if (envelope.isUnassigned()) {
 			defaultUnassignedEnvelope = envelope;
+			*/
 		}
 	}
 	
@@ -371,15 +378,41 @@ public class EnvelopeService extends EntityService<Envelope> {
 			
 		}
 	}
+	
+	public double distributeToNegativeEnvelopes(Account account, Envelope env, double balance) {
+		if (!env.isAvailable() && !env.isUnassigned()) {
+			if (balance > 0) {
+				if (!env.hasChildren()) {
+					if (env.getBalance() < 0) {
+						double transferAmount = 0;
+						if (balance > -env.getBalance()) {
+							transferAmount = -env.getBalance();
+						} else {
+							transferAmount = balance;
+						}
+						transfer(account, account, getAvailableEnvelope(), env, transferAmount);
+						return balance-transferAmount;
+					}
+				} else {
+					for (Envelope child : env.getChildren()) {
+						balance = distributeToNegativeEnvelopes(account, child, balance);
+					}
+				}
+			}
+		}
+		return balance;
+	}
 
 	@Override
 	protected void clearCache() {
 		bills.clear();
+		savingsGoals.clear();
 		rootEnvelope = null;
 		monthlyEnvelope = null;
 		unassignedEnvelope = null;
 		availableEnvelope = null;
 		selectedEnvelope = null;
+		savingsGoalsEnvelope = null;
 		super.clearCache();
 	}
 }
