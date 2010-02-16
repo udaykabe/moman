@@ -5,7 +5,6 @@ import java.util.List;
 import net.deuce.moman.envelope.service.EnvelopeService;
 import net.deuce.moman.model.AbstractBuilder;
 import net.deuce.moman.rule.service.TransactionRuleService;
-import net.deuce.moman.transaction.model.Split;
 import net.deuce.moman.util.Utils;
 
 import org.dom4j.Document;
@@ -30,7 +29,6 @@ public class TransactionRuleBuilder extends AbstractBuilder {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	private void processEnvelopeElement(Element e) {
 
 		Rule rule = new Rule();
@@ -43,15 +41,7 @@ public class TransactionRuleBuilder extends AbstractBuilder {
 		}
 		rule.setCondition(Condition.valueOf(e.elementText("condition")));
 		
-		List<Element> envelopeElements = e.selectNodes("split/envelope");
-		if (envelopeElements != null) {
-			for (Element ee : envelopeElements) {
-				String amount = ee.attributeValue("amount");
-				rule.addSplit(
-						envelopeService.findEntity(ee.attributeValue("id")),
-						amount != null ? Double.valueOf(amount) : 0.0);
-			}
-		}
+		rule.setEnvelope(envelopeService.findEntity(e.element("envelope").attributeValue("id")));
 		
 		transactionRuleService.addEntity(rule);
 
@@ -70,13 +60,7 @@ public class TransactionRuleBuilder extends AbstractBuilder {
 			addElement(el, "expression", rule.getExpression());
 			addElement(el, "conversion", rule.getConversion());
 			addElement(el, "condition", rule.getCondition().name());
-			Element sel = el.addElement("split");
-			Element eel;
-			for (Split item : rule.getSplit()) {
-				eel = sel.addElement("envelope");
-				eel.addAttribute("id", item.getEnvelope().getId());
-				eel.addAttribute("amount", Utils.formatDouble(item.getAmount()));
-			}
+			el.addElement("envelope").addAttribute("id", rule.getEnvelope().getId());
 		}
 	}
 }

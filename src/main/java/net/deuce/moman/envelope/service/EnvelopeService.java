@@ -276,9 +276,8 @@ public class EnvelopeService extends EntityService<Envelope> {
 		}
 		
 		for (Rule rule : transactionRuleService.getEntities()) {
-			if (rule.getSplit().contains(envelope)) {
-				rule.removeSplit(envelope);
-				rule.addSplit(unassignedEnvelope, null);
+			if (rule.getEnvelope() == envelope) {
+				rule.setEnvelope(unassignedEnvelope);
 			}
 		}
 		

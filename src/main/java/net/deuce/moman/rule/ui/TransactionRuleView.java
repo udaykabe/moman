@@ -1,20 +1,15 @@
 package net.deuce.moman.rule.ui;
 
-import java.util.Iterator;
-import java.util.List;
-
+import net.deuce.moman.envelope.model.Envelope;
 import net.deuce.moman.envelope.ui.EnvelopeSelectionDialog;
-import net.deuce.moman.envelope.ui.SplitSelectionDialog;
 import net.deuce.moman.rule.command.Delete;
 import net.deuce.moman.rule.model.Rule;
 import net.deuce.moman.service.ServiceNeeder;
-import net.deuce.moman.transaction.model.Split;
 import net.deuce.moman.ui.AbstractEntityTableView;
 
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
@@ -69,55 +64,23 @@ public class TransactionRuleView extends AbstractEntityTableView<Rule> {
 		return tableViewer;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	protected void doubleClickHandler(int column,
 			StructuredSelection selection, Shell shell) {
 		Rule rule = (Rule)selection.getFirstElement();
-		List<Split> split = rule.getSplit();
+		Envelope env = rule.getEnvelope();
 		
-		if (rule.getAmount() == null) {
-			EnvelopeSelectionDialog dialog = new EnvelopeSelectionDialog(shell, split.get(0).getEnvelope());
-			dialog.setAllowBills(true);
-			dialog.create();
-			dialog.open();
-			if (split.get(0).getEnvelope() != dialog.getEnvelope()) {
-				ServiceNeeder.instance().getTransactionRuleService().startQueuingNotifications();
-				try {
-					rule.clearSplit();
-					rule.addSplit(dialog.getEnvelope(), null);
-					getViewer().refresh(rule);
-				} finally {
-					ServiceNeeder.instance().getTransactionRuleService().stopQueuingNotifications();
-				}
-			}
-		} else {
-			SplitSelectionDialog dialog = new SplitSelectionDialog(shell, rule.getAmount(), split);
-			
-			dialog.setAllowBills(true);
-			dialog.create();
-			int status = dialog.open();
-			List<Split> result = dialog.getSplit();
-			if (status == Window.OK) {
-				if (!split.equals(result)) {
-					ServiceNeeder.instance().getTransactionRuleService().startQueuingNotifications();
-					try {
-						Iterator<Rule> itr = selection.iterator();
-						while (itr.hasNext()) {
-							rule = itr.next();
-							rule.clearSplit();
-							for (Split item : result) {
-								if (rule.getAmount() < 0.0) {
-									item.setAmount(-item.getAmount());
-								}
-								rule.addSplit(item);
-							}
-							getViewer().refresh(rule);
-						}
-					} finally {
-						ServiceNeeder.instance().getTransactionRuleService().stopQueuingNotifications();
-					}
-				}
+		EnvelopeSelectionDialog dialog = new EnvelopeSelectionDialog(shell, env);
+		dialog.setAllowBills(true);
+		dialog.create();
+		dialog.open();
+		if (env != dialog.getEnvelope()) {
+			ServiceNeeder.instance().getTransactionRuleService().startQueuingNotifications();
+			try {
+				rule.setEnvelope(dialog.getEnvelope());
+				getViewer().refresh(rule);
+			} finally {
+				ServiceNeeder.instance().getTransactionRuleService().stopQueuingNotifications();
 			}
 		}
 	}
