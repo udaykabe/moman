@@ -7,6 +7,7 @@ import net.deuce.moman.envelope.service.EnvelopeService;
 import net.deuce.moman.income.model.Income;
 import net.deuce.moman.income.service.IncomeService;
 import net.deuce.moman.model.AbstractBuilder;
+import net.deuce.moman.util.Utils;
 
 import org.dom4j.Document;
 import org.dom4j.Element;
@@ -99,9 +100,9 @@ public class AllocationSetBuilder extends AbstractBuilder {
 			ael = sel.addElement("allocation");
 			ael.addAttribute("id", allocation.getId());
 			addElement(ael, "index", allocation.getIndex());
-			addElement(ael, "amount", allocation.getAmount());
+			addElement(ael, "amount", Utils.formatDouble(allocation.getAmount()));
 			addElement(ael, "amount-type", allocation.getAmountType().name());
-			addElement(ael, "limit", allocation.getLimit());
+			addElement(ael, "limit", Utils.formatDouble(allocation.getLimit()));
 			addElement(ael, "limit-type", allocation.getLimitType().name());
 			addElement(ael, "enabled", allocation.getEnabled());
 			ael.addElement("envelope").addAttribute("id", allocation.getEnvelope().getId());

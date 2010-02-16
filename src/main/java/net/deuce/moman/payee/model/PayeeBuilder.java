@@ -5,6 +5,7 @@ import java.util.List;
 import net.deuce.moman.envelope.service.EnvelopeService;
 import net.deuce.moman.model.AbstractBuilder;
 import net.deuce.moman.payee.service.PayeeService;
+import net.deuce.moman.util.Utils;
 
 import org.dom4j.Document;
 import org.dom4j.Element;
@@ -49,7 +50,7 @@ public class PayeeBuilder extends AbstractBuilder {
 			el = root.addElement("payee");
 			el.addAttribute("id", payee.getId());
 			addElement(el, "description", payee.getDescription());
-			addElement(el, "amount", payee.getAmount().toString());
+			addElement(el, "amount", Utils.formatDouble(payee.getAmount()));
 			el.addElement("envelope").addAttribute("id", payee.getEnvelope().getId());
 		}
 	}

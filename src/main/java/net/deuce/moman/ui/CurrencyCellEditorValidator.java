@@ -25,6 +25,10 @@ public class CurrencyCellEditorValidator implements ICellEditorValidator {
 		if (!Constants.CURRENCY_VALIDATOR.isValid((String)value)) {
 			return "Please enter a currency value";
 		}
+		
+		if (Constants.CURRENCY_VALIDATOR.validate((String)value).doubleValue() < 0) {
+			return "Please enter a non-negative value";
+		}
 		return null;
 	}
 

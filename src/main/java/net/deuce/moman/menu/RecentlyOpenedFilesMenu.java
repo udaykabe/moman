@@ -19,7 +19,6 @@ import org.eclipse.ui.services.IServiceLocator;
 public class RecentlyOpenedFilesMenu extends CompoundContributionItem {
 
 	public RecentlyOpenedFilesMenu() {
-		System.out.println();
 	}
 
 	public RecentlyOpenedFilesMenu(String id) {

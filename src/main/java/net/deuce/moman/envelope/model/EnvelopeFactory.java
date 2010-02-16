@@ -40,6 +40,7 @@ public class EnvelopeFactory extends EntityFactory<Envelope> {
 	
 	public Envelope createTopLevelEnvelope() {
 		Envelope topLevel = cloneEnvelope(Envelope.TOP_LEVEL, null);
+		/*
 		if (envelopeService.getAvailableEnvelope() != null) {
 			topLevel.addChild(envelopeService.getAvailableEnvelope());
 		}
@@ -52,6 +53,7 @@ public class EnvelopeFactory extends EntityFactory<Envelope> {
 		if (envelopeService.getSavingsGoalsEnvelope() != null) {
 			topLevel.addChild(envelopeService.getSavingsGoalsEnvelope());
 		}
+		*/
 		if (envelopeService.getRootEnvelope() != null) {
 			topLevel.addChild(envelopeService.getRootEnvelope());
 		}

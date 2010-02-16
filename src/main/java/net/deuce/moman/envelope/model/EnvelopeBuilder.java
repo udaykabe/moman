@@ -9,6 +9,7 @@ import net.deuce.moman.Constants;
 import net.deuce.moman.envelope.service.EnvelopeService;
 import net.deuce.moman.model.AbstractBuilder;
 import net.deuce.moman.model.Frequency;
+import net.deuce.moman.util.Utils;
 
 import org.dom4j.Document;
 import org.dom4j.Element;
@@ -123,7 +124,7 @@ public class EnvelopeBuilder extends AbstractBuilder {
 		addElement(el, "name", env.getName());
 		addElement(el, "index", env.getIndex());
 		addElement(el, "frequency", env.getFrequency().name());
-		addElement(el, "budget", env.getBudget().toString());
+		addElement(el, "budget", Utils.formatDouble(env.getBudget()));
 		
 		addElement(el, "dueDay", env.getDueDay().toString());
 		if (env.getSavingsGoalDate() != null) {

@@ -226,7 +226,12 @@ public class ServiceContainer {
 		saveEntities(activeFile);
 	}
 	
+	public void backupFile(File f) throws IOException {
+		 Process p = new ProcessBuilder("/Users/nbolton/Documents/backup_moman.sh").start();
+	}
+	
 	public void saveEntities(File f) {
+		
 		
         setLastUsedDirectory(f.getParentFile());
 		OutputFormat format = OutputFormat.createPrettyPrint();
@@ -235,6 +240,8 @@ public class ServiceContainer {
         activeFile = f;
         
 		try {
+			backupFile(f);
+		
 			Document doc = DocumentHelper.createDocument();
 			Element root = doc.addElement("moman");
 			root.addAttribute("version", Constants.MOMAN_DOCUMENT_VERSION.toString());

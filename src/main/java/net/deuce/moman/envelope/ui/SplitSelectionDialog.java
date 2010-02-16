@@ -44,8 +44,8 @@ public class SplitSelectionDialog extends TitleAreaDialog implements EntityListe
 	private List<Split> split = new LinkedList<Split>();
 	private List<Envelope> invalidSelections = new LinkedList<Envelope>();
 	private EnvelopeService envelopeService;
-	private Label totalLabel;
-	private Label remainingLabel;
+	private Label totalLabel = null;
+	private Label remainingLabel = null;
 	private Double amount;
 	private Double remaining = 0.0;
 	private boolean allowBills;
@@ -53,13 +53,18 @@ public class SplitSelectionDialog extends TitleAreaDialog implements EntityListe
 	public SplitSelectionDialog(Shell parentShell, Double amount, List<Split> split) {
 		super(parentShell);
 		
+		this.amount = Math.abs(amount);
+		this.remaining = this.amount;
+		
+		Split newSplit;
 		for (Split item : split) {
-			item.setAmount(Math.abs(item.getAmount()));
-			this.split.add(item);
-			item.getMonitor().addListener(this);
+			newSplit = new Split(item.getEnvelope(), Math.abs(item.getAmount()));
+			this.split.add(newSplit);
+			newSplit.getMonitor().addListener(this);
+			
+			this.remaining -= newSplit.getAmount();
 		}
 		
-		this.amount = Math.abs(amount);
 		envelopeService = ServiceNeeder.instance().getEnvelopeService();
 		setTitle("Envelope Split");
 	}

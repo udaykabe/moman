@@ -96,15 +96,17 @@ public class TransactionRuleView extends AbstractEntityTableView<Rule> {
 			
 			dialog.setAllowBills(true);
 			dialog.create();
-			if (dialog.open() == Window.OK) {
-				if (!split.equals(dialog.getSplit())) {
+			int status = dialog.open();
+			List<Split> result = dialog.getSplit();
+			if (status == Window.OK) {
+				if (!split.equals(result)) {
 					ServiceNeeder.instance().getTransactionRuleService().startQueuingNotifications();
 					try {
 						Iterator<Rule> itr = selection.iterator();
 						while (itr.hasNext()) {
 							rule = itr.next();
 							rule.clearSplit();
-							for (Split item : dialog.getSplit()) {
+							for (Split item : result) {
 								if (rule.getAmount() < 0.0) {
 									item.setAmount(-item.getAmount());
 								}

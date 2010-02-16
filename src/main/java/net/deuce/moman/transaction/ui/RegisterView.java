@@ -106,17 +106,22 @@ public class RegisterView extends AbstractEntityTableView<InternalTransaction>  
 		
  		column = new TableViewerColumn(tableViewer, SWT.LEFT);
  		column.getColumn().setText("Description");
- 	    column.getColumn().setWidth(341);
+ 	    column.getColumn().setWidth(330);
  	    column.setEditingSupport(new TransactionEditingSupport(tableViewer, 2));
 		
- 		column = new TableViewerColumn(tableViewer, SWT.RIGHT);
+ 		column = new TableViewerColumn(tableViewer, SWT.LEFT);
  		column.getColumn().setText("Envelope");
- 	    column.getColumn().setWidth(200);
+ 	    column.getColumn().setWidth(175);
 		
  		column = new TableViewerColumn(tableViewer, SWT.RIGHT);
- 		column.getColumn().setText("Amount");
+ 		column.getColumn().setText("Credit");
  	    column.getColumn().setWidth(87);
  	    column.setEditingSupport(new TransactionEditingSupport(tableViewer, 4));
+		
+ 		column = new TableViewerColumn(tableViewer, SWT.RIGHT);
+ 		column.getColumn().setText("Debit");
+ 	    column.getColumn().setWidth(87);
+ 	    column.setEditingSupport(new TransactionEditingSupport(tableViewer, 5));
 		
  		column = new TableViewerColumn(tableViewer, SWT.RIGHT);
  		column.getColumn().setText("Balance");
@@ -199,8 +204,10 @@ public class RegisterView extends AbstractEntityTableView<InternalTransaction>  
 		
 		dialog.setAllowBills(true);
 		dialog.create();
-		if (dialog.open() == Window.OK) {
-			if (!split.equals(dialog.getSplit())) {
+		int status = dialog.open();
+		final List<Split> result = dialog.getSplit();
+		if (status == Window.OK) {
+			if (!split.equals(result)) {
 				BusyIndicator.showWhile(shell.getDisplay(), new Runnable() {
 					@SuppressWarnings("unchecked")
 					public void run() {
@@ -212,7 +219,7 @@ public class RegisterView extends AbstractEntityTableView<InternalTransaction>  
 							
 								transaction.clearSplit();
 								
-								for (Split item : dialog.getSplit()) {
+								for (Split item : result) {
 									if (transaction.getAmount() < 0.0) {
 										item.setAmount(-item.getAmount());
 									}

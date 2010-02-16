@@ -8,6 +8,13 @@ import net.deuce.moman.Constants;
 public class Utils {
 	
 	private static NumberFormat CURRENCY_FORMAT = NumberFormat.getCurrencyInstance();
+	private static NumberFormat DOUBLE_FORMAT;
+	
+	static {
+		DOUBLE_FORMAT = NumberFormat.getNumberInstance();
+		DOUBLE_FORMAT.setMaximumFractionDigits(2);
+		DOUBLE_FORMAT.setGroupingUsed(false);
+	}
 
 	public static boolean validateCurrency(String value) {
 		if (Constants.CURRENCY_VALIDATOR.isValid(value)) {
@@ -30,5 +37,10 @@ public class Utils {
 		} catch (ParseException e) {
 		}
 		return null;
+	}
+	
+	public static String formatDouble(Double value) {
+		if (value == null) return null;
+		return DOUBLE_FORMAT.format(value);
 	}
 }

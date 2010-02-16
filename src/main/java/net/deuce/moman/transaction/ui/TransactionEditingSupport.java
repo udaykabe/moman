@@ -25,6 +25,7 @@ public class TransactionEditingSupport extends EditingSupport {
 			editor.getControl().setFont(Constants.STANDARD_FONT);
 			break;
 		case 4:
+		case 5:
 			editor = new TextCellEditor(((TableViewer) viewer).getTable());
 			editor.getControl().setFont(Constants.STANDARD_FONT);
 			editor.setValidator(CurrencyCellEditorValidator.instance());
@@ -52,7 +53,13 @@ public class TransactionEditingSupport extends EditingSupport {
 		switch (this.column) {
 		case 1: return transaction.getCheck();
 		case 2: return transaction.getDescription();
-		case 4: return Constants.CURRENCY_VALIDATOR.format(transaction.getAmount());
+		case 4:
+			double amount = Math.round(transaction.getAmount()*100.0)/100.0;
+			return amount > 0.0 ? Constants.CURRENCY_VALIDATOR.format(amount) : "";
+		case 5:
+			amount = Math.round(transaction.getAmount()*100.0)/100.0;
+			return amount <= 0.0 ? (amount < 0.0 ? Constants.CURRENCY_VALIDATOR.format(-amount) :
+					Constants.CURRENCY_VALIDATOR.format(amount)) : "";
 		default:
 			break;
 		}
@@ -70,6 +77,7 @@ public class TransactionEditingSupport extends EditingSupport {
 			case 1: transaction.executeChange(InternalTransaction.Properties.check, value); break;
 			case 2: transaction.executeChange(InternalTransaction.Properties.description, value); break;
 			case 4: transaction.executeSetAmount(Constants.CURRENCY_VALIDATOR.validate((String)value).doubleValue()); break;
+			case 5: transaction.executeSetAmount(-Constants.CURRENCY_VALIDATOR.validate((String)value).doubleValue()); break;
 			default:
 				break;
 			}

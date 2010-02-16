@@ -275,6 +275,9 @@ public abstract class TransactionProcessor implements Runnable {
 				findMatchedTransactions(transactions, monitor);
 				applyRules(transactions, monitor);
 				addUnmatchedTransactions(transactions, monitor);
+				
+				// transfer to as many negative envelopes as possible
+				envelopeService.distributeToNegativeEnvelopes(account, envelopeFactory.createTopLevelEnvelope(), envelopeService.getAvailableEnvelope().getBalance());
 			}
 		}
 		ServiceNeeder.instance().getImportService().setEntities(transactions);
@@ -286,9 +289,6 @@ public abstract class TransactionProcessor implements Runnable {
 	private void applyRules(List<InternalTransaction> transactions, IProgressMonitor monitor) {
 		for (InternalTransaction t : transactions) {
 			for (Rule rule : ServiceNeeder.instance().getTransactionRuleService().getEntities()) {
-				if (rule.getExpression().contains("LOANSERVICING AUTOMATIC") && t.getDescription().contains("LOANSERVICING AUTOMATIC")) {
-					System.out.println("");
-				}
 				if (rule.isEnabled() && rule.evaluate(t.getDescription()) &&
 						(rule.getAmount() == null || rule.amountEquals(t.getAmount()))) {
 					if (rule.getConversion() != null && rule.getConversion().length() > 0) {
@@ -296,7 +296,11 @@ public abstract class TransactionProcessor implements Runnable {
 					}
 					t.clearSplit();
 					for (Split item : rule.getSplit()) {
-						t.addSplit(item, !t.isMatched());
+						Split splitCopy = new Split(item.getEnvelope(), item.getAmount());
+						if (splitCopy.getAmount() == null || splitCopy.getAmount() == 0.0) {
+							splitCopy.setAmount(t.getAmount());
+						}
+						t.addSplit(splitCopy, !t.isMatched());
 					}
 				}
 			}
@@ -338,36 +342,8 @@ public abstract class TransactionProcessor implements Runnable {
 					transaction.setAmount(balance);
 					transaction.setDate(initialBalanceDate);
 				}
-				
-				// transfer to as many negative envelopes as possible
-				distributeToNegativeEnvelopes(envelopeFactory.createTopLevelEnvelope(), envelopeService.getAvailableEnvelope().getBalance());
 			}
 		}
-	}
-	
-	private double distributeToNegativeEnvelopes(Envelope env, double balance) {
-		if (!env.isAvailable()) {
-			if (balance > 0) {
-				if (!env.hasChildren()) {
-					if (env.getBalance() < 0) {
-						double transferAmount = 0;
-						if (balance > -env.getBalance()) {
-							transferAmount = -env.getBalance();
-						} else {
-							transferAmount = balance;
-						}
-						envelopeService.transfer(account, account,
-								envelopeService.getAvailableEnvelope(), env, transferAmount);
-						return balance-transferAmount;
-					}
-				} else {
-					for (Envelope child : env.getChildren()) {
-						balance = distributeToNegativeEnvelopes(child, balance);
-					}
-				}
-			}
-		}
-		return balance;
 	}
 	
 	private void addUnmatchedTransactions(List<InternalTransaction> transactions, IProgressMonitor monitor) {
