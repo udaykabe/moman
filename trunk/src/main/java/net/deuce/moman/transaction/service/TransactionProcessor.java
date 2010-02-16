@@ -289,19 +289,15 @@ public abstract class TransactionProcessor implements Runnable {
 	private void applyRules(List<InternalTransaction> transactions, IProgressMonitor monitor) {
 		for (InternalTransaction t : transactions) {
 			for (Rule rule : ServiceNeeder.instance().getTransactionRuleService().getEntities()) {
+				if (!"TACO ?BELL".equals(rule.getExpression())) continue;
+				if (!t.getDescription().contains("TACO BELL")) continue;
 				if (rule.isEnabled() && rule.evaluate(t.getDescription()) &&
 						(rule.getAmount() == null || rule.amountEquals(t.getAmount()))) {
 					if (rule.getConversion() != null && rule.getConversion().length() > 0) {
 						t.setDescription(rule.getConversion());
 					}
 					t.clearSplit();
-					for (Split item : rule.getSplit()) {
-						Split splitCopy = new Split(item.getEnvelope(), item.getAmount());
-						if (splitCopy.getAmount() == null || splitCopy.getAmount() == 0.0) {
-							splitCopy.setAmount(t.getAmount());
-						}
-						t.addSplit(splitCopy, !t.isMatched());
-					}
+					t.addSplit(rule.getEnvelope(), t.getAmount());
 				}
 			}
 			for (Split item : t.getSplit()) {
