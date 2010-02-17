@@ -103,13 +103,14 @@ public class EnvelopeTransferDialog extends TitleAreaDialog {
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.horizontalAlignment = GridData.FILL;
 
-		createTextFields(parent, gridData);
+		createTextFields(parent);
 	
 		return parent;
 	}
 
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
+		/*
 		GridData gridData = new GridData();
 		gridData.verticalAlignment = GridData.FILL;
 		gridData.horizontalSpan = 4;
@@ -118,6 +119,7 @@ public class EnvelopeTransferDialog extends TitleAreaDialog {
 		gridData.horizontalAlignment = SWT.CENTER;
 
 		parent.setLayoutData(gridData);
+		*/
 		// Create Add button
 		// Own method as we need to overview the SelectionAdapter
 		createOkButton(parent, OK, "OK", true);
@@ -192,7 +194,7 @@ public class EnvelopeTransferDialog extends TitleAreaDialog {
 		return combo;
 	}
 
-	protected void createTextFields(final Composite parent, GridData gridData) {
+	protected void createTextFields(final Composite parent) {
 		
 		final List<Account> accounts = accountService.getOrderedEntities(false);
 		
@@ -212,7 +214,7 @@ public class EnvelopeTransferDialog extends TitleAreaDialog {
 			targetEnvelope = envelopeService.getAvailableEnvelope();
 		}
 		
-		sourceAccountCombo = buildCombo(parent, gridData, sourceAccount, accounts);
+		sourceAccountCombo = buildCombo(parent, new GridData(GridData.FILL_HORIZONTAL), sourceAccount, accounts);
 		sourceAccountCombo.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -224,9 +226,9 @@ public class EnvelopeTransferDialog extends TitleAreaDialog {
 		Label arrowLabel = new Label(parent, SWT.NONE);
 		arrowLabel.setImage(ARROW);
 		arrowLabel.setSize(32, 32);
-		//arrowLabel.setLayoutData(gridData);
+		arrowLabel.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_CENTER));
 		
-		targetAccountCombo = buildCombo(parent, gridData, targetAccount, accounts);
+		targetAccountCombo = buildCombo(parent, new GridData(GridData.FILL_HORIZONTAL), targetAccount, accounts);
 		targetAccountCombo.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -235,9 +237,10 @@ public class EnvelopeTransferDialog extends TitleAreaDialog {
 		});
 		
 		sourceEnvelopeText = new Text(parent, SWT.BORDER);
-		sourceEnvelopeText.setLayoutData(gridData);
+		sourceEnvelopeText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		sourceEnvelopeText.setEditable(false);
-		sourceEnvelopeText.setText(sourceEnvelope.getName());
+		sourceEnvelopeText.setText(sourceEnvelope.getName() + " " +
+				Constants.CURRENCY_VALIDATOR.format(sourceEnvelope.getBalance()));
 //		sourceEnvelopeText.setSize(100, 20);
 		sourceEnvelopeText.setFont(Constants.STANDARD_FONT);
 		sourceEnvelopeText.addMouseListener(new MouseAdapter() {
@@ -252,20 +255,22 @@ public class EnvelopeTransferDialog extends TitleAreaDialog {
 				dialog.open();
 				if (sourceEnvelope != dialog.getEnvelope()) {
 					sourceEnvelope = dialog.getEnvelope();
-					sourceEnvelopeText.setText(sourceEnvelope.getName());
+					sourceEnvelopeText.setText(sourceEnvelope.getName() + " " +
+							Constants.CURRENCY_VALIDATOR.format(sourceEnvelope.getBalance()));
 				}
 			}
 		});
 		
-		arrowLabel = new Label(parent, SWT.NONE);
+		arrowLabel = new Label(parent, SWT.BORDER);
 		arrowLabel.setImage(ARROW);
 		arrowLabel.setSize(32, 32);
-		//arrowLabel.setLayoutData(gridData);
+		arrowLabel.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_CENTER));
 		
 		targetEnvelopeText = new Text(parent, SWT.BORDER);
-		targetEnvelopeText.setLayoutData(gridData);
+		targetEnvelopeText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		targetEnvelopeText.setEditable(false);
-		targetEnvelopeText.setText(targetEnvelope.getName());
+		targetEnvelopeText.setText(targetEnvelope.getName() + " " +
+				Constants.CURRENCY_VALIDATOR.format(targetEnvelope.getBalance()));
 //		targetEnvelopeText.setSize(100, 20);
 		targetEnvelopeText.setFont(Constants.STANDARD_FONT);
 		targetEnvelopeText.addMouseListener(new MouseAdapter() {
@@ -278,23 +283,37 @@ public class EnvelopeTransferDialog extends TitleAreaDialog {
 				dialog.open();
 				if (targetEnvelope != dialog.getEnvelope()) {
 					targetEnvelope = dialog.getEnvelope();
-					targetEnvelopeText.setText(targetEnvelope.getName());
+					targetEnvelopeText.setText(targetEnvelope.getName() + " " +
+							Constants.CURRENCY_VALIDATOR.format(targetEnvelope.getBalance()));
 				}
 			}
 		});
 		
-		Label label = new Label(parent, SWT.NONE);
-		label.setLayoutData(gridData);
+		Composite amountContainer = new Composite(parent, SWT.NONE);
+		
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 2;
+		amountContainer.setLayout(layout);
+		amountContainer.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		amountContainer.setFont(parent.getFont());
+		
+		Label label = new Label(amountContainer, SWT.NONE);
 		label.setFont(Constants.STANDARD_FONT);
 		label.setText("Amount");
 		
-		amountText = new Text(parent, SWT.BORDER);
-		amountText.setLayoutData(gridData);
+		amountText = new Text(amountContainer, SWT.BORDER);
+		amountText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		amountText.setFont(Constants.STANDARD_FONT);
 		
-		// spacer
-//		label = new Label(parent, SWT.NONE);
-//		label.setLayoutData(gridData);
+		// spacers
+		label = new Label(parent, SWT.NONE);
+		label.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		label = new Label(parent, SWT.NONE);
+		label.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		label = new Label(parent, SWT.NONE);
+		label.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		label = new Label(parent, SWT.NONE);
+		label.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 		if (targetEnvelope.getBalance() < 0 && sourceEnvelope.getBalance() >= Math.abs(targetEnvelope.getBalance())) {
 			amountText.setText(Constants.CURRENCY_VALIDATOR.format(Math.abs(targetEnvelope.getBalance())));

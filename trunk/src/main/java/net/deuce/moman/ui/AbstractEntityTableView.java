@@ -16,6 +16,7 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerEditor;
+import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.KeyEvent;
@@ -29,6 +30,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
 
@@ -36,7 +38,7 @@ import org.eclipse.ui.part.ViewPart;
 public abstract class AbstractEntityTableView<E extends AbstractEntity> extends ViewPart
 implements EntityListener<E> {
 	
-	private TableViewer tableViewer;
+	private SelectingTableViewer tableViewer;
 	private boolean editingEntity;
 	private EntityService<E> service;
 
@@ -45,7 +47,7 @@ implements EntityListener<E> {
 		service.addEntityListener(this);
 	}
 	
-	protected abstract TableViewer createTableViewer(Composite parent);
+	protected abstract SelectingTableViewer createTableViewer(Composite parent);
 	protected abstract String getDeleteCommandId();
 	
 	public EntityService<E> getService() {
@@ -106,11 +108,11 @@ implements EntityListener<E> {
 		};
 	}
 	
-	protected TableViewer getTableViewer() {
+	protected SelectingTableViewer getTableViewer() {
 		return tableViewer;
 	}
 
-	protected void setTableViewer(TableViewer tableViewer) {
+	protected void setTableViewer(SelectingTableViewer tableViewer) {
 		this.tableViewer = tableViewer;
 	}
 	
@@ -228,7 +230,11 @@ implements EntityListener<E> {
 	public void setFocus() {
 		tableViewer.getTable().setFocus();
 	}
-
+	
+	protected int getNewEntitySelectionColumn() {
+		return -1;
+	}
+	
 	@Override
 	public void entityAdded(EntityEvent<E> event) {
 		refresh();
@@ -237,6 +243,18 @@ implements EntityListener<E> {
 			if (event != null && event.getEntity() != null) {
 				tableViewer.setSelection(new StructuredSelection(new Object[]{event.getEntity()}));
 				tableViewer.reveal(event.getEntity());
+				
+				int selectionColumn = getNewEntitySelectionColumn();
+				if (selectionColumn >= 0) {
+					TableItem[] selection = tableViewer.getTable().getSelection();
+					if (selection.length > 0) {
+						Rectangle bounds = selection[0].getBounds(selectionColumn);
+						ViewerCell viewerCell = tableViewer.getCell(new Point(bounds.x, bounds.y));
+						if (viewerCell != null) {
+							tableViewer.activateInitialCellEditor(viewerCell);
+						}
+					}
+				}
 			}
 		} catch (Throwable t) {
 			t.printStackTrace();

@@ -18,6 +18,7 @@ import net.deuce.moman.model.Frequency;
 import net.deuce.moman.service.ServiceContainer;
 import net.deuce.moman.service.ServiceNeeder;
 import net.deuce.moman.ui.AbstractEntityTableView;
+import net.deuce.moman.ui.SelectingTableViewer;
 
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -133,7 +134,7 @@ public class BudgetView extends AbstractEntityTableView<Envelope> {
 	}
 	
 	protected TableViewer createTableViewer(Composite parent, GridData gridData) {
-		final TableViewer tableViewer = new TableViewer(parent, SWT.MULTI | SWT.V_SCROLL | SWT.FULL_SELECTION);    
+		final SelectingTableViewer tableViewer = new SelectingTableViewer(parent, SWT.MULTI | SWT.V_SCROLL | SWT.FULL_SELECTION);    
 		tableViewer.setComparator(new BudgetViewerComparator());
 		tableViewer.getTable().setLayoutData(gridData);
 		
@@ -296,7 +297,7 @@ public class BudgetView extends AbstractEntityTableView<Envelope> {
 	}
 
 	@Override
-	protected TableViewer createTableViewer(Composite parent) {
+	protected SelectingTableViewer createTableViewer(Composite parent) {
 		return null;
 	}
 	

@@ -111,7 +111,6 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
 			if (status == Window.OK) {
 				if (!split.equals(result)) {
 					BusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
-						@SuppressWarnings("unchecked")
 						public void run() {
 							ServiceNeeder.instance().getServiceContainer().startQueuingNotifications();
 							try {
@@ -330,9 +329,9 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
 		if (!splitMap.containsValue(split)) {
 			if (notifyEnvelope) {
 				split.getEnvelope().addTransaction(this, false);
+				split.getEnvelope().resetBalance();
 			}
 			splitMap.put(split.getEnvelope(), split);
-			split.getEnvelope().resetBalance();
 			getMonitor().fireEntityChanged(this, Properties.split);
 		}
 	}
@@ -354,6 +353,17 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
 	
 	public List<Split> getSplit() {
 		return new LinkedList<Split>(splitMap.values());
+	}
+	
+	public void setSplit(List<Split> splitList) {
+		setSplit(splitList, true);
+	}
+	
+	public void setSplit(List<Split> splitList, boolean notify) {
+		clearSplit();
+		for (Split split : splitList) {
+			addSplit(split, notify);
+		}
 	}
 	
 	@Override

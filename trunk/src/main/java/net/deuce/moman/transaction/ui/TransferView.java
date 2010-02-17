@@ -3,8 +3,8 @@ package net.deuce.moman.transaction.ui;
 import java.util.List;
 
 import net.deuce.moman.transaction.model.InternalTransaction;
+import net.deuce.moman.ui.SelectingTableViewer;
 
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -23,8 +23,8 @@ public class TransferView extends RegisterView {
 	}
 	
 	@Override
-	protected TableViewer createTableViewer(Composite parent) {
-		TableViewer tableViewer = new TableViewer(parent, SWT.MULTI | SWT.V_SCROLL | SWT.FULL_SELECTION);
+	protected SelectingTableViewer createTableViewer(Composite parent) {
+		SelectingTableViewer tableViewer = new SelectingTableViewer(parent, SWT.MULTI | SWT.V_SCROLL | SWT.FULL_SELECTION);
 				
         TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.LEFT);
  		column.getColumn().setText("Date");

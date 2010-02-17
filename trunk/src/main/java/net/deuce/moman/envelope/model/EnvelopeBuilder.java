@@ -84,7 +84,7 @@ public class EnvelopeBuilder extends AbstractBuilder {
 				envelope.setId(e.attributeValue("id"));
 				envelope.setEditable(Boolean.valueOf(e.elementText("editable")));
 				envelope.setExpanded(Boolean.valueOf(e.elementText("expanded")));
-				envelope.setSelected(Boolean.valueOf(e.elementText("selected")));
+//				envelope.setSelected(Boolean.valueOf(e.elementText("selected")));
 				envelope.setMonthly(Boolean.valueOf(e.elementText("monthly")));
 				envelope.setSavingsGoals(Boolean.valueOf(e.elementText("savings-goals")));
 				envelope.setRoot(Boolean.valueOf(e.elementText("root")));

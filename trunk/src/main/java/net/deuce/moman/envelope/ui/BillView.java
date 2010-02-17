@@ -11,10 +11,10 @@ import net.deuce.moman.model.EntityEvent;
 import net.deuce.moman.service.ServiceContainer;
 import net.deuce.moman.service.ServiceNeeder;
 import net.deuce.moman.ui.AbstractEntityTableView;
+import net.deuce.moman.ui.SelectingTableViewer;
 
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -41,8 +41,8 @@ public class BillView extends AbstractEntityTableView<Envelope> {
 	}
 
 	@Override
-	protected TableViewer createTableViewer(Composite parent) {
-		TableViewer tableViewer = new TableViewer(parent, SWT.MULTI | SWT.V_SCROLL | SWT.FULL_SELECTION);    
+	protected SelectingTableViewer createTableViewer(Composite parent) {
+		SelectingTableViewer tableViewer = new SelectingTableViewer(parent, SWT.MULTI | SWT.V_SCROLL | SWT.FULL_SELECTION);    
 		tableViewer.setComparator(new BillViewerComparator());
 		getEnvelopeService().setBillViewer(tableViewer);
 		
@@ -82,6 +82,11 @@ public class BillView extends AbstractEntityTableView<Envelope> {
 	    tableViewer.setContentProvider(new EnvelopeListContentProvider());
 	    tableViewer.setLabelProvider(new BillLabelProvider());
 		return tableViewer;
+	}
+	
+	@Override
+	protected int getNewEntitySelectionColumn() {
+		return 1;
 	}
 
 	@SuppressWarnings("unchecked")

@@ -3,14 +3,16 @@ package net.deuce.moman.account.command;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.List;
 
 import net.deuce.moman.account.model.Account;
+import net.deuce.moman.account.service.AccountService;
+import net.deuce.moman.account.ui.SelectAccountDialog;
 import net.deuce.moman.service.ServiceNeeder;
 import net.deuce.moman.transaction.service.FileImportingTransactionProcessor;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -27,41 +29,50 @@ public class ImportFile extends AbstractAccountHandler {
 
 	@Override
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
-		final IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow(event);
 		
-		List<Account> accounts = getAccounts(window);
+		IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow(event);
+		AccountService accountService = ServiceNeeder.instance().getAccountService();
+		Account account = null;
+		if (accountService.getEntities().size() == 1) {
+			account = accountService.getEntities().get(0);
+		} else {
+			SelectAccountDialog dialog = new SelectAccountDialog(window.getShell());
+			dialog.create();
+			if (dialog.open() == Window.OK) {
+				account = dialog.getEntity();
+			}
+		}
 		
-		if (accounts.size() == 0) return null;
-		
-		FileReader fileReader = null;
-		
-		try {
-			Shell shell = HandlerUtil.getActiveWorkbenchWindow(event).getShell();
-			FileDialog dialog = new FileDialog(shell, SWT.OPEN);
-			
-			String lastDirectory = ServiceNeeder.instance().getServiceContainer().getLastUsedImportDirectory().getAbsolutePath();
-			dialog.setFilterPath(lastDirectory);
-	        dialog.setFilterExtensions(new String[] {"*.ofx"});
-	        dialog.setFilterNames(new String[] {"OFX File"});
-	        String fileSelected = dialog.open();
-			
-	        if (fileSelected != null) {
-	        	
-				ServiceNeeder.instance().getServiceContainer()
-					.setLastUsedImportDirectory(new File(fileSelected).getParentFile());
-				new FileImportingTransactionProcessor(window.getShell(),
-						accounts.get(0), fileSelected).execute();
-	        	
-	        }
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new ExecutionException("Failed importing file", e);
-		} finally {
-			if (fileReader != null) {
-				try {
-					fileReader.close();
-				} catch (IOException e) {
-					e.printStackTrace();
+		if (account != null) {
+			FileReader fileReader = null;
+			try {
+				Shell shell = HandlerUtil.getActiveWorkbenchWindow(event).getShell();
+				FileDialog fileDialog = new FileDialog(shell, SWT.OPEN);
+				
+				String lastDirectory = ServiceNeeder.instance().getServiceContainer().getLastUsedImportDirectory().getAbsolutePath();
+				fileDialog.setFilterPath(lastDirectory);
+		        fileDialog.setFilterExtensions(new String[] {"*.ofx"});
+		        fileDialog.setFilterNames(new String[] {"OFX File"});
+		        String fileSelected = fileDialog.open();
+				
+		        if (fileSelected != null) {
+		        	
+					ServiceNeeder.instance().getServiceContainer()
+						.setLastUsedImportDirectory(new File(fileSelected).getParentFile());
+					new FileImportingTransactionProcessor(window.getShell(),
+							account, fileSelected).execute();
+		        	
+		        }
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new ExecutionException(e.getMessage(), e);
+			} finally {
+				if (fileReader != null) {
+					try {
+						fileReader.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}
