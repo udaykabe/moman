@@ -72,6 +72,12 @@ public class EnvelopeService extends EntityService<Envelope> {
 	public void setSavingsGoalViewer(TableViewer savingsGoalViewer) {
 		this.savingsGoalViewer = savingsGoalViewer;
 	}
+	
+	public void clearSelectedEnvelope() {
+		if (selectedEnvelope != null) {
+			selectedEnvelope.setSelected(false);
+		}
+	}
 
 	public Envelope getSelectedEnvelope() {
 		return selectedEnvelope;

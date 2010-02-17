@@ -9,9 +9,9 @@ import net.deuce.moman.service.ServiceNeeder;
 import net.deuce.moman.transaction.model.InternalTransaction;
 import net.deuce.moman.transaction.model.Split;
 import net.deuce.moman.ui.AbstractEntityTableView;
+import net.deuce.moman.ui.SelectingTableViewer;
 
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -28,8 +28,8 @@ public class TransactionImportView extends AbstractEntityTableView<InternalTrans
 	}
 
 	@Override
-	protected TableViewer createTableViewer(Composite parent) {
-		TableViewer tableViewer = new TableViewer(parent, SWT.MULTI | SWT.V_SCROLL | SWT.FULL_SELECTION);
+	protected SelectingTableViewer createTableViewer(Composite parent) {
+		SelectingTableViewer tableViewer = new SelectingTableViewer(parent, SWT.MULTI | SWT.V_SCROLL | SWT.FULL_SELECTION);
 				
         TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.CENTER);
  		column.getColumn().setText("Matched");

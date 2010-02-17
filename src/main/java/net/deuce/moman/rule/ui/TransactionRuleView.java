@@ -6,9 +6,9 @@ import net.deuce.moman.rule.command.Delete;
 import net.deuce.moman.rule.model.Rule;
 import net.deuce.moman.service.ServiceNeeder;
 import net.deuce.moman.ui.AbstractEntityTableView;
+import net.deuce.moman.ui.SelectingTableViewer;
 
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -23,8 +23,8 @@ public class TransactionRuleView extends AbstractEntityTableView<Rule> {
 	}
 
 	@Override
-	protected TableViewer createTableViewer(Composite parent) {
-		TableViewer tableViewer = new TableViewer(parent, SWT.MULTI | SWT.V_SCROLL | SWT.FULL_SELECTION);
+	protected SelectingTableViewer createTableViewer(Composite parent) {
+		SelectingTableViewer tableViewer = new SelectingTableViewer(parent, SWT.MULTI | SWT.V_SCROLL | SWT.FULL_SELECTION);
 				
         TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.CENTER);
  		column.getColumn().setText("Enabled");
@@ -61,9 +61,15 @@ public class TransactionRuleView extends AbstractEntityTableView<Rule> {
 		
 	    tableViewer.setContentProvider(new RuleContentProvider());
 	    tableViewer.setLabelProvider(new RuleLabelProvider());
+	    
 		return tableViewer;
 	}
-
+	
+	@Override
+	protected int getNewEntitySelectionColumn() {
+		return 2;
+	}
+	
 	@Override
 	protected void doubleClickHandler(int column,
 			StructuredSelection selection, Shell shell) {

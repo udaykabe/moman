@@ -19,9 +19,9 @@ import net.deuce.moman.transaction.model.Split;
 import net.deuce.moman.transaction.service.TransactionService;
 import net.deuce.moman.ui.AbstractEntityTableView;
 import net.deuce.moman.ui.DateSelectionDialog;
+import net.deuce.moman.ui.SelectingTableViewer;
 
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -84,8 +84,8 @@ public class RegisterView extends AbstractEntityTableView<InternalTransaction>  
 	}
 
 	@Override
-	protected TableViewer createTableViewer(Composite parent) {
-		final TableViewer tableViewer = new TableViewer(parent, SWT.MULTI | SWT.V_SCROLL | SWT.FULL_SELECTION);
+	protected SelectingTableViewer createTableViewer(Composite parent) {
+		final SelectingTableViewer tableViewer = new SelectingTableViewer(parent, SWT.MULTI | SWT.V_SCROLL | SWT.FULL_SELECTION);
 		tableViewer.addFilter(filter);
 		searchText.addKeyListener(new KeyAdapter() {
 			@Override
@@ -144,6 +144,11 @@ public class RegisterView extends AbstractEntityTableView<InternalTransaction>  
 		});
 	    
 		return tableViewer;
+	}
+	
+	@Override
+	protected int getNewEntitySelectionColumn() {
+		return 2;
 	}
 	
 	private void handleDateDoubleClicked(StructuredSelection selection, Shell shell) {

@@ -6,6 +6,7 @@ import net.deuce.moman.account.model.Account;
 import net.deuce.moman.model.EntityEvent;
 import net.deuce.moman.service.ServiceNeeder;
 import net.deuce.moman.ui.AbstractEntityTableView;
+import net.deuce.moman.ui.SelectingTableViewer;
 
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
@@ -33,8 +34,8 @@ public class AccountView extends AbstractEntityTableView<Account> {
 	}
 	
 	@Override
-	protected TableViewer createTableViewer(Composite parent) {
-		TableViewer tableViewer = new TableViewer(parent, SWT.SINGLE | SWT.V_SCROLL | SWT.FULL_SELECTION);    
+	protected SelectingTableViewer createTableViewer(Composite parent) {
+		SelectingTableViewer tableViewer = new SelectingTableViewer(parent, SWT.SINGLE | SWT.V_SCROLL | SWT.FULL_SELECTION);    
 		   
         TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.CENTER);
  		column.getColumn().setText("enabled");

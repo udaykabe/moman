@@ -288,20 +288,20 @@ public abstract class TransactionProcessor implements Runnable {
 	
 	private void applyRules(List<InternalTransaction> transactions, IProgressMonitor monitor) {
 		for (InternalTransaction t : transactions) {
-			for (Rule rule : ServiceNeeder.instance().getTransactionRuleService().getEntities()) {
-				if (!"TACO ?BELL".equals(rule.getExpression())) continue;
-				if (!t.getDescription().contains("TACO BELL")) continue;
-				if (rule.isEnabled() && rule.evaluate(t.getDescription()) &&
-						(rule.getAmount() == null || rule.amountEquals(t.getAmount()))) {
-					if (rule.getConversion() != null && rule.getConversion().length() > 0) {
-						t.setDescription(rule.getConversion());
+			if (t.getSplit().size() == 1 && t.getSplit().get(0).getEnvelope() == ServiceNeeder.instance().getEnvelopeService().getUnassignedEnvelope()) {
+				for (Rule rule : ServiceNeeder.instance().getTransactionRuleService().getEntities()) {
+					if (rule.isEnabled() && rule.evaluate(t.getDescription()) &&
+							(rule.getAmount() == null || rule.amountEquals(t.getAmount()))) {
+						if (rule.getConversion() != null && rule.getConversion().length() > 0) {
+							t.setDescription(rule.getConversion());
+						}
+						t.clearSplit();
+						t.addSplit(rule.getEnvelope(), t.getAmount());
 					}
-					t.clearSplit();
-					t.addSplit(rule.getEnvelope(), t.getAmount());
 				}
-			}
-			for (Split item : t.getSplit()) {
-				modifiedEnvelopes.add(item.getEnvelope());
+				for (Split item : t.getSplit()) {
+					modifiedEnvelopes.add(item.getEnvelope());
+				}
 			}
 		}
 	}
@@ -362,6 +362,7 @@ public abstract class TransactionProcessor implements Runnable {
 			if (existingTransaction != null && t.getAmount().doubleValue() == existingTransaction.getAmount().doubleValue()) {
 				System.out.println("ZZZ matched " + t);
 				t.setMatchedTransaction(existingTransaction);
+				t.setSplit(existingTransaction.getSplit());
 			}
 			monitor.worked(1);
 		}
@@ -377,7 +378,7 @@ public abstract class TransactionProcessor implements Runnable {
 			
 			System.out.println("ZZZ checking import " + importedTransaction);
 			
-			if (!importedTransaction.isMatched() && !importedTransaction.isExternal()) {
+			if (!importedTransaction.isMatched()) {
 				
 				Calendar lowerBound = CalendarUtil.convertToCalendar(importedTransaction.getDate());
 				lowerBound.add(Calendar.DATE, -threshold);
@@ -387,17 +388,20 @@ public abstract class TransactionProcessor implements Runnable {
 				System.out.println("ZZZ lowerBound " + Constants.SHORT_DATE_FORMAT.format(lowerBound.getTime()));
 				System.out.println("ZZZ upperBound " + Constants.SHORT_DATE_FORMAT.format(upperBound.getTime()));
 				for (InternalTransaction t : register) {
-				System.out.println("ZZZ against " + t);
-					if (t.getDate().before(lowerBound.getTime()) || t.getDate().after(upperBound.getTime())) {
-					System.out.println("ZZZ out of range - imported: " + Constants.SHORT_DATE_FORMAT.format(importedTransaction.getDate())
-							+ " existing: " + Constants.SHORT_DATE_FORMAT.format(t.getDate()));
-						break;
-					}
-					
-					if (t.getAmount().doubleValue() == importedTransaction.getAmount().doubleValue() && !t.isEnvelopeTransfer()) {
-						importedTransaction.setMatchedTransaction(t);
-						t.setExternalId(importedTransaction.getExternalId());
-						transactionService.addExternalTransactionReference(t);
+					if (!t.isExternal()) {
+						System.out.println("ZZZ against " + t);
+						if (t.getDate().before(lowerBound.getTime()) || t.getDate().after(upperBound.getTime())) {
+						System.out.println("ZZZ out of range - imported: " + Constants.SHORT_DATE_FORMAT.format(importedTransaction.getDate())
+								+ " existing: " + Constants.SHORT_DATE_FORMAT.format(t.getDate()));
+							break;
+						}
+						
+						if (t.getAmount().doubleValue() == importedTransaction.getAmount().doubleValue() && !t.isEnvelopeTransfer()) {
+							importedTransaction.setMatchedTransaction(t);
+							importedTransaction.setSplit(t.getSplit(), false);
+							t.setExternalId(importedTransaction.getExternalId());
+							transactionService.addExternalTransactionReference(t);
+						}
 					}
 				}
 			}

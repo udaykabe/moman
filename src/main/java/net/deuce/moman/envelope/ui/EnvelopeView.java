@@ -12,6 +12,7 @@ import net.deuce.moman.model.EntityEvent;
 import net.deuce.moman.model.EntityListener;
 import net.deuce.moman.service.ServiceNeeder;
 import net.deuce.moman.transaction.model.InternalTransaction;
+import net.deuce.moman.transaction.ui.RegisterView;
 
 import org.eclipse.jface.viewers.ColumnViewerEditor;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
@@ -31,6 +32,9 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
 
@@ -144,7 +148,15 @@ public class EnvelopeView extends ViewPart implements EntityListener<Envelope> {
 						env.setSelected(false);
 					}
 				} else {
-					((Envelope)selection.getFirstElement()).setSelected(true);
+					try {
+						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPages()[0]
+						    .showView(RegisterView.ID, null, IWorkbenchPage.VIEW_ACTIVATE);
+						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPages()[0]
+						    .showView(EnvelopeView.ID, null, IWorkbenchPage.VIEW_ACTIVATE);
+						((Envelope)selection.getFirstElement()).setSelected(true);
+					} catch (PartInitException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		});

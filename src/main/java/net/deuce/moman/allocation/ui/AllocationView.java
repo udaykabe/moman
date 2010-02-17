@@ -21,6 +21,7 @@ import net.deuce.moman.model.EntityEvent;
 import net.deuce.moman.model.EntityListener;
 import net.deuce.moman.model.EntityMonitor;
 import net.deuce.moman.service.ServiceNeeder;
+import net.deuce.moman.ui.SelectingTableViewer;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ColumnViewerEditor;
@@ -31,9 +32,9 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TableViewerEditor;
+import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
@@ -61,6 +62,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
@@ -69,8 +71,8 @@ public class AllocationView extends ViewPart implements EntityListener<Allocatio
 	
 	public static final String ID = AllocationView.class.getName();
 	
-	private TableViewer profileListViewer;
-	private TableViewer profileViewer;
+	private SelectingTableViewer profileListViewer;
+	private SelectingTableViewer profileViewer;
 	private AllocationSetService allocationSetService;
 	private EnvelopeService envelopeService;
 	private AccountService accountService;
@@ -496,8 +498,8 @@ public class AllocationView extends ViewPart implements EntityListener<Allocatio
 		}
 	}
 	
-	private TableViewer createProfileListViewer(Composite composite) {
-		final TableViewer tableViewer = new TableViewer(composite, SWT.MULTI | SWT.V_SCROLL | SWT.FULL_SELECTION);
+	private SelectingTableViewer createProfileListViewer(Composite composite) {
+		final SelectingTableViewer tableViewer = new SelectingTableViewer(composite, SWT.MULTI | SWT.V_SCROLL | SWT.FULL_SELECTION);
 		
 		TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.NONE);
  		column.getColumn().setText("name");
@@ -513,7 +515,9 @@ public class AllocationView extends ViewPart implements EntityListener<Allocatio
 				StructuredSelection selection = (StructuredSelection) event.getSelection();
 				if (selection.size() == 1) {
 					allocationSet = (AllocationSet) selection.getFirstElement();
-					paySourceAmountText.setText(Constants.CURRENCY_VALIDATOR.format(allocationSet.getIncome().getAmount()));
+					if (allocationSet.getIncome() != null) {
+						paySourceAmountText.setText(Constants.CURRENCY_VALIDATOR.format(allocationSet.getIncome().getAmount()));
+					}
 				} else {
 					allocationSet = null;
 				}
@@ -565,8 +569,8 @@ public class AllocationView extends ViewPart implements EntityListener<Allocatio
 		return tableViewer;
 	}
 	
-	private TableViewer createProfileViewer(Composite composite) {
-		final TableViewer tableViewer = new TableViewer (composite, SWT.MULTI | SWT.V_SCROLL | SWT.FULL_SELECTION);
+	private SelectingTableViewer createProfileViewer(Composite composite) {
+		final SelectingTableViewer tableViewer = new SelectingTableViewer (composite, SWT.MULTI | SWT.V_SCROLL | SWT.FULL_SELECTION);
 		
 		TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.CENTER);
  		column.getColumn().setText("Enabled");
@@ -755,6 +759,13 @@ public class AllocationView extends ViewPart implements EntityListener<Allocatio
 		if (event != null && event.getEntity() != null) {
 			profileListViewer.setSelection(new StructuredSelection(new Object[]{event.getEntity()}));
 			profileListViewer.reveal(event.getEntity());
+			
+			TableItem item = profileListViewer.getTable().getSelection()[0];
+			Rectangle bounds = item.getBounds(0);
+			ViewerCell viewerCell = profileListViewer.getCell(new Point(bounds.x, bounds.y));
+			if (viewerCell != null) {
+				profileListViewer.activateInitialCellEditor(viewerCell);
+			}
 		} else {
 			refresh();
 		}

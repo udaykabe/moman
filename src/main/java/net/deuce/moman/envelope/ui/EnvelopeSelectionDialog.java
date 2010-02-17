@@ -73,7 +73,7 @@ public class EnvelopeSelectionDialog extends Dialog {
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		EnvelopeLabelProvider labelProvider = new EnvelopeLabelProvider();
-		Tree tree = new Tree(parent, SWT.BORDER | SWT.H_SCROLL);
+		Tree tree = new Tree(parent, SWT.BORDER | SWT.V_SCROLL);
 		tree.setHeaderVisible(true);
 		tree.setFont(Constants.STANDARD_FONT);
 		

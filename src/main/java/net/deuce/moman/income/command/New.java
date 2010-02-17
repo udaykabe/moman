@@ -27,6 +27,7 @@ public class New extends AbstractHandler {
 				"Set Name", 0.0, true, new Date(), Frequency.BIWEEKLY);
 			IncomeService incomeService = ServiceNeeder.instance().getIncomeService();
 			incomeService.addEntity(income);
+			
 		} catch (PartInitException e) {
 			e.printStackTrace();
 		}
