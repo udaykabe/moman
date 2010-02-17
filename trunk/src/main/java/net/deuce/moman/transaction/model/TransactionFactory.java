@@ -13,7 +13,7 @@ public class TransactionFactory extends EntityFactory<InternalTransaction> {
 
 	protected void setTransactionProperties(InternalTransaction entity, String externalId,
 			Double amount, TransactionType type, Date date, String description,
-			String memo, String check, String ref, Double balance,
+			String memo, String check, String ref, Double balance, TransactionStatus status,
 			Account account) {
 		
 		entity.setExternalId(externalId);
@@ -25,24 +25,25 @@ public class TransactionFactory extends EntityFactory<InternalTransaction> {
 		entity.setCheck(check);
 		entity.setRef(ref);
 		entity.setBalance(balance);
+		entity.setStatus(status);
 		entity.setAccount(account);
 	}
 	
 	public InternalTransaction buildEntity(String id, String externalId,
 		Double amount, TransactionType type, Date date, String description,
-		String memo, String check, String ref, Double balance,
+		String memo, String check, String ref, Double balance, TransactionStatus status,
 		Account account) {
 		InternalTransaction entity = super.buildEntity(InternalTransaction.class, id);
 		setTransactionProperties(entity, externalId, amount, type, date,
-			description, memo, check, ref, balance, account);
+			description, memo, check, ref, balance, status, account);
 		return entity;
 	}
 	
 	public InternalTransaction newEntity(String externalId,
 			Double amount, TransactionType type, Date date, String description,
-			String memo, String check, String ref, Double balance,
+			String memo, String check, String ref, Double balance, TransactionStatus status,
 			Account account) {
 		return buildEntity(createUuid(), externalId, amount, type, date,
-			description, memo, check, ref, balance, account);
+			description, memo, check, ref, balance, status, account);
 	}
 }

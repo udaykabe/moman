@@ -77,7 +77,7 @@ implements Comparator<E>, Comparable<E> {
 	
 	protected boolean propertyChanged(Object s1, Object s2) {
 		if (s1 == s2) return false;
-		return s1 != s2 && ( (s1 != null && !s1.equals(s2)) || (s2 != null && !s2.equals(s1)) );
+		return ( (s1 != null && !s1.equals(s2)) || (s2 != null && !s2.equals(s1)) );
 	}
 
 	@Override

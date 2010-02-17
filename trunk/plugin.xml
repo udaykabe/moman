@@ -194,6 +194,10 @@
             name="Import Error">
       </command>
       <command
+            id="net.deuce.moman.account.command.reconcile"
+            name="Reconcile Account">
+      </command>
+      <command
             id="net.deuce.moman.income.command.new"
             name="New Pay Source">
       </command>
@@ -432,6 +436,12 @@
             sequence="SHIFT+COMMAND+O">
       </key>
       <key
+            commandId="net.deuce.moman.account.command.reconcile"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="net.deuce.moman.scheme.main"
+            sequence="CTRL+COMMAND+R">
+      </key>
+      <key
             commandId="net.deuce.moman.income.command.new"
             contextId="org.eclipse.ui.contexts.window"
             schemeId="net.deuce.moman.scheme.main"
@@ -644,6 +654,10 @@
             commandId="net.deuce.moman.account.command.importError">
       </handler>
       <handler
+            class="net.deuce.moman.account.command.Reconcile"
+            commandId="net.deuce.moman.account.command.reconcile">
+      </handler>
+      <handler
             class="net.deuce.moman.allocation.command.New"
             commandId="net.deuce.moman.allocation.command.new">
       </handler>
@@ -842,6 +856,7 @@
       </page>
       <page
             class="net.deuce.moman.preference.AccountPage"
+            
             id="net.deuce.moman.preference.general"
             name="Account">
       </page>

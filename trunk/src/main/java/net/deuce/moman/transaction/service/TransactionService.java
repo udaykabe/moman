@@ -16,6 +16,7 @@ import net.deuce.moman.envelope.service.EnvelopeService;
 import net.deuce.moman.service.EntityService;
 import net.deuce.moman.transaction.model.InternalTransaction;
 import net.deuce.moman.transaction.model.Split;
+import net.deuce.moman.transaction.model.TransactionStatus;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -121,6 +122,26 @@ public class TransactionService extends EntityService<InternalTransaction> {
 		return list;
 	}
 	
+	public List<InternalTransaction> getUnreconciledTransactions(Account account, boolean reverse) {
+		List<InternalTransaction> list = new LinkedList<InternalTransaction>();
+		
+		for (InternalTransaction it : __getUnreconciledTransactions(account)) {
+			if ((it.getStatus() == TransactionStatus.open || it.getStatus() == TransactionStatus.cleared) &&
+					!it.isEnvelopeTransfer()) {
+				list.add(it);
+			}
+		}
+			
+		// sort
+		if (list.size() > 1) {
+			InternalTransaction it = list.get(0);
+			Comparator<InternalTransaction> comparator = reverse ? it.getReverseComparator() :
+				it.getForwardComparator();
+			Collections.sort(list, comparator);
+		}
+		return list;
+	}
+	
 	private void addEnvelopeTransactions(List<InternalTransaction> list, Envelope env) {
 		list.addAll(env.getTransactions());
 		for (Envelope child : env.getChildren()) {
@@ -150,6 +171,13 @@ public class TransactionService extends EntityService<InternalTransaction> {
 			}
 		}
 		return list;
+	}
+	
+	private List<InternalTransaction> __getUnreconciledTransactions(Account account) {
+		if (account == null) return Collections.emptyList();
+		List<InternalTransaction> list = accountTransactions.get(account);
+		if (list == null) return Collections.emptyList();
+		return new LinkedList<InternalTransaction>(list);
 	}
 	
 	public void adjustBalances(InternalTransaction transaction, boolean remove) {

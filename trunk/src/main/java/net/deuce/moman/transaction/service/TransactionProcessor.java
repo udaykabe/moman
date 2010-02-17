@@ -21,6 +21,7 @@ import net.deuce.moman.service.ServiceNeeder;
 import net.deuce.moman.transaction.model.InternalTransaction;
 import net.deuce.moman.transaction.model.Split;
 import net.deuce.moman.transaction.model.TransactionFactory;
+import net.deuce.moman.transaction.model.TransactionStatus;
 import net.deuce.moman.ui.Activator;
 import net.deuce.moman.util.CalendarUtil;
 import net.sf.ofx4j.domain.data.common.Transaction;
@@ -231,7 +232,7 @@ public abstract class TransactionProcessor implements Runnable {
 				InternalTransaction t = ServiceNeeder.instance().getTransactionFactory().newEntity(
 						bt.getId(), bt.getAmount(), null, bt.getDatePosted(),
 						bt.getName(), bt.getMemo(), bt.getCheckNumber(),
-						bt.getReferenceNumber(), null, account);
+						bt.getReferenceNumber(), null, TransactionStatus.cleared, account);
 				
 				if (t.getAmount() > 0) {
 					t.clearSplit();
@@ -330,7 +331,7 @@ public abstract class TransactionProcessor implements Runnable {
 				if (transaction == null) {
 					transaction = transactionFactory.newEntity(
 						null, balance, TransactionType.OTHER, initialBalanceDate, "Initial Balance",
-						null, null, null, null, account);
+						null, null, null, null, TransactionStatus.reconciled, account);
 					transaction.setInitialBalance(true);
 					transaction.addSplit(envelopeService.getAvailableEnvelope(), transaction.getAmount());
 					transactionService.addEntity(transaction);
@@ -401,6 +402,7 @@ public abstract class TransactionProcessor implements Runnable {
 							importedTransaction.setSplit(t.getSplit(), false);
 							t.setExternalId(importedTransaction.getExternalId());
 							transactionService.addExternalTransactionReference(t);
+							t.setStatus(TransactionStatus.cleared);
 						}
 					}
 				}

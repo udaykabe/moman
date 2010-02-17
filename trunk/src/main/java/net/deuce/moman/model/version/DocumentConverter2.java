@@ -8,7 +8,7 @@ import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.Element;
 
-public class DocumentConverter1_2 implements DocumentConverter {
+public class DocumentConverter2 implements DocumentConverter {
 
 	@SuppressWarnings("unchecked")
 	@Override

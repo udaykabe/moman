@@ -50,6 +50,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private IWorkbenchAction newAllocationProfileAction;
     private IWorkbenchAction newAccountAction;
     private IWorkbenchAction editAccountAction;
+    private IWorkbenchAction reconcileAccountAction;
     private IWorkbenchAction downloadTransactionsAction;
     private IWorkbenchAction forceDownloadTransactionsAction;
     
@@ -127,6 +128,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
         editAccountAction = Actions.EDIT_ACCOUNT_ACTION.create( window );
         register( editAccountAction );
+
+        reconcileAccountAction = Actions.RECONCILE_ACCOUNT_ACTION.create( window );
+        register( reconcileAccountAction );
 
         downloadTransactionsAction = Actions.DOWNLOAD_TRANSACTIONS_ACTION.create( window );
         register( downloadTransactionsAction );
@@ -285,6 +289,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         
         accountMenu.add( newAccountAction );
         accountMenu.add( editAccountAction );
+        accountMenu.add( reconcileAccountAction );
         accountMenu.add( new Separator() );
         accountMenu.add( downloadTransactionsAction );
         accountMenu.add( forceDownloadTransactionsAction );

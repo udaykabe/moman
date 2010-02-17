@@ -163,6 +163,7 @@ public class FinancialInstitutionService extends EntityService<FinancialInstitut
 				password,
 				bankInfo.getStatus(),
 				bankInfo.getSupportsTransactionDetailOperations(),
+				0.0,
 				0.0
 				);
 			list.add(account);

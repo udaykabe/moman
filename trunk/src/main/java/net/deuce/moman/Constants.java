@@ -12,7 +12,7 @@ import org.eclipse.swt.widgets.Display;
 
 public class Constants {
 
-	public static final Integer MOMAN_DOCUMENT_VERSION = 2;
+	public static final Integer MOMAN_DOCUMENT_VERSION = 4;
 	public static final DateFormat SHORT_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 	public static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a");
 	public static final CurrencyValidator CURRENCY_VALIDATOR = new CurrencyValidator(false, true);
