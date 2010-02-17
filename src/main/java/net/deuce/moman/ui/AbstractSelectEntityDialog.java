@@ -1,27 +1,23 @@
 package net.deuce.moman.ui;
 
 import java.lang.reflect.ParameterizedType;
-import java.util.List;
 
 import net.deuce.moman.model.AbstractEntity;
 import net.deuce.moman.service.EntityService;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.EntityCombo;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 @SuppressWarnings("unchecked")
 public abstract class AbstractSelectEntityDialog<E extends AbstractEntity> extends AbstractModelDialog<E> {
 	
-	private E entity;
-	private Combo entityCombo;
+	private EntityCombo<E> entityCombo;
 	private EntityService<E> service;
 
 	public AbstractSelectEntityDialog(Shell shell, EntityService<E> service) {
@@ -30,14 +26,10 @@ public abstract class AbstractSelectEntityDialog<E extends AbstractEntity> exten
 	}
 	
 	public E getEntity() {
-		return entity;
+		return entityCombo.getEntity();
 	}
 	
-	public void setEntity(E entity) {
-		this.entity = entity;
-	}
-	
-	protected abstract String getEntityLabel(E entity);
+	protected abstract EntityLabelProvider getEntityLabelProvider();
 	
 	protected String getEntityTitle() {
 		return "Select a " + ((Class<E>)((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]).getSimpleName() + ":";
@@ -57,30 +49,7 @@ public abstract class AbstractSelectEntityDialog<E extends AbstractEntity> exten
 		
 		Label label = new Label(container, SWT.NONE);
 		label.setText(getEntityTitle());
-		entityCombo = new Combo(container, SWT.READ_ONLY | SWT.SIMPLE);
-		
-		final List<E> entities = service.getOrderedEntities(false);
-		
-		for (E entity : entities) {
-			entityCombo.add(getEntityLabel(entity));
-		}
-		
-		entityCombo.addSelectionListener(new SelectionListener() {
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				int index = entityCombo.getSelectionIndex();
-				entity = entities.get(index);
-			}
-		});
-		
-		if (entities.size() > 0) {
-			entityCombo.select(0);
-			entity = entities.get(0);
-		}
+		entityCombo = new EntityCombo(container, service, getEntityLabelProvider(), SWT.READ_ONLY | SWT.SIMPLE);
 		
 		return container;
 	}

@@ -47,7 +47,8 @@ public class AccountBuilder extends AbstractBuilder {
 						n.elementText("password"),
 						n.element("status") != null ? AccountStatus.valueOf(n.elementText("status")) : null,
 						Boolean.valueOf(n.elementText("supports-downloading")),
-						Double.valueOf(n.elementText("balance"))
+						Double.valueOf(n.elementText("balance")),
+						Double.valueOf(n.elementText("last-reconciled-ending-balance"))
 						);
 				
 				String val = n.elementText("initial-balance");
@@ -57,7 +58,12 @@ public class AccountBuilder extends AbstractBuilder {
 
 				val = n.elementText("last-download-date");
 				if (val != null) {
-					account.setLastDownloadDate(Constants.DATE_FORMAT.parse(val));
+					account.setLastDownloadDate(Constants.SHORT_DATE_FORMAT.parse(val));
+				}
+
+				val = n.elementText("last-reconciled-date");
+				if (val != null) {
+					account.setLastReconciledDate(Constants.SHORT_DATE_FORMAT.parse(val));
 				}
 
 				el = n.element("financialInstitution");
@@ -88,13 +94,18 @@ public class AccountBuilder extends AbstractBuilder {
 			addElement(el, "password", account.getPassword());
 			addElement(el, "nickname", account.getNickname());
 			addElement(el, "balance", Utils.formatDouble(account.getBalance()));
+			addElement(el, "last-reconciled-ending-balance", Utils.formatDouble(account.getLastReconciledEndingBalance()));
+			
 			if (account.getStatus() != null) {
 				addElement(el, "status", account.getStatus().name());
 			}
 			addElement(el, "supports-downloading", account.isSupportsDownloading());
 			addOptionalElement(el, "initial-balance", account.getInitialBalance());
 			if (account.getLastDownloadDate() != null) {
-				addElement(el, "last-download-date", Constants.DATE_FORMAT.format(account.getLastDownloadDate()));
+				addElement(el, "last-download-date", Constants.SHORT_DATE_FORMAT.format(account.getLastDownloadDate()));
+			}
+			if (account.getLastReconciledDate() != null) {
+				addElement(el, "last-reconciled-date", Constants.SHORT_DATE_FORMAT.format(account.getLastReconciledDate()));
 			}
 			if (account.getFinancialInstitution() != null) {
 				el.addElement("financialInstitution").addAttribute("id", account.getFinancialInstitution().getId());

@@ -8,6 +8,7 @@ import net.deuce.moman.account.ui.SelectAccountDialog;
 import net.deuce.moman.envelope.service.EnvelopeService;
 import net.deuce.moman.service.ServiceNeeder;
 import net.deuce.moman.transaction.model.InternalTransaction;
+import net.deuce.moman.transaction.model.TransactionStatus;
 import net.deuce.moman.transaction.service.TransactionService;
 import net.deuce.moman.transaction.ui.RegisterView;
 
@@ -48,7 +49,7 @@ public class New extends AbstractHandler {
 				TransactionService transactionService = ServiceNeeder.instance().getTransactionService();
 				InternalTransaction transaction = ServiceNeeder.instance().getTransactionFactory().newEntity(
 						null, 0.0, null, new Date(), "Set Description", null, null,
-						null, null, account);
+						null, null, TransactionStatus.open, account);
 				transaction.addSplit(envelopeService.getUnassignedEnvelope(), transaction.getAmount());
 				envelopeService.clearSelectedEnvelope();
 				transactionService.addEntity(transaction);

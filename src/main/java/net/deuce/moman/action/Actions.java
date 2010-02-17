@@ -180,6 +180,22 @@ public class Actions {
         }
     };
     
+	public static final ActionFactory RECONCILE_ACCOUNT_ACTION = new ActionFactory(
+			net.deuce.moman.account.command.Reconcile.ID,
+			net.deuce.moman.account.command.Reconcile.ID) {
+        
+        public IWorkbenchAction create(IWorkbenchWindow window) {
+            if (window == null) {
+                throw new IllegalArgumentException();
+            }
+            MomanCommandAction action = new MomanCommandAction(window, getCommandId());
+            action.setId(getId());
+            action.setActionDefinitionId(getId());
+            action.setText(Messages.getString("AccountMenu.reconcile"));
+            return action;
+        }
+    };
+    
 	public static final ActionFactory DOWNLOAD_TRANSACTIONS_ACTION = new ActionFactory(
 			net.deuce.moman.account.command.Import.ID,
 			net.deuce.moman.account.command.Import.ID) {

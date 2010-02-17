@@ -26,7 +26,7 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
     public enum Properties implements EntityProperty {
         externalId(String.class), amount(Double.class), type(TransactionType.class),
         date(Date.class), description(String.class), memo(String.class),
-        check(String.class), ref(String.class), balance(Double.class),
+        check(String.class), ref(String.class), balance(Double.class), status(TransactionStatus.class),
         account(Account.class), split(Map.class), initialBalance(Double.class);
         
 		private Class<?> ptype;
@@ -46,6 +46,7 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
 	private String ref;
 	private Double balance;
 	private Boolean initialBalance;
+	private TransactionStatus status;
 
 	private InternalTransaction transferTransaction;
 	private Account account;
@@ -84,6 +85,17 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
 
 	public void setTransferTransaction(InternalTransaction transferTransaction) {
 		this.transferTransaction = transferTransaction;
+	}
+
+	public TransactionStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(TransactionStatus status) {
+		if (propertyChanged(this.status, status)) {
+			this.status = status;
+			getMonitor().fireEntityChanged(this, Properties.status);
+		}
 	}
 
 	public Double getAmount() {

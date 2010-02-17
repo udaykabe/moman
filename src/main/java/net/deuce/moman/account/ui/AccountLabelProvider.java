@@ -11,7 +11,7 @@ import org.eclipse.swt.graphics.Image;
 public class AccountLabelProvider implements ITableLabelProvider {
 	
 	private static final Image CHECKED = Activator.getImageDescriptor(
-	"icons/checked.gif").createImage();
+			"icons/checked.gif").createImage();
 	private static final Image UNCHECKED = Activator.getImageDescriptor(
 			"icons/unchecked.gif").createImage();
 

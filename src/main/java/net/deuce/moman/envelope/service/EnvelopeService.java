@@ -16,6 +16,7 @@ import net.deuce.moman.rule.service.TransactionRuleService;
 import net.deuce.moman.service.EntityService;
 import net.deuce.moman.transaction.model.InternalTransaction;
 import net.deuce.moman.transaction.model.TransactionFactory;
+import net.deuce.moman.transaction.model.TransactionStatus;
 import net.deuce.moman.transaction.service.TransactionService;
 import net.sf.ofx4j.domain.data.common.TransactionType;
 
@@ -161,7 +162,7 @@ public class EnvelopeService extends EntityService<Envelope> {
 		InternalTransaction sTransaction = transactionFactory.newEntity(
 				null, -amount, TransactionType.XFER, date,
 				"Transfer to " + target.getName(), null, null, null,
-				null, sourceAccount);
+				null, TransactionStatus.reconciled, sourceAccount);
 		sTransaction.addSplit(source, -amount);
 		transactionService.addEntity(sTransaction);
 		
@@ -169,7 +170,7 @@ public class EnvelopeService extends EntityService<Envelope> {
 		InternalTransaction tTransaction = transactionFactory.newEntity(
 				null, amount, TransactionType.XFER, date,
 				"Transfer from " + source.getName(), null, null, null,
-				null, targetAccount);
+				null, TransactionStatus.reconciled, targetAccount);
 		tTransaction.addSplit(target, amount);
 		transactionService.addEntity(tTransaction);
 		

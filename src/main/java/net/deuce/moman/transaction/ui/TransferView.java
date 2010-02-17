@@ -1,54 +1,25 @@
 package net.deuce.moman.transaction.ui;
 
-import java.util.List;
-
-import net.deuce.moman.transaction.model.InternalTransaction;
-import net.deuce.moman.ui.SelectingTableViewer;
-
-import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.part.ViewPart;
 
-public class TransferView extends RegisterView {
+public class TransferView extends ViewPart {
 	
 	public static final String ID = TransferView.class.getName();
 	
-	public TransferView() {
-		super();
-	}
+
+	private TransferComposite register;
 	
 	@Override
-	protected int[] getDoubleClickableColumns() {
-		return new int[0];
+	public void createPartControl(Composite parent) {
+		register = new TransferComposite(parent, false, getSite(), SWT.NONE);
+		register.setLayoutData(new GridData(GridData.FILL_BOTH));
 	}
-	
+
 	@Override
-	protected SelectingTableViewer createTableViewer(Composite parent) {
-		SelectingTableViewer tableViewer = new SelectingTableViewer(parent, SWT.MULTI | SWT.V_SCROLL | SWT.FULL_SELECTION);
-				
-        TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.LEFT);
- 		column.getColumn().setText("Date");
- 	    column.getColumn().setWidth(102);
-		
- 		column = new TableViewerColumn(tableViewer, SWT.LEFT);
- 		column.getColumn().setText("Description");
- 	    column.getColumn().setWidth(341);
-		
- 		column = new TableViewerColumn(tableViewer, SWT.RIGHT);
- 		column.getColumn().setText("Envelope");
- 	    column.getColumn().setWidth(200);
-		
- 		column = new TableViewerColumn(tableViewer, SWT.RIGHT);
- 		column.getColumn().setText("Amount");
- 	    column.getColumn().setWidth(87);
-		
-	    tableViewer.setContentProvider(new TransactionContentProvider());
-	    tableViewer.setLabelProvider(new TransferLabelProvider());
-		return tableViewer;
+	public void setFocus() {
+		register.setFocus();
 	}
-
-	protected List<InternalTransaction> getEntities() {
-		return getTransactionService().getRegisterTransactions(false, true);
-	}
-
 }

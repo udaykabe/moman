@@ -49,6 +49,7 @@ public class TransactionBuilder extends AbstractBuilder {
 			transaction.setMemo(e.elementText("memo"));
 			transaction.setCheck(e.elementText("check"));
 			transaction.setRef(e.elementText("ref"));
+			transaction.setStatus(TransactionStatus.valueOf(e.elementText("status")));
 			
 			String val = e.elementText("extid");
 			if (val != null && val.length() > 0) {
@@ -106,6 +107,7 @@ public class TransactionBuilder extends AbstractBuilder {
 		addElement(el, "memo", trans.getMemo());
 		addElement(el, "check", trans.getCheck());
 		addElement(el, "ref", trans.getRef());
+		addElement(el, "status", trans.getStatus().name());
 		if (trans.getTransferTransaction() != null) {
 			el.addElement("etransfer").addAttribute("id", trans.getTransferTransaction().getId());
 		}

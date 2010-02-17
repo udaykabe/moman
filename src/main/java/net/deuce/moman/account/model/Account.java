@@ -17,6 +17,7 @@ public class Account extends AbstractEntity<Account> {
 		initialBalance(Double.class), selected(Boolean.class),
 		financialInstitution(FinancialInstitution.class),
 		lastDownloadDate(Date.class), status(AccountStatus.class),
+		lastReconciledDate(Date.class), lastReconciledEndingBalance(Double.class),
 		supportsDownloading(Boolean.class), balance(Double.class);
 		
 		private Class<?> type;
@@ -35,12 +36,14 @@ public class Account extends AbstractEntity<Account> {
 	private String nickname;
 	private Double initialBalance;
 	private Double balance = 0.0;
+	private Double lastReconciledEndingBalance = 0.0;
 	private Boolean selected = Boolean.FALSE;
 
 	private FinancialInstitution financialInstitution;
 	private AccountStatus status;
 	private Boolean supportsDownloading = Boolean.FALSE;
 	private Date lastDownloadDate;
+	private Date lastReconciledDate;
 	
 	public Account() {
 		super();
@@ -64,6 +67,17 @@ public class Account extends AbstractEntity<Account> {
 		if (propertyChanged(this.balance, balance)) {
 			this.balance = balance;
 			getMonitor().fireEntityChanged(this, Properties.balance);
+		}
+	}
+
+	public Double getLastReconciledEndingBalance() {
+		return lastReconciledEndingBalance;
+	}
+
+	public void setLastReconciledEndingBalance(Double lastReconciledEndingBalance) {
+		if (propertyChanged(this.lastReconciledEndingBalance, lastReconciledEndingBalance)) {
+			this.lastReconciledEndingBalance = lastReconciledEndingBalance;
+			getMonitor().fireEntityChanged(this, Properties.lastReconciledEndingBalance);
 		}
 	}
 
@@ -215,6 +229,17 @@ public class Account extends AbstractEntity<Account> {
 		if (propertyChanged(this.lastDownloadDate, lastDownloadDate)) {
 			this.lastDownloadDate = lastDownloadDate;
 			getMonitor().fireEntityChanged(this);
+		}
+	}
+
+	public Date getLastReconciledDate() {
+		return lastReconciledDate;
+	}
+
+	public void setLastReconciledDate(Date lastReconciledDate) {
+		if (propertyChanged(this.lastReconciledDate, lastReconciledDate)) {
+			this.lastReconciledDate = lastReconciledDate;
+			getMonitor().fireEntityChanged(this, Properties.lastReconciledDate);
 		}
 	}
 

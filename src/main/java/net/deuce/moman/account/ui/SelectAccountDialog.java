@@ -3,6 +3,7 @@ package net.deuce.moman.account.ui;
 import net.deuce.moman.account.model.Account;
 import net.deuce.moman.service.ServiceNeeder;
 import net.deuce.moman.ui.AbstractSelectEntityDialog;
+import net.deuce.moman.ui.EntityLabelProvider;
 
 import org.eclipse.swt.widgets.Shell;
 
@@ -16,10 +17,10 @@ public class SelectAccountDialog extends AbstractSelectEntityDialog<Account> {
 	protected String getEntityTitle() {
 		return "Select an Account:";
 	}
-
+	
 	@Override
-	protected String getEntityLabel(Account entity) {
-		return entity.getNickname();
+	protected EntityLabelProvider<Account> getEntityLabelProvider() {
+		return new AccountEntityLabelProvider();
 	}
 
 }

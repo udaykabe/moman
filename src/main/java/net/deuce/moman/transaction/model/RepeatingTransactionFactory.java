@@ -27,7 +27,7 @@ public class RepeatingTransactionFactory extends EntityFactory<RepeatingTransact
 			entity.setId(id);
 			
 			transactionFactory.setTransactionProperties(entity, externalId, amount, type, date,
-				description, memo, check, ref, balance, account);
+				description, memo, check, ref, balance, TransactionStatus.open, account);
 			entity.setOriginalDateDue(originalDateDue);
 			entity.setDateDue(dateDue);
 			entity.setFrequency(frequency);
