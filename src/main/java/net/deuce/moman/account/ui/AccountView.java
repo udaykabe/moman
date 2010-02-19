@@ -10,13 +10,12 @@ import net.deuce.moman.ui.SelectingTableViewer;
 
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.handlers.IHandlerService;
 
@@ -49,6 +48,18 @@ public class AccountView extends AbstractEntityTableView<Account> {
 		
 	    tableViewer.setContentProvider(new AccountContentProvider());
 	    tableViewer.setLabelProvider(new AccountLabelProvider());
+	    
+	    tableViewer.getTable().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDoubleClick(MouseEvent evt) {
+				IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
+				try {
+					handlerService.executeCommand(Edit.ID, null);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 		return tableViewer;
 	}
 	
@@ -73,21 +84,6 @@ public class AccountView extends AbstractEntityTableView<Account> {
 		return Delete.ID;
 	}
 	
-	@Override
-	protected IDoubleClickListener getDoubleClickListener(Shell shell) {
-		return new IDoubleClickListener() {
-			@Override
-			public void doubleClick(DoubleClickEvent event) {
-				IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
-				try {
-					handlerService.executeCommand(Edit.ID, null);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
- 		};
-	}
-
 	@Override
 	public void createPartControl(Composite parent) {
 		IContextService service = (IContextService)getSite().getService(IContextService.class); 

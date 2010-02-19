@@ -10,13 +10,11 @@ import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
-import org.eclipse.ui.IWorkbench;
 
 public class AccountEditingSupport extends EditingSupport {
 	
 	private CellEditor editor;
 	private int column;
-	private IWorkbench workbench;
 
 	public AccountEditingSupport(ColumnViewer viewer, int column) {
 		super(viewer);

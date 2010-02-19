@@ -85,7 +85,7 @@ public class EnvelopeSelectionDialog extends Dialog {
 		balanceColumn.setText("Balance");
 		balanceColumn.setWidth(100);
 		
-		treeViewer = new TreeViewer(tree);
+		treeViewer = new EnvelopeSelectionTreeViewer(tree);
 		EnvelopeSelectionContentProvider contentProvider = new EnvelopeSelectionContentProvider();
 		contentProvider.setAllowBills(allowBills);
 		treeViewer.setContentProvider(contentProvider);

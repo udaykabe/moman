@@ -1,6 +1,5 @@
 package net.deuce.moman.envelope.ui;
 
-import java.util.Iterator;
 import java.util.List;
 
 import net.deuce.moman.Constants;
@@ -8,27 +7,21 @@ import net.deuce.moman.envelope.command.DeleteBill;
 import net.deuce.moman.envelope.model.Envelope;
 import net.deuce.moman.envelope.service.EnvelopeService;
 import net.deuce.moman.model.EntityEvent;
-import net.deuce.moman.service.ServiceContainer;
 import net.deuce.moman.service.ServiceNeeder;
 import net.deuce.moman.ui.AbstractEntityTableView;
 import net.deuce.moman.ui.SelectingTableViewer;
 
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Shell;
 
 public class BillView extends AbstractEntityTableView<Envelope> {
 	
 	public static final String ID = BillView.class.getName();
 	
-	private ServiceContainer serviceContainer;
-
 	public BillView() {
 		super(ServiceNeeder.instance().getEnvelopeService());
-		serviceContainer = ServiceNeeder.instance().getServiceContainer();
 	}
 	
 	@Override
@@ -74,6 +67,7 @@ public class BillView extends AbstractEntityTableView<Envelope> {
  		column = new TableViewerColumn(tableViewer, SWT.RIGHT);
  		column.getColumn().setText("Envelope");
  	    column.getColumn().setWidth(100);
+ 	    column.setEditingSupport(new EnvelopeSelectionEditingSupport(tableViewer, null, tableViewer.getTable()));
  	    
  		tableViewer.getTable().setFont(Constants.STANDARD_FONT);
  		tableViewer.getTable().setHeaderVisible(true);
@@ -89,56 +83,9 @@ public class BillView extends AbstractEntityTableView<Envelope> {
 		return 1;
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	protected void doubleClickHandler(int column, StructuredSelection selection, Shell shell) {
-		Envelope parentEnvelope = null;
-		Iterator<Envelope> itr = selection.iterator();
-		while (itr.hasNext()) {
-			Envelope bill = itr.next();
-			if (parentEnvelope == null) {
-				parentEnvelope = bill.getParent();
-			} else if (parentEnvelope != bill.getParent()) {
-				parentEnvelope = getEnvelopeService().getRootEnvelope();
-				break;
-			}
-		}
-		EnvelopeSelectionDialog dialog = new EnvelopeSelectionDialog(shell, parentEnvelope);
-		
-		dialog.create();
-		dialog.open();
-		if (parentEnvelope != dialog.getEnvelope()) {
-			
-			serviceContainer.startQueuingNotifications();
-			try {
-				itr = selection.iterator();
-				while (itr.hasNext()) {
-					Envelope bill = itr.next();
-					Envelope oldParent = bill.getParent();
-					if (oldParent != null) {
-						oldParent.removeChild(bill);
-					}
-					bill.setParent(dialog.getEnvelope());
-					dialog.getEnvelope().addChild(bill);
-				}
-			} finally {
-				serviceContainer.stopQueuingNotifications();
-			}
-		}
-	}
-
 	@Override
 	protected String getDeleteCommandId() {
 		return DeleteBill.ID;
-	}
-
-	@Override
-	protected int[] getDoubleClickableColumns() {
-		return new int[]{5};
-	}
-
-	protected IDoubleClickListener getDoubleClickListener(Shell shell) {
-		return super.getDoubleClickListener(shell);
 	}
 
 	@Override

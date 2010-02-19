@@ -12,6 +12,7 @@ import net.deuce.moman.model.EntityEvent;
 import net.deuce.moman.model.EntityListener;
 import net.deuce.moman.service.ServiceNeeder;
 import net.deuce.moman.transaction.model.InternalTransaction;
+import net.deuce.moman.transaction.model.Split;
 import net.deuce.moman.transaction.ui.RegisterView;
 
 import org.eclipse.jface.viewers.ColumnViewerEditor;
@@ -170,6 +171,14 @@ public class EnvelopeView extends ViewPart implements EntityListener<Envelope> {
 		treeViewer.getControl().setFocus();		
 	}
 	
+	private void refreshEnvelope(Envelope env) {
+		if (env != null && env.isDirty()) {
+			treeViewer.refresh(env);
+			env.clearDirty();
+			refreshEnvelope(env.getParent());
+		}
+	}
+	
 	private void refresh() {
 		treeViewer.setInput(envelopeFactory.createTopLevelEnvelope());
 		
@@ -222,7 +231,13 @@ public class EnvelopeView extends ViewPart implements EntityListener<Envelope> {
 		public void entityChanged(EntityEvent<InternalTransaction> event) {
 			if (event != null && (InternalTransaction.Properties.split == event.getProperty() ||
 					InternalTransaction.Properties.amount == event.getProperty())) {
-				refresh();
+				if (event.getEntity() != null) {
+					for (Split split : event.getEntity().getSplit()) {
+						refreshEnvelope(split.getEnvelope());
+					}
+				} else {
+					refresh();
+				}
 			}
 		}
 

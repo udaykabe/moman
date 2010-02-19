@@ -1,23 +1,14 @@
 package net.deuce.moman.transaction.ui;
 
-import java.util.Iterator;
-import java.util.List;
-
 import net.deuce.moman.command.importer.Delete;
-import net.deuce.moman.envelope.ui.SplitSelectionDialog;
 import net.deuce.moman.service.ServiceNeeder;
 import net.deuce.moman.transaction.model.InternalTransaction;
-import net.deuce.moman.transaction.model.Split;
 import net.deuce.moman.ui.AbstractEntityTableView;
 import net.deuce.moman.ui.SelectingTableViewer;
 
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Shell;
 
 public class TransactionImportView extends AbstractEntityTableView<InternalTransaction> {
 	
@@ -53,6 +44,7 @@ public class TransactionImportView extends AbstractEntityTableView<InternalTrans
  		column = new TableViewerColumn(tableViewer, SWT.RIGHT);
  		column.getColumn().setText("Envelope");
  	    column.getColumn().setWidth(200);
+ 	    column.setEditingSupport(new TransactionEnvelopeSelectionEditingSupport(tableViewer, null, tableViewer.getTable()));
 		
  		column = new TableViewerColumn(tableViewer, SWT.RIGHT);
  		column.getColumn().setText("Credit");
@@ -67,53 +59,9 @@ public class TransactionImportView extends AbstractEntityTableView<InternalTrans
 	    return tableViewer;
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	protected void doubleClickHandler(int column,
-			final StructuredSelection selection, Shell shell) {
-		InternalTransaction transaction = (InternalTransaction)selection.getFirstElement();
-		List<Split> split = transaction.getSplit();
-		final SplitSelectionDialog dialog = new SplitSelectionDialog(shell, transaction.getAmount(), split);
-		
-		dialog.setAllowBills(true);
-		dialog.create();
-		int status = dialog.open();
-		final List<Split> result = dialog.getSplit();
-		if (status == Window.OK) {
-			if (!split.equals(result)) {
-				BusyIndicator.showWhile(shell.getDisplay(), new Runnable() {
-					public void run() {
-						ServiceNeeder.instance().getServiceContainer().startQueuingNotifications();
-						try {
-							Iterator<InternalTransaction> itr = selection.iterator();
-							while (itr.hasNext()) {
-								InternalTransaction transaction = itr.next();
-							
-								transaction.clearSplit();
-								
-								for (Split item : result) {
-									transaction.addSplit(item, true);
-								}
-								
-								getViewer().refresh(transaction);
-							}
-						} finally {
-							ServiceNeeder.instance().getServiceContainer().stopQueuingNotifications();
-						}
-					}
-				});
-			}
-		}
-	}
-
 	@Override
 	protected String getDeleteCommandId() {
 		return Delete.ID;
-	}
-
-	@Override
-	protected int[] getDoubleClickableColumns() {
-		return new int[]{4};
 	}
 
 }

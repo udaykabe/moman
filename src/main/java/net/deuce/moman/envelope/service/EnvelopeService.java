@@ -58,6 +58,10 @@ public class EnvelopeService extends EntityService<Envelope> {
 	private TableViewer savingsGoalViewer;
 	private int maxIndex = 0;
 	
+	public EnvelopeService() {
+		setSingleChange(true);
+	}
+	
 	public TableViewer getBillViewer() {
 		return billViewer;
 	}
@@ -382,6 +386,7 @@ public class EnvelopeService extends EntityService<Envelope> {
 				savingsGoals.put(env.getId(), env);
 			}
 			
+			env.clearDirty();
 		}
 	}
 	

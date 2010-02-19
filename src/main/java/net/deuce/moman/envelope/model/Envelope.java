@@ -67,6 +67,7 @@ public class Envelope extends AbstractEntity<Envelope> {
 	private Integer dueDay = 0;
 	private Integer index = 0;
 	private Date savingsGoalDate;
+	private transient boolean dirty;
 	
 	public Envelope() {}
 	
@@ -76,6 +77,14 @@ public class Envelope extends AbstractEntity<Envelope> {
 		this.editable = editable;
 	}
 	
+	public boolean isDirty() {
+		return dirty;
+	}
+
+	public void clearDirty() {
+		this.dirty = false;
+	}
+
 	public double expensesDuringPeriod(Account account, Frequency frequency) {
 		Calendar cal = new GregorianCalendar();
 		CalendarUtil.convertCalendarToMidnight(cal);
@@ -137,6 +146,7 @@ public class Envelope extends AbstractEntity<Envelope> {
 
 	public void setSavingsGoalDate(Date savingsGoalDate) {
 		if (this.savingsGoalDate != savingsGoalDate) {
+			dirty = true;
 			this.savingsGoalDate = savingsGoalDate;
 			getMonitor().fireEntityChanged(this, Properties.savingsGoalDate);
 		}
@@ -208,6 +218,7 @@ public class Envelope extends AbstractEntity<Envelope> {
 
 	public void setFrequency(Frequency frequency) {
 		if (this.frequency != frequency) {
+			dirty = true;
 			this.frequency = frequency;
 			getMonitor().fireEntityChanged(this, Properties.frequency);
 		}
@@ -230,7 +241,8 @@ public class Envelope extends AbstractEntity<Envelope> {
 	}
 
 	public void setBudget(Double budget) {
-		if (this.budget != budget) {
+		if (propertyChanged(this.budget, budget)) {
+			dirty = true;
 			this.budget = budget;
 			getMonitor().fireEntityChanged(this, Properties.budget);
 		}
@@ -247,6 +259,7 @@ public class Envelope extends AbstractEntity<Envelope> {
 
 	public void setName(String name) {
 		if (propertyChanged(this.name, name)) {
+			dirty = true;
 			this.name = name;
 			getMonitor().fireEntityChanged(this, Properties.name);
 		}
@@ -301,6 +314,7 @@ public class Envelope extends AbstractEntity<Envelope> {
 	}
 	
 	public void setBalance(Double balance) {
+		dirty = propertyChanged(this.balance, balance);
 		this.balance = balance;
 	}
 
@@ -326,6 +340,7 @@ public class Envelope extends AbstractEntity<Envelope> {
 
 	public void setSelected(Boolean selected) {
 		if (propertyChanged(this.selected, selected)) {
+			dirty = true;
 			this.selected = selected;
 			Envelope oldEnvelope = getEnvelopeService().getSelectedEnvelope();
 			if (oldEnvelope != null) {
@@ -350,6 +365,7 @@ public class Envelope extends AbstractEntity<Envelope> {
 
 	public void setExpanded(Boolean expanded) {
 		if (propertyChanged(this.expanded, expanded)) {
+			dirty = true;
 			this.expanded = expanded;
 			getMonitor().fireEntityChanged(this, Properties.expanded);
 		}
@@ -361,6 +377,7 @@ public class Envelope extends AbstractEntity<Envelope> {
 
 	public void setParent(Envelope parent) {
 		if (propertyChanged(this.parent, parent)) {
+			dirty = true;
 			this.parent = parent;
 			getMonitor().fireEntityChanged(this, Properties.parent);
 		}
@@ -510,6 +527,7 @@ public class Envelope extends AbstractEntity<Envelope> {
 	
 	public void setEnabled(Boolean enabled) {
 		if (this.enabled != enabled) {
+			dirty = true;
 			this.enabled = enabled;
 			getMonitor().fireEntityChanged(this, Properties.enabled);
 		}
@@ -519,6 +537,7 @@ public class Envelope extends AbstractEntity<Envelope> {
 	}
 	public void setDueDay(Integer dueDay) {
 		if (propertyChanged(this.dueDay, dueDay)) {
+			dirty = true;
 			this.dueDay = dueDay;
 			getMonitor().fireEntityChanged(this, Properties.dueDay);
 		}
