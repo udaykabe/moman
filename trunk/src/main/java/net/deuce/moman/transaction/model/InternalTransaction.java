@@ -133,7 +133,7 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
 				if (!split.equals(result)) {
 					BusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
 						public void run() {
-							ServiceNeeder.instance().getServiceContainer().startQueuingNotifications();
+							List<String> ids = ServiceNeeder.instance().getServiceContainer().startQueuingNotifications();
 							try {
 								clearSplit();
 									
@@ -144,7 +144,7 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
 									addSplit(item, true);
 								}
 							} finally {
-								ServiceNeeder.instance().getServiceContainer().stopQueuingNotifications();
+								ServiceNeeder.instance().getServiceContainer().stopQueuingNotifications(ids);
 							}
 						}
 					});

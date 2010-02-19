@@ -1,5 +1,7 @@
 package net.deuce.moman.envelope.command;
 
+import java.util.List;
+
 import net.deuce.moman.account.model.Account;
 import net.deuce.moman.account.service.AccountService;
 import net.deuce.moman.account.ui.SelectAccountDialog;
@@ -47,13 +49,13 @@ public class FundNegativeEnvelopes extends AbstractHandler {
 						@Override
 		                public void run() {
 							ServiceContainer serviceContainer = ServiceNeeder.instance().getServiceContainer();
-							serviceContainer.startQueuingNotifications();
+							List<String> ids = serviceContainer.startQueuingNotifications();
 							try {
 								EnvelopeService envelopeService = ServiceNeeder.instance().getEnvelopeService();
 								EnvelopeFactory envelopeFactory = ServiceNeeder.instance().getEnvelopeFactory();
 								envelopeService.distributeToNegativeEnvelopes(targetAccount, envelopeFactory.createTopLevelEnvelope(), envelopeService.getAvailableEnvelope().getBalance());
 							} finally {
-								serviceContainer.stopQueuingNotifications();
+								serviceContainer.stopQueuingNotifications(ids);
 							}
 						}
 					});

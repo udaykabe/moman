@@ -1,6 +1,7 @@
 package net.deuce.moman.transaction.command;
 
 import java.util.Iterator;
+import java.util.List;
 
 import net.deuce.moman.service.ServiceContainer;
 import net.deuce.moman.service.ServiceNeeder;
@@ -45,7 +46,7 @@ public class DeleteRepeating extends AbstractHandler {
 			
 			RepeatingTransactionService repeatingTransactionService = ServiceNeeder.instance().getRepeatingTransactionService();
 			ServiceContainer serviceContainer = ServiceNeeder.instance().getServiceContainer();
-			serviceContainer.startQueuingNotifications();
+			List<String> ids = serviceContainer.startQueuingNotifications();
 			try {
 				Iterator<RepeatingTransaction> itr = ss.iterator();
 				while (itr.hasNext()) {
@@ -53,7 +54,7 @@ public class DeleteRepeating extends AbstractHandler {
 					repeatingTransactionService.removeEntity(transaction);
 				}
 			} finally {
-				serviceContainer.stopQueuingNotifications();
+				serviceContainer.stopQueuingNotifications(ids);
 			}
 		}
 		return null;

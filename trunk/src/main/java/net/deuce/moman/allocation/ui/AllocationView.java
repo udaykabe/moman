@@ -268,13 +268,13 @@ public class AllocationView extends ViewPart implements EntityListener<Allocatio
 			BusyIndicator.showWhile(shell.getDisplay(), new Runnable() {
 				
 				public void run() {
-					ServiceNeeder.instance().getServiceContainer().startQueuingNotifications();
+					List<String> ids = ServiceNeeder.instance().getServiceContainer().startQueuingNotifications();
 					try {
 						for (Allocation allocation : allocationSet.getAllocations()) {
 							envelopeService.transfer(account, account, available, allocation.getEnvelope(), allocation.getProposed());
 						}
 					} finally {
-						ServiceNeeder.instance().getServiceContainer().stopQueuingNotifications();
+						ServiceNeeder.instance().getServiceContainer().stopQueuingNotifications(ids);
 					}
 				}
 			});
@@ -388,18 +388,20 @@ public class AllocationView extends ViewPart implements EntityListener<Allocatio
 			
 			// check for adjusted savings goals
 			for (Allocation allocation : allocations) {
-				Envelope env = allocation.getEnvelope();
-				if (env.isSavingsGoal()) {
-					int paycheckCount = allocationSet.getIncome().calcPaycheckCountUntilDate(env.getSavingsGoalDate());
-					if (paycheckCount > 0) {
-						allocation.setAmount((env.getBudget() - env.getBalance()) / paycheckCount);
+				if (allocation.isEnabled()) {
+					Envelope env = allocation.getEnvelope();
+					if (env.isSavingsGoal()) {
+						int paycheckCount = allocationSet.getIncome().calcPaycheckCountUntilDate(env.getSavingsGoalDate());
+						if (paycheckCount > 0) {
+							allocation.setAmount((env.getBudget() - env.getBalance()) / paycheckCount);
+						}
 					}
 				}
 			}
 			
 			for (Allocation allocation : allocations) {
 				
-				if (available > 0) {
+				if (allocation.isEnabled() && available > 0) {
 					AmountType atype = allocation.getAmountType();
 					
 					// allocation distribution
@@ -442,7 +444,7 @@ public class AllocationView extends ViewPart implements EntityListener<Allocatio
 			
 			remainderAmount = available;
 			for (Allocation allocation : percentRemainderAllocations) {
-				if (available > 0) {
+				if (allocation.isEnabled() && available > 0) {
 					allocationAmount = 0.0;
 					if (allocation.getAmountType() == AmountType.REMAINDER_PERCENT) {
 						allocationAmount = Math.min(allocation.getAmount()*remainderAmount, available);

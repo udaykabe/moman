@@ -178,7 +178,7 @@ public class ServiceContainer {
 	
 	public void loadEntities(File f) {
         setLastUsedDirectory(f.getParentFile());
-		startQueuingNotifications();
+		List<String> ids = startQueuingNotifications();
 		clearCaches();
 		SAXReader reader = new SAXReader();
         try {
@@ -204,7 +204,7 @@ public class ServiceContainer {
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		} finally {
-			stopQueuingNotifications();
+			stopQueuingNotifications(ids);
 		}
         
 	}
@@ -298,16 +298,18 @@ public class ServiceContainer {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void startQueuingNotifications() {
+	public List<String> startQueuingNotifications() {
+		List<String> ids = new LinkedList<String>();
 		for (EntityService service : services) {
-			service.startQueuingNotifications();
+			ids.add(service.startQueuingNotifications());
 		}
+		return ids;
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void stopQueuingNotifications() {
-		for (EntityService service : services) {
-			service.stopQueuingNotifications();
+	public void stopQueuingNotifications(List<String> ids) {
+		for (int i=0; i<services.size(); i++) {
+			services.get(i).stopQueuingNotifications(ids.get(i));
 		}
 	}
 	

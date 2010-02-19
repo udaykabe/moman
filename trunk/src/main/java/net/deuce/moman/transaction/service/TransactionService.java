@@ -63,9 +63,10 @@ public class TransactionService extends EntityService<InternalTransaction> {
 	
 	public void removeAccountTransactions(Account account) {
 		boolean queuingNotifications = isQueuingNotifications();
+		String id = null;
 		
 		if (!queuingNotifications) {
-			startQueuingNotifications();
+			id = startQueuingNotifications();
 		}
 		try {
 			for (InternalTransaction it : new LinkedList<InternalTransaction>(__getAccountTransactions(account))) {
@@ -73,7 +74,7 @@ public class TransactionService extends EntityService<InternalTransaction> {
 			}
 		} finally {
 			if (!queuingNotifications) {
-				stopQueuingNotifications();
+				stopQueuingNotifications(id);
 			}
 		}
 	}

@@ -2,6 +2,8 @@ package net.deuce.moman.util;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.Random;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -9,6 +11,7 @@ import net.deuce.moman.Constants;
 
 public class Utils {
 	
+	private static Random random = new Random(System.currentTimeMillis());
 	private static Pattern currencyPattern;
 	private static NumberFormat CURRENCY_FORMAT = NumberFormat.getCurrencyInstance();
 	private static NumberFormat DOUBLE_FORMAT;
@@ -30,7 +33,7 @@ public class Utils {
 			return true;
 		}
 		try {
-			Number number = CURRENCY_FORMAT.parse(value);
+			CURRENCY_FORMAT.parse(value);
 			return true;
 		} catch (ParseException e) {
 		}
@@ -56,4 +59,9 @@ public class Utils {
 	public static double round(double value) {
 		return Math.round(value*100.0)/100.0;
 	}
+	
+	public static String createUuid() {
+		return UUID.nameUUIDFromBytes(((random.nextInt()+"."+System.currentTimeMillis()).getBytes())).toString();
+	}
+
 }

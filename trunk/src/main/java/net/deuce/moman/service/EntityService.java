@@ -6,20 +6,18 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
 
 import net.deuce.moman.model.AbstractEntity;
 import net.deuce.moman.model.EntityListener;
 import net.deuce.moman.model.EntityMonitor;
 import net.deuce.moman.model.EntityProperty;
+import net.deuce.moman.util.Utils;
 
 import org.eclipse.jface.viewers.StructuredViewer;
 
 @SuppressWarnings("unchecked")
 public class EntityService<E extends AbstractEntity> {
 
-	private static Random random = new Random(System.currentTimeMillis());
 	private Map<String, E> entities = new HashMap<String, E>();
 	private EntityMonitor<E> monitor = new EntityMonitor<E>();
 	private StructuredViewer viewer;
@@ -37,12 +35,12 @@ public class EntityService<E extends AbstractEntity> {
 		return monitor.isQueuingNotifications();
 	}
 	
-	public void startQueuingNotifications() {
-		monitor.setQueuingNotifications(true);
+	public String startQueuingNotifications() {
+		return monitor.startQueuingNotifications();
 	}
 	
-	public void stopQueuingNotifications() {
-		monitor.setQueuingNotifications(false);
+	public void stopQueuingNotifications(String id) {
+		monitor.stopQueuingNotifications(id);
 	}
 	
 	public StructuredViewer getViewer() {
@@ -196,7 +194,7 @@ public class EntityService<E extends AbstractEntity> {
 	}
 
 	public String createUuid() {
-		return UUID.nameUUIDFromBytes(((random.nextInt()+"."+System.currentTimeMillis()).getBytes())).toString();
+		return Utils.createUuid();
 	}
 	
 	protected void clearCache() {

@@ -1,6 +1,7 @@
 package net.deuce.moman.transaction.ui;
 
 import java.util.Date;
+import java.util.List;
 
 import net.deuce.moman.Constants;
 import net.deuce.moman.account.model.Account;
@@ -129,7 +130,7 @@ public class ReconcileDialog extends TitleAreaDialog implements EntityListener<I
 		        	endingDate = date;
 		    		endingDateText.setText(Constants.SHORT_DATE_FORMAT.format(endingDate));
 		    		
-		    		ServiceNeeder.instance().getServiceContainer().startQueuingNotifications();
+		    		List<String> ids = ServiceNeeder.instance().getServiceContainer().startQueuingNotifications();
 
 		    		try {
 			    		for (InternalTransaction it : transactionService.getUnreconciledTransactions(accountCombo.getEntity(), false)) {
@@ -140,7 +141,7 @@ public class ReconcileDialog extends TitleAreaDialog implements EntityListener<I
 			    			}
 						}
 		    		} finally {
-			    		ServiceNeeder.instance().getServiceContainer().stopQueuingNotifications();
+			    		ServiceNeeder.instance().getServiceContainer().stopQueuingNotifications(ids);
 		    		}
 		        }
 			}
@@ -197,7 +198,7 @@ public class ReconcileDialog extends TitleAreaDialog implements EntityListener<I
 	}
 	
 	private void reconcile() {
-		ServiceNeeder.instance().getServiceContainer().startQueuingNotifications();
+		List<String> ids = ServiceNeeder.instance().getServiceContainer().startQueuingNotifications();
 		try {
 			for (InternalTransaction it : transactionService.getUnreconciledTransactions(accountCombo.getEntity(), false)) {
 				if (it.getStatus() == TransactionStatus.cleared) {
@@ -207,7 +208,7 @@ public class ReconcileDialog extends TitleAreaDialog implements EntityListener<I
 				accountCombo.getEntity().setLastReconciledEndingBalance(endingBalance);
 			}
 		} finally {
-			ServiceNeeder.instance().getServiceContainer().stopQueuingNotifications();
+			ServiceNeeder.instance().getServiceContainer().stopQueuingNotifications(ids);
 		}
 	}
 	

@@ -1,5 +1,7 @@
 package net.deuce.moman.account.command;
 
+import java.util.List;
+
 import net.deuce.moman.account.model.Account;
 import net.deuce.moman.account.service.AccountService;
 import net.deuce.moman.account.ui.AccountDialog;
@@ -39,14 +41,14 @@ public class NewDisconnected extends AbstractHandler {
 			}
 			Account account = dialog.getAccount();
 			account.setSelected(true);
-			ServiceNeeder.instance().getServiceContainer().startQueuingNotifications();
+			List<String> ids = ServiceNeeder.instance().getServiceContainer().startQueuingNotifications();
 			try {
 				ServiceNeeder.instance().getAccountService().addEntity(account);
 				if (service.getEntities().size() == 1) {
 					envelopeService.importDefaultEnvelopes();
 				}
 			} finally {
-				ServiceNeeder.instance().getServiceContainer().stopQueuingNotifications();
+				ServiceNeeder.instance().getServiceContainer().stopQueuingNotifications(ids);
 			}
 		}
 		return null;

@@ -1,6 +1,7 @@
 package net.deuce.moman.rule.command;
 
 import java.util.Iterator;
+import java.util.List;
 
 import net.deuce.moman.rule.model.Rule;
 import net.deuce.moman.rule.service.TransactionRuleService;
@@ -42,7 +43,7 @@ public class Delete extends AbstractHandler {
 			
 			ServiceContainer serviceContainer = ServiceNeeder.instance().getServiceContainer();
 			TransactionRuleService ruleService = ServiceNeeder.instance().getTransactionRuleService();
-			serviceContainer.startQueuingNotifications();
+			List<String> ids = serviceContainer.startQueuingNotifications();
 			try {
 				Iterator<Rule> itr = ss.iterator();
 				while (itr.hasNext()) {
@@ -50,7 +51,7 @@ public class Delete extends AbstractHandler {
 					ruleService.removeEntity(rule);
 				}
 			} finally {
-				serviceContainer.stopQueuingNotifications();
+				serviceContainer.stopQueuingNotifications(ids);
 			}
 		}
 		return null;
