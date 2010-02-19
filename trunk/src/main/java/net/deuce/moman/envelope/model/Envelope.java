@@ -81,6 +81,10 @@ public class Envelope extends AbstractEntity<Envelope> {
 		return dirty;
 	}
 
+	public void markDirty() {
+		this.dirty = true;
+	}
+
 	public void clearDirty() {
 		this.dirty = false;
 	}
@@ -422,6 +426,7 @@ public class Envelope extends AbstractEntity<Envelope> {
 	
 	private void resetBalance(Envelope envelope) {
 		if (envelope != null) {
+			dirty = true;
 			envelope.setBalance(null);
 			resetBalance(envelope.getParent());
 		}
@@ -436,6 +441,7 @@ public class Envelope extends AbstractEntity<Envelope> {
 		Account account = transaction.getAccount();
 		getAccountTransactions(account).add(transaction);
 		resetBalance(this);
+		dirty = true;
 		getMonitor().fireEntityChanged(this, Properties.transactions);
 		if (notifyTransaction) {
 			transaction.addSplit(this, transaction.getAmount(), false);

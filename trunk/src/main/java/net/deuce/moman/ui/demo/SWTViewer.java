@@ -290,7 +290,6 @@ public class SWTViewer extends Composite implements ICallBackNotifier, PaintList
 			// query = "Select * from SampleData where Category='"+
 			// hint.getBaseValue()+"'";
 
-			System.out.println("ZZZ hint: " + hint.getBaseValue());
 			for (Envelope env : envelope.getChildren()) {
 				if (hint.getBaseDisplayValue().equals(env.getChartLegendLabel())) {
 					

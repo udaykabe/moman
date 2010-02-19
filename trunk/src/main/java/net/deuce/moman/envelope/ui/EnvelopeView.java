@@ -175,7 +175,10 @@ public class EnvelopeView extends ViewPart implements EntityListener<Envelope> {
 		if (env != null && env.isDirty()) {
 			treeViewer.refresh(env);
 			env.clearDirty();
-			refreshEnvelope(env.getParent());
+			if (env.getParent() != null) {
+				env.getParent().markDirty();
+				refreshEnvelope(env.getParent());
+			}
 		}
 	}
 	
@@ -212,7 +215,11 @@ public class EnvelopeView extends ViewPart implements EntityListener<Envelope> {
 	public void entityChanged(EntityEvent<Envelope> event) {
 		if (event == null || (Envelope.Properties.expanded != event.getProperty() &&
 				Envelope.Properties.selected != event.getProperty())) {
-			refresh();
+			if (event != null && event.getEntity() != null) {
+				refreshEnvelope(event.getEntity());
+			} else {
+				refresh();
+			}
 		}
 	}
 
