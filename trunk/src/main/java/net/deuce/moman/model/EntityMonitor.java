@@ -14,28 +14,39 @@ public class EntityMonitor<E extends AbstractEntity> {
 	private Set<E> addedEntities = new HashSet<E>();
 	private Set<ChangedEntity<E>> changedEntities = new HashSet<ChangedEntity<E>>();
 	private boolean singleChange = false;
+	private boolean processing = false;
 	
 	public boolean isQueuingNotifications() {
 		return queuingNotifications;
 	}
 
 	public void setQueuingNotifications(boolean queuingNotifications) {
-		this.queuingNotifications = queuingNotifications;
-		if (!queuingNotifications) {
-			for (E entity : addedEntities) {
-				fireEntityAdded(entity);
+		
+		if (processing) return;
+		
+		processing = true;
+		
+		try {
+			this.queuingNotifications = queuingNotifications;
+			if (!queuingNotifications) {
+				
+				for (E entity : addedEntities) {
+					fireEntityAdded(entity);
+				}
+				for (E entity : removedEntities) {
+					fireEntityRemoved(entity);
+				}
+				for (ChangedEntity<E> changedEntity : changedEntities) {
+					fireEntityChanged(changedEntity.entity, changedEntity.property);
+					if (singleChange) break;
+				}
 			}
-			for (E entity : removedEntities) {
-				fireEntityRemoved(entity);
-			}
-			for (ChangedEntity<E> changedEntity : changedEntities) {
-				fireEntityChanged(changedEntity.entity, changedEntity.property);
-				if (singleChange) break;
-			}
+			removedEntities.clear();
+			addedEntities.clear();
+			changedEntities.clear();
+		} finally {
+			processing = true;
 		}
-		removedEntities.clear();
-		addedEntities.clear();
-		changedEntities.clear();
 	}
 	
 	public boolean isSingleChange() {
@@ -62,15 +73,19 @@ public class EntityMonitor<E extends AbstractEntity> {
 		return event;
 	}
 	
-	public void fireEntityAdded(E entity) {
+	public void fireEntityAdded(E entity, EntityProperty property) {
 		if (!queuingNotifications) {
-			EntityEvent<E> event = createEvent(entity, null);
+			EntityEvent<E> event = createEvent(entity, property);
 			for (EntityListener<E> listener : listeners) {
 				listener.entityAdded(event);
 			}
 		} else {
 			addedEntities.add(entity);
 		}
+	}
+	
+	public void fireEntityAdded(E entity) {
+		fireEntityAdded(entity, null);
 	}
 	
 	public void fireEntityRemoved(E entity) {

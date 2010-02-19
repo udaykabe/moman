@@ -17,6 +17,7 @@ import net.deuce.moman.service.EntityService;
 import net.deuce.moman.transaction.model.InternalTransaction;
 import net.deuce.moman.transaction.model.Split;
 import net.deuce.moman.transaction.model.TransactionStatus;
+import net.deuce.moman.transaction.model.InternalTransaction.Properties;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -276,7 +277,11 @@ public class TransactionService extends EntityService<InternalTransaction> {
 			adjustBalances(transaction, false);
 		}
 		if (notify) {
-			fireEntityAdded(transaction);
+			if (transaction.isImported()) {
+				fireEntityAdded(transaction, Properties.imported);
+			} else {
+				fireEntityAdded(transaction);
+			}
 		}
 	}
 	
