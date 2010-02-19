@@ -12,6 +12,7 @@ import java.util.UUID;
 import net.deuce.moman.model.AbstractEntity;
 import net.deuce.moman.model.EntityListener;
 import net.deuce.moman.model.EntityMonitor;
+import net.deuce.moman.model.EntityProperty;
 
 import org.eclipse.jface.viewers.StructuredViewer;
 
@@ -176,6 +177,10 @@ public class EntityService<E extends AbstractEntity> {
 	
 	public void fireEntityAdded(E entity) {
 		monitor.fireEntityAdded(entity);
+	}
+	
+	public void fireEntityAdded(E entity, EntityProperty property) {
+		monitor.fireEntityAdded(entity, property);
 	}
 	
 	public void fireEntityRemoved(E entity) {

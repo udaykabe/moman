@@ -21,6 +21,7 @@ import net.deuce.moman.model.EntityEvent;
 import net.deuce.moman.model.EntityListener;
 import net.deuce.moman.model.EntityMonitor;
 import net.deuce.moman.service.ServiceNeeder;
+import net.deuce.moman.transaction.model.InternalTransaction;
 import net.deuce.moman.ui.SelectingTableViewer;
 
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -117,6 +118,25 @@ public class AllocationView extends ViewPart implements EntityListener<Allocatio
 			}
 			@Override
 			public void entityRemoved(EntityEvent<Income> event) {
+			}
+			
+		});
+		
+		ServiceNeeder.instance().getTransactionService().addEntityListener(new EntityListener<InternalTransaction>() {
+			@Override
+			public void entityAdded(EntityEvent<InternalTransaction> event) {
+				resetAvailableAmounts();
+				adjustAllocations();
+			}
+			@Override
+			public void entityChanged(EntityEvent<InternalTransaction> event) {
+				resetAvailableAmounts();
+				adjustAllocations();
+			}
+			@Override
+			public void entityRemoved(EntityEvent<InternalTransaction> event) {
+				resetAvailableAmounts();
+				adjustAllocations();
 			}
 			
 		});

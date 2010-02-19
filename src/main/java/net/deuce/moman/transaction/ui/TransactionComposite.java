@@ -289,7 +289,7 @@ implements EntityListener<InternalTransaction>, ShiftKeyAware {
 		refresh();
 		try {
 			setFocus();
-			if (event != null && event.getEntity() != null) {
+			if (event != null && event.getEntity() != null && event.getProperty() != InternalTransaction.Properties.imported) {
 				tableViewer.setSelection(new StructuredSelection(new Object[]{event.getEntity()}));
 				tableViewer.reveal(event.getEntity());
 				

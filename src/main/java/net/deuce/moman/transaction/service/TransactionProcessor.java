@@ -234,6 +234,8 @@ public abstract class TransactionProcessor implements Runnable {
 						bt.getName(), bt.getMemo(), bt.getCheckNumber(),
 						bt.getReferenceNumber(), null, TransactionStatus.cleared, account);
 				
+				t.setImported(true);
+				
 				if (t.getAmount() > 0) {
 					t.clearSplit();
 					t.addSplit(envelopeService.getAvailableEnvelope(), t.getAmount());

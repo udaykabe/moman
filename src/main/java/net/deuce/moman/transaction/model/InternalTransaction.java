@@ -24,7 +24,7 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
 	private static final long serialVersionUID = 1L;
 
     public enum Properties implements EntityProperty {
-        externalId(String.class), amount(Double.class), type(TransactionType.class),
+        imported(Boolean.class), externalId(String.class), amount(Double.class), type(TransactionType.class),
         date(Date.class), description(String.class), memo(String.class),
         check(String.class), ref(String.class), balance(Double.class), status(TransactionStatus.class),
         account(Account.class), split(Map.class), initialBalance(Double.class);
@@ -54,6 +54,7 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
 	
 	private transient InternalTransaction matchedTransaction;
 	private transient String transferTransactionId;
+	private transient boolean imported;
 	
 	// constants for annotations
 	public static final int TYPE_LENGTH = 20;
@@ -67,6 +68,14 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
 		super();
 	}
 	
+	public boolean isImported() {
+		return imported;
+	}
+
+	public void setImported(boolean imported) {
+		this.imported = imported;
+	}
+
 	public boolean isEnvelopeTransfer() {
 		return transferTransaction != null;
 	}
