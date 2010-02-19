@@ -45,7 +45,7 @@ public class EntityMonitor<E extends AbstractEntity> {
 			addedEntities.clear();
 			changedEntities.clear();
 		} finally {
-			processing = true;
+			processing = false;
 		}
 	}
 	

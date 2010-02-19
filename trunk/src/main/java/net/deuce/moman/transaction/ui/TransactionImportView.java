@@ -16,8 +16,14 @@ public class TransactionImportView extends AbstractEntityTableView<InternalTrans
 	
 	public TransactionImportView() {
 		super(ServiceNeeder.instance().getImportService());
+		ServiceNeeder.instance().getTransactionService().addEntityListener(this);
 	}
 
+	@Override
+	protected boolean isSettingServiceViewer() {
+		return false;
+	}
+	
 	@Override
 	protected SelectingTableViewer createTableViewer(Composite parent) {
 		SelectingTableViewer tableViewer = new SelectingTableViewer(parent, SWT.MULTI | SWT.V_SCROLL | SWT.FULL_SELECTION);
