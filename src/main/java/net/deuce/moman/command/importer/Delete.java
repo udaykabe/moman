@@ -1,6 +1,7 @@
 package net.deuce.moman.command.importer;
 
 import java.util.Iterator;
+import java.util.List;
 
 import net.deuce.moman.service.ServiceContainer;
 import net.deuce.moman.service.ServiceNeeder;
@@ -44,7 +45,7 @@ public class Delete extends AbstractHandler {
 			TransactionService transactionService = ServiceNeeder.instance().getTransactionService();
 			ImportService importService = ServiceNeeder.instance().getImportService();
 			ServiceContainer serviceContainer = ServiceNeeder.instance().getServiceContainer();
-			serviceContainer.startQueuingNotifications();
+			List<String> ids = serviceContainer.startQueuingNotifications();
 			try {
 				Iterator<InternalTransaction> itr = ss.iterator();
 				while (itr.hasNext()) {
@@ -57,7 +58,7 @@ public class Delete extends AbstractHandler {
 					}
 				}
 			} finally {
-				serviceContainer.stopQueuingNotifications();
+				serviceContainer.stopQueuingNotifications(ids);
 			}
 		}
 		return null;

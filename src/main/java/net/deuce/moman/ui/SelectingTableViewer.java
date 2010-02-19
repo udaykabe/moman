@@ -1,5 +1,7 @@
 package net.deuce.moman.ui;
 
+import java.util.List;
+
 import net.deuce.moman.service.ServiceNeeder;
 
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
@@ -30,11 +32,11 @@ public class SelectingTableViewer extends TableViewer {
 	@Override
 	protected void triggerEditorActivationEvent(
 			ColumnViewerEditorActivationEvent event) {
-		ServiceNeeder.instance().getServiceContainer().startQueuingNotifications();
+		List<String> ids = ServiceNeeder.instance().getServiceContainer().startQueuingNotifications();
 		try {
 			super.triggerEditorActivationEvent(event);
 		} finally {
-			ServiceNeeder.instance().getServiceContainer().stopQueuingNotifications();
+			ServiceNeeder.instance().getServiceContainer().stopQueuingNotifications(ids);
 		}
 	}
 }

@@ -1,6 +1,7 @@
 package net.deuce.moman.envelope.command;
 
 import java.util.Iterator;
+import java.util.List;
 
 import net.deuce.moman.envelope.model.Envelope;
 import net.deuce.moman.service.ServiceNeeder;
@@ -37,7 +38,7 @@ public class DeleteBill extends AbstractBillHandler {
 		if (MessageDialog.openQuestion(window.getShell(), "Delete Bill?",
 				"Are you sure you want to delete the " + msg)) {
 			
-			ServiceNeeder.instance().getServiceContainer().startQueuingNotifications();
+			List<String> ids = ServiceNeeder.instance().getServiceContainer().startQueuingNotifications();
 			try {
 				Iterator<Envelope> itr = ss.iterator();
 				while (itr.hasNext()) {
@@ -45,7 +46,7 @@ public class DeleteBill extends AbstractBillHandler {
 					ServiceNeeder.instance().getEnvelopeService().removeEnvelope(bill);
 				}
 			} finally {
-				ServiceNeeder.instance().getServiceContainer().stopQueuingNotifications();
+				ServiceNeeder.instance().getServiceContainer().stopQueuingNotifications(ids);
 			}
 		}
 		return null;

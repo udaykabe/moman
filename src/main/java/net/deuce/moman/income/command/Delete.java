@@ -1,6 +1,7 @@
 package net.deuce.moman.income.command;
 
 import java.util.Iterator;
+import java.util.List;
 
 import net.deuce.moman.income.model.Income;
 import net.deuce.moman.income.service.IncomeService;
@@ -43,7 +44,7 @@ public class Delete extends AbstractHandler {
 			
 			IncomeService incomeService = ServiceNeeder.instance().getIncomeService();
 			ServiceContainer serviceContainer = ServiceNeeder.instance().getServiceContainer();
-			serviceContainer.startQueuingNotifications();
+			List<String> ids = serviceContainer.startQueuingNotifications();
 			try {
 				Iterator<Income> itr = ss.iterator();
 				while (itr.hasNext()) {
@@ -51,7 +52,7 @@ public class Delete extends AbstractHandler {
 					incomeService.removeEntity(income);
 				}
 			} finally {
-				serviceContainer.stopQueuingNotifications();
+				serviceContainer.stopQueuingNotifications(ids);
 			}
 		}
 		return null;

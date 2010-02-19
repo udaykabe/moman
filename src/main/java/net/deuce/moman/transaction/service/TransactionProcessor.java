@@ -151,7 +151,7 @@ public abstract class TransactionProcessor implements Runnable {
 					"Error communicating with the bank: " + msg);
 		} else {
 			
-			ServiceNeeder.instance().getServiceContainer().startQueuingNotifications();
+			List<String> ids = ServiceNeeder.instance().getServiceContainer().startQueuingNotifications();
 
 			try {
 				if (result != null) {
@@ -191,7 +191,7 @@ public abstract class TransactionProcessor implements Runnable {
 				for (Envelope env : modifiedEnvelopes) {
 					env.resetBalance();
 				}
-				ServiceNeeder.instance().getServiceContainer().stopQueuingNotifications();
+				ServiceNeeder.instance().getServiceContainer().stopQueuingNotifications(ids);
 			}
 			
 			try {

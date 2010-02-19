@@ -5,48 +5,53 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import net.deuce.moman.util.Utils;
+
 @SuppressWarnings("unchecked")
 public class EntityMonitor<E extends AbstractEntity> {
 
 	private List<EntityListener<E>> listeners = new LinkedList<EntityListener<E>>();
-	private boolean queuingNotifications;
 	private Set<E> removedEntities = new HashSet<E>();
 	private Set<E> addedEntities = new HashSet<E>();
 	private Set<ChangedEntity<E>> changedEntities = new HashSet<ChangedEntity<E>>();
 	private boolean singleChange = false;
-	private boolean processing = false;
+	private String queuingId = null;
 	
 	public boolean isQueuingNotifications() {
-		return queuingNotifications;
+		return queuingId != null;
 	}
 
-	public void setQueuingNotifications(boolean queuingNotifications) {
-		
-		if (processing) return;
-		
-		processing = true;
-		
-		try {
-			this.queuingNotifications = queuingNotifications;
-			if (!queuingNotifications) {
-				
-				for (E entity : addedEntities) {
-					fireEntityAdded(entity);
-				}
-				for (E entity : removedEntities) {
-					fireEntityRemoved(entity);
-				}
-				for (ChangedEntity<E> changedEntity : changedEntities) {
-					fireEntityChanged(changedEntity.entity, changedEntity.property);
-					if (singleChange) break;
-				}
+	public void stopQueuingNotifications(String id) {
+		if (queuingId != null && queuingId.equals(id)) {
+			queuingId = null;
+			for (E entity : addedEntities) {
+				fireEntityAdded(entity);
+			}
+			for (E entity : removedEntities) {
+				fireEntityRemoved(entity);
+			}
+			for (ChangedEntity<E> changedEntity : changedEntities) {
+				fireEntityChanged(changedEntity.entity, changedEntity.property);
+				if (singleChange) break;
 			}
 			removedEntities.clear();
 			addedEntities.clear();
 			changedEntities.clear();
-		} finally {
-			processing = false;
+			
 		}
+	}
+	
+	public String startQueuingNotifications() {
+		
+		if (queuingId != null) return null;
+		
+		queuingId = Utils.createUuid();
+		
+		removedEntities.clear();
+		addedEntities.clear();
+		changedEntities.clear();
+		
+		return queuingId;
 	}
 	
 	public boolean isSingleChange() {
@@ -74,7 +79,7 @@ public class EntityMonitor<E extends AbstractEntity> {
 	}
 	
 	public void fireEntityAdded(E entity, EntityProperty property) {
-		if (!queuingNotifications) {
+		if (!isQueuingNotifications()) {
 			EntityEvent<E> event = createEvent(entity, property);
 			for (EntityListener<E> listener : listeners) {
 				listener.entityAdded(event);
@@ -89,7 +94,7 @@ public class EntityMonitor<E extends AbstractEntity> {
 	}
 	
 	public void fireEntityRemoved(E entity) {
-		if (!queuingNotifications) {
+		if (!isQueuingNotifications()) {
 			EntityEvent<E> event = createEvent(entity, null);
 			for (EntityListener<E> listener : listeners) {
 				listener.entityRemoved(event);
@@ -104,7 +109,7 @@ public class EntityMonitor<E extends AbstractEntity> {
 	}
 	
 	public void fireEntityChanged(E entity, EntityProperty property) {
-		if (!queuingNotifications) {
+		if (!isQueuingNotifications()) {
 			EntityEvent<E> event = createEvent(entity, property);
 			for (EntityListener<E> listener : listeners) {
 				listener.entityChanged(event);

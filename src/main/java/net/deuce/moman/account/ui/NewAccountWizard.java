@@ -93,11 +93,11 @@ public class NewAccountWizard extends Wizard {
 			accountService.addEntity(account);
 			account.setSelected(true);
 			if (accountService.getEntities().size() == 1) {
-				ServiceNeeder.instance().getServiceContainer().startQueuingNotifications();
+				List<String> ids = ServiceNeeder.instance().getServiceContainer().startQueuingNotifications();
 				try {
 					envelopeService.importDefaultEnvelopes();
 				} finally {
-					ServiceNeeder.instance().getServiceContainer().stopQueuingNotifications();
+					ServiceNeeder.instance().getServiceContainer().stopQueuingNotifications(ids);
 				}
 			}
 			

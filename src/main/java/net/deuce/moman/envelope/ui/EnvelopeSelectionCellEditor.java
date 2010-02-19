@@ -4,7 +4,6 @@ import java.util.List;
 
 import net.deuce.moman.envelope.model.Envelope;
 import net.deuce.moman.service.ServiceNeeder;
-import net.deuce.moman.transaction.model.InternalTransaction;
 import net.deuce.moman.transaction.model.Split;
 import net.deuce.moman.transaction.ui.ControlLimitingCellEditor;
 import net.deuce.moman.ui.ShiftKeyAware;
@@ -122,11 +121,11 @@ public class EnvelopeSelectionCellEditor extends ControlLimitingCellEditor {
 			if (!split.equals(result)) {
 				BusyIndicator.showWhile(shell.getDisplay(), new Runnable() {
 					public void run() {
-						ServiceNeeder.instance().getServiceContainer().startQueuingNotifications();
+						List<String> ids = ServiceNeeder.instance().getServiceContainer().startQueuingNotifications();
 						try {
 							handleSplitSelected(value, result);
 						} finally {
-							ServiceNeeder.instance().getServiceContainer().stopQueuingNotifications();
+							ServiceNeeder.instance().getServiceContainer().stopQueuingNotifications(ids);
 						}
 					}
 				});

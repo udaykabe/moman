@@ -295,6 +295,7 @@ public class Envelope extends AbstractEntity<Envelope> {
 			Double value = 0.0;
 			for (InternalTransaction t : getTransactions()) {
 				double splitAmount = t.getSplitAmount(this);
+				System.out.println("ZZZ " + name + " - transaction: " + t.getDescription() + " - " + splitAmount);
 				value += splitAmount;
 			}
 			for (Envelope e : children) {
