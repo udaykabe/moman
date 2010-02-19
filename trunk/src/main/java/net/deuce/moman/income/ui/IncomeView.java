@@ -1,19 +1,14 @@
 package net.deuce.moman.income.ui;
 
-import java.util.Date;
-
 import net.deuce.moman.income.command.Delete;
 import net.deuce.moman.income.model.Income;
 import net.deuce.moman.service.ServiceNeeder;
 import net.deuce.moman.ui.AbstractEntityTableView;
-import net.deuce.moman.ui.DateSelectionDialog;
 import net.deuce.moman.ui.SelectingTableViewer;
 
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Shell;
 
 public class IncomeView extends AbstractEntityTableView<Income> {
 	
@@ -49,6 +44,7 @@ public class IncomeView extends AbstractEntityTableView<Income> {
  		column = new TableViewerColumn(tableViewer, SWT.RIGHT);
  		column.getColumn().setText("Next Payday");
  	    column.getColumn().setWidth(100);
+ 	    column.setEditingSupport(new IncomeDateSelectionEditingSupport(tableViewer, tableViewer.getTable()));
  	    
 	    tableViewer.setContentProvider(new IncomeContentProvider());
 	    tableViewer.setLabelProvider(new IncomeLabelProvider());
@@ -61,25 +57,8 @@ public class IncomeView extends AbstractEntityTableView<Income> {
 	}
 
 	@Override
-	protected void doubleClickHandler(int column, StructuredSelection selection, Shell shell) {
-		Income income = (Income)selection.getFirstElement();
-		
-		DateSelectionDialog dialog = new DateSelectionDialog(shell, income.getNextPayday());
-		dialog.open();
-		Date date = dialog.getDate();
-        if (date != null) {
-        	income.setNextPayday(date);
-        }
-	}
-
-	@Override
 	protected String getDeleteCommandId() {
 		return Delete.ID;
-	}
-
-	@Override
-	protected int[] getDoubleClickableColumns() {
-		return new int[]{4};
 	}
 
 }

@@ -24,6 +24,14 @@ public class EntityService<E extends AbstractEntity> {
 	private StructuredViewer viewer;
 	private E addedEntity;
 	
+	public boolean isSingleChange() {
+		return monitor.isSingleChange();
+	}
+
+	public void setSingleChange(boolean singleChange) {
+		monitor.setSingleChange(singleChange);
+	}
+	
 	public boolean isQueuingNotifications() {
 		return monitor.isQueuingNotifications();
 	}

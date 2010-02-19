@@ -1,6 +1,5 @@
 package net.deuce.moman.envelope.ui;
 
-import java.util.Date;
 import java.util.List;
 
 import net.deuce.moman.Constants;
@@ -10,15 +9,12 @@ import net.deuce.moman.envelope.service.EnvelopeService;
 import net.deuce.moman.model.EntityEvent;
 import net.deuce.moman.service.ServiceNeeder;
 import net.deuce.moman.ui.AbstractEntityTableView;
-import net.deuce.moman.ui.DateSelectionDialog;
 import net.deuce.moman.ui.SelectingTableViewer;
 
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Shell;
 
 public class SavingsGoalsView extends AbstractEntityTableView<Envelope> {
 	
@@ -61,6 +57,7 @@ public class SavingsGoalsView extends AbstractEntityTableView<Envelope> {
  		column = new TableViewerColumn(tableViewer, SWT.NONE);
  		column.getColumn().setText("Due Date");
  	    column.getColumn().setWidth(100);
+ 	    column.setEditingSupport(new SavingsGoalDateSelectionEditingSupport(tableViewer, tableViewer.getTable()));
 		
  		tableViewer.getTable().setFont(Constants.STANDARD_FONT);
  		tableViewer.getTable().setHeaderVisible(true);
@@ -77,37 +74,8 @@ public class SavingsGoalsView extends AbstractEntityTableView<Envelope> {
 	}
 	
 	@Override
-	protected void doubleClickHandler(int column, StructuredSelection selection, Shell shell) {
-		switch (column) {
-		case 3:
-			handleDateDoubleClicked(selection, shell);
-			break;
-		}
-	}
-
-	private void handleDateDoubleClicked(StructuredSelection selection, Shell shell) {
-		Envelope envelope = (Envelope)selection.getFirstElement();
-		
-		DateSelectionDialog dialog = new DateSelectionDialog(shell, envelope.getSavingsGoalDate());
-		dialog.open();
-		Date date = dialog.getDate();
-        if (date != null) {
-        	envelope.setSavingsGoalDate(date);
-        }
-	}
-	
-	@Override
 	protected String getDeleteCommandId() {
 		return DeleteSavingsGoal.ID;
-	}
-
-	@Override
-	protected int[] getDoubleClickableColumns() {
-		return new int[]{3,4};
-	}
-
-	protected IDoubleClickListener getDoubleClickListener(Shell shell) {
-		return super.getDoubleClickListener(shell);
 	}
 
 	@Override

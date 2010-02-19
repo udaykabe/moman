@@ -18,11 +18,6 @@ public class TransferComposite extends TransactionComposite {
 	}
 
 	@Override
-	protected int[] getDoubleClickableColumns() {
-		return new int[0];
-	}
-	
-	@Override
 	protected SelectingTableViewer createTableViewer(Composite parent) {
 		SelectingTableViewer tableViewer = new SelectingTableViewer(parent, SWT.MULTI | SWT.V_SCROLL | SWT.FULL_SELECTION);
 				

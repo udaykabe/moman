@@ -6,7 +6,6 @@ import java.util.List;
 import net.deuce.moman.Constants;
 import net.deuce.moman.account.model.Account;
 import net.deuce.moman.ui.AbstractModelDialog;
-import net.deuce.moman.ui.Activator;
 
 import org.eclipse.jface.viewers.ColumnViewerEditor;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;

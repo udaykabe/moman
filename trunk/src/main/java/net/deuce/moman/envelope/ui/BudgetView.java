@@ -3,7 +3,6 @@ package net.deuce.moman.envelope.ui;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Iterator;
 import java.util.List;
 
 import net.deuce.moman.Constants;
@@ -15,14 +14,11 @@ import net.deuce.moman.income.service.IncomeService;
 import net.deuce.moman.model.EntityEvent;
 import net.deuce.moman.model.EntityListener;
 import net.deuce.moman.model.Frequency;
-import net.deuce.moman.service.ServiceContainer;
 import net.deuce.moman.service.ServiceNeeder;
 import net.deuce.moman.ui.AbstractEntityTableView;
 import net.deuce.moman.ui.SelectingTableViewer;
 
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
@@ -31,14 +27,12 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 public class BudgetView extends AbstractEntityTableView<Envelope> {
 	
 	public static final String ID = BudgetView.class.getName();
 	
-	private ServiceContainer serviceContainer;
 	private EnvelopeService envelopeService;
 	private IncomeService incomeService;
 	private Text paySourcesTotalText;
@@ -49,7 +43,6 @@ public class BudgetView extends AbstractEntityTableView<Envelope> {
 		super(ServiceNeeder.instance().getEnvelopeService());
 		envelopeService = ServiceNeeder.instance().getEnvelopeService();
 		incomeService = ServiceNeeder.instance().getIncomeService();
-		serviceContainer = ServiceNeeder.instance().getServiceContainer();
 		
 		incomeService.addEntityListener(new EntityListener<Income>() {
 			@Override
@@ -138,8 +131,6 @@ public class BudgetView extends AbstractEntityTableView<Envelope> {
 		tableViewer.setComparator(new BudgetViewerComparator());
 		tableViewer.getTable().setLayoutData(gridData);
 		
-		tableViewer.addDoubleClickListener(getDoubleClickListener(parent.getShell()));
-		
 		// removed for now until a better way to determine table selection
 		// can be passed to the command handlers.  via command parameter?
 		/*
@@ -182,6 +173,7 @@ public class BudgetView extends AbstractEntityTableView<Envelope> {
  		column = new TableViewerColumn(tableViewer, SWT.RIGHT);
  		column.getColumn().setText("Envelope");
  	    column.getColumn().setWidth(100);
+ 	    column.setEditingSupport(new EnvelopeSelectionEditingSupport(tableViewer, null, tableViewer.getTable()));
  	    
  		tableViewer.getTable().setFont(Constants.STANDARD_FONT);
  		tableViewer.getTable().setHeaderVisible(true);
@@ -198,55 +190,8 @@ public class BudgetView extends AbstractEntityTableView<Envelope> {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	protected void doubleClickHandler(int column, StructuredSelection selection, Shell shell) {
-		Envelope parentEnvelope = null;
-		Iterator<Envelope> itr = selection.iterator();
-		while (itr.hasNext()) {
-			Envelope env = itr.next();
-			if (parentEnvelope == null) {
-				parentEnvelope = env.getParent();
-			} else if (parentEnvelope != env.getParent()) {
-				parentEnvelope = envelopeService.getRootEnvelope();
-				break;
-			}
-		}
-		EnvelopeSelectionDialog dialog = new EnvelopeSelectionDialog(shell, parentEnvelope);
-		
-		dialog.create();
-		dialog.open();
-		if (parentEnvelope != dialog.getEnvelope()) {
-			
-			serviceContainer.startQueuingNotifications();
-			try {
-				itr = selection.iterator();
-				while (itr.hasNext()) {
-					Envelope env = itr.next();
-					Envelope oldParent = env.getParent();
-					if (oldParent != null) {
-						oldParent.removeChild(env);
-					}
-					env.setParent(dialog.getEnvelope());
-					dialog.getEnvelope().addChild(env);
-				}
-			} finally {
-				serviceContainer.stopQueuingNotifications();
-			}
-		}
-	}
-
-	@Override
 	protected String getDeleteCommandId() {
 		return Delete.ID;
-	}
-
-	@Override
-	protected int[] getDoubleClickableColumns() {
-		return new int[]{3};
-	}
-
-	protected IDoubleClickListener getDoubleClickListener(Shell shell) {
-		return super.getDoubleClickListener(shell);
 	}
 
 	@Override

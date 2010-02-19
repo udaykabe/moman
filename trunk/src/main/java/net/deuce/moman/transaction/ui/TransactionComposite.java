@@ -1,15 +1,13 @@
 package net.deuce.moman.transaction.ui;
 
-import java.util.Date;
-import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import net.deuce.moman.Constants;
 import net.deuce.moman.account.model.Account;
 import net.deuce.moman.envelope.model.Envelope;
 import net.deuce.moman.envelope.service.EnvelopeService;
-import net.deuce.moman.envelope.ui.EnvelopeSelectionDialog;
-import net.deuce.moman.envelope.ui.SplitSelectionDialog;
+import net.deuce.moman.envelope.ui.EnvelopeSelectionCellEditor;
 import net.deuce.moman.model.EntityEvent;
 import net.deuce.moman.model.EntityListener;
 import net.deuce.moman.service.ServiceNeeder;
@@ -18,14 +16,12 @@ import net.deuce.moman.transaction.model.InternalTransaction;
 import net.deuce.moman.transaction.model.Split;
 import net.deuce.moman.transaction.model.TransactionStatus;
 import net.deuce.moman.transaction.service.TransactionService;
-import net.deuce.moman.ui.DateSelectionDialog;
 import net.deuce.moman.ui.SelectingTableViewer;
+import net.deuce.moman.ui.ShiftKeyAware;
 
 import org.eclipse.jface.viewers.ColumnViewerEditor;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -33,7 +29,6 @@ import org.eclipse.jface.viewers.TableViewerEditor;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.KeyAdapter;
@@ -45,18 +40,16 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.handlers.IHandlerService;
 
-public class TransactionComposite extends Composite implements EntityListener<InternalTransaction> {
+public class TransactionComposite extends Composite
+implements EntityListener<InternalTransaction>, ShiftKeyAware {
 	
 	private SelectingTableViewer tableViewer;
-	private boolean editingEntity;
 	private TransactionService service;
 	private AccountListener accountListener = new AccountListener();
 	private EnvelopeListener envelopeListener = new EnvelopeListener();
@@ -64,6 +57,7 @@ public class TransactionComposite extends Composite implements EntityListener<In
 	private RegisterFilter filter = new RegisterFilter();
 	private Text searchText;
 	private boolean shiftDown = false;
+	private List<EnvelopeSelectionCellEditor> envelopeSelectionCellEditors = new LinkedList<EnvelopeSelectionCellEditor>();
 
 	public TransactionComposite(Composite parent, boolean settingServiceViewer,
 			final IWorkbenchSite site, boolean selectionListener, int style) {
@@ -105,8 +99,6 @@ public class TransactionComposite extends Composite implements EntityListener<In
 			service.setViewer(tableViewer);
 		}
 		
-		tableViewer.addDoubleClickListener(getDoubleClickListener(this.getShell()));
-				
 		if (site != null) {
 	 		tableViewer.getTable().addKeyListener(new KeyListener() {
 				@Override
@@ -139,6 +131,14 @@ public class TransactionComposite extends Composite implements EntityListener<In
  		refresh();
 	}
 	
+	public boolean isShiftKeyDown() {
+		return shiftDown;
+	}
+
+	public void setShiftKeyDown(boolean shiftDown) {
+		this.shiftDown = shiftDown;
+	}
+
 	protected void setupTableViewerEditor(TableViewer tableViewer, ColumnViewerEditorActivationStrategy strategy) {
 		TableViewerEditor.create(tableViewer, strategy,
 				ColumnViewerEditor.TABBING_HORIZONTAL
@@ -200,6 +200,7 @@ public class TransactionComposite extends Composite implements EntityListener<In
         TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.LEFT);
  		column.getColumn().setText("Date");
  	    column.getColumn().setWidth(102);
+ 	    column.setEditingSupport(new TransactionDateSelectionEditingSupport(tableViewer, this));
 		
         column = new TableViewerColumn(tableViewer, SWT.LEFT);
  		column.getColumn().setText("Status");
@@ -219,6 +220,10 @@ public class TransactionComposite extends Composite implements EntityListener<In
  		column = new TableViewerColumn(tableViewer, SWT.LEFT);
  		column.getColumn().setText("Envelope");
  	    column.getColumn().setWidth(175);
+ 	    TransactionEnvelopeSelectionEditingSupport editingSupport =
+ 	    	new TransactionEnvelopeSelectionEditingSupport(tableViewer, this, this);
+ 	    column.setEditingSupport(editingSupport);
+ 	    envelopeSelectionCellEditors.add((EnvelopeSelectionCellEditor)editingSupport.getCellEditor(null));
 		
  		column = new TableViewerColumn(tableViewer, SWT.RIGHT);
  		column.getColumn().setText("Credit");
@@ -241,11 +246,17 @@ public class TransactionComposite extends Composite implements EntityListener<In
 			@Override
 			public void keyPressed(KeyEvent ke) {
 				shiftDown = ke.keyCode == SWT.SHIFT;
+				for (EnvelopeSelectionCellEditor cellEditor : envelopeSelectionCellEditors) {
+					cellEditor.setShiftDown(shiftDown);
+				}
 			}
 			@Override
 			public void keyReleased(KeyEvent ke) {
 				if (ke.keyCode == SWT.SHIFT) {
 					shiftDown = false;
+					for (EnvelopeSelectionCellEditor cellEditor : envelopeSelectionCellEditors) {
+						cellEditor.setShiftDown(shiftDown);
+					}
 				}
 			}
 		});
@@ -253,150 +264,8 @@ public class TransactionComposite extends Composite implements EntityListener<In
 		return tableViewer;
 	}
 	
-	private void handleDateDoubleClicked(StructuredSelection selection, Shell shell) {
-		InternalTransaction transaction = (InternalTransaction)selection.getFirstElement();
-		
-		DateSelectionDialog dialog = new DateSelectionDialog(shell, transaction.getDate());
-		dialog.open();
-		Date date = dialog.getDate();
-        if (date != null) {
-        	transaction.setDate(date, true);
-        }
-	}
-	
-	private void handleEnvelopeDoubleClicked(final StructuredSelection selection, Shell shell) {
-		InternalTransaction transaction = (InternalTransaction)selection.getFirstElement();
-		List<Split> split = transaction.getSplit();
-		
-		if (shiftDown || split.size() > 1) {
-			handleSplitSelectionDialog(selection, shell, transaction, split);
-		} else {
-			handleEnvelopeSelectionDialog(selection, shell, transaction, split);
-		}
-	}
-	
-	private void handleEnvelopeSelectionDialog(final StructuredSelection selection,
-			Shell shell, InternalTransaction transaction, List<Split> split) {
-		final EnvelopeSelectionDialog dialog = new EnvelopeSelectionDialog(shell, split.get(0).getEnvelope());
-		dialog.setAllowBills(true);
-		dialog.create();
-		dialog.open();
-		if (split.get(0).getEnvelope() != dialog.getEnvelope()) {
-			BusyIndicator.showWhile(shell.getDisplay(), new Runnable() {
-				@SuppressWarnings("unchecked")
-				public void run() {
-					ServiceNeeder.instance().getServiceContainer().startQueuingNotifications();
-					try {
-						Iterator<InternalTransaction> itr = selection.iterator();
-						while (itr.hasNext()) {
-							InternalTransaction transaction = itr.next();
-						
-							transaction.clearSplit();
-							
-							transaction.addSplit(dialog.getEnvelope(), transaction.getAmount(), true);
-							
-							tableViewer.refresh(transaction);
-						}
-					} finally {
-						ServiceNeeder.instance().getServiceContainer().stopQueuingNotifications();
-					}
-				}
-			});
-		}
-	}
-	
-	private void handleSplitSelectionDialog(final StructuredSelection selection,
-			Shell shell, InternalTransaction transaction, List<Split> split) {
-		final SplitSelectionDialog dialog = new SplitSelectionDialog(shell, transaction.getAmount(), split);
-		
-		dialog.setAllowBills(true);
-		dialog.create();
-		int status = dialog.open();
-		final List<Split> result = dialog.getSplit();
-		if (status == Window.OK) {
-			if (!split.equals(result)) {
-				BusyIndicator.showWhile(shell.getDisplay(), new Runnable() {
-					@SuppressWarnings("unchecked")
-					public void run() {
-						ServiceNeeder.instance().getServiceContainer().startQueuingNotifications();
-						try {
-							Iterator<InternalTransaction> itr = selection.iterator();
-							while (itr.hasNext()) {
-								InternalTransaction transaction = itr.next();
-							
-								transaction.clearSplit();
-								
-								for (Split item : result) {
-									if (transaction.getAmount() < 0.0) {
-										item.setAmount(-item.getAmount());
-									}
-									transaction.addSplit(item, true);
-								}
-								
-								tableViewer.refresh(transaction);
-							}
-						} finally {
-							ServiceNeeder.instance().getServiceContainer().stopQueuingNotifications();
-						}
-					}
-				});
-			}
-		}
-		shiftDown = false;
-	}
-
-	protected void doubleClickHandler(int column, StructuredSelection selection, Shell shell) {
-		switch (column) {
-		case 0:
-			handleDateDoubleClicked(selection, shell);
-			break;
-		case 3:
-			handleEnvelopeDoubleClicked(selection, shell);
-			break;
-		}
-	}
-
-	protected int[] getDoubleClickableColumns() {
-		return new int[]{0,4};
-	}
-
 	protected String getDeleteCommandId() {
 		return Delete.ID;
-	}
-	
-	protected IDoubleClickListener getDoubleClickListener(final Shell shell) {
-		return new IDoubleClickListener() {
-			@Override
-			public void doubleClick(DoubleClickEvent event) {
-				int[] columns = getDoubleClickableColumns();
-				if (columns.length == 0) return;
-				if (editingEntity) return;
-				editingEntity = true;
-				
-				try {
-					Point cursorLocation = Display.getCurrent().getCursorLocation();
-					Rectangle tableBounds = tableViewer.getTable().getParent().getParent().getBounds();
-					Rectangle shellBounds = Display.getCurrent().getActiveShell().getBounds();
-					
-					int x = cursorLocation.x;
-					
-					for (int i=0; i<columns.length; i++) {
-						Rectangle bounds = tableViewer.getTable().getItem(0).getBounds(columns[i]);
-						int minThreshold = tableBounds.x+shellBounds.x+bounds.x;
-						int maxThreshold = tableBounds.x+shellBounds.x+bounds.x+bounds.width;
-				
-						if (x >= minThreshold && x <= maxThreshold) {
-							StructuredSelection selection = (StructuredSelection)tableViewer.getSelection();
-							doubleClickHandler(columns[i], selection, shell);
-						}
-					}
-				} finally {
-					editingEntity = false;
-				}
-				
-			}
-
-		};
 	}
 	
 	protected TransactionService getService() {

@@ -1,5 +1,7 @@
 package net.deuce.moman.ui;
 
+import net.deuce.moman.service.ServiceNeeder;
+
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerCell;
@@ -23,5 +25,16 @@ public class SelectingTableViewer extends TableViewer {
 	public void activateInitialCellEditor(ViewerCell cell) {
 		ColumnViewerEditorActivationEvent event = new ColumnViewerEditorActivationEvent(cell);
 		triggerEditorActivationEvent(event);
+	}
+	
+	@Override
+	protected void triggerEditorActivationEvent(
+			ColumnViewerEditorActivationEvent event) {
+		ServiceNeeder.instance().getServiceContainer().startQueuingNotifications();
+		try {
+			super.triggerEditorActivationEvent(event);
+		} finally {
+			ServiceNeeder.instance().getServiceContainer().stopQueuingNotifications();
+		}
 	}
 }

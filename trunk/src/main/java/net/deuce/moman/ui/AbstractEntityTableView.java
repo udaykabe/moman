@@ -11,8 +11,6 @@ import net.deuce.moman.service.EntityService;
 import org.eclipse.jface.viewers.ColumnViewerEditor;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerEditor;
@@ -28,8 +26,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
@@ -39,7 +35,6 @@ public abstract class AbstractEntityTableView<E extends AbstractEntity> extends 
 implements EntityListener<E> {
 	
 	private SelectingTableViewer tableViewer;
-	private boolean editingEntity;
 	private EntityService<E> service;
 
 	public AbstractEntityTableView(EntityService<E> service) {
@@ -66,48 +61,6 @@ implements EntityListener<E> {
 		return true;
 	}
 
-	protected int[] getDoubleClickableColumns() {
-		return new int[0];
-	}
-	
-	protected void doubleClickHandler(int column, StructuredSelection selection, Shell shell) {
-	}
-	
-	protected IDoubleClickListener getDoubleClickListener(final Shell shell) {
-		return new IDoubleClickListener() {
-			@Override
-			public void doubleClick(DoubleClickEvent event) {
-				int[] columns = getDoubleClickableColumns();
-				if (columns.length == 0) return;
-				if (editingEntity) return;
-				editingEntity = true;
-				
-				try {
-					Point cursorLocation = Display.getCurrent().getCursorLocation();
-					Rectangle tableBounds = tableViewer.getTable().getParent().getParent().getBounds();
-					Rectangle shellBounds = Display.getCurrent().getActiveShell().getBounds();
-					
-					int x = cursorLocation.x;
-					
-					for (int i=0; i<columns.length; i++) {
-						Rectangle bounds = tableViewer.getTable().getItem(0).getBounds(columns[i]);
-						int minThreshold = tableBounds.x+shellBounds.x+bounds.x;
-						int maxThreshold = tableBounds.x+shellBounds.x+bounds.x+bounds.width;
-				
-						if (x >= minThreshold && x <= maxThreshold) {
-							StructuredSelection selection = (StructuredSelection)tableViewer.getSelection();
-							doubleClickHandler(columns[i], selection, shell);
-						}
-					}
-				} finally {
-					editingEntity = false;
-				}
-				
-			}
-
-		};
-	}
-	
 	protected SelectingTableViewer getTableViewer() {
 		return tableViewer;
 	}
@@ -158,8 +111,6 @@ implements EntityListener<E> {
 			service.setViewer(tableViewer);
 		}
 		
-		tableViewer.addDoubleClickListener(getDoubleClickListener(parent.getShell()));
-				
  		tableViewer.getTable().addKeyListener(new KeyListener() {
 			@Override
 			public void keyPressed(KeyEvent e) {

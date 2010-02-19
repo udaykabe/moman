@@ -1,18 +1,14 @@
 package net.deuce.moman.rule.ui;
 
-import net.deuce.moman.envelope.model.Envelope;
-import net.deuce.moman.envelope.ui.EnvelopeSelectionDialog;
 import net.deuce.moman.rule.command.Delete;
 import net.deuce.moman.rule.model.Rule;
 import net.deuce.moman.service.ServiceNeeder;
 import net.deuce.moman.ui.AbstractEntityTableView;
 import net.deuce.moman.ui.SelectingTableViewer;
 
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Shell;
 
 public class TransactionRuleView extends AbstractEntityTableView<Rule> {
 	
@@ -58,6 +54,7 @@ public class TransactionRuleView extends AbstractEntityTableView<Rule> {
  		column = new TableViewerColumn(tableViewer, SWT.LEFT);
  		column.getColumn().setText("Use This Envelope");
  	    column.getColumn().setWidth(400);
+ 	    column.setEditingSupport(new RuleEnvelopeSelectionEditingSupport(tableViewer, null, tableViewer.getTable()));
 		
 	    tableViewer.setContentProvider(new RuleContentProvider());
 	    tableViewer.setLabelProvider(new RuleLabelProvider());
@@ -71,34 +68,8 @@ public class TransactionRuleView extends AbstractEntityTableView<Rule> {
 	}
 	
 	@Override
-	protected void doubleClickHandler(int column,
-			StructuredSelection selection, Shell shell) {
-		Rule rule = (Rule)selection.getFirstElement();
-		Envelope env = rule.getEnvelope();
-		
-		EnvelopeSelectionDialog dialog = new EnvelopeSelectionDialog(shell, env);
-		dialog.setAllowBills(true);
-		dialog.create();
-		dialog.open();
-		if (env != dialog.getEnvelope()) {
-			ServiceNeeder.instance().getTransactionRuleService().startQueuingNotifications();
-			try {
-				rule.setEnvelope(dialog.getEnvelope());
-				getViewer().refresh(rule);
-			} finally {
-				ServiceNeeder.instance().getTransactionRuleService().stopQueuingNotifications();
-			}
-		}
-	}
-
-	@Override
 	protected String getDeleteCommandId() {
 		return Delete.ID;
-	}
-
-	@Override
-	protected int[] getDoubleClickableColumns() {
-		return new int[]{5};
 	}
 
 }
