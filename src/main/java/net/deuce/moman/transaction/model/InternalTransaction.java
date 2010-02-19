@@ -341,7 +341,6 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
 		if (!splitMap.containsValue(split)) {
 			if (notifyEnvelope) {
 				split.getEnvelope().addTransaction(this, false);
-				split.getEnvelope().resetBalance();
 			}
 			splitMap.put(split.getEnvelope(), split);
 			getMonitor().fireEntityChanged(this, Properties.split);
