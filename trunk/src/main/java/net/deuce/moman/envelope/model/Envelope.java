@@ -67,6 +67,7 @@ public class Envelope extends AbstractEntity<Envelope> {
 	private Integer dueDay = 0;
 	private Integer index = 0;
 	private Date savingsGoalDate;
+	private Double savingsGoalOverrideAmount; 
 	private transient boolean dirty;
 	
 	public Envelope() {}
@@ -77,6 +78,14 @@ public class Envelope extends AbstractEntity<Envelope> {
 		this.editable = editable;
 	}
 	
+	public Double getSavingsGoalOverrideAmount() {
+		return savingsGoalOverrideAmount;
+	}
+
+	public void setSavingsGoalOverrideAmount(Double savingsGoalOverrideAmount) {
+		this.savingsGoalOverrideAmount = savingsGoalOverrideAmount;
+	}
+
 	public boolean isDirty() {
 		return dirty;
 	}

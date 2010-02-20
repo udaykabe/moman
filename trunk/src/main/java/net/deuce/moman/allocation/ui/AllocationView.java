@@ -391,9 +391,13 @@ public class AllocationView extends ViewPart implements EntityListener<Allocatio
 				if (allocation.isEnabled()) {
 					Envelope env = allocation.getEnvelope();
 					if (env.isSavingsGoal()) {
-						int paycheckCount = allocationSet.getIncome().calcPaycheckCountUntilDate(env.getSavingsGoalDate());
-						if (paycheckCount > 0) {
-							allocation.setAmount((env.getBudget() - env.getBalance()) / paycheckCount);
+						if (env.getSavingsGoalOverrideAmount() == null) {
+							int paycheckCount = allocationSet.getIncome().calcPaycheckCountUntilDate(env.getSavingsGoalDate());
+							if (paycheckCount > 0) {
+								allocation.setAmount((env.getBudget() - env.getBalance()) / paycheckCount);
+							}
+						} else {
+							allocation.setAmount(env.getSavingsGoalOverrideAmount());
 						}
 					}
 				}
@@ -406,9 +410,12 @@ public class AllocationView extends ViewPart implements EntityListener<Allocatio
 					
 					// allocation distribution
 					allocationAmount = 0.0;
-					if (allocation.getEnvelope().isSavingsGoal()) {
+					if (allocation.getEnvelope().isSavingsGoal() && allocation.getEnvelope().getSavingsGoalOverrideAmount() == null) {
 						savingsGoals.add(allocation);
-					} else if (atype == AmountType.FIXED) {
+						continue;
+					} 
+					
+					if (atype == AmountType.FIXED) {
 						if (allocation.getAmount() < available) {
 							allocationAmount = allocation.getAmount();
 						} else {

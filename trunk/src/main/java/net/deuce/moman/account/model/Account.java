@@ -18,7 +18,8 @@ public class Account extends AbstractEntity<Account> {
 		financialInstitution(FinancialInstitution.class),
 		lastDownloadDate(Date.class), status(AccountStatus.class),
 		lastReconciledDate(Date.class), lastReconciledEndingBalance(Double.class),
-		supportsDownloading(Boolean.class), balance(Double.class);
+		supportsDownloading(Boolean.class), onlineBalance(Double.class),
+		balance(Double.class);
 		
 		private Class<?> type;
 		
@@ -36,6 +37,7 @@ public class Account extends AbstractEntity<Account> {
 	private String nickname;
 	private Double initialBalance;
 	private Double balance = 0.0;
+	private Double onlineBalance = 0.0;
 	private Double lastReconciledEndingBalance = 0.0;
 	private Boolean selected = Boolean.FALSE;
 
@@ -57,6 +59,14 @@ public class Account extends AbstractEntity<Account> {
 	@Override
 	public int compare(Account o1, Account o2) {
 		return o1.nickname.compareTo(o2.nickname);
+	}
+
+	public Double getOnlineBalance() {
+		return onlineBalance;
+	}
+
+	public void setOnlineBalance(Double onlineBalance) {
+		this.onlineBalance = onlineBalance;
 	}
 
 	public Double getBalance() {

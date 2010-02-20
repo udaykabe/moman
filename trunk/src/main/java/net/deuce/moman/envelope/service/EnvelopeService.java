@@ -14,7 +14,6 @@ import net.deuce.moman.envelope.model.EnvelopeFactory;
 import net.deuce.moman.rule.model.Rule;
 import net.deuce.moman.rule.service.TransactionRuleService;
 import net.deuce.moman.service.EntityService;
-import net.deuce.moman.service.ServiceContainer;
 import net.deuce.moman.transaction.model.InternalTransaction;
 import net.deuce.moman.transaction.model.TransactionFactory;
 import net.deuce.moman.transaction.model.TransactionStatus;
@@ -39,9 +38,6 @@ public class EnvelopeService extends EntityService<Envelope> {
 
 	@Autowired
 	private TransactionFactory transactionFactory;
-
-	@Autowired
-	private ServiceContainer serviceContainer;
 
 	private Map<String, Envelope> bills = new HashMap<String, Envelope>();
 	private Map<String, Envelope> savingsGoals = new HashMap<String, Envelope>();
@@ -164,37 +160,31 @@ public class EnvelopeService extends EntityService<Envelope> {
 	public void transfer(Account sourceAccount, Account targetAccount,
 			Envelope source, Envelope target, double amount) {
 		
-		List<String> ids = serviceContainer.startQueuingNotifications();
+		Date date = new Date();
 		
-		try {
-			Date date = new Date();
-			
-			// source transaction
-			InternalTransaction sTransaction = transactionFactory.newEntity(
-					null, -amount, TransactionType.XFER, date,
-					"Transfer to " + target.getName(), null, null, null,
-					null, TransactionStatus.reconciled, sourceAccount);
-			sTransaction.addSplit(source, -amount);
-			transactionService.addEntity(sTransaction);
-			
-			// target transaction
-			InternalTransaction tTransaction = transactionFactory.newEntity(
-					null, amount, TransactionType.XFER, date,
-					"Transfer from " + source.getName(), null, null, null,
-					null, TransactionStatus.reconciled, targetAccount);
-			tTransaction.addSplit(target, amount);
-			transactionService.addEntity(tTransaction);
-			
-			sTransaction.setTransferTransaction(tTransaction);
-			tTransaction.setTransferTransaction(sTransaction);
-			
-			source.markDirty();
-			target.markDirty();
-			fireEntityChanged(source);
-			fireEntityChanged(target);
-		} finally {
-			serviceContainer.stopQueuingNotifications(ids);
-		}
+		// source transaction
+		InternalTransaction sTransaction = transactionFactory.newEntity(
+				null, -amount, TransactionType.XFER, date,
+				"Transfer to " + target.getName(), null, null, null,
+				null, TransactionStatus.reconciled, sourceAccount);
+		sTransaction.addSplit(source, -amount);
+		transactionService.addEntity(sTransaction);
+		
+		// target transaction
+		InternalTransaction tTransaction = transactionFactory.newEntity(
+				null, amount, TransactionType.XFER, date,
+				"Transfer from " + source.getName(), null, null, null,
+				null, TransactionStatus.reconciled, targetAccount);
+		tTransaction.addSplit(target, amount);
+		transactionService.addEntity(tTransaction);
+		
+		sTransaction.setTransferTransaction(tTransaction);
+		tTransaction.setTransferTransaction(sTransaction);
+		
+		source.markDirty();
+		target.markDirty();
+		fireEntityChanged(source);
+		fireEntityChanged(target);
 	}
 	
 	public void importDefaultEnvelopes() {
