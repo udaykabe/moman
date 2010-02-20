@@ -21,27 +21,27 @@ public class EntityMonitor<E extends AbstractEntity> {
 		return queuingId != null;
 	}
 
-	public void stopQueuingNotifications(String id) {
+	public synchronized void stopQueuingNotifications(String id) {
 		if (queuingId != null && queuingId.equals(id)) {
-			queuingId = null;
 			for (E entity : addedEntities) {
-				fireEntityAdded(entity);
+				fireEntityAdded(entity, true);
 			}
 			for (E entity : removedEntities) {
-				fireEntityRemoved(entity);
+				fireEntityRemoved(entity, true);
 			}
 			for (ChangedEntity<E> changedEntity : changedEntities) {
-				fireEntityChanged(changedEntity.entity, changedEntity.property);
+				fireEntityChanged(changedEntity.entity, changedEntity.property, true);
 				if (singleChange) break;
 			}
 			removedEntities.clear();
 			addedEntities.clear();
 			changedEntities.clear();
 			
+			queuingId = null;
 		}
 	}
 	
-	public String startQueuingNotifications() {
+	public synchronized String startQueuingNotifications() {
 		
 		if (queuingId != null) return null;
 		
@@ -78,8 +78,8 @@ public class EntityMonitor<E extends AbstractEntity> {
 		return event;
 	}
 	
-	public void fireEntityAdded(E entity, EntityProperty property) {
-		if (!isQueuingNotifications()) {
+	public void fireEntityAdded(E entity, EntityProperty property, boolean force) {
+		if (force || !isQueuingNotifications()) {
 			EntityEvent<E> event = createEvent(entity, property);
 			for (EntityListener<E> listener : listeners) {
 				listener.entityAdded(event);
@@ -90,11 +90,23 @@ public class EntityMonitor<E extends AbstractEntity> {
 	}
 	
 	public void fireEntityAdded(E entity) {
-		fireEntityAdded(entity, null);
+		fireEntityAdded(entity, null, false);
+	}
+	
+	public void fireEntityAdded(E entity, boolean force) {
+		fireEntityAdded(entity, null, force);
+	}
+	
+	public void fireEntityAdded(E entity, EntityProperty property) {
+		fireEntityAdded(entity, property, false);
 	}
 	
 	public void fireEntityRemoved(E entity) {
-		if (!isQueuingNotifications()) {
+		fireEntityRemoved(entity, false);
+	}
+	
+	public void fireEntityRemoved(E entity, boolean force) {
+		if (force || !isQueuingNotifications()) {
 			EntityEvent<E> event = createEvent(entity, null);
 			for (EntityListener<E> listener : listeners) {
 				listener.entityRemoved(event);
@@ -105,11 +117,19 @@ public class EntityMonitor<E extends AbstractEntity> {
 	}
 	
 	public void fireEntityChanged(E entity) {
-		fireEntityChanged(entity, null);
+		fireEntityChanged(entity, null, false);
+	}
+	
+	public void fireEntityChanged(E entity, boolean force) {
+		fireEntityChanged(entity, null, force);
 	}
 	
 	public void fireEntityChanged(E entity, EntityProperty property) {
-		if (!isQueuingNotifications()) {
+		fireEntityChanged(entity, property, false);
+	}
+	
+	public void fireEntityChanged(E entity, EntityProperty property, boolean force) {
+		if (force || !isQueuingNotifications()) {
 			EntityEvent<E> event = createEvent(entity, property);
 			for (EntityListener<E> listener : listeners) {
 				listener.entityChanged(event);

@@ -7,6 +7,7 @@ import net.deuce.moman.account.model.Account;
 import net.deuce.moman.account.service.AccountService;
 import net.deuce.moman.envelope.model.Envelope;
 import net.deuce.moman.envelope.service.EnvelopeService;
+import net.deuce.moman.service.ServiceContainer;
 import net.deuce.moman.service.ServiceNeeder;
 import net.deuce.moman.ui.Activator;
 
@@ -341,8 +342,16 @@ public class EnvelopeTransferDialog extends TitleAreaDialog {
 	protected void saveInput() {
 		double amount = Constants.CURRENCY_VALIDATOR.validate(amountText.getText()).doubleValue();
 		if (amount > 0 && sourceEnvelope != targetEnvelope) {
-			envelopeService.transfer(sourceAccount, targetAccount,
+			
+			ServiceContainer serviceContainer = ServiceNeeder.instance().getServiceContainer();
+			List<String> ids = serviceContainer.startQueuingNotifications();
+
+			try {
+				envelopeService.transfer(sourceAccount, targetAccount,
 					sourceEnvelope, targetEnvelope, amount);
+			} finally {
+				serviceContainer.stopQueuingNotifications(ids);
+			}
 		}
 	}
 

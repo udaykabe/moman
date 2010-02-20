@@ -11,7 +11,7 @@ public class AccountFactory extends EntityFactory<Account> {
 	public Account buildEntity(String id, Boolean selected,
 			String nickname, String bankId, String accountId,
 			String username, String password, AccountStatus status,
-			Boolean supportsDownloading, Double balance,
+			Boolean supportsDownloading, Double balance, Double onlineBalance,
 			Double lastReconciledEndingBalance) {
 		Account entity = super.buildEntity(Account.class, id);
 		entity.setSelected(selected);
@@ -23,6 +23,7 @@ public class AccountFactory extends EntityFactory<Account> {
 		entity.setStatus(status);
 		entity.setSupportsDownloading(supportsDownloading);
 		entity.setBalance(balance);
+		entity.setOnlineBalance(onlineBalance);
 		entity.setLastReconciledEndingBalance(lastReconciledEndingBalance);
 		return entity;
 	}
@@ -30,10 +31,10 @@ public class AccountFactory extends EntityFactory<Account> {
 	public Account newEntity(Boolean selected,
 			String nickname, String bankId, String accountId,
 			String username, String password, AccountStatus status,
-			Boolean supportsDownloading, Double balance,
+			Boolean supportsDownloading, Double balance, Double onlineBalance,
 			Double lastReconciledEndingBalance) {
 		return buildEntity(createUuid(), selected, nickname,
 			bankId, accountId, username, password, status,
-			supportsDownloading, balance, lastReconciledEndingBalance);
+			supportsDownloading, balance, onlineBalance, lastReconciledEndingBalance);
 	}
 }

@@ -32,8 +32,8 @@ public class AccountLabelProvider implements ITableLabelProvider {
 	public String getColumnText(Object element, int columnIndex) {
 		Account account = (Account) element;
 		switch (columnIndex) {
-		case 1: return account.getNickname() + " (" +
-			Constants.CURRENCY_VALIDATOR.format(account.getBalance()) + ")";
+		case 1: return account.getNickname() + " - " +
+			Constants.CURRENCY_VALIDATOR.format(account.getBalance());
 		case 2: return account.getAccountId();
 		default:
 			break;

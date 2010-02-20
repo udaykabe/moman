@@ -309,6 +309,7 @@ public class ServiceContainer {
 	@SuppressWarnings("unchecked")
 	public void stopQueuingNotifications(List<String> ids) {
 		for (int i=0; i<services.size(); i++) {
+			EntityService service = services.get(i);
 			services.get(i).stopQueuingNotifications(ids.get(i));
 		}
 	}

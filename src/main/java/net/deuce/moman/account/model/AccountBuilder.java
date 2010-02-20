@@ -48,6 +48,7 @@ public class AccountBuilder extends AbstractBuilder {
 						n.element("status") != null ? AccountStatus.valueOf(n.elementText("status")) : null,
 						Boolean.valueOf(n.elementText("supports-downloading")),
 						Double.valueOf(n.elementText("balance")),
+						Double.valueOf(n.elementText("online-balance")),
 						Double.valueOf(n.elementText("last-reconciled-ending-balance"))
 						);
 				
@@ -94,6 +95,7 @@ public class AccountBuilder extends AbstractBuilder {
 			addElement(el, "password", account.getPassword());
 			addElement(el, "nickname", account.getNickname());
 			addElement(el, "balance", Utils.formatDouble(account.getBalance()));
+			addElement(el, "online-balance", Utils.formatDouble(account.getOnlineBalance()));
 			addElement(el, "last-reconciled-ending-balance", Utils.formatDouble(account.getLastReconciledEndingBalance()));
 			
 			if (account.getStatus() != null) {

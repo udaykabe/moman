@@ -172,7 +172,7 @@ public abstract class TransactionProcessor implements Runnable {
 						});
 						
 						account.setLastDownloadDate(result.getLastDownloadedDate());
-						account.setBalance(result.getStatementBalance());
+						account.setOnlineBalance(result.getStatementBalance());
 						if (processedTransactions != null && processedTransactions.size() > 0) {
 							InternalTransaction firstTransaction = processedTransactions.get(processedTransactions.size()-1);
 							if (firstTransaction.isMatched()) {

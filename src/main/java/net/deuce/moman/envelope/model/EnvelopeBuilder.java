@@ -100,6 +100,10 @@ public class EnvelopeBuilder extends AbstractBuilder {
 				if (val != null) {
 					envelope.setSavingsGoalDate(Constants.SHORT_DATE_FORMAT.parse(val));
 				}
+				val = e.elementText("savings-goal-override");
+				if (val != null) {
+					envelope.setSavingsGoalOverrideAmount(Double.valueOf(val));
+				}
 				return envelope;
 		} catch (ParseException pe) {
 			pe.printStackTrace();
@@ -129,6 +133,9 @@ public class EnvelopeBuilder extends AbstractBuilder {
 		addElement(el, "dueDay", env.getDueDay().toString());
 		if (env.getSavingsGoalDate() != null) {
 			addElement(el, "savings-goal-date", Constants.SHORT_DATE_FORMAT.format(env.getSavingsGoalDate()));
+		}
+		if (env.getSavingsGoalOverrideAmount() != null) {
+			addElement(el, "savings-goal-override", Utils.formatDouble(env.getSavingsGoalOverrideAmount()));
 		}
 		
 		if (env.getParent() != null) {

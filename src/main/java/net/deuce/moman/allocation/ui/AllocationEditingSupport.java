@@ -86,7 +86,11 @@ public class AllocationEditingSupport extends EditingSupport {
 		case 1: 
 			AmountType type = allocation.getAmountType();
 			if (type == AmountType.FIXED || type == AmountType.REMAINDER) {
-				return Constants.CURRENCY_VALIDATOR.format(allocation.getAmount());
+				Double amount = allocation.getAmount();
+				if (allocation.getEnvelope().getSavingsGoalOverrideAmount() != null) {
+					amount = allocation.getEnvelope().getSavingsGoalOverrideAmount(); 
+				}
+				return Constants.CURRENCY_VALIDATOR.format(amount);
 			}
 			return Constants.PERCENT_VALIDATOR.format(allocation.getAmount());
 		case 2: return allocation.getAmountType().ordinal();
@@ -122,6 +126,9 @@ public class AllocationEditingSupport extends EditingSupport {
 					amount = Constants.PERCENT_VALIDATOR.validate((String)value).doubleValue();
 				}
 				if (amount != null) {
+					if (allocation.getEnvelope().isSavingsGoal()) {
+						allocation.getEnvelope().setSavingsGoalOverrideAmount(amount);
+					}
 					allocation.executeChange(Allocation.Properties.amount, amount);
 					allocationMonitor.fireEntityChanged(allocation, Allocation.Properties.amount);
 				}

@@ -217,6 +217,8 @@ public class TransactionService extends EntityService<InternalTransaction> {
 			
 		}
 		
+		account.setBalance(balance);
+		
 		/*
 		Double balance = null;
 		
