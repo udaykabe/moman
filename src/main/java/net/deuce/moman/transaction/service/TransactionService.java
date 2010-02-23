@@ -28,6 +28,7 @@ public class TransactionService extends EntityService<InternalTransaction> {
 	private Map<String, InternalTransaction> transactionsByExternalId = new HashMap<String, InternalTransaction>();
 	private Map<Account, List<InternalTransaction>> accountTransactions = new HashMap<Account, List<InternalTransaction>>();
 	private Map<Account, InternalTransaction> initialBalanceTransactions = new HashMap<Account, InternalTransaction>();
+	private List<InternalTransaction> customTransactionList;
 
 	@Autowired
 	private AccountService accountService;
@@ -45,6 +46,16 @@ public class TransactionService extends EntityService<InternalTransaction> {
 		}
 	}
 	
+	public List<InternalTransaction> getCustomTransactionList() {
+		return customTransactionList;
+	}
+
+	public void setCustomTransactionList(
+			List<InternalTransaction> customTransactionList) {
+		this.customTransactionList = customTransactionList;
+		fireEntityChanged(null);
+	}
+
 	public InternalTransaction findTransactionByExternalId(String id) {
 		return transactionsByExternalId.get(id);
 	}
@@ -100,7 +111,13 @@ public class TransactionService extends EntityService<InternalTransaction> {
 	}
 	
 	public List<InternalTransaction> getRegisterTransactions(boolean reverse, boolean allowingTransfers) {
-		List<InternalTransaction> list = new LinkedList<InternalTransaction>(__getRegisterTransactions());
+		List<InternalTransaction> sourceList;
+		if (customTransactionList != null) {
+			sourceList = customTransactionList;
+		} else {
+			sourceList = __getRegisterTransactions();
+		}
+		List<InternalTransaction> list = new LinkedList<InternalTransaction>(sourceList);
 		if (list.size() > 0) {
 			
 			// filter

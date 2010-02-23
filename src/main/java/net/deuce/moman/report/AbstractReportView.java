@@ -34,8 +34,7 @@ public abstract class AbstractReportView extends ViewPart {
 		gridLayout.numColumns = 1;
 		parent.setLayout(gridLayout);
 		
-		Control dateRangeControl = createDateRangeControl(parent);
-//		dateRangeControl.setLayoutData(new GridData(GridData.FILL_VERTICAL));
+		createDateRangeControl(parent);
 			
 		Control chartControl = createChartControl(parent);
 		chartControl.setLayoutData(new GridData(GridData.FILL_BOTH));
