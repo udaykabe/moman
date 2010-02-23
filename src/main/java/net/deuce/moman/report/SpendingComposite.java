@@ -10,11 +10,11 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DateRangeCombo;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
 
 public class SpendingComposite extends Composite {
 	
@@ -34,7 +34,7 @@ public class SpendingComposite extends Composite {
 		canvas = buildCanvas(this, combo, style);
 		canvas.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
-		createButton(canvas.getTopEnvelopeSource());
+		createLink(canvas.getTopEnvelopeSource());
 	}
 	
 	protected SpendingCanvas buildCanvas(SpendingComposite parent, DateRangeCombo combo, int style) {
@@ -47,18 +47,18 @@ public class SpendingComposite extends Composite {
 		return breadCrumbComposite;
 	}
 	
-	private Button createButton(final EnvelopeSource source) {
-		final Button button = new Button(breadCrumbComposite, SWT.PUSH | SWT.FLAT);
+	private Link createLink(final EnvelopeSource source) {
+		final Link link = new Link(breadCrumbComposite, SWT.NONE);
 		String text = source.getLabel();
-		button.setText(text);
-		button.setData(source);
-		button.setToolTipText(text);
-		button.addSelectionListener(new SelectionListener() {
+		link.setText("<a>"+text+"</a>");
+		link.setData(source);
+		link.setToolTipText(text);
+		link.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (button.getData() != canvas.peekSourceEnvelope()) {
-					if (button.getData() != null) {
-						while (button.getData() != canvas.peekSourceEnvelope()) {
+				if (link.getData() != canvas.peekSourceEnvelope()) {
+					if (link.getData() != null) {
+						while (link.getData() != canvas.peekSourceEnvelope()) {
 							canvas.popSourceEnvelope();
 						}
 					}
@@ -69,8 +69,8 @@ public class SpendingComposite extends Composite {
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		});
-		button.setEnabled(true);
-		return button;
+		link.setEnabled(true);
+		return link;
 	}
 	
 	private Label createSeparator() {
@@ -89,7 +89,7 @@ public class SpendingComposite extends Composite {
 				if (source != canvas.getTopEnvelopeSource()) {
 					createSeparator();
 				}
-				createButton(source);
+				createLink(source);
 			}
 		}
 		breadCrumbComposite.layout(true, true);
