@@ -31,10 +31,14 @@ public class SpendingComposite extends Composite {
 		Composite breadCrumbs = createBreadCrumbs(this);
 		breadCrumbs.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
-		canvas = new SpendingCanvas(this, combo, style);
+		canvas = buildCanvas(this, combo, style);
 		canvas.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
 		createButton(canvas.getTopEnvelopeSource());
+	}
+	
+	protected SpendingCanvas buildCanvas(SpendingComposite parent, DateRangeCombo combo, int style) {
+		return new SpendingCanvas(this, combo, style);
 	}
 	
 	private Composite createBreadCrumbs(Composite parent) {

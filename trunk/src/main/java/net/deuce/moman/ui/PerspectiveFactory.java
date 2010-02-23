@@ -8,6 +8,7 @@ import net.deuce.moman.envelope.ui.EnvelopeView;
 import net.deuce.moman.envelope.ui.SavingsGoalsView;
 import net.deuce.moman.income.ui.IncomeView;
 import net.deuce.moman.report.CashFlowReportView;
+import net.deuce.moman.report.EnvelopeBreakdownReportView;
 import net.deuce.moman.report.SpendingReportView;
 import net.deuce.moman.rule.ui.TransactionRuleView;
 import net.deuce.moman.transaction.ui.RegisterView;
@@ -30,6 +31,7 @@ public class PerspectiveFactory implements IPerspectiveFactory {
 		
 		IFolderLayout envelopeFolder = layout.createFolder("net.deuce.moman.rcp.view.envelopees", IPageLayout.TOP, 0.6f, editorArea);
 		
+		envelopeFolder.addView(EnvelopeBreakdownReportView.ID);
 		envelopeFolder.addView(EnvelopeView.ID);
 		
 		String[] placeholders = new String[] {
@@ -40,6 +42,7 @@ public class PerspectiveFactory implements IPerspectiveFactory {
 				BudgetView.ID,
 				CashFlowReportView.ID,
 				SpendingReportView.ID,
+//				EnvelopeBreakdownReportView.ID,
 		};
 		
 		for (String partId : placeholders) {

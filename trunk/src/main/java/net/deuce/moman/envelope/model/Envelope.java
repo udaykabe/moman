@@ -8,6 +8,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -19,6 +20,7 @@ import net.deuce.moman.model.Frequency;
 import net.deuce.moman.transaction.model.InternalTransaction;
 import net.deuce.moman.transaction.model.RepeatingTransaction;
 import net.deuce.moman.util.CalendarUtil;
+import net.deuce.moman.util.DataDateRange;
 
 public class Envelope extends AbstractEntity<Envelope> {
 
@@ -422,6 +424,32 @@ public class Envelope extends AbstractEntity<Envelope> {
 			list = new ArrayList<InternalTransaction>();
 			transactions.put(account, list);
 		}
+		
+		return list;
+	}
+	
+	public List<InternalTransaction> getAccountTransactions(Account account, boolean deep) {
+		return getAccountTransactions(account, null, deep);
+	}
+	
+	public List<InternalTransaction> getAccountTransactions(Account account, DataDateRange dateRange, boolean deep) {
+		List<InternalTransaction> list = new LinkedList<InternalTransaction>(getAccountTransactions(account));
+		
+		if (deep) {
+			for (Envelope child : getChildren()) {
+				list.addAll(child.getAccountTransactions(account, deep));
+			}
+		}
+		
+		if (dateRange != null) {
+			ListIterator<InternalTransaction> itr = list.listIterator();
+			while (itr.hasNext()) {
+				if (!CalendarUtil.dateInRange(itr.next().getDate(), dateRange)) {
+					itr.remove();
+				}
+			}
+		}
+		
 		return list;
 	}
 
@@ -478,6 +506,26 @@ public class Envelope extends AbstractEntity<Envelope> {
 		}
 	}
 	
+	public boolean contains(Envelope env) {
+		return contains(env, false);
+	}
+	
+	public boolean contains(Envelope env, boolean deep) {
+		
+		for (Envelope child : getChildren()) {
+			if (child == env) return true;
+		}
+		
+		if (deep) {
+			for (Envelope child : getChildren()) {
+				if (child.contains(env, true)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
 	public List<InternalTransaction> getTransactions() {
 		List<Account> selectedAccounts = getAccountService().getSelectedAccounts();
 		List<InternalTransaction> list = new LinkedList<InternalTransaction>();
@@ -487,6 +535,30 @@ public class Envelope extends AbstractEntity<Envelope> {
 				list.addAll(entry.getValue());
 			}
 		}
+		return list;
+	}
+	
+	public List<InternalTransaction> getTransactions(boolean deep) {
+		return getTransactions(null, deep);
+	}
+	
+	public List<InternalTransaction> getTransactions(DataDateRange dateRange, boolean deep) {
+		List<InternalTransaction> list = getTransactions();
+		if (deep) {
+			for (Envelope child : getChildren()) {
+				list.addAll(child.getTransactions(true));
+			}
+		}
+		
+		if (dateRange != null) {
+			ListIterator<InternalTransaction> itr = list.listIterator();
+			while (itr.hasNext()) {
+				if (!CalendarUtil.dateInRange(itr.next().getDate(), dateRange)) {
+					itr.remove();
+				}
+			}
+		}
+
 		return list;
 	}
 	

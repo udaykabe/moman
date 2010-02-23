@@ -1,5 +1,6 @@
 package net.deuce.moman.report;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -70,37 +71,35 @@ public class SpendingCanvas extends AbstractEnvelopeReportPieCanvas {
 		if (index < getResult().getEnvelopes().size()) {
 			Envelope env = getResult().getEnvelopes().get(index).getEnvelope();
 			if (env != peekSourceEnvelope().getEnvelope()) {
-				envelopeSource = new EnvelopeSource(env, env.getChildren(), env.getName());
+				if (env.getChildren().size() > 0) {
+					envelopeSource = new EnvelopeSource(peekSourceEnvelope(), env, env.getChildren(), env.getName());
+				} else {
+					Envelope[] list = new Envelope[]{env};
+					envelopeSource = new EnvelopeSource(peekSourceEnvelope(), env, Arrays.asList(list), env.getName());
+				}
 			}
 		} else {
 			List<Envelope> availableEnvelopes = getTopEnvelopeSource().getAvailableEnvelopes();
-			System.out.println("ZZZ availableEnvelopes: ");
-			for (Envelope env : availableEnvelopes) {
-				System.out.println(env);
-			}
 			for (EnvelopeResult er : getResult().getEnvelopes()) {
-				System.out.println("ZZZ filtering " + er.getEnvelope());
 				availableEnvelopes.remove(er.getEnvelope());
 			}
 			for (EnvelopeSource es : getSourceEnvelopes()) {
 				if (es != getTopEnvelopeSource()) {
-					System.out.println("ZZZ filtering " + es.getEnvelope());
 					availableEnvelopes.remove(es.getEnvelope());
 				}
-				System.out.println("ZZZ filtering tops " + es.getTopEnvelopes());
 				availableEnvelopes.removeAll(es.getTopEnvelopes());
 			}
-			System.out.println("ZZZ filtered availableEnvelopes: ");
-			for (Envelope env : availableEnvelopes) {
-				System.out.println(env);
-			}
-			envelopeSource = new EnvelopeSource(null, availableEnvelopes, "Other");
+			envelopeSource = new EnvelopeSource(peekSourceEnvelope(), null, availableEnvelopes, "Other");
 		}
 		
-		if (envelopeSource != null) {
+		if (envelopeSource != null && envelopeSource.getAvailableEnvelopes().size() > 0) {
 			pushSourceEnvelope(envelopeSource);
 			regenerateChart();
 		}
+	}
+	
+	protected String getChartTitle() {
+		return "Spending Overview";
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -111,7 +110,7 @@ public class SpendingCanvas extends AbstractEnvelopeReportPieCanvas {
 	    chart.getBlock().getOutline().setVisible(true);
 	    chart.setDimension(ChartDimension.TWO_DIMENSIONAL_WITH_DEPTH_LITERAL);
 	    
-	    chart.getTitle().getLabel().getCaption().setValue("Spending Overview");
+	    chart.getTitle().getLabel().getCaption().setValue(getChartTitle());
 	    
 	    if (hasSourceEnvelopes()) {
 	    	spendingComposite.setSourceEnvelopes(getSourceEnvelopes());

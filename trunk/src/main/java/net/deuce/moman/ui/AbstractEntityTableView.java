@@ -17,8 +17,8 @@ import org.eclipse.jface.viewers.TableViewerEditor;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
+import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
@@ -111,7 +111,7 @@ implements EntityListener<E> {
 			service.setViewer(tableViewer);
 		}
 		
- 		tableViewer.getTable().addKeyListener(new KeyListener() {
+ 		tableViewer.getTable().addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.keyCode == SWT.BS && e.stateMask == SWT.COMMAND) {
@@ -124,10 +124,6 @@ implements EntityListener<E> {
 				} else if (e.keyCode == 'a' && e.stateMask == SWT.COMMAND) {
 					tableViewer.getTable().selectAll();
 				}
-			}
-
-			@Override
-			public void keyReleased(KeyEvent e) {
 			}
  		});
  		

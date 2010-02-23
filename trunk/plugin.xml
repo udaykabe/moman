@@ -146,6 +146,14 @@
                name="Spending Report"
                restorable="true">
          </view>
+         <view
+               allowMultiple="false"
+               category="moman.category"
+               class="net.deuce.moman.report.EnvelopeBreakdownReportView"
+               id="net.deuce.moman.report.EnvelopeBreakdownReportView"
+               name="Envelope Breakdown Report"
+               restorable="true">
+         </view>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
@@ -341,6 +349,10 @@
       <command
             id="net.deuce.moman.command.navigate.spendingReport"
             name="Spending Report Navigation">
+      </command>
+      <command
+            id="net.deuce.moman.command.navigate.envelopeBreakdownReport"
+            name="Envelope Breakdown Navigation">
       </command>
       <command
             id="net.deuce.moman.command.navigate.repeatingTransaction"
@@ -592,6 +604,12 @@
             sequence="COMMAND+8">
       </key>
       <key
+            commandId="net.deuce.moman.command.navigate.envelopeBreakdownReport"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="net.deuce.moman.scheme.main"
+            sequence="COMMAND+9">
+      </key>
+      <key
             commandId="net.deuce.moman.command.navigate.register"
             contextId="org.eclipse.ui.contexts.window"
             schemeId="net.deuce.moman.scheme.main"
@@ -834,6 +852,10 @@
       <handler
             class="net.deuce.moman.command.navigate.ActivateSpendingReportView"
             commandId="net.deuce.moman.command.navigate.spendingReport">
+      </handler>
+      <handler
+            class="net.deuce.moman.command.navigate.ActivateEnvelopeBreakdownReportView"
+            commandId="net.deuce.moman.command.navigate.envelopeBreakdownReport">
       </handler>
       <handler
             class="net.deuce.moman.command.navigate.ActivateRepeatingTransactionView"

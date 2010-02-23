@@ -90,6 +90,7 @@ public class EnvelopeService extends EntityService<Envelope> {
 	
 	public void setSelectedEnvelope(Envelope env) {
 		this.selectedEnvelope = env;
+		transactionService.setCustomTransactionList(null);
 	}
 	
 	public Envelope getMonthlyEnvelope() {
