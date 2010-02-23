@@ -49,7 +49,7 @@ public abstract class AbstractSelectEntityDialog<E extends AbstractEntity> exten
 		
 		Label label = new Label(container, SWT.NONE);
 		label.setText(getEntityTitle());
-		entityCombo = new EntityCombo(container, service, getEntityLabelProvider(), SWT.READ_ONLY | SWT.SIMPLE);
+		entityCombo = new EntityCombo(container, service, getEntityLabelProvider());
 		
 		return container;
 	}

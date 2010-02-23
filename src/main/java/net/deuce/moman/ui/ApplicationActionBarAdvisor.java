@@ -70,10 +70,16 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private IWorkbenchAction envelopeViewAction;
     private IWorkbenchAction paySourceViewAction;
     private IWorkbenchAction billViewAction;
+    private IWorkbenchAction allocationViewAction;
+    private IWorkbenchAction budgetViewAction;
+    private IWorkbenchAction cashFlowReportViewAction;
+    private IWorkbenchAction spendingReportViewAction;
     private IWorkbenchAction savingsGoalsViewAction;
     private IWorkbenchAction registerViewAction;
     private IWorkbenchAction importViewAction;
     private IWorkbenchAction importRuleViewAction;
+    private IWorkbenchAction transferViewAction;
+    private IWorkbenchAction repeatingTransactionViewAction;
     
     private RecentlyOpenedFilesMenu recentFilesMenu;
     
@@ -174,8 +180,20 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         billViewAction = Actions.NAVIGATE_BILLS_ACTION.create( window );
         register( billViewAction );
 
+        allocationViewAction = Actions.NAVIGATE_ALLOCATION_ACTION.create( window );
+        register( allocationViewAction );
+
         savingsGoalsViewAction = Actions.NAVIGATE_SAVINGS_GOALS_ACTION.create( window );
         register( savingsGoalsViewAction );
+
+        budgetViewAction = Actions.NAVIGATE_BUDGET_ACTION.create( window );
+        register( budgetViewAction );
+
+        cashFlowReportViewAction = Actions.NAVIGATE_CASH_FLOW_REPORT_GOALS_ACTION.create( window );
+        register( cashFlowReportViewAction );
+
+        spendingReportViewAction = Actions.NAVIGATE_SPENDING_REPORT_ACTION.create( window );
+        register( spendingReportViewAction );
 
         registerViewAction = Actions.NAVIGATE_REGISTER_ACTION.create( window );
         register( registerViewAction );
@@ -185,6 +203,12 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
         importRuleViewAction = Actions.NAVIGATE_IMPORT_RULES_ACTION.create( window );
         register( importRuleViewAction );
+
+        transferViewAction = Actions.NAVIGATE_TRANSFER_ACTION.create( window );
+        register( transferViewAction );
+
+        repeatingTransactionViewAction = Actions.NAVIGATE_REPEATING_TRANSACTION_ACTION.create( window );
+        register( repeatingTransactionViewAction );
 
         aboutAction = ActionFactory.ABOUT.create( window );
 //        aboutAction.setImageDescriptor( AbstractUIPlugin.imageDescriptorFromPlugin( "moman.application",
@@ -311,10 +335,16 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         navigateMenu.add( envelopeViewAction );
         navigateMenu.add( paySourceViewAction );
         navigateMenu.add( billViewAction );
+        navigateMenu.add( allocationViewAction );
         navigateMenu.add( savingsGoalsViewAction );
+        navigateMenu.add( budgetViewAction );
+        navigateMenu.add( cashFlowReportViewAction );
+        navigateMenu.add( spendingReportViewAction );
         navigateMenu.add( registerViewAction );
         navigateMenu.add( importViewAction );
         navigateMenu.add( importRuleViewAction );
+        navigateMenu.add( transferViewAction );
+        navigateMenu.add( repeatingTransactionViewAction );
         
 		((MenuManager)menuBar).setOverrides(new IContributionManagerOverrides() {
                     public Integer getAccelerator(IContributionItem item) {

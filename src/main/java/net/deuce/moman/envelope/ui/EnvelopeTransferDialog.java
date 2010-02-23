@@ -177,7 +177,7 @@ public class EnvelopeTransferDialog extends TitleAreaDialog {
 	private Combo buildCombo(Composite parent, GridData gridData, Account account, List<Account> accounts) {
 		Combo combo = new Combo(parent, SWT.DROP_DOWN | SWT.READ_ONLY);
 		combo.setLayoutData(gridData);
-		combo.setFont(Constants.STANDARD_FONT);
+		combo.setFont(Constants.COMBO_FONT);
 //		combo.setSize(100, 20);
 		
 		int index = 0;

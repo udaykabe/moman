@@ -17,7 +17,10 @@ public class Constants {
 	public static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a");
 	public static final CurrencyValidator CURRENCY_VALIDATOR = new CurrencyValidator(false, true);
 	public static final PercentValidator PERCENT_VALIDATOR = new PercentValidator(false);
+	public static final Font COMBO_FONT = new Font(Display.getCurrent(), new FontData[]{new FontData("Lucida Grande", 12, SWT.NORMAL)});
 	public static final Font STANDARD_FONT = new Font(Display.getCurrent(), new FontData[]{new FontData("Lucida Grande", 14, SWT.NORMAL)});
+	public static final int CHART_TITLE_FONT_SIZE = 16;
+	public static final String CHART_TITLE_FONT_NAME = "Lucida Grande";
 	public static final Font CHART_FONT = new Font(Display.getCurrent(), new FontData[]{new FontData("Lucida Grande", 12, SWT.NORMAL)});
 	
 }
