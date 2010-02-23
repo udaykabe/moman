@@ -105,12 +105,38 @@ public abstract class AbstractEnvelopeReportPieCanvas extends
 	public List<EnvelopeSource> getSourceEnvelopes() {
 		return new LinkedList<EnvelopeSource>(envelopeStack);
 	}
+	
+	private EnvelopeResult calculateResult(Envelope env, boolean expense, boolean recursive, List<InternalTransaction> allTransactions) {
+		double sum = 0.0;
+		List<Account> accounts = accountService.getSelectedAccounts();
+
+		for (DataDateRange ddr : getDateRange().dataDateRanges()) {
+			for (Account account : accounts) {
+				for (InternalTransaction it : env.getAccountTransactions(account, ddr, deepEnvelopeTransactions && recursive)) {
+					if (it.isEnvelopeTransfer()) continue;
+					
+					Double splitAmount = 0.0;
+					
+					for (Split s : it.getSplit()) {
+						if (env == s.getEnvelope() || env.contains(s.getEnvelope(), true)) {
+							splitAmount += s.getAmount();
+						}
+					}
+					
+					if ((expense && splitAmount <= 0.0) || (!expense && splitAmount > 0.0)) {
+						allTransactions.add(it);
+						sum += expense ? -splitAmount : splitAmount;
+					}
+				}
+			}
+		}
+		return new EnvelopeResult(env, sum);
+	}
 
 	protected DataSetResult createDataSet(boolean expense) {
 		double maxSum = 0.0;
 		double minSum = Double.MAX_VALUE;
 		List<EnvelopeResult> dataSet = new LinkedList<EnvelopeResult>();
-		List<Account> accounts = accountService.getSelectedAccounts();
 		
 		EnvelopeSource envelopeSource = envelopeStack.peek();
 		List<Envelope> envelopes = new LinkedList<Envelope>();
@@ -122,36 +148,21 @@ public abstract class AbstractEnvelopeReportPieCanvas extends
 		envelopes.addAll(envelopeSource.getAvailableEnvelopes());
 		
 		List<InternalTransaction> allTransactions = new LinkedList<InternalTransaction>();
+		
+		if (envelopeSource.getEnvelope() != null) {
+			EnvelopeResult result = calculateResult(envelopeSource.getEnvelope(), expense, false, allTransactions);
+			maxSum = Math.max(result.getValue(), maxSum);
+			minSum = Math.min(result.getValue(), minSum);
+			dataSet.add(result);
+		}
 
 		for (Envelope env : envelopes) {
-			double sum = 0.0;
-			for (DataDateRange ddr : getDateRange().dataDateRanges()) {
-				for (Account account : accounts) {
-					for (InternalTransaction it : env.getAccountTransactions(account, ddr, deepEnvelopeTransactions)) {
-						if (it.isEnvelopeTransfer()) continue;
-						
-						Double splitAmount = 0.0;
-						
-						for (Split s : it.getSplit()) {
-							if (env == s.getEnvelope() || env.contains(s.getEnvelope(), true)) {
-								splitAmount += s.getAmount();
-							}
-						}
-						
-						if ((expense && splitAmount <= 0.0) || (!expense && splitAmount > 0.0)) {
-							allTransactions.add(it);
-							sum += expense ? -splitAmount : splitAmount;
-						}
-					}
-				}
-				if (sum > maxSum) {
-					maxSum = sum;
-				}
-				if (sum < minSum) {
-					minSum = sum;
-				}
+			if (env != envelopeSource.getEnvelope()) {
+				EnvelopeResult result = calculateResult(env, expense, true, allTransactions);
+				maxSum = Math.max(result.getValue(), maxSum);
+				minSum = Math.min(result.getValue(), minSum);
+				dataSet.add(result);
 			}
-			dataSet.add(new EnvelopeResult(env, sum));
 		}
 		
 		Collections.sort(dataSet);
@@ -173,6 +184,7 @@ public abstract class AbstractEnvelopeReportPieCanvas extends
 		
 		if (count == 1) {
 			dataSet.add(remaining);
+			allOtherTotal = 0.0;
 		}
 		
 		// remove any zero valued categories

@@ -86,6 +86,7 @@ public abstract class AbstractReportCanvas extends Canvas implements ICallBackNo
 						rect.height);
 			}
 		});
+		
 	}
 	
 	protected abstract Chart doCreateChart();
