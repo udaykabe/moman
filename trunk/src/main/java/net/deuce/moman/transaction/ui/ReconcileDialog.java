@@ -100,7 +100,7 @@ public class ReconcileDialog extends TitleAreaDialog implements EntityListener<I
 		Label label = new Label(composite, SWT.NONE);
 		label.setText("Account");
 		accountCombo = new EntityCombo<Account>(composite,
-				accountService,  new AccountEntityLabelProvider(), SWT.NONE);
+				accountService,  new AccountEntityLabelProvider());
 		accountCombo.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

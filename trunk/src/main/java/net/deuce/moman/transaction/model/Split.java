@@ -48,6 +48,11 @@ public class Split extends AbstractEntity<Split> {
 	}
 
 	@Override
+	public String toString() {
+		return "Split [amount=" + amount + ", envelope=" + envelope + "]";
+	}
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;

@@ -130,6 +130,22 @@
                name="Allocation Profiles"
                restorable="true">
          </view>
+         <view
+               allowMultiple="false"
+               category="moman.category"
+               class="net.deuce.moman.report.CashFlowReportView"
+               id="net.deuce.moman.report.CashFlowReportView"
+               name="Cash Flow"
+               restorable="true">
+         </view>
+         <view
+               allowMultiple="false"
+               category="moman.category"
+               class="net.deuce.moman.report.SpendingReportView"
+               id="net.deuce.moman.report.SpendingReportView"
+               name="Spending Report"
+               restorable="true">
+         </view>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
@@ -317,6 +333,14 @@
       <command
             id="net.deuce.moman.command.navigate.budget"
             name="Budget View Navigation">
+      </command>
+      <command
+            id="net.deuce.moman.command.navigate.cashFlowReport"
+            name="Cash Flow Report Navigation">
+      </command>
+      <command
+            id="net.deuce.moman.command.navigate.spendingReport"
+            name="Spending Report Navigation">
       </command>
       <command
             id="net.deuce.moman.command.navigate.repeatingTransaction"
@@ -514,6 +538,12 @@
             sequence="COMMAND+F">
       </key>
       <key
+            commandId="net.deuce.moman.command.navigate.account"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="net.deuce.moman.scheme.main"
+            sequence="COMMAND+0">
+      </key>
+      <key
             commandId="net.deuce.moman.command.navigate.envelope"
             contextId="org.eclipse.ui.contexts.window"
             schemeId="net.deuce.moman.scheme.main"
@@ -548,6 +578,18 @@
             contextId="org.eclipse.ui.contexts.window"
             schemeId="net.deuce.moman.scheme.main"
             sequence="COMMAND+6">
+      </key>
+      <key
+            commandId="net.deuce.moman.command.navigate.cashFlowReport"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="net.deuce.moman.scheme.main"
+            sequence="COMMAND+7">
+      </key>
+      <key
+            commandId="net.deuce.moman.command.navigate.spendingReport"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="net.deuce.moman.scheme.main"
+            sequence="COMMAND+8">
       </key>
       <key
             commandId="net.deuce.moman.command.navigate.register"
@@ -784,7 +826,14 @@
       <handler
             class="net.deuce.moman.command.navigate.ActivateBudgetView"
             commandId="net.deuce.moman.command.navigate.budget">
-            
+      </handler>
+      <handler
+            class="net.deuce.moman.command.navigate.ActivateCashFlowReportView"
+            commandId="net.deuce.moman.command.navigate.cashFlowReport">
+      </handler>
+      <handler
+            class="net.deuce.moman.command.navigate.ActivateSpendingReportView"
+            commandId="net.deuce.moman.command.navigate.spendingReport">
       </handler>
       <handler
             class="net.deuce.moman.command.navigate.ActivateRepeatingTransactionView"

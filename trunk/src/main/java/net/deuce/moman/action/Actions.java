@@ -481,6 +481,70 @@ public class Actions {
         }
     };
     
+   	public static final ActionFactory NAVIGATE_ALLOCATION_ACTION = new ActionFactory(
+			net.deuce.moman.command.navigate.ActivateAllocationView.ID,
+			net.deuce.moman.command.navigate.ActivateAllocationView.ID) {
+        
+        public IWorkbenchAction create(IWorkbenchWindow window) {
+            if (window == null) {
+                throw new IllegalArgumentException();
+            }
+            MomanCommandAction action = new MomanCommandAction(window, getCommandId());
+            action.setId(getId());
+            action.setActionDefinitionId(getId());
+            action.setText(Messages.getString("NavigateMenu.allocation"));
+            return action;
+        }
+    };
+     
+   	public static final ActionFactory NAVIGATE_BUDGET_ACTION = new ActionFactory(
+			net.deuce.moman.command.navigate.ActivateBudgetView.ID,
+			net.deuce.moman.command.navigate.ActivateBudgetView.ID) {
+        
+        public IWorkbenchAction create(IWorkbenchWindow window) {
+            if (window == null) {
+                throw new IllegalArgumentException();
+            }
+            MomanCommandAction action = new MomanCommandAction(window, getCommandId());
+            action.setId(getId());
+            action.setActionDefinitionId(getId());
+            action.setText(Messages.getString("NavigateMenu.budget"));
+            return action;
+        }
+    };
+     
+	public static final ActionFactory NAVIGATE_CASH_FLOW_REPORT_GOALS_ACTION = new ActionFactory(
+			net.deuce.moman.command.navigate.ActivateCashFlowReportView.ID,
+			net.deuce.moman.command.navigate.ActivateCashFlowReportView.ID) {
+        
+        public IWorkbenchAction create(IWorkbenchWindow window) {
+            if (window == null) {
+                throw new IllegalArgumentException();
+            }
+            MomanCommandAction action = new MomanCommandAction(window, getCommandId());
+            action.setId(getId());
+            action.setActionDefinitionId(getId());
+            action.setText(Messages.getString("NavigateMenu.cashFlowReport"));
+            return action;
+        }
+    };
+        
+   	public static final ActionFactory NAVIGATE_SPENDING_REPORT_ACTION = new ActionFactory(
+			net.deuce.moman.command.navigate.ActivateSpendingReportView.ID,
+			net.deuce.moman.command.navigate.ActivateSpendingReportView.ID) {
+        
+        public IWorkbenchAction create(IWorkbenchWindow window) {
+            if (window == null) {
+                throw new IllegalArgumentException();
+            }
+            MomanCommandAction action = new MomanCommandAction(window, getCommandId());
+            action.setId(getId());
+            action.setActionDefinitionId(getId());
+            action.setText(Messages.getString("NavigateMenu.spendingReport"));
+            return action;
+        }
+    };
+     
 	public static final ActionFactory NAVIGATE_SAVINGS_GOALS_ACTION = new ActionFactory(
 			net.deuce.moman.command.navigate.ActivateSavingsGoalsView.ID,
 			net.deuce.moman.command.navigate.ActivateSavingsGoalsView.ID) {
@@ -541,6 +605,38 @@ public class Actions {
             action.setId(getId());
             action.setActionDefinitionId(getId());
             action.setText(Messages.getString("NavigateMenu.importRules"));
+            return action;
+        }
+    };
+    
+	public static final ActionFactory NAVIGATE_TRANSFER_ACTION = new ActionFactory(
+			net.deuce.moman.command.navigate.ActivateTransferView.ID,
+			net.deuce.moman.command.navigate.ActivateTransferView.ID) {
+        
+        public IWorkbenchAction create(IWorkbenchWindow window) {
+            if (window == null) {
+                throw new IllegalArgumentException();
+            }
+            MomanCommandAction action = new MomanCommandAction(window, getCommandId());
+            action.setId(getId());
+            action.setActionDefinitionId(getId());
+            action.setText(Messages.getString("NavigateMenu.transfer"));
+            return action;
+        }
+    };
+    
+	public static final ActionFactory NAVIGATE_REPEATING_TRANSACTION_ACTION = new ActionFactory(
+			net.deuce.moman.command.navigate.ActivateRepeatingTransactionView.ID,
+			net.deuce.moman.command.navigate.ActivateRepeatingTransactionView.ID) {
+        
+        public IWorkbenchAction create(IWorkbenchWindow window) {
+            if (window == null) {
+                throw new IllegalArgumentException();
+            }
+            MomanCommandAction action = new MomanCommandAction(window, getCommandId());
+            action.setId(getId());
+            action.setActionDefinitionId(getId());
+            action.setText(Messages.getString("NavigateMenu.repeatingTransaction"));
             return action;
         }
     };

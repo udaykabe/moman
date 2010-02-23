@@ -26,4 +26,11 @@ public class CalendarUtil {
 		convertCalendarToMidnight(cal);
 		return cal;
 	}
+	
+	public static boolean dateInRange(Date d, DataDateRange ddr) {
+		Calendar dCal = convertToCalendar(d);
+		Calendar sCal = convertToCalendar(ddr.getStartDate());
+		Calendar eCal = convertToCalendar(ddr.getEndDate());
+		return dCal.equals(sCal) || dCal.equals(eCal) || (sCal.before(dCal) && dCal.before(eCal));
+	}
 }

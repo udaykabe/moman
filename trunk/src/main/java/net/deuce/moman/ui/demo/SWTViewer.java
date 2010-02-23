@@ -47,13 +47,14 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 
 import com.ibm.icu.util.ULocale;
 
 
-public class SWTViewer extends Composite implements ICallBackNotifier, PaintListener
+public class SWTViewer extends Canvas implements ICallBackNotifier, PaintListener
 {
 
 	private IDeviceRenderer idr = null;
@@ -84,6 +85,8 @@ public class SWTViewer extends Composite implements ICallBackNotifier, PaintList
 	public SWTViewer( Composite parent, int style )
 	{
 		super( parent, style );
+		
+		addPaintListener(this);
 		
 		contextMap = new HashMap();
 		
@@ -318,7 +321,7 @@ public class SWTViewer extends Composite implements ICallBackNotifier, PaintList
 		}
 	}
 	
-	public  void addInteractivity(Chart cm, Class clazz)
+	public void addInteractivity(Chart cm, Class clazz)
 	{
 		
 		ActionValue actionValue = CallBackValueImpl.create(clazz.getCanonicalName());

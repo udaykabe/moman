@@ -2,14 +2,14 @@ package org.eclipse.swt.widgets;
 
 import java.util.List;
 
+import net.deuce.moman.Constants;
 import net.deuce.moman.model.AbstractEntity;
 import net.deuce.moman.service.EntityService;
 import net.deuce.moman.ui.EntityLabelProvider;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.Composite;
 
 @SuppressWarnings("unchecked")
 public class EntityCombo<E extends AbstractEntity> extends Combo {
@@ -17,8 +17,9 @@ public class EntityCombo<E extends AbstractEntity> extends Combo {
 	private E entity;
 
 	public EntityCombo(Composite parent, final EntityService<E> service,
-			final EntityLabelProvider labelProvider, int style) {
-		super(parent, style);
+			final EntityLabelProvider labelProvider) {
+		super(parent, SWT.DROP_DOWN | SWT.READ_ONLY);
+		setFont(Constants.COMBO_FONT);
 		
 		final List<E> entities = service.getOrderedEntities(false);
 		
@@ -42,6 +43,7 @@ public class EntityCombo<E extends AbstractEntity> extends Combo {
 			select(0);
 			entity = entities.get(0);
 		}
+		
 	}
 
 	public E getEntity() {
