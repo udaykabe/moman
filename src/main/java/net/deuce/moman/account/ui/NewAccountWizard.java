@@ -104,7 +104,7 @@ public class NewAccountWizard extends Wizard {
 //			serviceContainer.setMonitoring(false);
 			try {
 				new ImportExecuter(Display.getCurrent().getActiveShell(), account, true, RegisterView.ID).execute();
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				MessageDialog.openError(getShell(), "Transactions Download Error", 
 						"Failed downloading transactions from " + financialInstitution.getName());
 //			} finally {
