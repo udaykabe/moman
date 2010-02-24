@@ -1,6 +1,5 @@
 package net.deuce.moman.fi.service;
 
-import java.io.FileWriter;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Date;
@@ -23,20 +22,11 @@ import net.sf.ofx4j.client.impl.BaseFinancialInstitutionData;
 import net.sf.ofx4j.client.impl.FinancialInstitutionImpl;
 import net.sf.ofx4j.client.impl.FinancialInstitutionServiceImpl;
 import net.sf.ofx4j.client.net.OFXConnection;
-import net.sf.ofx4j.client.net.OFXV1Connection;
 import net.sf.ofx4j.domain.data.RequestEnvelope;
-import net.sf.ofx4j.domain.data.ResponseEnvelope;
-import net.sf.ofx4j.domain.data.TransactionWrappedRequestMessage;
 import net.sf.ofx4j.domain.data.banking.AccountType;
 import net.sf.ofx4j.domain.data.banking.BankAccountDetails;
 import net.sf.ofx4j.domain.data.banking.BankAccountInfo;
-import net.sf.ofx4j.domain.data.banking.BankStatementRequest;
-import net.sf.ofx4j.domain.data.banking.BankStatementRequestTransaction;
-import net.sf.ofx4j.domain.data.banking.BankingRequestMessageSet;
-import net.sf.ofx4j.domain.data.common.StatementRange;
 import net.sf.ofx4j.domain.data.signup.AccountProfile;
-import net.sf.ofx4j.io.AggregateMarshaller;
-import net.sf.ofx4j.io.v2.OFXV2Writer;
 
 import org.springframework.stereotype.Service;
 
@@ -102,6 +92,7 @@ public class FinancialInstitutionService extends EntityService<FinancialInstitut
 		
 		statement = bankAccount.readStatement(startDate, endDate);
 		
+		/*
 		FileWriter fileWriter = new FileWriter("/Users/nbolton/Downloads/importedTransactions.ofx");
 		try {
 			StatementRange range = new StatementRange();
@@ -109,7 +100,7 @@ public class FinancialInstitutionService extends EntityService<FinancialInstitut
 		    range.setStart(startDate);
 		    range.setEnd(endDate);
 
-		    Wiggy wiggy = new Wiggy(data, new OFXV1Connection());
+		    FinancialInstitutionWrapper wiggy = new FinancialInstitutionWrapper(data, new OFXV1Connection());
 		    RequestEnvelope request = wiggy.createRequest(account.getUsername(), account.getPassword());
 		    TransactionWrappedRequestMessage requestTransaction = new BankStatementRequestTransaction();
 		    BankStatementRequest bankRequest = new BankStatementRequest();
@@ -129,6 +120,7 @@ public class FinancialInstitutionService extends EntityService<FinancialInstitut
 				fileWriter.close();
 			}
 		}
+		*/
 		
 		return new TransactionFetchResult(
 				statement.getLedgerBalance().getAmount(),
@@ -177,9 +169,9 @@ public class FinancialInstitutionService extends EntityService<FinancialInstitut
 		return false;
 	}
 
-	private static class Wiggy extends FinancialInstitutionImpl {
+	private static class FinancialInstitutionWrapper extends FinancialInstitutionImpl {
 
-		public Wiggy(FinancialInstitutionData data, OFXConnection connection) {
+		public FinancialInstitutionWrapper(FinancialInstitutionData data, OFXConnection connection) {
 			super(data, connection);
 		}
 		
