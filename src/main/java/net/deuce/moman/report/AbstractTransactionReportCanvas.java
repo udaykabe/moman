@@ -42,10 +42,13 @@ implements EntityListener<InternalTransaction>, ICallBackNotifier {
 		List<Double> dataSet = new LinkedList<Double>();
 		List<Account> accounts = accountService.getSelectedAccounts();
 		
+		List<List<InternalTransaction>> dataPointTransactionList = new LinkedList<List<InternalTransaction>>();
+		
 		Map<Account, List<InternalTransaction>> accountTransactions = new HashMap<Account, List<InternalTransaction>>();
 		
 		for (DataDateRange ddr : getDateRange().dataDateRanges()) {
 			double sum = 0.0;
+			List<InternalTransaction> dataPointTransactions = new LinkedList<InternalTransaction>();
 			for (Account account : accounts) {
 				List<InternalTransaction> transactions = accountTransactions.get(account);
 				if (transactions == null) {
@@ -58,6 +61,7 @@ implements EntityListener<InternalTransaction>, ICallBackNotifier {
 							((expense && it.getAmount() <= 0.0) || (!expense && it.getAmount() > 0.0))) {
 						if (CalendarUtil.dateInRange(it.getDate(), ddr)) {
 							sum += expense ? -it.getAmount() : it.getAmount();
+							dataPointTransactions.add(it);
 						}
 					}
 				}
@@ -69,10 +73,11 @@ implements EntityListener<InternalTransaction>, ICallBackNotifier {
 				minSum = sum;
 			}
 			
+			dataPointTransactionList.add(dataPointTransactions);
 			dataSet.add(sum);
 		}
 		
-		return new DataSetResult(dataSet, minSum, maxSum);
+		return new DataSetResult(dataPointTransactionList, dataSet, minSum, maxSum);
 	}
 	
 	public AccountService getAccountService() {

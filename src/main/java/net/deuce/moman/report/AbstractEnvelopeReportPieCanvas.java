@@ -18,7 +18,6 @@ import net.deuce.moman.transaction.model.Split;
 import net.deuce.moman.transaction.service.TransactionService;
 import net.deuce.moman.util.DataDateRange;
 
-import org.eclipse.birt.chart.device.ICallBackNotifier;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -26,8 +25,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DateRangeCombo;
 
 public abstract class AbstractEnvelopeReportPieCanvas extends
-		AbstractReportCanvas implements EntityListener<InternalTransaction>,
-		ICallBackNotifier {
+		AbstractReportCanvas implements EntityListener<InternalTransaction> {
 
 	private AccountService accountService;
 	private TransactionService transactionService;
