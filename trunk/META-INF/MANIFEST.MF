@@ -13,11 +13,10 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.birt.chart.engine,
  com.ibm.icu;bundle-version="4.0.1",
  org.eclipse.birt.chart.device.swt;bundle-version="2.5.1",
- org.eclipse.birt.chart.engine.extension;bundle-version="2.5.1",
- org.eclipse.birt.chart.device.extension;bundle-version="2.5.1"
+ org.eclipse.birt.chart.engine.extension;bundle-version="2.5.1"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Bundle-ClassPath: lib/dom4j-1.6.1.jar,
+Bundle-ClassPath: .,lib/dom4j-1.6.1.jar,
  lib/jaxen-1.1.1.jar,
  lib/ofx4j-1.2.jar,
  src/main/java/,
