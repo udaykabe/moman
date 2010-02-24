@@ -10,6 +10,7 @@ import net.deuce.moman.util.Utils;
 @SuppressWarnings("unchecked")
 public class EntityMonitor<E extends AbstractEntity> {
 
+	private static final int QUEUE_THRESHOLD = 3;
 	private List<EntityListener<E>> listeners = new LinkedList<EntityListener<E>>();
 	private Set<E> removedEntities = new HashSet<E>();
 	private Set<E> addedEntities = new HashSet<E>();
@@ -23,15 +24,28 @@ public class EntityMonitor<E extends AbstractEntity> {
 
 	public synchronized void stopQueuingNotifications(String id) {
 		if (queuingId != null && queuingId.equals(id)) {
-			for (E entity : addedEntities) {
-				fireEntityAdded(entity, true);
+			if (addedEntities.size() <= QUEUE_THRESHOLD) {
+				for (E entity : addedEntities) {
+					fireEntityAdded(entity, true);
+				}
+			} else {
+				fireEntityAdded(null, true);
 			}
-			for (E entity : removedEntities) {
-				fireEntityRemoved(entity, true);
+			
+			if (removedEntities.size() <= QUEUE_THRESHOLD) {
+				for (E entity : removedEntities) {
+					fireEntityRemoved(entity, true);
+				}
+			} else {
+				fireEntityRemoved(null, true);
 			}
-			for (ChangedEntity<E> changedEntity : changedEntities) {
-				fireEntityChanged(changedEntity.entity, changedEntity.property, true);
-				if (singleChange) break;
+			if (changedEntities.size() <= QUEUE_THRESHOLD) {
+				for (ChangedEntity<E> changedEntity : changedEntities) {
+					fireEntityChanged(changedEntity.entity, changedEntity.property, true);
+					if (singleChange) break;
+				}
+			} else {
+				fireEntityChanged(null, true);
 			}
 			removedEntities.clear();
 			addedEntities.clear();
