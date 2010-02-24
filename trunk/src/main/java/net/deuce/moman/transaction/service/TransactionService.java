@@ -18,6 +18,8 @@ import net.deuce.moman.transaction.model.InternalTransaction;
 import net.deuce.moman.transaction.model.Split;
 import net.deuce.moman.transaction.model.TransactionStatus;
 import net.deuce.moman.transaction.model.InternalTransaction.Properties;
+import net.deuce.moman.util.CalendarUtil;
+import net.deuce.moman.util.DataDateRange;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -88,6 +90,20 @@ public class TransactionService extends EntityService<InternalTransaction> {
 				stopQueuingNotifications(id);
 			}
 		}
+	}
+	
+	public List<InternalTransaction> getAccountTransactions(Account account, DataDateRange dateRange, boolean reverse) {
+		List<InternalTransaction> list = new LinkedList<InternalTransaction>(getAccountTransactions(account, reverse));
+
+		if (dateRange != null) {
+			ListIterator<InternalTransaction> itr = list.listIterator();
+			while (itr.hasNext()) {
+				if (!CalendarUtil.dateInRange(itr.next().getDate(), dateRange)) {
+					itr.remove();
+				}
+			}
+		}
+		return list;
 	}
 	
 	public List<InternalTransaction> getAccountTransactions(Account account, boolean reverse) {

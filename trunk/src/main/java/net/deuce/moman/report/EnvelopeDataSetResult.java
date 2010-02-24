@@ -12,7 +12,7 @@ public class EnvelopeDataSetResult extends DataSetResult {
 
 	public EnvelopeDataSetResult(List<EnvelopeResult> results, double allOtherTotal,
 			double minValue, double maxValue) {
-		super(new LinkedList<Double>(), minValue, maxValue);
+		super(null, new LinkedList<Double>(), minValue, maxValue);
 		this.envelopeResults.addAll(results);
 		this.allOtherTotal = allOtherTotal;
 	}

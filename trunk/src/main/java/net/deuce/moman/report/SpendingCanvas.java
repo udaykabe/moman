@@ -128,6 +128,7 @@ public class SpendingCanvas extends AbstractEnvelopeReportPieCanvas {
 	    lg.getText().getFont().setSize(16);
 	    lg.getInsets().set(10, 5, 0, 0);
 	    lg.setAnchor(Anchor.NORTH_LITERAL);
+	    lg.setShowPercent(true);
         
 	    EnvelopeDataSetResult result = (EnvelopeDataSetResult) createDataSet(true);
 	    peekSourceEnvelope().getTopEnvelopes().clear();

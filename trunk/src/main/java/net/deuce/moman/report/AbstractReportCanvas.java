@@ -1,5 +1,10 @@
 package net.deuce.moman.report;
 
+import net.deuce.moman.account.model.Account;
+import net.deuce.moman.model.EntityEvent;
+import net.deuce.moman.model.EntityListener;
+import net.deuce.moman.service.ServiceNeeder;
+
 import org.eclipse.birt.chart.computation.DataPointHints;
 import org.eclipse.birt.chart.device.ICallBackNotifier;
 import org.eclipse.birt.chart.device.IDeviceRenderer;
@@ -20,6 +25,7 @@ import org.eclipse.birt.chart.model.data.Action;
 import org.eclipse.birt.chart.model.data.Trigger;
 import org.eclipse.birt.chart.model.data.impl.ActionImpl;
 import org.eclipse.birt.chart.model.data.impl.TriggerImpl;
+import org.eclipse.birt.chart.render.IActionRenderer;
 import org.eclipse.birt.chart.util.PluginSettings;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
@@ -87,6 +93,20 @@ public abstract class AbstractReportCanvas extends Canvas implements ICallBackNo
 			}
 		});
 		
+		ServiceNeeder.instance().getAccountService().addEntityListener(new EntityListener<Account>() {
+			@Override
+			public void entityRemoved(EntityEvent<Account> event) {
+				regenerateChart();
+			}
+			@Override
+			public void entityChanged(EntityEvent<Account> event) {
+				regenerateChart();
+			}
+			@Override
+			public void entityAdded(EntityEvent<Account> event) {
+				regenerateChart();
+			}
+		});
 	}
 	
 	protected abstract Chart doCreateChart();
@@ -102,14 +122,15 @@ public abstract class AbstractReportCanvas extends Canvas implements ICallBackNo
 		return chart;
 	}
 	
+	protected Trigger createTrigger(ActionValue actionValue, ActionType actionType, TriggerCondition condition) {
+		Action clickAction = ActionImpl.create(actionType, actionValue);
+		Trigger trigger = TriggerImpl.create(condition, clickAction);
+		return trigger;
+	}
+	
 	protected void addTrigger(Series series) {
 		ActionValue actionValue = CallBackValueImpl.create(getClass().getCanonicalName());
-		Action clickAction = ActionImpl.create(ActionType.CALL_BACK_LITERAL, actionValue);
-		Trigger onclick = TriggerImpl.create(TriggerCondition.ONCLICK_LITERAL,clickAction);
-		Action dclickAction = ActionImpl.create(ActionType.CALL_BACK_LITERAL, actionValue);
-		Trigger ondclick = TriggerImpl.create(TriggerCondition.ONCLICK_LITERAL,dclickAction);
-		series.getTriggers().add(onclick);
-		series.getTriggers().add(ondclick);
+		series.getTriggers().add(createTrigger(actionValue, ActionType.CALL_BACK_LITERAL, TriggerCondition.ONCLICK_LITERAL));
 	}
 	
 	@Override
@@ -157,6 +178,10 @@ public abstract class AbstractReportCanvas extends Canvas implements ICallBackNo
                              null,
                              null,
                              null);
+         IActionRenderer actionRenderer = getActionRenderer();
+         if (actionRenderer != null) {
+        	 state.getRunTimeContext().setActionRenderer(actionRenderer);
+         }
         } catch (ChartException ex) {
         	ex.printStackTrace();
         	throw new RuntimeException(ex);
@@ -165,6 +190,10 @@ public abstract class AbstractReportCanvas extends Canvas implements ICallBackNo
         }
         
     }
+	
+	protected IActionRenderer getActionRenderer() {
+		return null;
+	}
 	
 	private void drawToCachedImage(Rectangle size) {
         GC gc = null;
