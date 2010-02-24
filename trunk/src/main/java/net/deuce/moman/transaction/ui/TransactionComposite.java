@@ -40,7 +40,6 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchSite;
@@ -166,17 +165,17 @@ implements EntityListener<InternalTransaction>, ShiftKeyAware {
 	protected void createTopControl(Composite parent) {
 		final Composite container = new Composite(parent, SWT.NONE);
 		GridLayout gridLayout = new GridLayout();
-		gridLayout.numColumns = 2;
+		gridLayout.numColumns = 1;
 		container.setLayout(gridLayout);
 		
 		GridData gridData = new GridData();
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.horizontalAlignment = GridData.FILL;
 
-		Label searchLabel = new Label(container, SWT.NONE);
-		searchLabel.setText("Search:");
+//		Label searchLabel = new Label(container, SWT.NONE);
+//		searchLabel.setText("Search:");
 		
-		searchText = new Text(container, SWT.BORDER);
+		searchText = new Text(container, SWT.BORDER | SWT.SINGLE | SWT.SEARCH | SWT.ICON_SEARCH);
 		searchText.setEditable(true);
 		searchText.setEnabled(true);
 		searchText.setLayoutData(gridData);
@@ -194,6 +193,12 @@ implements EntityListener<InternalTransaction>, ShiftKeyAware {
 			public void keyReleased(KeyEvent ke) {
 				filter.setSearchText(searchText.getText());
 				tableViewer.refresh();
+			}
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.keyCode == SWT.ESC) {
+					searchText.setText("");
+				}
 			}
 		});
 				
