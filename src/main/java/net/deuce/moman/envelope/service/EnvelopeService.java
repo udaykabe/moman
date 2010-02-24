@@ -394,7 +394,7 @@ public class EnvelopeService extends EntityService<Envelope> {
 	}
 	
 	public double distributeToNegativeEnvelopes(Account account, Envelope env, double balance) {
-		if (!env.isAvailable() && !env.isUnassigned()) {
+		if (!env.isAvailable()) {
 			if (balance > 0) {
 				if (!env.hasChildren()) {
 					if (env.getBalance() < 0) {
