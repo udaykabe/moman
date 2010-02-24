@@ -5,6 +5,8 @@ import java.util.List;
 
 import net.deuce.moman.Constants;
 import net.deuce.moman.account.model.Account;
+import net.deuce.moman.model.EntityEvent;
+import net.deuce.moman.model.EntityListener;
 import net.deuce.moman.service.ServiceNeeder;
 import net.deuce.moman.transaction.model.InternalTransaction;
 import net.deuce.moman.transaction.service.TransactionService;
@@ -67,9 +69,37 @@ implements IActionRenderer {
 	private Palette palette;
 	private DataSetResult incomeResult;
 	private DataSetResult expenseResult;
+	private List<NumberDataSet> balanceDataSets = new LinkedList<NumberDataSet>();
+	private SeriesDefinition sdY;
 
 	public CashFlowCanvas(Composite parent, DateRangeCombo combo, int style) {
 		super(parent, combo, style);
+		
+		ServiceNeeder.instance().getAccountService().addEntityListener(new EntityListener<Account>() {
+			@Override
+			public void entityRemoved(EntityEvent<Account> event) {
+				adjustLegends();
+			}
+			@Override
+			public void entityChanged(EntityEvent<Account> event) {
+				adjustLegends();
+			}
+			@Override
+			public void entityAdded(EntityEvent<Account> event) {
+				adjustLegends();
+			}
+		});
+	}
+	
+	private void adjustLegends() {
+		palette = null;
+		
+		int index = 0;
+        for (NumberDataSet ds : balanceDataSets) {
+        	addPaletteColor(ACCOUNT_COLORS[index++]);
+        }
+    	addPaletteColor(ColorDefinitionImpl.GREEN());
+    	addPaletteColor(ColorDefinitionImpl.BLUE());
 	}
 
 	@SuppressWarnings("deprecation")
@@ -105,7 +135,7 @@ implements IActionRenderer {
         NumberDataSet orthoValuesDataSet1 = NumberDataSetImpl.create(incomeResult.getResult());
         NumberDataSet orthoValuesDataSet2 = NumberDataSetImpl.create(expenseResult.getResult());
         
-        List<NumberDataSet> balanceDataSets = new LinkedList<NumberDataSet>();
+        balanceDataSets.clear();
         
         double maxValue = 0.0;
     	maxValue = Math.max(maxValue, incomeResult.getMaxValue());
@@ -119,7 +149,7 @@ implements IActionRenderer {
         	balanceDataSets.add(NumberDataSetImpl.create(result.getResult()));
         }
 
-        SeriesDefinition sdY = SeriesDefinitionImpl.create();
+        sdY = SeriesDefinitionImpl.create();
         yAxis.getSeriesDefinitions().add(sdY);
         
         int index = 0;
@@ -134,7 +164,6 @@ implements IActionRenderer {
     		}
 
         	sdY.getSeries().add(lineSeries);
-        	addPaletteColor(ACCOUNT_COLORS[index++]);
         }
         
         BarSeries bs1 = (BarSeries) BarSeriesImpl.create();
@@ -149,12 +178,10 @@ implements IActionRenderer {
         sdY.getSeries().add(bs1);
         sdY.getSeries().add(bs2);
         
-    	addPaletteColor(ColorDefinitionImpl.GREEN());
-    	addPaletteColor(ColorDefinitionImpl.BLUE());
+        adjustLegends();
         sdY.setSeriesPalette(palette);
         
         yAxis.getScale().setStep(roundToNearestPowerOf10(maxValue));
-        
         yAxis.getScale().setMin(NumberDataElementImpl.create(0.0));
 		return chart;
 	}
