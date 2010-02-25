@@ -76,24 +76,15 @@ implements EntityListener<InternalTransaction>, ShiftKeyAware {
 		gridLayout.numColumns = 1;
 		setLayout(gridLayout);
 		
-		GridData gridData = new GridData();
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.horizontalAlignment = GridData.FILL;
-			
 		Composite topContainer = new Composite(this, SWT.NONE);
 		topContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
-		topContainer.setLayoutData(gridData);
+		topContainer.setLayoutData(new GridData((GridData.FILL_HORIZONTAL)));
 		
 		createTopControl(topContainer);
 		
 		tableViewer = createTableViewer(this);
 		
-		gridData = new GridData();
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.horizontalAlignment = GridData.FILL;
-		gridData.grabExcessVerticalSpace = true;
-		gridData.verticalAlignment = GridData.FILL;
-		tableViewer.getTable().setLayoutData(gridData);
+		tableViewer.getTable().setLayoutData(new GridData((GridData.FILL_BOTH)));
 		
 		if (settingServiceViewer) {
 			service.setViewer(tableViewer);
@@ -172,9 +163,6 @@ implements EntityListener<InternalTransaction>, ShiftKeyAware {
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.horizontalAlignment = GridData.FILL;
 
-//		Label searchLabel = new Label(container, SWT.NONE);
-//		searchLabel.setText("Search:");
-		
 		searchText = new Text(container, SWT.BORDER | SWT.SINGLE | SWT.SEARCH | SWT.ICON_SEARCH);
 		searchText.setEditable(true);
 		searchText.setEnabled(true);
@@ -186,6 +174,7 @@ implements EntityListener<InternalTransaction>, ShiftKeyAware {
 	}
 	
 	protected SelectingTableViewer createTableViewer(Composite parent) {
+		
 		final SelectingTableViewer tableViewer = new SelectingTableViewer(parent, SWT.MULTI | SWT.V_SCROLL | SWT.FULL_SELECTION);
 		tableViewer.addFilter(filter);
 		searchText.addKeyListener(new KeyAdapter() {
