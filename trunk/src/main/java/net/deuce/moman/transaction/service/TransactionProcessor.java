@@ -200,6 +200,23 @@ public abstract class TransactionProcessor implements Runnable {
 				e.printStackTrace();
 				throw new RuntimeException(e);
 			}
+
+/*
+            if (focusedView != null) {
+                try {
+                    PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPages()[0].showView(focusedView,null,IWorkbenchPage.VIEW_ACTIVATE);
+                } catch (PartInitException e) {
+                    e.printStackTrace();
+                    throw new RuntimeException(e);
+                }
+            } else {
+                if (ServiceNeeder.instance().getImportService().getEntities().size() > 0) {
+                    ImportMatchingDialog dialog = new ImportMatchingDialog(Display.getCurrent().getActiveShell());
+                    dialog.create();
+                    dialog.open();
+                }
+            }
+*/
 		}
 		clear();
 		return exception == null;

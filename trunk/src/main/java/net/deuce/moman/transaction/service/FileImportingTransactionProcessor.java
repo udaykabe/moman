@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 
 import net.deuce.moman.account.model.Account;
-import net.deuce.moman.transaction.ui.TransactionImportView;
 import net.sf.ofx4j.domain.data.MessageSetType;
 import net.sf.ofx4j.domain.data.ResponseEnvelope;
 import net.sf.ofx4j.domain.data.ResponseMessage;
@@ -23,7 +22,7 @@ public class FileImportingTransactionProcessor extends TransactionProcessor {
 	private String file;
 	
 	public FileImportingTransactionProcessor(Shell shell, Account account, String file) {
-		super(shell, account, false, TransactionImportView.ID);
+		super(shell, account, false, null);
 		this.file = file;
 	}
 

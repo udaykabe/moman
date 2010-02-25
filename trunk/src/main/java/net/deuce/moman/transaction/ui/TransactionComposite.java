@@ -16,6 +16,7 @@ import net.deuce.moman.transaction.model.InternalTransaction;
 import net.deuce.moman.transaction.model.Split;
 import net.deuce.moman.transaction.model.TransactionStatus;
 import net.deuce.moman.transaction.service.TransactionService;
+import net.deuce.moman.ui.Activator;
 import net.deuce.moman.ui.SelectingTableViewer;
 import net.deuce.moman.ui.ShiftKeyAware;
 
@@ -42,7 +43,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IWorkbenchSite;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.IHandlerService;
 
 public class TransactionComposite extends Composite
@@ -59,7 +60,7 @@ implements EntityListener<InternalTransaction>, ShiftKeyAware {
 	private List<EnvelopeSelectionCellEditor> envelopeSelectionCellEditors = new LinkedList<EnvelopeSelectionCellEditor>();
 
 	public TransactionComposite(Composite parent, boolean settingServiceViewer,
-			final IWorkbenchSite site, boolean selectionListener, int style) {
+			final boolean allowDeletes, boolean selectionListener, int style) {
 		super(parent, style);
 		
 		service = ServiceNeeder.instance().getTransactionService();
@@ -98,27 +99,26 @@ implements EntityListener<InternalTransaction>, ShiftKeyAware {
 			service.setViewer(tableViewer);
 		}
 		
-		if (site != null) {
-	 		tableViewer.getTable().addKeyListener(new KeyListener() {
-				@Override
-				public void keyPressed(KeyEvent e) {
-					if (e.keyCode == SWT.BS && e.stateMask == SWT.COMMAND) {
-						IHandlerService handlerService = (IHandlerService) site.getService(IHandlerService.class);
-						try {
-							handlerService.executeCommand(getDeleteCommandId(), null);
-						} catch (Exception ex) {
-							ex.printStackTrace();
-						}
-					} else if (e.keyCode == 'a' && e.stateMask == SWT.COMMAND) {
-						tableViewer.getTable().selectAll();
+ 		tableViewer.getTable().addKeyListener(new KeyListener() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (allowDeletes && e.keyCode == SWT.BS && e.stateMask == SWT.COMMAND) {
+					IWorkbenchWindow window = Activator.getDefault().getWorkbench().getActiveWorkbenchWindow();
+					IHandlerService handlerService = (IHandlerService) window.getService(IHandlerService.class);
+					try {
+						handlerService.executeCommand(getDeleteCommandId(), null);
+					} catch (Exception ex) {
+						ex.printStackTrace();
 					}
+				} else if (e.keyCode == 'a' && e.stateMask == SWT.COMMAND) {
+					tableViewer.getTable().selectAll();
 				}
-	
-				@Override
-				public void keyReleased(KeyEvent e) {
-				}
-	 		});
-		}
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+			}
+ 		});
  		
  		ColumnViewerEditorActivationStrategy actSupport = createColumnViewerEditorActivationStrategy(tableViewer);
  		setupTableViewerEditor(tableViewer, actSupport);
