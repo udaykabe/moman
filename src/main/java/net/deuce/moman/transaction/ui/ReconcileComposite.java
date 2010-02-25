@@ -7,16 +7,14 @@ import net.deuce.moman.transaction.model.InternalTransaction;
 import net.deuce.moman.transaction.model.TransactionStatus;
 
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IWorkbenchSite;
 
 public class ReconcileComposite extends TransactionComposite {
 	
 	private TransactionStatus[] availableStatuses;
 	private Account account;
 
-	public ReconcileComposite(Composite parent, boolean settingServiceViewer,
-			IWorkbenchSite site, int style) {
-		super(parent, settingServiceViewer, site, false, style);
+	public ReconcileComposite(Composite parent, int style) {
+		super(parent, false, true, false, style);
 	}
 	
 	public Account getAccount() {

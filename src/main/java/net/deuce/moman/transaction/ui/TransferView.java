@@ -14,7 +14,7 @@ public class TransferView extends ViewPart {
 	
 	@Override
 	public void createPartControl(Composite parent) {
-		register = new TransferComposite(parent, false, getSite(), SWT.NONE);
+		register = new TransferComposite(parent, SWT.NONE);
 		register.setLayoutData(new GridData(GridData.FILL_BOTH));
 	}
 

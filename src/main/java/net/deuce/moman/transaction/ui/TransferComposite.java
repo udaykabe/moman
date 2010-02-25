@@ -8,13 +8,11 @@ import net.deuce.moman.ui.SelectingTableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IWorkbenchSite;
 
 public class TransferComposite extends TransactionComposite {
 
-	public TransferComposite(Composite parent, boolean settingServiceViewer,
-			IWorkbenchSite site, int style) {
-		super(parent, settingServiceViewer, site, true, style);
+	public TransferComposite(Composite parent, int style) {
+		super(parent, false, false, true, style);
 	}
 
 	@Override

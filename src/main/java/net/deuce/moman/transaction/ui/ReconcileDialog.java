@@ -225,7 +225,7 @@ public class ReconcileDialog extends TitleAreaDialog implements EntityListener<I
 	}
 	
 	private void createRegister(Composite parent) {
-		register = new ReconcileComposite(parent, false, null, SWT.NONE);
+		register = new ReconcileComposite(parent, SWT.NONE);
 		register.setLayoutData(new GridData(GridData.FILL_BOTH));
 	}
 

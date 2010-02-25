@@ -13,7 +13,7 @@ public class RegisterView extends ViewPart {
 	
 	@Override
 	public void createPartControl(Composite parent) {
-		register = new TransactionComposite(parent, true, getSite(), true, SWT.NONE);
+		register = new TransactionComposite(parent, true, true, true, SWT.NONE);
 		register.setLayoutData(new GridData(GridData.FILL_BOTH));
 	}
 
