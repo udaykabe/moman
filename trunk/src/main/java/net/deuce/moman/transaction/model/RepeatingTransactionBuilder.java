@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RepeatingTransactionBuilder extends AbstractBuilder {
+public class RepeatingTransactionBuilder extends AbstractBuilder<RepeatingTransaction> {
 	
 	@Autowired
 	private RepeatingTransactionService repeatingTransactionService;
@@ -60,13 +60,23 @@ public class RepeatingTransactionBuilder extends AbstractBuilder {
 	
 	public void buildXml(Document doc) {
 		
-		Element root = doc.getRootElement().addElement("repeating-transactions");
-		Element el;
+		Element root = doc.getRootElement().addElement(getRootElementName());
 		
 		for (RepeatingTransaction trans : repeatingTransactionService.getEntities()) {
-			el = root.addElement("transaction");
-			buildTransactionXml(el, trans);
+			buildEntity(trans, root);
 		}
+	}
+
+	@Override
+	protected Element buildEntity(RepeatingTransaction entity, Element parent) {
+		Element el = parent.addElement("transaction");
+		buildTransactionXml(el, entity);
+		return el;
+	}
+
+	@Override
+	protected String getRootElementName() {
+		return "repeating-transactions";
 	}
 
 }

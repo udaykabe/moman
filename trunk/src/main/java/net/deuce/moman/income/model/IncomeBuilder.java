@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class IncomeBuilder extends AbstractBuilder {
+public class IncomeBuilder extends AbstractBuilder<Income> {
 	
 	@Autowired
 	private IncomeService incomeService;
@@ -43,17 +43,27 @@ public class IncomeBuilder extends AbstractBuilder {
 
 	public void buildXml(Document doc) {
 
-		Element root = doc.getRootElement().addElement("income-list");
-		Element el;
+		Element root = doc.getRootElement().addElement(getRootElementName());
 
 		for (Income income : incomeService.getEntities()) {
-			el = root.addElement("income");
-			el.addAttribute("id", income.getId());
-			addOptionalBooleanElement(el, "enabled", income.isEnabled());
-			addElement(el, "name", income.getName());
-			addElement(el, "amount", Utils.formatDouble(income.getAmount()));
-			addElement(el, "frequency", income.getFrequency().name());
-			addElement(el, "next-payday", Constants.SHORT_DATE_FORMAT.format(income.getNextPayday()));
+			buildEntity(income, root);
 		}
+	}
+
+	@Override
+	protected Element buildEntity(Income income, Element parent) {
+		Element el = parent.addElement("income");
+		el.addAttribute("id", income.getId());
+		addOptionalBooleanElement(el, "enabled", income.isEnabled());
+		addElement(el, "name", income.getName());
+		addElement(el, "amount", Utils.formatDouble(income.getAmount()));
+		addElement(el, "frequency", income.getFrequency().name());
+		addElement(el, "next-payday", Constants.SHORT_DATE_FORMAT.format(income.getNextPayday()));
+		return el;
+	}
+
+	@Override
+	protected String getRootElementName() {
+		return "income-list";
 	}
 }

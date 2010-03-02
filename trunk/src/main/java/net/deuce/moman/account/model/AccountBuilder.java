@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-public class AccountBuilder extends AbstractBuilder {
+public class AccountBuilder extends AbstractBuilder<Account> {
 	
 	@Autowired
 	private AccountService accountService;
@@ -83,35 +83,45 @@ public class AccountBuilder extends AbstractBuilder {
 	public void buildXml(Document doc) {
 		
 		Element root = doc.getRootElement().addElement("accounts");
-		Element el;
 		
 		for (Account account : accountService.getEntities()) {
-			el = root.addElement("account");
-			el.addAttribute("id", account.getId());
-			addOptionalBooleanElement(el, "selected", account.isSelected());
-			addElement(el, "bankId", account.getBankId());
-			addElement(el, "accountId", account.getAccountId());
-			addElement(el, "username", account.getUsername());
-			addElement(el, "password", account.getPassword());
-			addElement(el, "nickname", account.getNickname());
-			addElement(el, "balance", Utils.formatDouble(account.getBalance()));
-			addElement(el, "online-balance", Utils.formatDouble(account.getOnlineBalance()));
-			addElement(el, "last-reconciled-ending-balance", Utils.formatDouble(account.getLastReconciledEndingBalance()));
-			
-			if (account.getStatus() != null) {
-				addElement(el, "status", account.getStatus().name());
-			}
-			addElement(el, "supports-downloading", account.isSupportsDownloading());
-			addOptionalElement(el, "initial-balance", account.getInitialBalance());
-			if (account.getLastDownloadDate() != null) {
-				addElement(el, "last-download-date", Constants.SHORT_DATE_FORMAT.format(account.getLastDownloadDate()));
-			}
-			if (account.getLastReconciledDate() != null) {
-				addElement(el, "last-reconciled-date", Constants.SHORT_DATE_FORMAT.format(account.getLastReconciledDate()));
-			}
-			if (account.getFinancialInstitution() != null) {
-				el.addElement("financialInstitution").addAttribute("id", account.getFinancialInstitution().getId());
-			}
+			buildEntity(account, root);
 		}
+	}
+
+	@Override
+	protected Element buildEntity(Account account, Element parent) {
+		Element el = parent.addElement("account");
+		el.addAttribute("id", account.getId());
+		addOptionalBooleanElement(el, "selected", account.isSelected());
+		addElement(el, "bankId", account.getBankId());
+		addElement(el, "accountId", account.getAccountId());
+		addElement(el, "username", account.getUsername());
+		addElement(el, "password", account.getPassword());
+		addElement(el, "nickname", account.getNickname());
+		addElement(el, "balance", Utils.formatDouble(account.getBalance()));
+		addElement(el, "online-balance", Utils.formatDouble(account.getOnlineBalance()));
+		addElement(el, "last-reconciled-ending-balance", Utils.formatDouble(account.getLastReconciledEndingBalance()));
+		
+		if (account.getStatus() != null) {
+			addElement(el, "status", account.getStatus().name());
+		}
+		addElement(el, "supports-downloading", account.isSupportsDownloading());
+		addOptionalElement(el, "initial-balance", account.getInitialBalance());
+		if (account.getLastDownloadDate() != null) {
+			addElement(el, "last-download-date", Constants.SHORT_DATE_FORMAT.format(account.getLastDownloadDate()));
+		}
+		if (account.getLastReconciledDate() != null) {
+			addElement(el, "last-reconciled-date", Constants.SHORT_DATE_FORMAT.format(account.getLastReconciledDate()));
+		}
+		if (account.getFinancialInstitution() != null) {
+			el.addElement("financialInstitution").addAttribute("id", account.getFinancialInstitution().getId());
+		}
+		return el;
+	}
+
+	@Override
+	protected String getRootElementName() {
+		return "accounts";
 	}
 }

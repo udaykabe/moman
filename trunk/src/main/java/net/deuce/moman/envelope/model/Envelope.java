@@ -22,6 +22,8 @@ import net.deuce.moman.transaction.model.RepeatingTransaction;
 import net.deuce.moman.util.CalendarUtil;
 import net.deuce.moman.util.DataDateRange;
 
+import org.dom4j.Document;
+
 public class Envelope extends AbstractEntity<Envelope> {
 
 	private static final long serialVersionUID = 1L;
@@ -54,7 +56,7 @@ public class Envelope extends AbstractEntity<Envelope> {
 	private Double budget;
 	private transient String parentId;
 	private Envelope parent;
-	private List<Envelope> children = new LinkedList<Envelope>();
+	private Map<String, Envelope> children = new HashMap<String, Envelope>();
 	private Map<Account, List<InternalTransaction>> transactions = new HashMap<Account, List<InternalTransaction>>();
 	private List<RepeatingTransaction> repeatingTransactions = new LinkedList<RepeatingTransaction>();
 	private Boolean editable;
@@ -80,6 +82,11 @@ public class Envelope extends AbstractEntity<Envelope> {
 		this.editable = editable;
 	}
 	
+	@Override
+	public Document toXml() {
+		return buildXml(Properties.values());
+	}
+
 	public Double getSavingsGoalOverrideAmount() {
 		return savingsGoalOverrideAmount;
 	}
@@ -248,7 +255,7 @@ public class Envelope extends AbstractEntity<Envelope> {
 		
 		double value = budget;
 		if (descend) {
-			for (Envelope e : children) {
+			for (Envelope e : children.values()) {
 				value += e.getBudget(true);
 			}
 		}
@@ -294,7 +301,7 @@ public class Envelope extends AbstractEntity<Envelope> {
 	
 	private boolean isBalanceDirty() {
 		if (balance == null) return true;
-		for (Envelope child : children) {
+		for (Envelope child : children.values()) {
 			if (child.isBalanceDirty()) return true;
 		}
 		return false;
@@ -308,7 +315,7 @@ public class Envelope extends AbstractEntity<Envelope> {
 				double splitAmount = t.getSplitAmount(this);
 				value += splitAmount;
 			}
-			for (Envelope e : children) {
+			for (Envelope e : children.values()) {
 				value += e.getBalance();
 			}
 			balance = value;
@@ -403,19 +410,26 @@ public class Envelope extends AbstractEntity<Envelope> {
 	}
 	
 	public List<Envelope> getChildren() {
-		List<Envelope> l = new LinkedList<Envelope>(children);
+		List<Envelope> l = new LinkedList<Envelope>(children.values());
 		//Collections.sort(l, CHILD_COMPARATOR);
 		return l;
 	}
 	
 	public void addChild(Envelope child) {
-		children.add(child);
+		if (children.get(child.getName()) != null) {
+			throw new RuntimeException("Duplicate envelope name for " + this + ": '" + child.getName() + "'");
+		}
+		children.put(child.getName(), child);
 		getMonitor().fireEntityChanged(this, Properties.children);
 	}
 	
 	public void removeChild(Envelope child) {
-		children.remove(child);
+		children.remove(child.getName());
 		getMonitor().fireEntityChanged(this, Properties.children);
+	}
+	
+	public Envelope getChild(String name) {
+		return children.get(name);
 	}
 	
 	public List<InternalTransaction> getAccountTransactions(Account account) {
@@ -635,7 +649,7 @@ public class Envelope extends AbstractEntity<Envelope> {
 	public void setAmount(Double amount) {
 		setBudget(amount);
 	}
-
+	
 	private static class ChildComparator implements Comparator<Envelope> {
 		@Override
 		public int compare(Envelope e1, Envelope e2) {

@@ -9,6 +9,8 @@ import net.deuce.moman.model.EntityProperty;
 import net.deuce.moman.model.Frequency;
 import net.deuce.moman.util.CalendarUtil;
 
+import org.dom4j.Document;
+
 public class Income extends AbstractEntity<Income> {
 
 	private static final long serialVersionUID = 1L;
@@ -32,6 +34,11 @@ public class Income extends AbstractEntity<Income> {
 
 	public Income() {
 		super();
+	}
+	
+	@Override
+	public Document toXml() {
+		return buildXml(Properties.values());
 	}
 	
 	@Override

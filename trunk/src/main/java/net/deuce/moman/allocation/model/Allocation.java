@@ -6,6 +6,8 @@ import net.deuce.moman.model.AbstractEntity;
 import net.deuce.moman.model.EntityProperty;
 import net.deuce.moman.service.ServiceNeeder;
 
+import org.dom4j.Document;
+
 public class Allocation extends AbstractEntity<Allocation> {
 
 	private static final long serialVersionUID = 1L;
@@ -40,6 +42,11 @@ public class Allocation extends AbstractEntity<Allocation> {
 		return allocationSet;
 	}
 
+	@Override
+	public Document toXml() {
+		return buildXml(Properties.values());
+	}
+	
 	public void setAllocationSet(AllocationSet allocationSet) {
 		this.allocationSet = allocationSet;
 	}

@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TransactionBuilder extends AbstractBuilder {
+public class TransactionBuilder extends AbstractBuilder<InternalTransaction> {
 	
 	@Autowired
 	private TransactionService transactionService;
@@ -161,21 +161,31 @@ public class TransactionBuilder extends AbstractBuilder {
 	public void buildImportXml(Document doc) {
 		
 		Element root = doc.getRootElement().addElement("transactions");
-		Element el;
 		
 		for (InternalTransaction trans : importService.getEntities()) {
-			el = root.addElement("transaction");
-			el.addAttribute("id", trans.getId());
-			addElement(el, "amount", Utils.formatDouble(trans.getAmount()));
-			addElement(el, "type", trans.getType());
-			addElement(el, "date", Constants.DATE_FORMAT.format(trans.getDate()));
-			addElement(el, "desc", trans.getDescription());
-			addOptionalBooleanElement(el, "extid", trans.isInitialBalance());
-			addOptionalElement(el, "extid", trans.getExternalId());
-			addElement(el, "memo", trans.getMemo());
-			addElement(el, "check", trans.getCheck());
-			addElement(el, "ref", trans.getRef());
+			buildEntity(trans, root);
 		}
+	}
+
+	@Override
+	protected Element buildEntity(InternalTransaction trans, Element parent) {
+		Element el = parent.addElement("transaction");
+		el.addAttribute("id", trans.getId());
+		addElement(el, "amount", Utils.formatDouble(trans.getAmount()));
+		addElement(el, "type", trans.getType());
+		addElement(el, "date", Constants.DATE_FORMAT.format(trans.getDate()));
+		addElement(el, "desc", trans.getDescription());
+		addOptionalBooleanElement(el, "extid", trans.isInitialBalance());
+		addOptionalElement(el, "extid", trans.getExternalId());
+		addElement(el, "memo", trans.getMemo());
+		addElement(el, "check", trans.getCheck());
+		addElement(el, "ref", trans.getRef());
+		return el;
+	}
+
+	@Override
+	protected String getRootElementName() {
+		return "transactions";
 	}
 	
 }

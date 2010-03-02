@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class EnvelopeBuilder extends AbstractBuilder {
+public class EnvelopeBuilder extends AbstractBuilder<Envelope> {
 	
 	@Autowired
 	private EnvelopeService envelopeService;
@@ -147,10 +147,20 @@ public class EnvelopeBuilder extends AbstractBuilder {
 	
 	public void buildXml(Document doc) {
 		
-		Element root = doc.getRootElement().addElement("envelopes");
+		Element root = doc.getRootElement().addElement(getRootElementName());
 		
 		for (Envelope env : envelopeService.getEntities()) {
 			buildEnvelope(env, root, "envelope");
 		}
+	}
+
+	@Override
+	protected Element buildEntity(Envelope entity, Element parent) {
+		return buildEnvelope(entity, parent, "envelope");
+	}
+
+	@Override
+	protected String getRootElementName() {
+		return "envelopes";
 	}
 }

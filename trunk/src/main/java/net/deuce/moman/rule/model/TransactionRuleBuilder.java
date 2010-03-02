@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TransactionRuleBuilder extends AbstractBuilder {
+public class TransactionRuleBuilder extends AbstractBuilder<Rule> {
 	
 	@Autowired
 	private TransactionRuleService transactionRuleService;
@@ -49,18 +49,28 @@ public class TransactionRuleBuilder extends AbstractBuilder {
 	
 	public void buildXml(Document doc) {
 		
-		Element root = doc.getRootElement().element("transactions");
-		Element el;
+		Element root = doc.getRootElement().element(getRootElementName());
 		
 		for (Rule rule : transactionRuleService.getEntities()) {
-			el = root.addElement("rule");
-			el.addAttribute("id", rule.getId());
-			addOptionalBooleanElement(el, "enabled", rule.isEnabled());
-			addOptionalElement(el, "amount", Utils.formatDouble(rule.getAmount()));
-			addElement(el, "expression", rule.getExpression());
-			addElement(el, "conversion", rule.getConversion());
-			addElement(el, "condition", rule.getCondition().name());
-			el.addElement("envelope").addAttribute("id", rule.getEnvelope().getId());
+			buildEntity(rule, root);
 		}
+	}
+
+	@Override
+	protected Element buildEntity(Rule rule, Element parent) {
+		Element el = parent.addElement("rule");
+		el.addAttribute("id", rule.getId());
+		addOptionalBooleanElement(el, "enabled", rule.isEnabled());
+		addOptionalElement(el, "amount", Utils.formatDouble(rule.getAmount()));
+		addElement(el, "expression", rule.getExpression());
+		addElement(el, "conversion", rule.getConversion());
+		addElement(el, "condition", rule.getCondition().name());
+		el.addElement("envelope").addAttribute("id", rule.getEnvelope().getId());
+		return el;
+	}
+
+	@Override
+	protected String getRootElementName() {
+		return "transactions";
 	}
 }

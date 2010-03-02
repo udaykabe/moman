@@ -15,6 +15,7 @@ import net.deuce.moman.service.ServiceNeeder;
 import net.deuce.moman.transaction.operation.SetAmountOperation;
 import net.sf.ofx4j.domain.data.common.TransactionType;
 
+import org.dom4j.Document;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.widgets.Display;
@@ -66,6 +67,11 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
 
 	public InternalTransaction() {
 		super();
+	}
+	
+	@Override
+	public Document toXml() {
+		return buildXml(Properties.values());
 	}
 	
 	public boolean isImported() {
@@ -438,6 +444,11 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
 	@Override
 	public String toString() {
 		return "InternalTransaction : " + getId() + " - " + description + " - " + amount;
+	}
+	
+	@Override
+	public String getRootName() {
+		return "transaction";
 	}
 	
 }

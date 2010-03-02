@@ -8,6 +8,8 @@ import net.deuce.moman.model.EntityProperty;
 import net.deuce.moman.transaction.model.InternalTransaction;
 import net.sf.ofx4j.domain.data.common.AccountStatus;
 
+import org.dom4j.Document;
+
 public class Account extends AbstractEntity<Account> {
 	
 	public enum Properties implements EntityProperty {
@@ -49,6 +51,11 @@ public class Account extends AbstractEntity<Account> {
 	
 	public Account() {
 		super();
+	}
+	
+	@Override
+	public Document toXml() {
+		return buildXml(Properties.values());
 	}
 	
 	@Override

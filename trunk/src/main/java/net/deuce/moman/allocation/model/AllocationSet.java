@@ -9,6 +9,8 @@ import net.deuce.moman.income.model.Income;
 import net.deuce.moman.model.AbstractEntity;
 import net.deuce.moman.model.EntityProperty;
 
+import org.dom4j.Document;
+
 public class AllocationSet extends AbstractEntity<AllocationSet> {
 
 	private static final long serialVersionUID = 1L;
@@ -31,6 +33,11 @@ public class AllocationSet extends AbstractEntity<AllocationSet> {
 	
 	public AllocationSet(String name) {
 		this.name = name;
+	}
+	
+	@Override
+	public Document toXml() {
+		return buildXml(Properties.values());
 	}
 	
 	public String getName() {
