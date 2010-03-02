@@ -3,6 +3,8 @@ package net.deuce.moman.fi.model;
 import net.deuce.moman.model.AbstractEntity;
 import net.deuce.moman.model.EntityProperty;
 
+import org.dom4j.Document;
+
 public class FinancialInstitution extends AbstractEntity<FinancialInstitution> {
 
 	private static final long serialVersionUID = 1L;
@@ -27,6 +29,11 @@ public class FinancialInstitution extends AbstractEntity<FinancialInstitution> {
 		super();
 	}
 
+	@Override
+	public Document toXml() {
+		return buildXml(Properties.values());
+	}
+	
 	public String getName() {
 		return name;
 	}

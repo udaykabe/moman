@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-public class PayeeBuilder extends AbstractBuilder {
+public class PayeeBuilder extends AbstractBuilder<Payee> {
 	
 	@Autowired
 	private PayeeService payeeService;
@@ -43,15 +43,25 @@ public class PayeeBuilder extends AbstractBuilder {
 	
 	public void buildXml(Document doc) {
 		
-		Element root = doc.getRootElement().addElement("payees");
-		Element el;
+		Element root = doc.getRootElement().addElement(getRootElementName());
 		
 		for (Payee payee : payeeService.getEntities()) {
-			el = root.addElement("payee");
-			el.addAttribute("id", payee.getId());
-			addElement(el, "description", payee.getDescription());
-			addElement(el, "amount", Utils.formatDouble(payee.getAmount()));
-			el.addElement("envelope").addAttribute("id", payee.getEnvelope().getId());
+			buildEntity(payee, root);
 		}
+	}
+
+	@Override
+	protected Element buildEntity(Payee payee, Element parent) {
+		Element el = parent.addElement("payee");
+		el.addAttribute("id", payee.getId());
+		addElement(el, "description", payee.getDescription());
+		addElement(el, "amount", Utils.formatDouble(payee.getAmount()));
+		el.addElement("envelope").addAttribute("id", payee.getEnvelope().getId());
+		return el;
+	}
+
+	@Override
+	protected String getRootElementName() {
+		return "payees";
 	}
 }

@@ -4,6 +4,8 @@ import net.deuce.moman.envelope.model.Envelope;
 import net.deuce.moman.model.AbstractEntity;
 import net.deuce.moman.model.EntityProperty;
 
+import org.dom4j.Document;
+
 public class Split extends AbstractEntity<Split> {
 	
 	public enum Properties implements EntityProperty {
@@ -25,6 +27,11 @@ public class Split extends AbstractEntity<Split> {
 		this.amount = amount;
 	}
 
+	@Override
+	public Document toXml() {
+		return buildXml(Properties.values());
+	}
+	
 	public Envelope getEnvelope() {
 		return envelope;
 	}

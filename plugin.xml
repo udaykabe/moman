@@ -952,6 +952,13 @@
             series="org.eclipse.birt.chart.model.type.impl.PieSeriesImpl">
       </modelRenderer>
    </extension>
+   <extension
+         point="org.eclipse.equinox.http.registry.servlets">
+      <servlet
+            alias="/envelopeService"
+            class="net.deuce.moman.servlet.EnvelopeServlet">
+      </servlet>
+   </extension>
    
    
 </plugin>

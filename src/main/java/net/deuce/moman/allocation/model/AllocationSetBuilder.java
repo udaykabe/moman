@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AllocationSetBuilder extends AbstractBuilder {
+public class AllocationSetBuilder extends AbstractBuilder<AllocationSet> {
 	
 	@Autowired
 	private EnvelopeService envelopeService;
@@ -83,12 +83,12 @@ public class AllocationSetBuilder extends AbstractBuilder {
 		return allocation;
 	}
 	
-	protected Element buildAllocationSet(AllocationSet allocationSet, Element root, String name) {
+	@Override
+	protected Element buildEntity(AllocationSet allocationSet, Element root) {
 		Element el;
 		Element sel;
-		Element ael;
 		
-		el = root.addElement(name);
+		el = root.addElement("allocation-set");
 		el.addAttribute("id", allocationSet.getId());
 		addElement(el, "name", allocationSet.getName());
 		if (allocationSet.getIncome() != null) {
@@ -97,15 +97,7 @@ public class AllocationSetBuilder extends AbstractBuilder {
 		
 		sel = el.addElement("allocations");
 		for (Allocation allocation : allocationSet.getAllocations()) {
-			ael = sel.addElement("allocation");
-			ael.addAttribute("id", allocation.getId());
-			addElement(ael, "index", allocation.getIndex());
-			addElement(ael, "amount", Utils.formatDouble(allocation.getAmount()));
-			addElement(ael, "amount-type", allocation.getAmountType().name());
-			addElement(ael, "limit", Utils.formatDouble(allocation.getLimit()));
-			addElement(ael, "limit-type", allocation.getLimitType().name());
-			addElement(ael, "enabled", allocation.getEnabled());
-			ael.addElement("envelope").addAttribute("id", allocation.getEnvelope().getId());
+			buildAllocation(allocation, sel);
 		}
 		
 		return el;
@@ -113,10 +105,28 @@ public class AllocationSetBuilder extends AbstractBuilder {
 	
 	public void buildXml(Document doc) {
 		
-		Element root = doc.getRootElement().addElement("allocation-sets");
+		Element root = doc.getRootElement().addElement(getRootElementName());
 		
 		for (AllocationSet allocationSet : allocationSetService.getEntities()) {
-			buildAllocationSet(allocationSet, root, "allocation-set");
+			buildEntity(allocationSet, root);
 		}
+	}
+	
+	protected Element buildAllocation(Allocation allocation, Element parent) {
+		Element el = parent.addElement("allocation");
+		el.addAttribute("id", allocation.getId());
+		addElement(el, "index", allocation.getIndex());
+		addElement(el, "amount", Utils.formatDouble(allocation.getAmount()));
+		addElement(el, "amount-type", allocation.getAmountType().name());
+		addElement(el, "limit", Utils.formatDouble(allocation.getLimit()));
+		addElement(el, "limit-type", allocation.getLimitType().name());
+		addElement(el, "enabled", allocation.getEnabled());
+		el.addElement("envelope").addAttribute("id", allocation.getEnvelope().getId());
+		return el;
+	}
+
+	@Override
+	protected String getRootElementName() {
+		return "allocation-sets";
 	}
 }

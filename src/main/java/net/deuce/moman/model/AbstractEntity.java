@@ -1,11 +1,17 @@
 package net.deuce.moman.model;
 
+import java.lang.reflect.Method;
 import java.util.Comparator;
+import java.util.Date;
 
+import net.deuce.moman.Constants;
 import net.deuce.moman.operation.EntitySetterOperation;
 import net.deuce.moman.service.ServiceNeeder;
 import net.deuce.moman.ui.Activator;
 
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.IOperationHistory;
 import org.eclipse.core.commands.operations.IUndoContext;
@@ -124,4 +130,43 @@ implements Comparator<E>, Comparable<E> {
 			e.printStackTrace();
 		}
 	}
+	
+	private String buildGetterName(EntityProperty property) {
+		StringBuffer sb = new StringBuffer("get");
+		sb.append(property.name().substring(0,1).toUpperCase());
+		sb.append(property.name().substring(1));
+		return sb.toString();
+	}
+	
+	protected Document buildXml(EntityProperty[] properties) {
+		try {
+			Document doc = DocumentHelper.createDocument();
+			Element root = doc.addElement(getRootName());
+			root.addAttribute("id", id);
+			Method getter;
+			Object value;
+			
+			for (EntityProperty ep : properties) {
+				getter = getClass().getDeclaredMethod(buildGetterName(ep));
+				value = getter.invoke(this);
+				if (value != null) {
+					if (Date.class.equals(ep.type())) {
+						root.addElement(ep.name()).setText(Constants.SHORT_DATE_FORMAT.format(value));
+					} else {
+						root.addElement(ep.name()).setText(value.toString());
+					}
+				}
+			}
+			return doc;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	protected String getRootName() {
+		String name = getClass().getSimpleName();
+		return name.substring(0,1).toLowerCase() + name.substring(1);
+	}
+	
+	public abstract Document toXml();
 }

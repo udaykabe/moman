@@ -95,19 +95,6 @@
       <parent id="8fe52b38-23d2-343b-9377-b6ede8a8cd2b"/>
       <transactions/>
     </envelope>
-    <envelope id="774e4556-ae1c-378c-90ab-5ef98ecc8892">
-      <editable>true</editable>
-      <selected>false</selected>
-      <expanded>false</expanded>
-      <enabled>true</enabled>
-      <name>Savings Goals</name>
-      <index>7</index>
-      <frequency>NONE</frequency>
-      <budget>0.0</budget>
-      <dueDay>0</dueDay>
-      <parent id="8fe52b38-23d2-343b-9377-b6ede8a8cd2b"/>
-      <transactions/>
-    </envelope>
     <envelope id="a5e4cb76-0c95-3c34-8b81-ffc4521de8ac">
       <editable>true</editable>
       <selected>false</selected>

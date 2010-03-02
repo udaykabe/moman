@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class FinancialInstitutionBuilder extends AbstractBuilder {
+public class FinancialInstitutionBuilder extends AbstractBuilder<FinancialInstitution> {
 
 	@Autowired
 	private FinancialInstitutionService financialInstitutionService;
@@ -34,16 +34,26 @@ public class FinancialInstitutionBuilder extends AbstractBuilder {
 	
 	public void buildXml(Document doc) {
 		
-		Element root = doc.getRootElement().addElement("financialInstitutions");
-		Element el;
+		Element root = doc.getRootElement().addElement(getRootElementName());
 		
 		for (FinancialInstitution fi : financialInstitutionService.getEntities()) {
-			el = root.addElement("financialInstitution");
-			addElement(el, "id", fi.getId());
-			addElement(el, "name", fi.getName());
-			addElement(el, "url", fi.getUrl());
-			addElement(el, "fid", fi.getFinancialInstitutionId());
-			addElement(el, "org", fi.getOrganization());
+			buildEntity(fi, root);
 		}
+	}
+
+	@Override
+	protected Element buildEntity(FinancialInstitution fi, Element parent) {
+		Element el = parent.addElement("financialInstitution");
+		addElement(el, "id", fi.getId());
+		addElement(el, "name", fi.getName());
+		addElement(el, "url", fi.getUrl());
+		addElement(el, "fid", fi.getFinancialInstitutionId());
+		addElement(el, "org", fi.getOrganization());
+		return el;
+	}
+
+	@Override
+	protected String getRootElementName() {
+		return "financialInstitutions";
 	}
 }

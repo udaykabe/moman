@@ -4,6 +4,8 @@ import net.deuce.moman.envelope.model.Envelope;
 import net.deuce.moman.model.AbstractEntity;
 import net.deuce.moman.model.EntityProperty;
 
+import org.dom4j.Document;
+
 public class Rule extends AbstractEntity<Rule> {
 
 	private static final long serialVersionUID = 1L;
@@ -38,6 +40,11 @@ public class Rule extends AbstractEntity<Rule> {
 		super();
 	}
 
+	@Override
+	public Document toXml() {
+		return buildXml(Properties.values());
+	}
+	
 	public Double getAmount() {
 		return amount;
 	}
