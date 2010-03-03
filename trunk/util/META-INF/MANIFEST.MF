@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Moman_util
+Bundle-SymbolicName: net.deuce.moman.util
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: net.deuce.moman.util.Activator
+Require-Bundle: org.eclipse.core.runtime
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
