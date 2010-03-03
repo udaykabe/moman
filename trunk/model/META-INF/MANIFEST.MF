@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Moman_model
+Bundle-SymbolicName: net.deuce.moman.model
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: net.deuce.moman.model.Activator
+Require-Bundle: org.eclipse.core.runtime
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ClassPath: lib/dom4j-1.6.1.jar,
+ .
