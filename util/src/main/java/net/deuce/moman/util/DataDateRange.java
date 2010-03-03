@@ -2,8 +2,6 @@ package net.deuce.moman.util;
 
 import java.util.Date;
 
-import net.deuce.moman.Constants;
-
 public class DataDateRange {
 
 	private Date startDate;
