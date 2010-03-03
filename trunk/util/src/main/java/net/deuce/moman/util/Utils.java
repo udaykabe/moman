@@ -7,8 +7,6 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.deuce.moman.Constants;
-
 public class Utils {
 	
 	private static Random random = new Random(System.currentTimeMillis());
