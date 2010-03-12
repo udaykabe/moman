@@ -1,0 +1,4 @@
+<ipojo>
+<instance component="net.deuce.moman.entity.model.income.impl.IncomeBuilderImpl"/>
+<instance component="net.deuce.moman.entity.model.income.impl.IncomeFactoryImpl"/>
+</ipojo>

@@ -19,9 +19,8 @@ public class EnvelopeSelectionTreeViewer extends TreeViewer {
 		super(tree);
 	}
 
-	@Override
 	protected void triggerEditorActivationEvent(
 			ColumnViewerEditorActivationEvent event) {
-//		super.triggerEditorActivationEvent(event);
+		// super.triggerEditorActivationEvent(event);
 	}
 }

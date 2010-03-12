@@ -8,18 +8,18 @@ import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.deuce.moman.Constants;
+import net.deuce.moman.RcpConstants;
 import net.deuce.moman.util.DataDateRange;
 
 public enum DateRange {
 
-	currentMonth("Current Month", Calendar.MONTH, 1, true),
-	lastMonth("Last Month", Calendar.MONTH, 1, false),
-	last6Months("Last 6 Months", Calendar.MONTH, 6, true),
-	last12Months("Last 12 Months", Calendar.MONTH, 12, true),
-	currentYear("Current Year", Calendar.YEAR, 1, true),
-	lastYear("Last Year", Calendar.YEAR, 1, false);
-	
+	currentMonth("Current Month", Calendar.MONTH, 1, true), lastMonth(
+			"Last Month", Calendar.MONTH, 1, false), last6Months(
+			"Last 6 Months", Calendar.MONTH, 6, true), last12Months(
+			"Last 12 Months", Calendar.MONTH, 12, true), currentYear(
+			"Current Year", Calendar.YEAR, 1, true), lastYear("Last Year",
+			Calendar.YEAR, 1, false);
+
 	private static DateFormat MONTH_FORMAT = new SimpleDateFormat("MMM yyyy");
 	private static DateFormat YEAR_FORMAT = new SimpleDateFormat("yyyy");
 
@@ -29,43 +29,48 @@ public enum DateRange {
 	private boolean current;
 	private Date startDate;
 	private Date endDate;
-	
-	private DateRange(String label, int calendarField, int cardinality, boolean current) {
+
+	private DateRange(String label, int calendarField, int cardinality,
+			boolean current) {
 		this.label = label;
 		this.calendarField = calendarField;
 		this.cardinality = cardinality;
 		this.current = current;
 	}
-	
+
 	private DateRange(Date startDate, Date endDate) {
 		this.startDate = startDate;
 		this.endDate = endDate;
 	}
 
-	public String label() { return label; }
-	public Date startDate() { 
+	public String label() {
+		return label;
+	}
+
+	public Date startDate() {
 		if (startDate == null) {
 			calcDateRanges();
 		}
 		return startDate;
 	}
+
 	public Date endDate() {
 		if (endDate == null) {
 			calcDateRanges();
 		}
 		return endDate;
 	}
-	
+
 	public void calcDateRanges() {
 		GregorianCalendar cal = new GregorianCalendar();
-		
+
 		if (current) {
 			endDate = cal.getTime();
-			
+
 			if (cardinality > 1) {
-				cal.add(calendarField, -(cardinality-1));
+				cal.add(calendarField, -(cardinality - 1));
 			}
-			
+
 			switch (calendarField) {
 			case Calendar.MONTH:
 				cal.set(Calendar.DAY_OF_MONTH, 1);
@@ -78,7 +83,7 @@ public enum DateRange {
 			startDate = cal.getTime();
 		} else {
 			cal.add(calendarField, -1);
-			
+
 			if (calendarField == Calendar.MONTH) {
 				switch (cal.get(Calendar.MONTH)) {
 				case Calendar.JANUARY:
@@ -117,12 +122,12 @@ public enum DateRange {
 			}
 		}
 	}
-	
+
 	public List<String> chartLabels() {
 		List<String> list = new LinkedList<String>();
 		Calendar cal = new GregorianCalendar();
 		cal.setTime(startDate());
-		
+
 		while (cal.getTime().before(endDate)) {
 			if (calendarField == Calendar.MONTH) {
 				list.add(MONTH_FORMAT.format(cal.getTime()));
@@ -133,13 +138,13 @@ public enum DateRange {
 		}
 		return list;
 	}
-	
+
 	public List<DataDateRange> dataDateRanges() {
 		List<DataDateRange> list = new LinkedList<DataDateRange>();
 		Calendar cal = new GregorianCalendar();
 		cal.setTime(startDate());
 		Date startDate;
-		
+
 		while (cal.getTime().before(endDate)) {
 			startDate = cal.getTime();
 			cal.add(calendarField, 1);
@@ -149,12 +154,18 @@ public enum DateRange {
 		}
 		return list;
 	}
-	
+
 	public static void main(String[] args) {
 		for (DateRange dateRange : DateRange.values()) {
 			dateRange.calcDateRanges();
-			System.out.println(dateRange.label() + ": " + Constants.SHORT_DATE_FORMAT.format(dateRange.startDate()) + " -> " + 
-					Constants.SHORT_DATE_FORMAT.format(dateRange.endDate()) + " - " + dateRange.dataDateRanges());
+			System.out.println(dateRange.label()
+					+ ": "
+					+ RcpConstants.SHORT_DATE_FORMAT.format(dateRange
+							.startDate())
+					+ " -> "
+					+ RcpConstants.SHORT_DATE_FORMAT
+							.format(dateRange.endDate()) + " - "
+					+ dateRange.dataDateRanges());
 		}
 	}
 }

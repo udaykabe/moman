@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="DeployTest" uid="net.deuce.moman.rcp.deploy.product" id="moman.product" application="moman.application" version="1.0.0.qualifier" useFeatures="false" includeLaunchers="true">
+<product name="DeployTest" uid="net.deuce.moman.rcp.deploy.product" id="net.deuce.moman.rcp.product" application="moman.application" version="1.0.0.qualifier" useFeatures="false" includeLaunchers="true">
 
    <configIni use="default">
    </configIni>
@@ -14,8 +14,8 @@
 
    <plugins>
       <plugin id="com.ibm.icu"/>
-      <plugin id="moman"/>
-      <plugin id="net.deuce.jfreechart.libs"/>
+      <plugin id="moman" fragment=""/>
+      <plugin id="net.deuce.jfreechart.libs" fragment=""/>
       <plugin id="org.apache.commons.codec"/>
       <plugin id="org.eclipse.birt.chart"/>
       <plugin id="org.eclipse.birt.chart.device.swt"/>

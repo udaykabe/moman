@@ -19,7 +19,6 @@ public class DemoView4 extends ViewPart {
 	public DemoView4() {
 	}
 
-	@Override
 	public void createPartControl(Composite parent) {
 		String[] images = { ISharedImages.IMG_TOOL_CUT_DISABLED,
 				ISharedImages.IMG_TOOL_CUT_HOVER,
@@ -59,7 +58,6 @@ public class DemoView4 extends ViewPart {
 		}
 	}
 
-	@Override
 	public void setFocus() {
 	}
 

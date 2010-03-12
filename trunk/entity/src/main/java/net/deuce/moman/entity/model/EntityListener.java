@@ -1,0 +1,10 @@
+package net.deuce.moman.entity.model;
+
+
+@SuppressWarnings("unchecked")
+public interface EntityListener<E extends AbstractEntity>  {
+	
+	public void entityAdded(EntityEvent<E> event);
+	public void entityRemoved(EntityEvent<E> event);
+	public void entityChanged(EntityEvent<E> event);
+}

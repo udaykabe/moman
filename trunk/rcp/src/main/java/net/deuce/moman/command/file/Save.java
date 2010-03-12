@@ -1,7 +1,7 @@
 package net.deuce.moman.command.file;
 
-import net.deuce.moman.service.ServiceContainer;
-import net.deuce.moman.service.ServiceNeeder;
+import net.deuce.moman.entity.ServiceProvider;
+import net.deuce.moman.entity.service.ServiceManager;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -13,19 +13,19 @@ public class Save extends AbstractHandler {
 
 	public static final String ID = "net.deuce.moman.command.file.save";
 
-	@Override
+	private ServiceManager serviceManager = ServiceProvider.instance().getServiceManager();
+
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		ServiceContainer serviceContainer = ServiceNeeder.instance().getServiceContainer();
-		if (serviceContainer.getActiveFile() == null) {
-			IHandlerService handlerService =
-				(IHandlerService) HandlerUtil.getActiveSite(event).getService(IHandlerService.class);
+		if (serviceManager.getActiveFile() == null) {
+			IHandlerService handlerService = (IHandlerService) HandlerUtil
+					.getActiveSite(event).getService(IHandlerService.class);
 			try {
 				handlerService.executeCommand(SaveAs.ID, null);
 			} catch (Exception e) {
 				throw new ExecutionException("Save command failed", e);
 			}
 		} else {
-			serviceContainer.saveEntities();
+			serviceManager.saveEntities();
 		}
 		return null;
 	}

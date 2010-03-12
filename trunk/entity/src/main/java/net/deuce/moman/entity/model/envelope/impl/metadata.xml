@@ -1,0 +1,4 @@
+<ipojo>
+<instance component="net.deuce.moman.entity.model.envelope.impl.EnvelopeBuilderImpl"/>
+<instance component="net.deuce.moman.entity.model.envelope.impl.EnvelopeFactoryImpl"/>
+</ipojo>

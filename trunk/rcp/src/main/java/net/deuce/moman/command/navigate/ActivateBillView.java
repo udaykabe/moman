@@ -6,7 +6,6 @@ public class ActivateBillView extends AbstractActivateView {
 
 	public static final String ID = "net.deuce.moman.command.navigate.bill";
 
-	@Override
 	public String getViewId() {
 		return BillView.ID;
 	}

@@ -6,8 +6,8 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-public class GeneralPage extends FieldEditorPreferencePage
-		implements IWorkbenchPreferencePage {
+public class GeneralPage extends FieldEditorPreferencePage implements
+		IWorkbenchPreferencePage {
 
 	public GeneralPage() {
 		super(GRID);
@@ -16,7 +16,6 @@ public class GeneralPage extends FieldEditorPreferencePage
 	public void createFieldEditors() {
 	}
 
-	@Override
 	public void init(IWorkbench workbench) {
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
 		setDescription("General Preferences");

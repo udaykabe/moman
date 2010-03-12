@@ -27,387 +27,406 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.keys.IBindingService;
 
 public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
-	
-    private static final String OS_MACOSX = "macosx"; //$NON-NLS-1$
-    
-    private IWorkbenchAction newFileAction;
-    private IWorkbenchAction openFileAction;
-    private IWorkbenchAction saveFileAction;
-    private IWorkbenchAction saveFileAsAction;
-    private IWorkbenchAction exitAction;
-    private IWorkbenchAction aboutAction;
-    private IWorkbenchAction preferencesAction;
-    private IWorkbenchAction helpAction;
-    private IWorkbenchAction dynamicHelpAction;
-    
+
+	private static final String OS_MACOSX = "macosx"; //$NON-NLS-1$
+
+	private IWorkbenchAction newFileAction;
+	private IWorkbenchAction openFileAction;
+	private IWorkbenchAction saveFileAction;
+	private IWorkbenchAction saveFileAsAction;
+	private IWorkbenchAction exitAction;
+
     private IWorkbenchAction importAction;
-    private IWorkbenchAction exportAction;
-    
-    private IWorkbenchAction undoAction;
-    private IWorkbenchAction redoAction;
-    private IWorkbenchAction findTransactionAction;
-    
-    private IWorkbenchAction newAllocationProfileAction;
-    private IWorkbenchAction newAccountAction;
-    private IWorkbenchAction editAccountAction;
-    private IWorkbenchAction reconcileAccountAction;
-    private IWorkbenchAction downloadTransactionsAction;
-    private IWorkbenchAction forceDownloadTransactionsAction;
-    
-    private IWorkbenchAction newPaySourceAction;
-    
-    private IWorkbenchAction newEnvelopeAction;
-    
-    private IWorkbenchAction newBillAction;
-    private IWorkbenchAction newSavingsGoalAction;
-    private IWorkbenchAction fundNegativeEnvelopesAction;
-    
+	private IWorkbenchAction exportAction;
+
+	private IWorkbenchAction undoAction;
+	private IWorkbenchAction redoAction;
+	private IWorkbenchAction findTransactionAction;
+
+	private IWorkbenchAction newAllocationProfileAction;
+	private IWorkbenchAction newAccountAction;
+	private IWorkbenchAction editAccountAction;
+	private IWorkbenchAction reconcileAccountAction;
+	private IWorkbenchAction downloadTransactionsAction;
+	private IWorkbenchAction forceDownloadTransactionsAction;
+
+	private IWorkbenchAction newPaySourceAction;
+
+	private IWorkbenchAction newEnvelopeAction;
+
+	private IWorkbenchAction newBillAction;
+	private IWorkbenchAction newSavingsGoalAction;
+
     private IWorkbenchAction newTransactionAction;
-    private IWorkbenchAction newRepeatingTransactionAction;
-    private IWorkbenchAction newTransactionRuleAction;
-    
-    private IWorkbenchAction accountViewAction;
-    private IWorkbenchAction envelopeViewAction;
-    private IWorkbenchAction paySourceViewAction;
-    private IWorkbenchAction billViewAction;
-    private IWorkbenchAction allocationViewAction;
-    private IWorkbenchAction budgetViewAction;
-    private IWorkbenchAction cashFlowReportViewAction;
-    private IWorkbenchAction spendingReportViewAction;
-    private IWorkbenchAction savingsGoalsViewAction;
-    private IWorkbenchAction registerViewAction;
-    private IWorkbenchAction importViewAction;
-    private IWorkbenchAction importRuleViewAction;
-    private IWorkbenchAction transferViewAction;
-    private IWorkbenchAction repeatingTransactionViewAction;
-    
-    private RecentlyOpenedFilesMenu recentFilesMenu;
-    
-    private int menuAboutToShowCount = 0;
-    
-    //private IContributionItem perspectivesList;
+	private IWorkbenchAction newRepeatingTransactionAction;
+	private IWorkbenchAction newTransactionRuleAction;
 
-    public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
-        super(configurer);
-    }
+	private IWorkbenchAction accountViewAction;
+	private IWorkbenchAction envelopeViewAction;
+	private IWorkbenchAction paySourceViewAction;
+	private IWorkbenchAction billViewAction;
+	private IWorkbenchAction allocationViewAction;
+	private IWorkbenchAction budgetViewAction;
+	private IWorkbenchAction cashFlowReportViewAction;
+	private IWorkbenchAction spendingReportViewAction;
+	private IWorkbenchAction savingsGoalsViewAction;
+	private IWorkbenchAction registerViewAction;
+	private IWorkbenchAction importViewAction;
+	private IWorkbenchAction importRuleViewAction;
+	private IWorkbenchAction transferViewAction;
+	private IWorkbenchAction repeatingTransactionViewAction;
 
-    @Override
-    protected void makeActions(IWorkbenchWindow window) {
-    	try {
-    	newFileAction = Actions.NEW_FILE_ACTION.create( window );
-        register( newFileAction );
-        
-        openFileAction = Actions.OPEN_FILE_ACTION.create( window );
-        register( openFileAction );
-        
-        saveFileAction = Actions.SAVE_FILE_ACTION.create( window );
-        register( saveFileAction );
+	private RecentlyOpenedFilesMenu recentFilesMenu;
 
-        saveFileAsAction = Actions.SAVE_AS_FILE_ACTION.create( window );
-        register( saveFileAsAction );
-        
-        recentFilesMenu = new RecentlyOpenedFilesMenu();
+	private int menuAboutToShowCount = 0;
 
-        importAction = Actions.IMPORT_TRANSACTIONS_ACTION.create( window );
-        register( importAction );
+	// private IContributionItem perspectivesList;
 
-        exportAction = Actions.EXPORT_TRANSACTIONS_ACTION.create( window );
-        register( exportAction );
+	public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
+		super(configurer);
+	}
 
-        exitAction = ActionFactory.QUIT.create( window );
-        register( exitAction );
+	protected void makeActions(IWorkbenchWindow window) {
+		try {
+			newFileAction = Actions.NEW_FILE_ACTION.create(window);
+			register(newFileAction);
 
-        undoAction = ActionFactory.UNDO.create( window );
-        register( undoAction );
+			openFileAction = Actions.OPEN_FILE_ACTION.create(window);
+			register(openFileAction);
 
-        redoAction = ActionFactory.REDO.create( window );
-        register( redoAction );
+			saveFileAction = Actions.SAVE_FILE_ACTION.create(window);
+			register(saveFileAction);
 
-        findTransactionAction = Actions.FIND_TRANSACTION_ACTION.create( window );
-        register( findTransactionAction );
+			saveFileAsAction = Actions.SAVE_AS_FILE_ACTION.create(window);
+			register(saveFileAsAction);
 
-        newAccountAction = Actions.NEW_ACCOUNT_ACTION.create( window );
-        register( newAccountAction );
+			recentFilesMenu = new RecentlyOpenedFilesMenu();
 
-        newAllocationProfileAction = Actions.NEW_ALLOCATION_PROFILE_ACTION.create( window );
-        register( newAllocationProfileAction );
+			importAction = Actions.IMPORT_TRANSACTIONS_ACTION.create(window);
+			register(importAction);
 
-        editAccountAction = Actions.EDIT_ACCOUNT_ACTION.create( window );
-        register( editAccountAction );
+			exportAction = Actions.EXPORT_TRANSACTIONS_ACTION.create(window);
+			register(exportAction);
 
-        reconcileAccountAction = Actions.RECONCILE_ACCOUNT_ACTION.create( window );
-        register( reconcileAccountAction );
+			exitAction = ActionFactory.QUIT.create(window);
+			register(exitAction);
 
-        downloadTransactionsAction = Actions.DOWNLOAD_TRANSACTIONS_ACTION.create( window );
-        register( downloadTransactionsAction );
+			undoAction = ActionFactory.UNDO.create(window);
+			register(undoAction);
 
-        forceDownloadTransactionsAction = Actions.DOWNLOAD_TRANSACTIONS_FULL_ACTION.create( window );
-        register( forceDownloadTransactionsAction );
+			redoAction = ActionFactory.REDO.create(window);
+			register(redoAction);
 
-        newTransactionAction = Actions.NEW_TRANSACTION_ACTION.create( window );
-        register( newTransactionAction );
+			findTransactionAction = Actions.FIND_TRANSACTION_ACTION
+					.create(window);
+			register(findTransactionAction);
 
-        newRepeatingTransactionAction = Actions.NEW_REPEATING_TRANSACTION_ACTION.create( window );
-        register( newRepeatingTransactionAction );
+			newAccountAction = Actions.NEW_ACCOUNT_ACTION.create(window);
+			register(newAccountAction);
 
-        newEnvelopeAction = Actions.NEW_ENVELOPE_ACTION.create( window );
-        register( newEnvelopeAction );
+			newAllocationProfileAction = Actions.NEW_ALLOCATION_PROFILE_ACTION
+					.create(window);
+			register(newAllocationProfileAction);
 
-        newPaySourceAction = Actions.NEW_PAY_SOURCE_ACTION.create( window );
-        register( newPaySourceAction );
+			editAccountAction = Actions.EDIT_ACCOUNT_ACTION.create(window);
+			register(editAccountAction);
 
-        newBillAction = Actions.NEW_BILL_ACTION.create( window );
-        register( newBillAction );
+			reconcileAccountAction = Actions.RECONCILE_ACCOUNT_ACTION
+					.create(window);
+			register(reconcileAccountAction);
 
-        newSavingsGoalAction = Actions.NEW_SAVINGS_GOAL_ACTION.create( window );
-        register( newSavingsGoalAction );
+			downloadTransactionsAction = Actions.DOWNLOAD_TRANSACTIONS_ACTION
+					.create(window);
+			register(downloadTransactionsAction);
 
-        fundNegativeEnvelopesAction = Actions.FUND_NEGATIVE_ENVELOPES_ACTION.create( window );
-        register( fundNegativeEnvelopesAction );
+			forceDownloadTransactionsAction = Actions.DOWNLOAD_TRANSACTIONS_FULL_ACTION
+					.create(window);
+			register(forceDownloadTransactionsAction);
 
-        newTransactionRuleAction = Actions.NEW_TRANSACTION_RULE_ACTION.create( window );
-        register( newTransactionRuleAction );
+			newTransactionAction = Actions.NEW_TRANSACTION_ACTION
+					.create(window);
+			register(newTransactionAction);
 
-        accountViewAction = Actions.NAVIGATE_ACCOUNTS_ACTION.create( window );
-        register( accountViewAction );
+			newRepeatingTransactionAction = Actions.NEW_REPEATING_TRANSACTION_ACTION
+					.create(window);
+			register(newRepeatingTransactionAction);
 
-        envelopeViewAction = Actions.NAVIGATE_ENVELOPES_ACTION.create( window );
-        register( envelopeViewAction );
+			newEnvelopeAction = Actions.NEW_ENVELOPE_ACTION.create(window);
+			register(newEnvelopeAction);
 
-        paySourceViewAction = Actions.NAVIGATE_PAY_SOURCES_ACTION.create( window );
-        register( paySourceViewAction );
+			newPaySourceAction = Actions.NEW_PAY_SOURCE_ACTION.create(window);
+			register(newPaySourceAction);
 
-        billViewAction = Actions.NAVIGATE_BILLS_ACTION.create( window );
-        register( billViewAction );
+			newBillAction = Actions.NEW_BILL_ACTION.create(window);
+			register(newBillAction);
 
-        allocationViewAction = Actions.NAVIGATE_ALLOCATION_ACTION.create( window );
-        register( allocationViewAction );
+			newSavingsGoalAction = Actions.NEW_SAVINGS_GOAL_ACTION
+					.create(window);
+			register(newSavingsGoalAction);
 
-        savingsGoalsViewAction = Actions.NAVIGATE_SAVINGS_GOALS_ACTION.create( window );
-        register( savingsGoalsViewAction );
+            IWorkbenchAction fundNegativeEnvelopesAction = Actions.FUND_NEGATIVE_ENVELOPES_ACTION
+                    .create(window);
+			register(fundNegativeEnvelopesAction);
 
-        budgetViewAction = Actions.NAVIGATE_BUDGET_ACTION.create( window );
-        register( budgetViewAction );
+			newTransactionRuleAction = Actions.NEW_TRANSACTION_RULE_ACTION
+					.create(window);
+			register(newTransactionRuleAction);
 
-        cashFlowReportViewAction = Actions.NAVIGATE_CASH_FLOW_REPORT_GOALS_ACTION.create( window );
-        register( cashFlowReportViewAction );
+			accountViewAction = Actions.NAVIGATE_ACCOUNTS_ACTION.create(window);
+			register(accountViewAction);
 
-        spendingReportViewAction = Actions.NAVIGATE_SPENDING_REPORT_ACTION.create( window );
-        register( spendingReportViewAction );
+			envelopeViewAction = Actions.NAVIGATE_ENVELOPES_ACTION
+					.create(window);
+			register(envelopeViewAction);
 
-        registerViewAction = Actions.NAVIGATE_REGISTER_ACTION.create( window );
-        register( registerViewAction );
+			paySourceViewAction = Actions.NAVIGATE_PAY_SOURCES_ACTION
+					.create(window);
+			register(paySourceViewAction);
 
-        importViewAction = Actions.NAVIGATE_IMPORTS_ACTION.create( window );
-        register( importViewAction );
+			billViewAction = Actions.NAVIGATE_BILLS_ACTION.create(window);
+			register(billViewAction);
 
-        importRuleViewAction = Actions.NAVIGATE_IMPORT_RULES_ACTION.create( window );
-        register( importRuleViewAction );
+			allocationViewAction = Actions.NAVIGATE_ALLOCATION_ACTION
+					.create(window);
+			register(allocationViewAction);
 
-        transferViewAction = Actions.NAVIGATE_TRANSFER_ACTION.create( window );
-        register( transferViewAction );
+			savingsGoalsViewAction = Actions.NAVIGATE_SAVINGS_GOALS_ACTION
+					.create(window);
+			register(savingsGoalsViewAction);
 
-        repeatingTransactionViewAction = Actions.NAVIGATE_REPEATING_TRANSACTION_ACTION.create( window );
-        register( repeatingTransactionViewAction );
+			budgetViewAction = Actions.NAVIGATE_BUDGET_ACTION.create(window);
+			register(budgetViewAction);
 
-        aboutAction = ActionFactory.ABOUT.create( window );
-//        aboutAction.setImageDescriptor( AbstractUIPlugin.imageDescriptorFromPlugin( "moman.application",
-//            ImageKeys.ABOUT ) );
-        register( aboutAction );
+			cashFlowReportViewAction = Actions.NAVIGATE_CASH_FLOW_REPORT_GOALS_ACTION
+					.create(window);
+			register(cashFlowReportViewAction);
 
-        preferencesAction = ActionFactory.PREFERENCES.create( window );
-//        preferencesAction.setImageDescriptor( AbstractUIPlugin.imageDescriptorFromPlugin( Application.PLUGIN_ID,
-//            ImageKeys.SHOW_PREFERENCES ) );
-        register( preferencesAction );
+			spendingReportViewAction = Actions.NAVIGATE_SPENDING_REPORT_ACTION
+					.create(window);
+			register(spendingReportViewAction);
 
-        helpAction = ActionFactory.HELP_CONTENTS.create( window );
-        register( helpAction );
+			registerViewAction = Actions.NAVIGATE_REGISTER_ACTION
+					.create(window);
+			register(registerViewAction);
 
-        dynamicHelpAction = ActionFactory.DYNAMIC_HELP.create( window );
-        register( dynamicHelpAction );
-    	} catch (Throwable t) {
-    		t.printStackTrace();
-    	}
-    }
-    
-    
-    @Override
+			importViewAction = Actions.NAVIGATE_IMPORTS_ACTION.create(window);
+			register(importViewAction);
+
+			importRuleViewAction = Actions.NAVIGATE_IMPORT_RULES_ACTION
+					.create(window);
+			register(importRuleViewAction);
+
+			transferViewAction = Actions.NAVIGATE_TRANSFER_ACTION
+					.create(window);
+			register(transferViewAction);
+
+			repeatingTransactionViewAction = Actions.NAVIGATE_REPEATING_TRANSACTION_ACTION
+					.create(window);
+			register(repeatingTransactionViewAction);
+
+            IWorkbenchAction aboutAction = ActionFactory.ABOUT.create(window);
+			// aboutAction.setImageDescriptor(
+			// AbstractUIPlugin.imageDescriptorFromPlugin( "moman.application",
+			// ImageKeys.ABOUT ) );
+			register(aboutAction);
+
+            IWorkbenchAction preferencesAction = ActionFactory.PREFERENCES.create(window);
+			// preferencesAction.setImageDescriptor(
+			// AbstractUIPlugin.imageDescriptorFromPlugin(
+			// Application.PLUGIN_ID,
+			// ImageKeys.SHOW_PREFERENCES ) );
+			register(preferencesAction);
+
+            IWorkbenchAction helpAction = ActionFactory.HELP_CONTENTS.create(window);
+			register(helpAction);
+
+            IWorkbenchAction dynamicHelpAction = ActionFactory.DYNAMIC_HELP.create(window);
+			register(dynamicHelpAction);
+		} catch (Throwable t) {
+			t.printStackTrace();
+		}
+	}
+
 	public void fillActionBars(int flags) {
 		super.fillActionBars(flags);
 	}
 
-	@Override
-    protected void fillMenuBar(final IMenuManager menuBar) {
-		
-    	try {
-        // Getting the OS
-        String os = Platform.getOS();
+	protected void fillMenuBar(final IMenuManager menuBar) {
 
-    	// Creating menus
-        final MenuManager fileMenu = new MenuManager(
-            Messages.getString( "ApplicationActionBarAdvisor.file" ), "net.deuce.moman.menu.file"); //$NON-NLS-1$
-        MenuManager editMenu = new MenuManager(
-                Messages.getString( "ApplicationActionBarAdvisor.edit" ), "net.deuce.moman.edit"); //$NON-NLS-1$
-        MenuManager accountMenu = new MenuManager(
-                Messages.getString( "ApplicationActionBarAdvisor.account" ), "net.deuce.moman.menu.account"); //$NON-NLS-1$
-        MenuManager toolsMenu = new MenuManager(
-                Messages.getString( "ApplicationActionBarAdvisor.tools" ), "net.deuce.moman.menu.tools"); //$NON-NLS-1$
-        MenuManager navigateMenu = new MenuManager(
-                Messages.getString( "ApplicationActionBarAdvisor.navigate" ), "net.deuce.moman.menu.navigate"); //$NON-NLS-1$
-        MenuManager helpMenu = new MenuManager(
-                Messages.getString( "ApplicationActionBarAdvisor.help" ), IWorkbenchActionConstants.M_HELP ); //$NON-NLS-1$
-        MenuManager hiddenMenu = new MenuManager( "Hidden", "org.apache.directory.studio.rcp.hidden" ); //$NON-NLS-1$ //$NON-NLS-2$
-        hiddenMenu.setVisible( false );
+		try {
+			// Getting the OS
+			String os = Platform.getOS();
 
-	    // Adding menus
-        menuBar.add( fileMenu );
-        menuBar.add( editMenu );
-        menuBar.add( accountMenu );
-        menuBar.add( toolsMenu );
-        menuBar.add( navigateMenu );
-        menuBar.add( helpMenu );
-        
-	    // Populating File Menu
-        fileMenu.add( newFileAction );
-        fileMenu.add( openFileAction );
-        fileMenu.add( new Separator() );
-        fileMenu.add( saveFileAction );
-        fileMenu.add( saveFileAsAction );
-        fileMenu.add( new Separator() );
-        fileMenu.add( recentFilesMenu );
-        
-       
-        
-        if ( ApplicationActionBarAdvisor.OS_MACOSX.equalsIgnoreCase( os ) )
-        {
-            // We hide the exit (quit) action, it will be added by the "Carbon" plugin
-            hiddenMenu.add( exitAction );
-        }
-        else
-        {
-            fileMenu.add( new Separator() );
-            fileMenu.add( exitAction );
-        }
-        
-        editMenu.add( undoAction );
-        editMenu.add( redoAction );
-        
-        IWorkbench workbench = Activator.getDefault().getWorkbench();
-		final IUndoContext undoContext = workbench.getOperationSupport().getUndoContext();
-		final IOperationHistory operHistory = workbench.getOperationSupport().getOperationHistory();
-		workbench.getOperationSupport().getUndoContext();
-			operHistory.addOperationHistoryListener(new IOperationHistoryListener () {
-				
-				@Override
-				public void historyNotification(OperationHistoryEvent event) {
-					switch (event.getEventType()) {
-					case OperationHistoryEvent.DONE:
-					case OperationHistoryEvent.REDONE:
-					case OperationHistoryEvent.UNDONE:
-						redoAction.setEnabled(operHistory.canRedo(undoContext));
-						undoAction.setEnabled(operHistory.canUndo(undoContext));
-						break;
-					}
-				}
-			});
-        
-        accountMenu.add( newAccountAction );
-        accountMenu.add( editAccountAction );
-        accountMenu.add( reconcileAccountAction );
-        accountMenu.add( new Separator() );
-        accountMenu.add( downloadTransactionsAction );
-        accountMenu.add( forceDownloadTransactionsAction );
-        accountMenu.add( importAction );
-        accountMenu.add( exportAction );
-        
-        toolsMenu.add( newTransactionAction );
-        toolsMenu.add( newRepeatingTransactionAction );
-        toolsMenu.add( newEnvelopeAction );
-        toolsMenu.add( newBillAction );
-        toolsMenu.add( newSavingsGoalAction );
-        toolsMenu.add( newPaySourceAction );
-        toolsMenu.add( newTransactionRuleAction );
-        toolsMenu.add( newAllocationProfileAction );
-        toolsMenu.add( new Separator() );
-        toolsMenu.add( findTransactionAction );
-        
-        navigateMenu.add( accountViewAction );
-        navigateMenu.add( envelopeViewAction );
-        navigateMenu.add( paySourceViewAction );
-        navigateMenu.add( billViewAction );
-        navigateMenu.add( allocationViewAction );
-        navigateMenu.add( savingsGoalsViewAction );
-        navigateMenu.add( budgetViewAction );
-        navigateMenu.add( cashFlowReportViewAction );
-        navigateMenu.add( spendingReportViewAction );
-        navigateMenu.add( registerViewAction );
-        navigateMenu.add( importViewAction );
-        navigateMenu.add( importRuleViewAction );
-        navigateMenu.add( transferViewAction );
-        navigateMenu.add( repeatingTransactionViewAction );
-        
-		((MenuManager)menuBar).setOverrides(new IContributionManagerOverrides() {
-                    public Integer getAccelerator(IContributionItem item) {
-                        return null;
-                    }
+			// Creating menus
+			final MenuManager fileMenu = new MenuManager(
+					Messages.getString("ApplicationActionBarAdvisor.file"), "net.deuce.moman.menu.file"); //$NON-NLS-1$
+			MenuManager editMenu = new MenuManager(
+					Messages.getString("ApplicationActionBarAdvisor.edit"), "net.deuce.moman.edit"); //$NON-NLS-1$
+			MenuManager accountMenu = new MenuManager(
+					Messages.getString("ApplicationActionBarAdvisor.account"), "net.deuce.moman.menu.account"); //$NON-NLS-1$
+			MenuManager toolsMenu = new MenuManager(
+					Messages.getString("ApplicationActionBarAdvisor.tools"), "net.deuce.moman.menu.tools"); //$NON-NLS-1$
+			MenuManager navigateMenu = new MenuManager(
+					Messages.getString("ApplicationActionBarAdvisor.navigate"), "net.deuce.moman.menu.navigate"); //$NON-NLS-1$
+			MenuManager helpMenu = new MenuManager(
+					Messages.getString("ApplicationActionBarAdvisor.help"), IWorkbenchActionConstants.M_HELP); //$NON-NLS-1$
+			MenuManager hiddenMenu = new MenuManager(
+					"Hidden", "org.apache.directory.studio.rcp.hidden"); //$NON-NLS-1$ //$NON-NLS-2$
+			hiddenMenu.setVisible(false);
 
-                    public String getAcceleratorText(IContributionItem item) {
-                        return null;
-                    }
+			// Adding menus
+			menuBar.add(fileMenu);
+			menuBar.add(editMenu);
+			menuBar.add(accountMenu);
+			menuBar.add(toolsMenu);
+			menuBar.add(navigateMenu);
+			menuBar.add(helpMenu);
 
-                    public Boolean getEnabled(IContributionItem item) {
-                        return null;
-                    }
+			// Populating File Menu
+			fileMenu.add(newFileAction);
+			fileMenu.add(openFileAction);
+			fileMenu.add(new Separator());
+			fileMenu.add(saveFileAction);
+			fileMenu.add(saveFileAsAction);
+			fileMenu.add(new Separator());
+			fileMenu.add(recentFilesMenu);
 
-                    public String getText(IContributionItem item) {
-                        return null;
-                    }
-    				public Boolean getVisible(IContributionItem item) {
-    					return null;
-    				}
-                });
-        
-        accountMenu.addMenuListener(new IMenuListener() {
-
-			@Override
-			public void menuAboutToShow(IMenuManager manager) {
-//					System.out.println("ZZZ override: " + menuBar.getOverrides());
-//					for (int i=0; i<menuBar.getItems().length; i++) {
-//						IContributionItem item = menuBar.getItems()[i];
-//						System.out.println("ZZZ item: " + item.getId());
-//					}
-					
-				if (menuAboutToShowCount++ == 1) {
-					
-					for (int i=0; i<fileMenu.getMenu().getItemCount(); i++) {
-				        fileMenu.getMenu().getItem(i).addSelectionListener(new SelectionListener() {
-				
-							@Override
-							public void widgetDefaultSelected(SelectionEvent e) {
-								System.out.println();
-							}
-				
-							@Override
-							public void widgetSelected(SelectionEvent e) {
-								System.out.println();
-							}
-				        	
-				        });
-					}
-				}
-				IWorkbench workbench = PlatformUI.getWorkbench();
-				IBindingService bindingService = (IBindingService)workbench.getAdapter(IBindingService.class);
-				System.out.println(bindingService.getActiveScheme());
-//				for(Binding binding : bindingService.getBindings()) {
-//				    System.out.println(binding);
-//				}
+			if (ApplicationActionBarAdvisor.OS_MACOSX.equalsIgnoreCase(os)) {
+				// We hide the exit (quit) action, it will be added by the
+				// "Carbon" plugin
+				hiddenMenu.add(exitAction);
+			} else {
+				fileMenu.add(new Separator());
+				fileMenu.add(exitAction);
 			}
-        	
-        }); 
-    	} catch (Throwable t) {
-    		t.printStackTrace();
-    	}
-    }
 
-    
+			editMenu.add(undoAction);
+			editMenu.add(redoAction);
+
+			IWorkbench workbench = Activator.getDefault().getWorkbench();
+			final IUndoContext undoContext = workbench.getOperationSupport()
+					.getUndoContext();
+			final IOperationHistory operHistory = workbench
+					.getOperationSupport().getOperationHistory();
+			workbench.getOperationSupport().getUndoContext();
+			operHistory
+					.addOperationHistoryListener(new IOperationHistoryListener() {
+
+						public void historyNotification(
+								OperationHistoryEvent event) {
+							switch (event.getEventType()) {
+							case OperationHistoryEvent.DONE:
+							case OperationHistoryEvent.REDONE:
+							case OperationHistoryEvent.UNDONE:
+								redoAction.setEnabled(operHistory
+										.canRedo(undoContext));
+								undoAction.setEnabled(operHistory
+										.canUndo(undoContext));
+								break;
+							}
+						}
+					});
+
+			accountMenu.add(newAccountAction);
+			accountMenu.add(editAccountAction);
+			accountMenu.add(reconcileAccountAction);
+			accountMenu.add(new Separator());
+			accountMenu.add(downloadTransactionsAction);
+			accountMenu.add(forceDownloadTransactionsAction);
+			accountMenu.add(importAction);
+			accountMenu.add(exportAction);
+
+			toolsMenu.add(newTransactionAction);
+			toolsMenu.add(newRepeatingTransactionAction);
+			toolsMenu.add(newEnvelopeAction);
+			toolsMenu.add(newBillAction);
+			toolsMenu.add(newSavingsGoalAction);
+			toolsMenu.add(newPaySourceAction);
+			toolsMenu.add(newTransactionRuleAction);
+			toolsMenu.add(newAllocationProfileAction);
+			toolsMenu.add(new Separator());
+			toolsMenu.add(findTransactionAction);
+
+			navigateMenu.add(accountViewAction);
+			navigateMenu.add(envelopeViewAction);
+			navigateMenu.add(paySourceViewAction);
+			navigateMenu.add(billViewAction);
+			navigateMenu.add(allocationViewAction);
+			navigateMenu.add(savingsGoalsViewAction);
+			navigateMenu.add(budgetViewAction);
+			navigateMenu.add(cashFlowReportViewAction);
+			navigateMenu.add(spendingReportViewAction);
+			navigateMenu.add(registerViewAction);
+			navigateMenu.add(importViewAction);
+			navigateMenu.add(importRuleViewAction);
+			navigateMenu.add(transferViewAction);
+			navigateMenu.add(repeatingTransactionViewAction);
+
+			((MenuManager) menuBar)
+					.setOverrides(new IContributionManagerOverrides() {
+						public Integer getAccelerator(IContributionItem item) {
+							return null;
+						}
+
+						public String getAcceleratorText(IContributionItem item) {
+							return null;
+						}
+
+						public Boolean getEnabled(IContributionItem item) {
+							return null;
+						}
+
+						public String getText(IContributionItem item) {
+							return null;
+						}
+
+						public Boolean getVisible(IContributionItem item) {
+							return null;
+						}
+					});
+
+			accountMenu.addMenuListener(new IMenuListener() {
+
+				public void menuAboutToShow(IMenuManager manager) {
+					// System.out.println("ZZZ override: " +
+					// menuBar.getOverrides());
+					// for (int i=0; i<menuBar.getItems().length; i++) {
+					// IContributionItem item = menuBar.getItems()[i];
+					// System.out.println("ZZZ item: " + item.getId());
+					// }
+
+					if (menuAboutToShowCount++ == 1) {
+
+						for (int i = 0; i < fileMenu.getMenu().getItemCount(); i++) {
+							fileMenu.getMenu().getItem(i).addSelectionListener(
+									new SelectionListener() {
+
+										public void widgetDefaultSelected(
+												SelectionEvent e) {
+											System.out.println();
+										}
+
+										public void widgetSelected(
+												SelectionEvent e) {
+											System.out.println();
+										}
+
+									});
+						}
+					}
+					IWorkbench workbench = PlatformUI.getWorkbench();
+					IBindingService bindingService = (IBindingService) workbench
+							.getAdapter(IBindingService.class);
+					System.out.println(bindingService.getActiveScheme());
+					// for(Binding binding : bindingService.getBindings()) {
+					// System.out.println(binding);
+					// }
+				}
+
+			});
+		} catch (Throwable t) {
+			t.printStackTrace();
+		}
+	}
+
 }

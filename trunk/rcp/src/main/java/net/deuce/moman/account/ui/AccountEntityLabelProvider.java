@@ -1,6 +1,6 @@
 package net.deuce.moman.account.ui;
 
-import net.deuce.moman.account.model.Account;
+import net.deuce.moman.entity.model.account.Account;
 import net.deuce.moman.ui.EntityLabelProvider;
 
 public class AccountEntityLabelProvider implements EntityLabelProvider<Account> {

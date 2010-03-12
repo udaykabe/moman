@@ -1,0 +1,5 @@
+<ipojo>
+<instance component="net.deuce.moman.entity.model.allocation.impl.AllocationFactoryImpl"/>
+<instance component="net.deuce.moman.entity.model.allocation.impl.AllocationSetBuilderImpl"/>
+<instance component="net.deuce.moman.entity.model.allocation.impl.AllocationSetFactoryImpl"/>
+</ipojo>

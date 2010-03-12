@@ -8,16 +8,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.deuce.moman.model.AbstractBuilder;
-import net.deuce.moman.model.AbstractEntity;
-import net.deuce.moman.service.EntityService;
+import net.deuce.moman.entity.model.AbstractBuilder;
+import net.deuce.moman.entity.model.AbstractEntity;
+import net.deuce.moman.entity.service.EntityService;
 
 @SuppressWarnings("unchecked")
 public abstract class EntityServlet<E extends AbstractEntity, S extends EntityService, B extends AbstractBuilder>
-extends HttpServlet {
+		extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private S service;
 	private B builder;
 
@@ -26,7 +26,7 @@ extends HttpServlet {
 	}
 
 	protected abstract void initialize();
-	
+
 	public S getService() {
 		return service;
 	}
@@ -43,20 +43,20 @@ extends HttpServlet {
 		this.builder = builder;
 	}
 
-	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res)
 			throws ServletException, IOException {
-		
+
 		String id = req.getParameter("id");
-		
+
 		AbstractEntity entity = service.findEntity(id);
-		
+
 		if (entity == null) {
 			res.setStatus(HttpServletResponse.SC_NOT_FOUND);
 			return;
 		}
-		
-		builder.printEntities(res.getWriter(), Arrays.asList(new AbstractEntity[]{entity}));
+
+		builder.printEntities(res.getWriter(), Arrays
+				.asList(new AbstractEntity[] { entity }));
 	}
 
 }

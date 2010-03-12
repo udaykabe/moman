@@ -14,11 +14,12 @@ public class Undo extends AbstractHandler {
 
 	public static final String ID = "net.deuce.moman.command.edit.undo";
 
-	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbench workbench = Activator.getDefault().getWorkbench();
-		final IUndoContext undoContext = workbench.getOperationSupport().getUndoContext();
-		final IOperationHistory operHistory = workbench.getOperationSupport().getOperationHistory();
+		final IUndoContext undoContext = workbench.getOperationSupport()
+				.getUndoContext();
+		final IOperationHistory operHistory = workbench.getOperationSupport()
+				.getOperationHistory();
 		operHistory.undo(undoContext, new NullProgressMonitor(), null);
 		return null;
 	}

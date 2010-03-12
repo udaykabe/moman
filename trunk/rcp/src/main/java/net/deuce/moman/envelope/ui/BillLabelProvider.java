@@ -1,7 +1,7 @@
 package net.deuce.moman.envelope.ui;
 
-import net.deuce.moman.Constants;
-import net.deuce.moman.envelope.model.Envelope;
+import net.deuce.moman.RcpConstants;
+import net.deuce.moman.entity.model.envelope.Envelope;
 import net.deuce.moman.ui.Activator;
 
 import org.eclipse.jface.viewers.ILabelProviderListener;
@@ -10,12 +10,9 @@ import org.eclipse.swt.graphics.Image;
 
 public class BillLabelProvider implements ITableLabelProvider {
 
-	private static final Image CHECKED = Activator.getImageDescriptor(
-			"icons/checked.gif").createImage();
-	private static final Image UNCHECKED = Activator.getImageDescriptor(
-			"icons/unchecked.gif").createImage();
+	private static final Image CHECKED = Activator.getImage("icons/checked.gif");
+	private static final Image UNCHECKED = Activator.getImage("icons/unchecked.gif");
 
-	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
 		if (columnIndex == 0) {
 			if (((Envelope) element).isEnabled()) {
@@ -27,7 +24,6 @@ public class BillLabelProvider implements ITableLabelProvider {
 		return null;
 	}
 
-	@Override
 	public String getColumnText(Object element, int columnIndex) {
 		Envelope bill = (Envelope) element;
 
@@ -39,7 +35,7 @@ public class BillLabelProvider implements ITableLabelProvider {
 		case 3:
 			return bill.getFrequency().label();
 		case 4:
-			return Constants.CURRENCY_VALIDATOR.format(bill.getAmount());
+			return RcpConstants.CURRENCY_VALIDATOR.format(bill.getAmount());
 		case 5:
 			return bill.getParent().getName();
 		default:
@@ -48,20 +44,16 @@ public class BillLabelProvider implements ITableLabelProvider {
 		return "";
 	}
 
-	@Override
 	public void addListener(ILabelProviderListener listener) {
 	}
 
-	@Override
 	public void dispose() {
 	}
 
-	@Override
 	public boolean isLabelProperty(Object element, String property) {
 		return false;
 	}
 
-	@Override
 	public void removeListener(ILabelProviderListener listener) {
 	}
 

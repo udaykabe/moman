@@ -3,15 +3,15 @@ package net.deuce.moman.report;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.deuce.moman.envelope.model.Envelope;
+import net.deuce.moman.entity.model.envelope.Envelope;
 
 public class EnvelopeDataSetResult extends DataSetResult {
-	
+
 	private List<EnvelopeResult> envelopeResults = new LinkedList<EnvelopeResult>();
 	private double allOtherTotal;
 
-	public EnvelopeDataSetResult(List<EnvelopeResult> results, double allOtherTotal,
-			double minValue, double maxValue) {
+	public EnvelopeDataSetResult(List<EnvelopeResult> results,
+			double allOtherTotal, double minValue, double maxValue) {
 		super(null, new LinkedList<Double>(), minValue, maxValue);
 		this.envelopeResults.addAll(results);
 		this.allOtherTotal = allOtherTotal;
@@ -33,12 +33,12 @@ public class EnvelopeDataSetResult extends DataSetResult {
 		this.envelopeResults.clear();
 		this.envelopeResults.addAll(envelopeResults);
 	}
-	
+
 	public static class EnvelopeResult implements Comparable<EnvelopeResult> {
-		
+
 		private Envelope envelope;
 		private Double value;
-		
+
 		public EnvelopeResult(Envelope envelope, Double value) {
 			super();
 			this.envelope = envelope;
@@ -61,17 +61,15 @@ public class EnvelopeDataSetResult extends DataSetResult {
 			this.value = value;
 		}
 
-		@Override
 		public int compareTo(EnvelopeResult result) {
 			return result.getValue().compareTo(value);
 		}
 
-		@Override
 		public String toString() {
 			return "EnvelopeResult [envelope=" + envelope + ", value=" + value
 					+ "]";
 		}
-		
+
 	}
 
 }

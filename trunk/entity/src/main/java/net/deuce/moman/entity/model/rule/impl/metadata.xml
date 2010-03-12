@@ -1,0 +1,4 @@
+<ipojo>
+<instance component="net.deuce.moman.entity.model.rule.impl.TransactionRuleBuilderImpl"/>
+<instance component="net.deuce.moman.entity.model.rule.impl.RuleFactoryImpl"/>
+</ipojo>

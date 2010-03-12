@@ -2,11 +2,12 @@ package net.deuce.moman.account.command;
 
 import java.util.List;
 
-import net.deuce.moman.account.model.Account;
-import net.deuce.moman.account.service.AccountService;
 import net.deuce.moman.account.ui.AccountDialog;
-import net.deuce.moman.envelope.service.EnvelopeService;
-import net.deuce.moman.service.ServiceNeeder;
+import net.deuce.moman.entity.ServiceProvider;
+import net.deuce.moman.entity.model.account.Account;
+import net.deuce.moman.entity.service.ServiceManager;
+import net.deuce.moman.entity.service.account.AccountService;
+import net.deuce.moman.entity.service.envelope.EnvelopeService;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -18,22 +19,27 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 public class NewDisconnected extends AbstractHandler {
-	
+
 	public static final String ID = "net.deuce.moman.account.command.newDisconnected";
 
-	@Override
+	private AccountService accountService = ServiceProvider.instance().getAccountService();
+
+	private EnvelopeService envelopeService = ServiceProvider.instance().getEnvelopeService();
+
+	private ServiceManager serviceManager = ServiceProvider.instance().getServiceManager();
+
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow(event);
-		
-		AccountService service = ServiceNeeder.instance().getAccountService();
-		EnvelopeService envelopeService = ServiceNeeder.instance().getEnvelopeService();
+
 		AccountDialog dialog = new AccountDialog(window.getShell(), false);
 		dialog.create();
 		if (dialog.open() == Window.OK) {
-			if (service.doesAccountExist(dialog.getAccount())) {
+			if (accountService.doesAccountExist(dialog.getAccount())) {
 				String message = "An account already exists with the same routing and account numbers. Proceed?";
-				MessageDialog messageDialog = new MessageDialog(window.getShell(), "Duplicate account?", null, message,
-						MessageDialog.QUESTION, new String[] { IDialogConstants.YES_LABEL,
+				MessageDialog messageDialog = new MessageDialog(window
+						.getShell(), "Duplicate account?", null, message,
+						MessageDialog.QUESTION, new String[] {
+								IDialogConstants.YES_LABEL,
 								IDialogConstants.NO_LABEL }, 1);
 				if (messageDialog.open() != 0) {
 					return null;
@@ -41,14 +47,14 @@ public class NewDisconnected extends AbstractHandler {
 			}
 			Account account = dialog.getAccount();
 			account.setSelected(true);
-			List<String> ids = ServiceNeeder.instance().getServiceContainer().startQueuingNotifications();
+			List<String> ids = serviceManager.startQueuingNotifications();
 			try {
-				ServiceNeeder.instance().getAccountService().addEntity(account);
-				if (service.getEntities().size() == 1) {
+				accountService.addEntity(account);
+				if (accountService.getEntities().size() == 1) {
 					envelopeService.importDefaultEnvelopes();
 				}
 			} finally {
-				ServiceNeeder.instance().getServiceContainer().stopQueuingNotifications(ids);
+				serviceManager.stopQueuingNotifications(ids);
 			}
 		}
 		return null;

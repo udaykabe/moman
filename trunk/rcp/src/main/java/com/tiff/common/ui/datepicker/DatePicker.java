@@ -34,28 +34,26 @@ import org.eclipse.swt.widgets.TypedListener;
 /**
  * The date picker panel
  * 
- * changes by sebthom
- * ~ setDate will fire the Selection event
- * + you can use setDate(null) to clear the selection,
- *   the calendar will display the current date, but
- *   getDate will return null until the user explicitely
- *   selects a date from the control
+ * changes by sebthom ~ setDate will fire the Selection event + you can use
+ * setDate(null) to clear the selection, the calendar will display the current
+ * date, but getDate will return null until the user explicitely selects a date
+ * from the control
  * 
  * @author <a href="mailto:andy@tiff.ru">Andrey Onistchuk</a>
  */
 public class DatePicker extends Composite {
 
-	//~ Inner Classes
+	// ~ Inner Classes
 	// ----------------------------------------------------------
 	private class DatePanel extends Canvas {
-		//~ Instance fields
+		// ~ Instance fields
 		// ----------------------------------------------------
 		private int colSize;
 		private Display display = Display.getCurrent();
 		private int rowSize;
 		private Calendar temp = Calendar.getInstance();
 
-		//~ Constructors
+		// ~ Constructors
 		// -------------------------------------------------------
 		public DatePanel(Composite parent, int style) {
 			super(parent, style | SWT.NO_BACKGROUND | SWT.NO_REDRAW_RESIZE);
@@ -85,6 +83,7 @@ public class DatePicker extends Composite {
 				public void mouseDoubleClick(MouseEvent e) {
 					doubleClick();
 				}
+
 				public void mouseDown(MouseEvent e) {
 					onMouseDown(e);
 				}
@@ -96,24 +95,24 @@ public class DatePicker extends Composite {
 			});
 		}
 
-		//~ Methods
+		// ~ Methods
 		// ------------------------------------------------------------
 		private int computeOffset(int day) {
 			switch (day) {
-				case Calendar.MONDAY :
-					return 1;
-				case Calendar.TUESDAY :
-					return 2;
-				case Calendar.WEDNESDAY :
-					return 3;
-				case Calendar.THURSDAY :
-					return 4;
-				case Calendar.FRIDAY :
-					return 5;
-				case Calendar.SATURDAY :
-					return 6;
-				case Calendar.SUNDAY :
-					return 7;
+			case Calendar.MONDAY:
+				return 1;
+			case Calendar.TUESDAY:
+				return 2;
+			case Calendar.WEDNESDAY:
+				return 3;
+			case Calendar.THURSDAY:
+				return 4;
+			case Calendar.FRIDAY:
+				return 5;
+			case Calendar.SATURDAY:
+				return 6;
+			case Calendar.SUNDAY:
+				return 7;
 			}
 			return -1;
 		}
@@ -162,8 +161,7 @@ public class DatePicker extends Composite {
 			syncTime();
 			temp.set(Calendar.DAY_OF_MONTH, 1);
 
-			int firstDayOffset = computeOffset(temp.get(Calendar.DAY_OF_WEEK))
-					- 1;
+			int firstDayOffset = computeOffset(temp.get(Calendar.DAY_OF_WEEK)) - 1;
 			temp.set(Calendar.DAY_OF_MONTH, day);
 			int dayOffset = computeOffset(temp.get(Calendar.DAY_OF_WEEK));
 			int x = (dayOffset - 1) * colSize;
@@ -251,8 +249,7 @@ public class DatePicker extends Composite {
 		}
 
 		private void onMouseMove(MouseEvent e) {
-			int day = getDayFromPoint(e.x, e.y);
-			selection = day;
+			selection = getDayFromPoint(e.x, e.y);
 			updateDate();
 		}
 
@@ -296,20 +293,20 @@ public class DatePicker extends Composite {
 				Point p = getDayPoint(day);
 
 				if (day == cal.get(Calendar.DAY_OF_MONTH)) {
-					gc.setForeground(display.getSystemColor(
-							SWT.COLOR_LIST_SELECTION_TEXT));
-					gc.setBackground(display.getSystemColor(
-							SWT.COLOR_LIST_SELECTION));
+					gc.setForeground(display
+							.getSystemColor(SWT.COLOR_LIST_SELECTION_TEXT));
+					gc.setBackground(display
+							.getSystemColor(SWT.COLOR_LIST_SELECTION));
 				} else if (day == selection) {
-					gc.setForeground(display.getSystemColor(
-							SWT.COLOR_LIST_SELECTION_TEXT));
+					gc.setForeground(display
+							.getSystemColor(SWT.COLOR_LIST_SELECTION_TEXT));
 					gc.setBackground(display.getSystemColor(SWT.COLOR_BLACK));
 				} else {
-					gc.setBackground(display.getSystemColor(
-							SWT.COLOR_WIDGET_BACKGROUND));
-					gc.setForeground(display.getSystemColor(dayOffset == 7
-							? SWT.COLOR_RED
-							: SWT.COLOR_BLACK));
+					gc.setBackground(display
+							.getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+					gc.setForeground(display
+							.getSystemColor(dayOffset == 7 ? SWT.COLOR_RED
+									: SWT.COLOR_BLACK));
 				}
 
 				drawTextImage(gc, "" + day, p.x, p.y, colSize, rowSize);
@@ -326,7 +323,7 @@ public class DatePicker extends Composite {
 		}
 	}
 
-	//~ Instance fields
+	// ~ Instance fields
 	// --------------------------------------------------------
 	private Calendar cal = Calendar.getInstance();
 
@@ -338,7 +335,7 @@ public class DatePicker extends Composite {
 	private Label monthLabel;
 	private int selection = -1;
 
-	//~ Constructors
+	// ~ Constructors
 	// -----------------------------------------------------------
 	public DatePicker(Composite parent, int style) {
 		super(parent, style);
@@ -421,7 +418,7 @@ public class DatePicker extends Composite {
 		updateDate();
 	}
 
-	//~ Methods
+	// ~ Methods
 	// ----------------------------------------------------------------
 	public void addSelectionListener(SelectionListener listener) {
 		checkWidget();
@@ -469,7 +466,7 @@ public class DatePicker extends Composite {
 
 	public Date getDate() {
 		// sebthom
-		//return cal.getTime();
+		// return cal.getTime();
 		return selectedDate;
 	}
 
@@ -494,7 +491,7 @@ public class DatePicker extends Composite {
 
 	public void setDate(Date date) {
 		// sebthom
-		//cal.setTime(date);
+		// cal.setTime(date);
 		selectedDate = date;
 		cal.setTime(selectedDate == null ? new Date() : date);
 

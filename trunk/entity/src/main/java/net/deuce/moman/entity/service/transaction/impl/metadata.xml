@@ -1,0 +1,5 @@
+<ipojo>
+<instance component="net.deuce.moman.entity.service.transaction.impl.ImportServiceImpl"/>
+<instance component="net.deuce.moman.entity.service.transaction.impl.TransactionServiceImpl"/>
+<instance component="net.deuce.moman.entity.service.transaction.impl.RepeatingTransactionServiceImpl"/>
+</ipojo>

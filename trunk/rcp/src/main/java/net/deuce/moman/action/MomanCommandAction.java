@@ -7,8 +7,7 @@ import org.eclipse.ui.services.IServiceLocator;
 public class MomanCommandAction extends CommandAction implements
 		IWorkbenchAction {
 
-	public MomanCommandAction(IServiceLocator serviceLocator,
-			String commandIdIn) {
+	public MomanCommandAction(IServiceLocator serviceLocator, String commandIdIn) {
 		super(serviceLocator, commandIdIn);
 	}
 

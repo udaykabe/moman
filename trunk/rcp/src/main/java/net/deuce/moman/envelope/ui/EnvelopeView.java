@@ -3,17 +3,19 @@ package net.deuce.moman.envelope.ui;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.deuce.moman.Constants;
+import net.deuce.moman.RcpConstants;
+import net.deuce.moman.entity.ServiceProvider;
+import net.deuce.moman.entity.model.EntityEvent;
+import net.deuce.moman.entity.model.EntityListener;
+import net.deuce.moman.entity.model.envelope.Envelope;
+import net.deuce.moman.entity.model.envelope.EnvelopeFactory;
+import net.deuce.moman.entity.model.transaction.InternalTransaction;
+import net.deuce.moman.entity.model.transaction.Split;
+import net.deuce.moman.entity.service.envelope.EnvelopeService;
+import net.deuce.moman.entity.service.transaction.TransactionService;
 import net.deuce.moman.envelope.command.Delete;
-import net.deuce.moman.envelope.model.Envelope;
-import net.deuce.moman.envelope.model.EnvelopeFactory;
-import net.deuce.moman.envelope.service.EnvelopeService;
-import net.deuce.moman.model.EntityEvent;
-import net.deuce.moman.model.EntityListener;
-import net.deuce.moman.service.ServiceNeeder;
-import net.deuce.moman.transaction.model.InternalTransaction;
-import net.deuce.moman.transaction.model.Split;
 import net.deuce.moman.transaction.ui.RegisterView;
+import net.deuce.moman.ui.ViewerRegistry;
 
 import org.eclipse.jface.viewers.ColumnViewerEditor;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
@@ -38,80 +40,94 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class EnvelopeView extends ViewPart implements EntityListener<Envelope> {
-	
+
 	public static final String ID = EnvelopeView.class.getName();
-	
+
+	public static final String ENVELOPE_VIEWER_NAME = "envelope";
+
 	private TreeViewer treeViewer;
-	private TransactionListener transactionListener = new TransactionListener();
-	private EnvelopeService envelopeService;
-	private EnvelopeFactory envelopeFactory;
+
+    private EnvelopeService envelopeService = ServiceProvider.instance().getEnvelopeService();
+
+	private EnvelopeFactory envelopeFactory = ServiceProvider.instance().getEnvelopeFactory();
+
+    private ViewerRegistry viewerRegistry = ViewerRegistry.instance();
 
 	public EnvelopeView() {
-		envelopeService = ServiceNeeder.instance().getEnvelopeService();
-		envelopeFactory = ServiceNeeder.instance().getEnvelopeFactory();
 		envelopeService.addEntityListener(this);
-		ServiceNeeder.instance().getTransactionService().addEntityListener(transactionListener);
+        TransactionService transactionService = ServiceProvider.instance().getTransactionService();
+        TransactionListener transactionListener = new TransactionListener();
+        transactionService.addEntityListener(transactionListener);
 	}
 
 	public void createPartControl(Composite parent) {
 		EnvelopeLabelProvider labelProvider = new EnvelopeLabelProvider();
-		
+
 		Tree tree = new Tree(parent, SWT.BORDER | SWT.H_SCROLL);
 		tree.setHeaderVisible(true);
-		tree.setFont(Constants.STANDARD_FONT);
-		
+		tree.setFont(RcpConstants.STANDARD_FONT);
+
 		treeViewer = new TreeViewer(tree);
 		treeViewer.setComparator(new EnvelopeViewerComparator());
 		treeViewer.setContentProvider(new EnvelopeContentProvider());
-		//treeViewer.setSorter(new TreePathViewerSorter());
-		envelopeService.setViewer(treeViewer);
+		// treeViewer.setSorter(new TreePathViewerSorter());
+
+		viewerRegistry.registerViewer(ENVELOPE_VIEWER_NAME, treeViewer);
+
 		TreeViewerColumn column = new TreeViewerColumn(treeViewer, SWT.LEFT);
- 		column.getColumn().setText("Envelope");
- 	    column.getColumn().setWidth(200);
- 	    column.setEditingSupport(new EnvelopeEditingSupport(treeViewer, 0));
- 	    
+		column.getColumn().setText("Envelope");
+		column.getColumn().setWidth(200);
+		column.setEditingSupport(new EnvelopeEditingSupport(treeViewer, 0));
+
 		column = new TreeViewerColumn(treeViewer, SWT.RIGHT);
 		column.getColumn().setText("Balance");
 		column.getColumn().setWidth(100);
-		
+
 		column = new TreeViewerColumn(treeViewer, SWT.RIGHT);
 		column.getColumn().setText("Budgeted");
 		column.getColumn().setWidth(100);
- 	    column.setEditingSupport(new EnvelopeEditingSupport(treeViewer, 2));
-		
+		column.setEditingSupport(new EnvelopeEditingSupport(treeViewer, 2));
+
 		column = new TreeViewerColumn(treeViewer, SWT.RIGHT);
 		column.getColumn().setText("Freqency");
 		column.getColumn().setWidth(100);
- 	    column.setEditingSupport(new EnvelopeEditingSupport(treeViewer, 3));
-		
-		int operations = DND.DROP_COPY| DND.DROP_MOVE;
-		Transfer[] transferTypes = new Transfer[]{EnvelopeTransfer.getInstance()};
-		treeViewer.addDragSupport(operations, transferTypes , new EnvelopeDragListener(treeViewer));
-		treeViewer.addDropSupport(operations, transferTypes, new EnvelopeDropListener(treeViewer));
-		
+		column.setEditingSupport(new EnvelopeEditingSupport(treeViewer, 3));
+
+		int operations = DND.DROP_COPY | DND.DROP_MOVE;
+		Transfer[] transferTypes = new Transfer[] { EnvelopeTransfer
+				.getInstance() };
+		treeViewer.addDragSupport(operations, transferTypes,
+				new EnvelopeDragListener(treeViewer));
+		treeViewer.addDropSupport(operations, transferTypes,
+				new EnvelopeDropListener(treeViewer));
+
 		treeViewer.setLabelProvider(labelProvider);
-		
-		ColumnViewerEditorActivationStrategy actSupport = new ColumnViewerEditorActivationStrategy(treeViewer) {
-			protected boolean isEditorActivationEvent(ColumnViewerEditorActivationEvent event) {
+
+		ColumnViewerEditorActivationStrategy actSupport = new ColumnViewerEditorActivationStrategy(
+				treeViewer) {
+			protected boolean isEditorActivationEvent(
+					ColumnViewerEditorActivationEvent event) {
 				return event.eventType == ColumnViewerEditorActivationEvent.TRAVERSAL
 						|| event.eventType == ColumnViewerEditorActivationEvent.MOUSE_DOUBLE_CLICK_SELECTION
 						|| event.eventType == ColumnViewerEditorActivationEvent.PROGRAMMATIC;
 			}
 		};
-		
+
 		TreeViewerEditor.create(treeViewer, actSupport,
 				ColumnViewerEditor.TABBING_HORIZONTAL
 						| ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR
 						| ColumnViewerEditor.TABBING_VERTICAL
 						| ColumnViewerEditor.KEYBOARD_ACTIVATION);
-		
- 		treeViewer.getTree().addKeyListener(new KeyListener() {
-			@Override
+
+		treeViewer.getTree().addKeyListener(new KeyListener() {
+
 			public void keyPressed(KeyEvent e) {
 				if (e.keyCode == SWT.BS && e.stateMask == SWT.COMMAND) {
-					IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
+					IHandlerService handlerService = (IHandlerService) getSite()
+							.getService(IHandlerService.class);
 					try {
 						handlerService.executeCommand(Delete.ID, null);
 					} catch (Exception ex) {
@@ -122,55 +138,57 @@ public class EnvelopeView extends ViewPart implements EntityListener<Envelope> {
 				}
 			}
 
-			@Override
 			public void keyReleased(KeyEvent e) {
 			}
- 		});
- 		
+		});
+
 		treeViewer.addTreeListener(new ITreeViewerListener() {
-			@Override
+
 			public void treeCollapsed(TreeExpansionEvent event) {
-				((Envelope)event.getElement()).setExpanded(false);
+				((Envelope) event.getElement()).setExpanded(false);
 			}
 
-			@Override
 			public void treeExpanded(TreeExpansionEvent event) {
-				((Envelope)event.getElement()).setExpanded(true);
+				((Envelope) event.getElement()).setExpanded(true);
 			}
 		});
-		
+
 		treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-			@Override
+
 			public void selectionChanged(SelectionChangedEvent event) {
-				StructuredSelection selection = (StructuredSelection) event.getSelection();
+				StructuredSelection selection = (StructuredSelection) event
+						.getSelection();
 				if (selection.size() == 0) {
 					Envelope env = envelopeService.getSelectedEnvelope();
-					if (env != null && envelopeService.entityExists(env.getId())) {
+					if (env != null
+							&& envelopeService.entityExists(env.getId())) {
 						env.setSelected(false);
 					}
 				} else {
 					try {
-						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPages()[0]
-						    .showView(RegisterView.ID, null, IWorkbenchPage.VIEW_ACTIVATE);
-						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPages()[0]
-						    .showView(EnvelopeView.ID, null, IWorkbenchPage.VIEW_ACTIVATE);
-						((Envelope)selection.getFirstElement()).setSelected(true);
+						PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+								.getPages()[0].showView(RegisterView.ID, null,
+								IWorkbenchPage.VIEW_ACTIVATE);
+						PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+								.getPages()[0].showView(EnvelopeView.ID, null,
+								IWorkbenchPage.VIEW_ACTIVATE);
+						((Envelope) selection.getFirstElement())
+								.setSelected(true);
 					} catch (PartInitException e) {
 						e.printStackTrace();
 					}
 				}
 			}
 		});
-		
+
 		refresh();
-		
+
 	}
-	
-	@Override
+
 	public void setFocus() {
-		treeViewer.getControl().setFocus();		
+		treeViewer.getControl().setFocus();
 	}
-	
+
 	private void refreshEnvelope(Envelope env) {
 		if (env != null && env.isDirty()) {
 			treeViewer.refresh(env);
@@ -181,10 +199,10 @@ public class EnvelopeView extends ViewPart implements EntityListener<Envelope> {
 			}
 		}
 	}
-	
+
 	private void refresh() {
 		treeViewer.setInput(envelopeFactory.createTopLevelEnvelope());
-		
+
 		List<Envelope> expandedElements = new LinkedList<Envelope>();
 		for (Envelope env : envelopeService.getEntities()) {
 			if (env.isExpanded()) {
@@ -194,15 +212,16 @@ public class EnvelopeView extends ViewPart implements EntityListener<Envelope> {
 		treeViewer.setExpandedElements(expandedElements.toArray());
 	}
 
-	@Override
 	public void entityAdded(EntityEvent<Envelope> event) {
 		try {
 			treeViewer.getTree().setFocus();
 			if (event != null && event.getEntity() != null) {
-				treeViewer.setSelection(new StructuredSelection(new Object[]{event.getEntity()}));
+				treeViewer.setSelection(new StructuredSelection(
+						new Object[] { event.getEntity() }));
 				treeViewer.reveal(event.getEntity());
 			} else {
-				treeViewer.setSelection(new StructuredSelection(new Object[]{envelopeService.getRootEnvelope()}));
+				treeViewer.setSelection(new StructuredSelection(
+						new Object[] { envelopeService.getRootEnvelope() }));
 				treeViewer.reveal(envelopeService.getRootEnvelope());
 			}
 		} catch (Throwable t) {
@@ -211,10 +230,10 @@ public class EnvelopeView extends ViewPart implements EntityListener<Envelope> {
 		refresh();
 	}
 
-	@Override
 	public void entityChanged(EntityEvent<Envelope> event) {
-		if (event == null || (Envelope.Properties.expanded != event.getProperty() &&
-				Envelope.Properties.selected != event.getProperty())) {
+		if (event == null
+				|| (Envelope.Properties.expanded != event.getProperty() && Envelope.Properties.selected != event
+						.getProperty())) {
 			if (event != null && event.getEntity() != null) {
 				refreshEnvelope(event.getEntity());
 			} else {
@@ -223,21 +242,21 @@ public class EnvelopeView extends ViewPart implements EntityListener<Envelope> {
 		}
 	}
 
-	@Override
 	public void entityRemoved(EntityEvent<Envelope> event) {
 		refresh();
 	}
 
-	private class TransactionListener implements EntityListener<InternalTransaction> {
+	private class TransactionListener implements
+			EntityListener<InternalTransaction> {
 
-		@Override
 		public void entityAdded(EntityEvent<InternalTransaction> event) {
 		}
 
-		@Override
 		public void entityChanged(EntityEvent<InternalTransaction> event) {
-			if (event != null && (InternalTransaction.Properties.split == event.getProperty() ||
-					InternalTransaction.Properties.amount == event.getProperty())) {
+			if (event != null
+					&& (InternalTransaction.Properties.split == event
+							.getProperty() || InternalTransaction.Properties.amount == event
+							.getProperty())) {
 				if (event.getEntity() != null) {
 					for (Split split : event.getEntity().getSplit()) {
 						refreshEnvelope(split.getEnvelope());
@@ -248,9 +267,8 @@ public class EnvelopeView extends ViewPart implements EntityListener<Envelope> {
 			}
 		}
 
-		@Override
 		public void entityRemoved(EntityEvent<InternalTransaction> event) {
 		}
-		
+
 	}
 }

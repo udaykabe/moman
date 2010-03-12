@@ -21,57 +21,52 @@ import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 
 public class PerspectiveFactory implements IPerspectiveFactory {
-	
-	@Override
+
 	public void createInitialLayout(IPageLayout layout) {
 		String editorArea = layout.getEditorArea();
 		layout.setEditorAreaVisible(false);
-		
-		layout.addStandaloneView(AccountView.ID, true, IPageLayout.LEFT, 0.25f, editorArea);
-		
-		IFolderLayout envelopeFolder = layout.createFolder("net.deuce.moman.rcp.view.envelopees", IPageLayout.TOP, 0.6f, editorArea);
-		
+
+		layout.addStandaloneView(AccountView.ID, true, IPageLayout.LEFT, 0.25f,
+				editorArea);
+
+		IFolderLayout envelopeFolder = layout.createFolder(
+				"net.deuce.moman.rcp.view.envelopees", IPageLayout.TOP, 0.6f,
+				editorArea);
+
 		envelopeFolder.addView(EnvelopeView.ID);
-		
-		String[] placeholders = new String[] {
-				IncomeView.ID,
-				BillView.ID,
-				AllocationView.ID,
-				SavingsGoalsView.ID,
-				BudgetView.ID,
-				CashFlowReportView.ID,
-				SpendingReportView.ID,
-				EnvelopeBreakdownReportView.ID,
-		};
-		
+
+		String[] placeholders = new String[] { IncomeView.ID, BillView.ID,
+				AllocationView.ID, SavingsGoalsView.ID, BudgetView.ID,
+				CashFlowReportView.ID, SpendingReportView.ID,
+				EnvelopeBreakdownReportView.ID, };
+
 		for (String partId : placeholders) {
 			envelopeFolder.addPlaceholder(partId);
 		}
-		
-		IFolderLayout transactionsFolder = layout.createFolder("net.deuce.moman.rcp.view.transactions", IPageLayout.BOTTOM, 0.4f, editorArea);
+
+		IFolderLayout transactionsFolder = layout.createFolder(
+				"net.deuce.moman.rcp.view.transactions", IPageLayout.BOTTOM,
+				0.4f, editorArea);
 		transactionsFolder.addView(RegisterView.ID);
-		
-		placeholders = new String[] {
-				TransactionImportView.ID,
-				TransactionRuleView.ID,
-				TransferView.ID,
-				RepeatingTransactionView.ID,
-		};
-		
+
+		placeholders = new String[] { TransactionImportView.ID,
+				TransactionRuleView.ID, TransferView.ID,
+				RepeatingTransactionView.ID, };
+
 		for (String partId : placeholders) {
 			transactionsFolder.addPlaceholder(partId);
 		}
-		
+
 		/*
-		layout.getViewLayout(AccountView.ID).setCloseable(false);
-		layout.getViewLayout(EnvelopeView.ID).setCloseable(false);
-		layout.getViewLayout(IncomeView.ID).setCloseable(false);
-		layout.getViewLayout(RegisterView.ID).setCloseable(false);
-		layout.getViewLayout(TransactionImportView.ID).setCloseable(false);
-		layout.getViewLayout(TransactionRuleView.ID).setCloseable(false);
-		layout.getViewLayout(EnvelopeSpendingView.ID).setCloseable(false);
-		*/
-		
+		 * layout.getViewLayout(AccountView.ID).setCloseable(false);
+		 * layout.getViewLayout(EnvelopeView.ID).setCloseable(false);
+		 * layout.getViewLayout(IncomeView.ID).setCloseable(false);
+		 * layout.getViewLayout(RegisterView.ID).setCloseable(false);
+		 * layout.getViewLayout(TransactionImportView.ID).setCloseable(false);
+		 * layout.getViewLayout(TransactionRuleView.ID).setCloseable(false);
+		 * layout.getViewLayout(EnvelopeSpendingView.ID).setCloseable(false);
+		 */
+
 	}
 
 }

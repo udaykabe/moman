@@ -1,6 +1,5 @@
 package org.vafada.swtcalendar;
 
-
 import java.util.Calendar;
 import java.util.Date;
 
@@ -15,59 +14,58 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 public class SWTCalendarDialog {
-    private Shell shell;
-    private SWTCalendar swtcal;
-    private Display display;
-    private int status = Window.OK;
+	private Shell shell;
+	private SWTCalendar swtcal;
+	private Display display;
+	private int status = Window.OK;
 
-    public SWTCalendarDialog(Display display) {
-        this.display = display;
-        shell = new Shell(display, SWT.APPLICATION_MODAL | SWT.CLOSE);
-        shell.setLayout(new RowLayout());
-        shell.setLocation(Display.getCurrent().getCursorLocation());
-        swtcal = new SWTCalendar(shell);
-        
-        swtcal.addKeyListener(new KeyAdapter() {
-			@Override
+	public SWTCalendarDialog(Display display) {
+		this.display = display;
+		shell = new Shell(display, SWT.APPLICATION_MODAL | SWT.CLOSE);
+		shell.setLayout(new RowLayout());
+		shell.setLocation(Display.getCurrent().getCursorLocation());
+		swtcal = new SWTCalendar(shell);
+
+		swtcal.addKeyListener(new KeyAdapter() {
+
 			public void keyReleased(KeyEvent e) {
 				if (e.keyCode == SWT.ESC) {
 					status = Window.CANCEL;
 					shell.dispose();
 				}
 			}
-        });
-        
-        swtcal.addMouseListener(new MouseAdapter() {
-			@Override
+		});
+
+		swtcal.addMouseListener(new MouseAdapter() {
+
 			public void mouseDoubleClick(MouseEvent e) {
 				shell.dispose();
 			}
-        });
-    }
+		});
+	}
 
-    public int open() {
-        shell.pack();
-        shell.open();
-        while (!shell.isDisposed()) {
-            if (!display.readAndDispatch()) display.sleep();
-        }
-        return status;
-    }
-    
-    public Calendar getCalendar() {
-        return swtcal.getCalendar();
-    }
+	public int open() {
+		shell.pack();
+		shell.open();
+		while (!shell.isDisposed()) {
+			if (!display.readAndDispatch())
+				display.sleep();
+		}
+		return status;
+	}
 
-    public void setDate(Date date) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        swtcal.setCalendar(calendar);
-    }
+	public Calendar getCalendar() {
+		return swtcal.getCalendar();
+	}
 
-    public void addDateChangedListener(SWTCalendarListener listener) {
-        swtcal.addSWTCalendarListener(listener);
-    }
+	public void setDate(Date date) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		swtcal.setCalendar(calendar);
+	}
+
+	public void addDateChangedListener(SWTCalendarListener listener) {
+		swtcal.addSWTCalendarListener(listener);
+	}
 
 }
-
-

@@ -19,7 +19,6 @@ public class DemoView2 extends ViewPart {
 	public DemoView2() {
 	}
 
-	@Override
 	public void createPartControl(Composite parent) {
 		String[] images = { ISharedImages.IMG_ETOOL_DELETE,
 				ISharedImages.IMG_ETOOL_DELETE_DISABLED,
@@ -57,7 +56,6 @@ public class DemoView2 extends ViewPart {
 		}
 	}
 
-	@Override
 	public void setFocus() {
 	}
 

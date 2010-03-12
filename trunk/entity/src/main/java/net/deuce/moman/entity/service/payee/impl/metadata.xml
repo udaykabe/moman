@@ -1,0 +1,3 @@
+<ipojo>
+<instance component="net.deuce.moman.entity.service.payee.impl.PayeeServiceImpl"/>
+</ipojo>

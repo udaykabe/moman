@@ -19,7 +19,6 @@ public class DemoView5 extends ViewPart {
 	public DemoView5() {
 	}
 
-	@Override
 	public void createPartControl(Composite parent) {
 		String[] images = { ISharedImages.IMG_TOOL_REDO_HOVER,
 				ISharedImages.IMG_TOOL_UNDO,
@@ -58,7 +57,6 @@ public class DemoView5 extends ViewPart {
 		}
 	}
 
-	@Override
 	public void setFocus() {
 	}
 

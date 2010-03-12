@@ -24,28 +24,30 @@ public class AllocationTransfer extends ByteArrayTransfer {
 	}
 
 	public void javaToNative(Object object, TransferData transferData) {
-		if (object == null || !(object instanceof int[]) || !isSupportedType(transferData)) {
+		if (object == null || !(object instanceof int[])
+				|| !isSupportedType(transferData)) {
 			DND.error(DND.ERROR_INVALID_DATA);
 			return;
 		}
-		
-		int[] myTypes = (int[]) object;	
- 		try {
- 			// write data to a byte array and then ask super to convert to pMedium
- 			ByteArrayOutputStream out = new ByteArrayOutputStream();
- 			DataOutputStream writeOut = new DataOutputStream(out);
-		    writeOut.writeInt(myTypes.length);
- 			for (int i = 0, length = myTypes.length; i < length;  i++){
- 				writeOut.writeInt(myTypes[i]);
- 			}
- 			byte[] buffer = out.toByteArray();
- 			writeOut.close();
- 
- 			super.javaToNative(buffer, transferData);
- 			
- 		} catch (IOException e) {
- 			e.printStackTrace();
- 		}
+
+		int[] myTypes = (int[]) object;
+		try {
+			// write data to a byte array and then ask super to convert to
+			// pMedium
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			DataOutputStream writeOut = new DataOutputStream(out);
+			writeOut.writeInt(myTypes.length);
+			for (int i = 0, length = myTypes.length; i < length; i++) {
+				writeOut.writeInt(myTypes[i]);
+			}
+			byte[] buffer = out.toByteArray();
+			writeOut.close();
+
+			super.javaToNative(buffer, transferData);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public Object nativeToJava(TransferData transferData) {
@@ -62,7 +64,7 @@ public class AllocationTransfer extends ByteArrayTransfer {
 				DataInputStream readIn = new DataInputStream(in);
 				int size = readIn.readInt();
 				myData = new int[size];
-				for (int i=0; i<size; i++) {
+				for (int i = 0; i < size; i++) {
 					myData[i] = readIn.readInt();
 				}
 				readIn.close();
@@ -76,12 +78,10 @@ public class AllocationTransfer extends ByteArrayTransfer {
 		return null;
 	}
 
-	@Override
 	protected String[] getTypeNames() {
 		return new String[] { MYTYPENAME };
 	}
 
-	@Override
 	protected int[] getTypeIds() {
 		return new int[] { MYTYPEID };
 	}

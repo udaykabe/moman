@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTError;
 import org.eclipse.swt.accessibility.ACC;
 import org.eclipse.swt.accessibility.AccessibleAdapter;
 import org.eclipse.swt.accessibility.AccessibleControlAdapter;
@@ -29,28 +30,25 @@ import org.eclipse.swt.widgets.TypedListener;
 /**
  * The combo widget with drop-down date-picker panel.
  * 
- * changes by sebthom
- *  ~ declared package accessible methods as private
- *  ~ declared getEditable() as public
- *  + added useSingleMouseClickToCommit behaviour
- *  + manually modifying the date in the text field is reflected in the date picker
- *  + setDate(null) clears the date.
- *  + added getText & setText()
+ * changes by sebthom ~ declared package accessible methods as private ~
+ * declared getEditable() as public + added useSingleMouseClickToCommit
+ * behaviour + manually modifying the date in the text field is reflected in the
+ * date picker + setDate(null) clears the date. + added getText & setText()
  * 
  * @author <a href="mailto:andy@tiff.ru">Andrey Onistchuk</a>
  * 
  */
-public final class DatePickerCombo extends Composite
-{
-	//~ Static Methods ---------------------------------------------------------
-	public static int checkStyle(int style)
-	{
+public final class DatePickerCombo extends Composite {
+	// ~ Static Methods
+	// ---------------------------------------------------------
+	public static int checkStyle(int style) {
 		int mask = SWT.BORDER | SWT.READ_ONLY | SWT.FLAT;
 
 		return style & mask;
 	}
 
-	//~ Instance fields --------------------------------------------------------
+	// ~ Instance fields
+	// --------------------------------------------------------
 	private Button arrow;
 	private DatePicker dp;
 	private boolean hasFocus;
@@ -62,22 +60,20 @@ public final class DatePickerCombo extends Composite
 	private Shell popup;
 	private Text text;
 
-	//~ Constructors -----------------------------------------------------------
-	public DatePickerCombo(Composite parent, int style)
-	{
+	// ~ Constructors
+	// -----------------------------------------------------------
+	public DatePickerCombo(Composite parent, int style) {
 		super(parent, checkStyle(style));
 
 		style = getStyle();
 
 		int textStyle = SWT.SINGLE;
 
-		if ((style & SWT.READ_ONLY) != 0)
-		{
+		if ((style & SWT.READ_ONLY) != 0) {
 			textStyle |= SWT.READ_ONLY;
 		}
 
-		if ((style & SWT.FLAT) != 0)
-		{
+		if ((style & SWT.FLAT) != 0) {
 			textStyle |= SWT.FLAT;
 		}
 
@@ -87,8 +83,7 @@ public final class DatePickerCombo extends Composite
 
 		int pickerStyle = SWT.SINGLE;
 
-		if ((style & SWT.FLAT) != 0)
-		{
+		if ((style & SWT.FLAT) != 0) {
 			pickerStyle |= SWT.FLAT;
 		}
 
@@ -96,46 +91,37 @@ public final class DatePickerCombo extends Composite
 
 		int arrowStyle = SWT.ARROW | SWT.DOWN;
 
-		if ((style & SWT.FLAT) != 0)
-		{
+		if ((style & SWT.FLAT) != 0) {
 			arrowStyle |= SWT.FLAT;
 		}
 
 		arrow = new Button(this, arrowStyle);
 
-		Listener listener = new Listener()
-		{
-			public void handleEvent(Event event)
-			{
-				if (popup == event.widget)
-				{
+		Listener listener = new Listener() {
+			public void handleEvent(Event event) {
+				if (popup == event.widget) {
 					popupEvent(event);
 					return;
 				}
 
-				if (text == event.widget)
-				{
+				if (text == event.widget) {
 					textEvent(event);
 					return;
 				}
 
-				if (dp == event.widget)
-				{
+				if (dp == event.widget) {
 					dpEvent(event);
 					return;
 				}
 
-				if (arrow == event.widget)
-				{
+				if (arrow == event.widget) {
 					arrowEvent(event);
 					return;
 				}
 
-				if (DatePickerCombo.this == event.widget)
-				{
+				if (DatePickerCombo.this == event.widget) {
 					comboEvent(event);
-					return;
-				}
+                }
 			}
 		};
 
@@ -149,22 +135,14 @@ public final class DatePickerCombo extends Composite
 		for (int i = 0; i < popupEvents.length; i++)
 			popup.addListener(popupEvents[i], listener);
 
-		int[] textEvents =
-			{ SWT.KeyDown, SWT.KeyUp, SWT.Modify, SWT.MouseDown, SWT.MouseUp, SWT.Traverse, SWT.FocusIn, SWT.FocusOut };
+		int[] textEvents = { SWT.KeyDown, SWT.KeyUp, SWT.Modify, SWT.MouseDown,
+				SWT.MouseUp, SWT.Traverse, SWT.FocusIn, SWT.FocusOut };
 
 		for (int i = 0; i < textEvents.length; i++)
 			text.addListener(textEvents[i], listener);
 
-		int[] dpEvents =
-			{
-				SWT.MouseUp,
-				SWT.MouseDoubleClick,
-				SWT.Selection,
-				SWT.Traverse,
-				SWT.KeyDown,
-				SWT.KeyUp,
-				SWT.FocusIn,
-				SWT.FocusOut };
+		int[] dpEvents = { SWT.MouseUp, SWT.MouseDoubleClick, SWT.Selection,
+				SWT.Traverse, SWT.KeyDown, SWT.KeyUp, SWT.FocusIn, SWT.FocusOut };
 
 		for (int i = 0; i < dpEvents.length; i++)
 			dp.addListener(dpEvents[i], listener);
@@ -177,27 +155,27 @@ public final class DatePickerCombo extends Composite
 		initAccessible();
 	}
 
-	//~ Methods ----------------------------------------------------------------
+	// ~ Methods
+	// ----------------------------------------------------------------
 
 	/**
 	 * Adds the listener to receive events.
-	 *
-	 * @param listener 
-	 *                the listener
-	 *
-	 * @exception SWTError(ERROR_THREAD_INVALID_ACCESS)
-	 *                when called from the wrong thread
-	 * @exception SWTError(ERROR_WIDGET_DISPOSED)
-	 *                when the widget has been disposed
-	 * @exception SWTError(ERROR_NULL_ARGUMENT)
-	 *                when listener is null
+	 * 
+	 * @param listener
+	 *            the listener
+	 * 
+	 * @exception SWTError
+	 *                (ERROR_THREAD_INVALID_ACCESS) when called from the wrong
+	 *                thread
+	 * @exception SWTError
+	 *                (ERROR_WIDGET_DISPOSED) when the widget has been disposed
+	 * @exception SWTError
+	 *                (ERROR_NULL_ARGUMENT) when listener is null
 	 */
-	public void addModifyListener(ModifyListener listener)
-	{
+	public void addModifyListener(ModifyListener listener) {
 		checkWidget();
 
-		if (listener == null)
-		{
+		if (listener == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
 
@@ -207,23 +185,22 @@ public final class DatePickerCombo extends Composite
 
 	/**
 	 * Adds the listener to receive events.
-	 *
+	 * 
 	 * @param listener
 	 *            the listener
-	 *
-	 * @exception SWTError(ERROR_THREAD_INVALID_ACCESS)
-	 *                when called from the wrong thread
-	 * @exception SWTError(ERROR_WIDGET_DISPOSED)
-	 *                when the widget has been disposed
-	 * @exception SWTError(ERROR_NULL_ARGUMENT)
-	 *                when listener is null
+	 * 
+	 * @exception SWTError
+	 *                (ERROR_THREAD_INVALID_ACCESS) when called from the wrong
+	 *                thread
+	 * @exception SWTError
+	 *                (ERROR_WIDGET_DISPOSED) when the widget has been disposed
+	 * @exception SWTError
+	 *                (ERROR_NULL_ARGUMENT) when listener is null
 	 */
-	public void addSelectionListener(SelectionListener listener)
-	{
+	public void addSelectionListener(SelectionListener listener) {
 		checkWidget();
 
-		if (listener == null)
-		{
+		if (listener == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
 
@@ -232,99 +209,87 @@ public final class DatePickerCombo extends Composite
 		addListener(SWT.DefaultSelection, typedListener);
 	}
 
-	private void arrowEvent(Event event)
-	{
-		switch (event.type)
-		{
-			case SWT.FocusIn :
-				{
-					if (hasFocus)
-					{
-						return;
-					}
+	private void arrowEvent(Event event) {
+		switch (event.type) {
+		case SWT.FocusIn: {
+			if (hasFocus) {
+				return;
+			}
 
-					hasFocus = true;
+			hasFocus = true;
 
-					if (getEditable())
-					{
-						text.selectAll();
-					}
+			if (getEditable()) {
+				text.selectAll();
+			}
 
-					Event e = new Event();
-					e.time = event.time;
-					notifyListeners(SWT.FocusIn, e);
-					break;
-				}
+			Event e = new Event();
+			e.time = event.time;
+			notifyListeners(SWT.FocusIn, e);
+			break;
+		}
 
-			case SWT.FocusOut :
-				{
-					Control focusControl = getDisplay().getFocusControl();
+		case SWT.FocusOut: {
+			Control focusControl = getDisplay().getFocusControl();
 
-					if ((focusControl == dp) || (focusControl == text))
-					{
-						return;
-					}
+			if ((focusControl == dp) || (focusControl == text)) {
+				return;
+			}
 
-					hasFocus = false;
+			hasFocus = false;
 
-					Event e = new Event();
-					e.time = event.time;
-					notifyListeners(SWT.FocusOut, e);
-					break;
-				}
+			Event e = new Event();
+			e.time = event.time;
+			notifyListeners(SWT.FocusOut, e);
+			break;
+		}
 
-			case SWT.Selection :
-				{
-					dropDown(!isDropped());
-					break;
-				}
+		case SWT.Selection: {
+			dropDown(!isDropped());
+			break;
+		}
 		}
 	}
 
 	/**
 	 * Clears the current selection.
-	 *
-	 * @exception SWTError(ERROR_THREAD_INVALID_ACCESS)
-	 *                when called from the wrong thread
-	 * @exception SWTError(ERROR_WIDGET_DISPOSED)
-	 *                when the widget has been disposed
+	 * 
+	 * @exception SWTError
+	 *                (ERROR_THREAD_INVALID_ACCESS) when called from the wrong
+	 *                thread
+	 * @exception SWTError
+	 *                (ERROR_WIDGET_DISPOSED) when the widget has been disposed
 	 */
-	public void clearSelection()
-	{
+	public void clearSelection() {
 		checkWidget();
 		text.clearSelection();
 		dp.reset();
 	}
 
-	private void comboEvent(Event event)
-	{
-		switch (event.type)
-		{
-			case SWT.Dispose :
+	private void comboEvent(Event event) {
+		switch (event.type) {
+		case SWT.Dispose:
 
-				if ((popup != null) && !popup.isDisposed())
-				{
-					popup.dispose();
-				}
+			if ((popup != null) && !popup.isDisposed()) {
+				popup.dispose();
+			}
 
-				popup = null;
-				text = null;
-				dp = null;
-				arrow = null;
-				break;
+			popup = null;
+			text = null;
+			dp = null;
+			arrow = null;
+			break;
 
-			case SWT.Move :
-				dropDown(false);
-				break;
+		case SWT.Move:
+			dropDown(false);
+			break;
 
-			case SWT.Resize :
-				internalLayout();
-				break;
+		case SWT.Resize:
+			internalLayout();
+			break;
 		}
 	}
 
-	public Point computeSize(int wHint, int hHint, boolean changed)
-	{
+	public Point computeSize(int wHint, int hHint, boolean changed) {
 		checkWidget();
 
 		int width = 0;
@@ -334,195 +299,172 @@ public final class DatePickerCombo extends Composite
 		Point listSize = dp.computeSize(wHint, SWT.DEFAULT, changed);
 		int borderWidth = getBorderWidth();
 
-		height = Math.max(hHint, Math.max(textSize.y, arrowSize.y) + (2 * borderWidth));
-		width = Math.max(wHint, Math.max(textSize.x + arrowSize.x + (2 * borderWidth), listSize.x + 2));
+		height = Math.max(hHint, Math.max(textSize.y, arrowSize.y)
+				+ (2 * borderWidth));
+		width = Math.max(wHint, Math.max(textSize.x + arrowSize.x
+				+ (2 * borderWidth), listSize.x + 2));
 
 		return new Point(width, height);
 	}
 
-	private void dpEvent(Event event)
-	{
-		switch (event.type)
-		{
-			case SWT.FocusIn :
-				{
-					if (hasFocus)
-					{
-						return;
-					}
+	private void dpEvent(Event event) {
+		switch (event.type) {
+		case SWT.FocusIn: {
+			if (hasFocus) {
+				return;
+			}
 
-					hasFocus = true;
+			hasFocus = true;
 
-					if (getEditable())
-					{
-						text.selectAll();
-					}
+			if (getEditable()) {
+				text.selectAll();
+			}
 
-					Event e = new Event();
-					e.time = event.time;
-					notifyListeners(SWT.FocusIn, e);
-					break;
-				}
+			Event e = new Event();
+			e.time = event.time;
+			notifyListeners(SWT.FocusIn, e);
+			break;
+		}
 
-			case SWT.FocusOut :
-				{
-					Control focusControl = getDisplay().getFocusControl();
+		case SWT.FocusOut: {
+			Control focusControl = getDisplay().getFocusControl();
 
-					if ((focusControl == text) || (focusControl == arrow))
-					{
-						return;
-					}
+			if ((focusControl == text) || (focusControl == arrow)) {
+				return;
+			}
 
-					hasFocus = false;
+			hasFocus = false;
 
-					Event e = new Event();
-					e.time = event.time;
-					notifyListeners(SWT.FocusOut, e);
-					break;
-				}
+			Event e = new Event();
+			e.time = event.time;
+			notifyListeners(SWT.FocusOut, e);
+			break;
+		}
 
-			case SWT.MouseDown :
-				{
-					if (event.button != 1)
-					{
-						return;
-					}
+		case SWT.MouseDown: {
+			if (event.button != 1) {
+				return;
+			}
 
-					dropDown(false);
+			dropDown(false);
 
-					Event e = new Event();
-					e.time = event.time;
-					notifyListeners(SWT.DefaultSelection, e);
-					break;
-				}
+			Event e = new Event();
+			e.time = event.time;
+			notifyListeners(SWT.DefaultSelection, e);
+			break;
+		}
 
-			case SWT.Selection :
-				{
-					// sebthom
-					if (!isClosePopupWithSingleMouseClick)
-					{
-						Date date = dp.getDate();
-						text.setText(DateFormat.getDateInstance().format(date));
-						text.selectAll();
+		case SWT.Selection: {
+			// sebthom
+			if (!isClosePopupWithSingleMouseClick) {
+				Date date = dp.getDate();
+				text.setText(DateFormat.getDateInstance().format(date));
+				text.selectAll();
 
-						Event e = new Event();
-						e.time = event.time;
-						e.stateMask = event.stateMask;
-						e.doit = event.doit;
-						notifyListeners(SWT.Selection, e);
-						event.doit = e.doit;
+				Event e = new Event();
+				e.time = event.time;
+				e.stateMask = event.stateMask;
+				e.doit = event.doit;
+				notifyListeners(SWT.Selection, e);
+				event.doit = e.doit;
 
-						break;
-					}
-					// otherwise perform the code of SWT.MouseDoubleClick
-				}
+				break;
+			}
+			// otherwise perform the code of SWT.MouseDoubleClick
+		}
 
-			case SWT.MouseDoubleClick :
-				{
-					dropDown(false);
+		case SWT.MouseDoubleClick: {
+			dropDown(false);
 
-					Date date = dp.getDate();
+			Date date = dp.getDate();
 
-					// sebthom
-					if (date == null)
-					{
-						text.setText("");
-					}
-					else
-					{
-						text.setText(DateFormat.getDateInstance().format(date));
-						text.selectAll();
-					}
+			// sebthom
+			if (date == null) {
+				text.setText("");
+			} else {
+				text.setText(DateFormat.getDateInstance().format(date));
+				text.selectAll();
+			}
 
-					Event e = new Event();
-					e.time = event.time;
-					e.stateMask = event.stateMask;
-					e.doit = event.doit;
-					notifyListeners(SWT.Selection, e);
-					event.doit = e.doit;
-					break;
-				}
+			Event e = new Event();
+			e.time = event.time;
+			e.stateMask = event.stateMask;
+			e.doit = event.doit;
+			notifyListeners(SWT.Selection, e);
+			event.doit = e.doit;
+			break;
+		}
 
-			case SWT.Traverse :
-				{
-					switch (event.detail)
-					{
-						case SWT.TRAVERSE_TAB_NEXT :
-						case SWT.TRAVERSE_RETURN :
-						case SWT.TRAVERSE_ESCAPE :
-						case SWT.TRAVERSE_ARROW_PREVIOUS :
-						case SWT.TRAVERSE_ARROW_NEXT :
-							event.doit = false;
-							break;
-					}
+		case SWT.Traverse: {
+			switch (event.detail) {
+			case SWT.TRAVERSE_TAB_NEXT:
+			case SWT.TRAVERSE_RETURN:
+			case SWT.TRAVERSE_ESCAPE:
+			case SWT.TRAVERSE_ARROW_PREVIOUS:
+			case SWT.TRAVERSE_ARROW_NEXT:
+				event.doit = false;
+				break;
+			}
 
-					Event e = new Event();
-					e.time = event.time;
-					e.detail = event.detail;
-					e.doit = event.doit;
-					e.keyCode = event.keyCode;
-					notifyListeners(SWT.Traverse, e);
-					event.doit = e.doit;
-					break;
-				}
+			Event e = new Event();
+			e.time = event.time;
+			e.detail = event.detail;
+			e.doit = event.doit;
+			e.keyCode = event.keyCode;
+			notifyListeners(SWT.Traverse, e);
+			event.doit = e.doit;
+			break;
+		}
 
-			case SWT.KeyUp :
-				{
-					Event e = new Event();
-					e.time = event.time;
-					e.character = event.character;
-					e.keyCode = event.keyCode;
-					e.stateMask = event.stateMask;
-					notifyListeners(SWT.KeyUp, e);
-					break;
-				}
+		case SWT.KeyUp: {
+			Event e = new Event();
+			e.time = event.time;
+			e.character = event.character;
+			e.keyCode = event.keyCode;
+			e.stateMask = event.stateMask;
+			notifyListeners(SWT.KeyUp, e);
+			break;
+		}
 
-			case SWT.KeyDown :
-				{
-					if (event.character == SWT.ESC)
-					{
-						// escape key cancels popup dp
-						dropDown(false);
-					}
+		case SWT.KeyDown: {
+			if (event.character == SWT.ESC) {
+				// escape key cancels popup dp
+				dropDown(false);
+			}
 
-					if ((event.character == SWT.CR) || (event.character == '\t'))
-					{
-						// Enter and Tab cause default selection
-						dropDown(false);
+			if ((event.character == SWT.CR) || (event.character == '\t')) {
+				// Enter and Tab cause default selection
+				dropDown(false);
 
-						Event e = new Event();
-						e.time = event.time;
-						e.stateMask = event.stateMask;
-						notifyListeners(SWT.DefaultSelection, e);
-					}
+				Event e = new Event();
+				e.time = event.time;
+				e.stateMask = event.stateMask;
+				notifyListeners(SWT.DefaultSelection, e);
+			}
 
-					//At this point the widget may have been disposed.
-					// If so, do not continue.
-					if (isDisposed())
-					{
-						break;
-					}
+			// At this point the widget may have been disposed.
+			// If so, do not continue.
+			if (isDisposed()) {
+				break;
+			}
 
-					Event e = new Event();
-					e.time = event.time;
-					e.character = event.character;
-					e.keyCode = event.keyCode;
-					e.stateMask = event.stateMask;
-					notifyListeners(SWT.KeyDown, e);
-					break;
-				}
+			Event e = new Event();
+			e.time = event.time;
+			e.character = event.character;
+			e.keyCode = event.keyCode;
+			e.stateMask = event.stateMask;
+			notifyListeners(SWT.KeyDown, e);
+			break;
+		}
 		}
 	}
 
-	private void dropDown(boolean drop)
-	{
-		if (drop == isDropped())
-		{
+	private void dropDown(boolean drop) {
+		if (drop == isDropped()) {
 			return;
 		}
 
-		if (!drop)
-		{
+		if (!drop) {
 			popup.setVisible(false);
 			text.setFocus();
 			return;
@@ -532,107 +474,90 @@ public final class DatePickerCombo extends Composite
 		Point point = getParent().toDisplay(getLocation());
 		Point comboSize = getSize();
 		int width = Math.max(comboSize.x, listRect.width + 2);
-		popup.setBounds(point.x, point.y + comboSize.y, width, listRect.height + 2);
+		popup.setBounds(point.x, point.y + comboSize.y, width,
+				listRect.height + 2);
 		popup.setVisible(true);
 		dp.setFocus();
 	}
 
-	public Control[] getChildren()
-	{
+	public Control[] getChildren() {
 		checkWidget();
 
 		return new Control[0];
 	}
 
-	public Date getDate()
-	{
+	public Date getDate() {
 		checkWidget();
 
 		return dp.getDate();
 	}
 
-	public boolean getEditable()
-	{
+	public boolean getEditable() {
 		return text.getEditable();
 	}
-	
+
 	/**
 	 * @author sebthom
 	 */
-	public String getText()
-	{
+	public String getText() {
 		return text.getText();
 	}
-	
-	public void setText(String txt)
-	{
+
+	public void setText(String txt) {
 		text.setText(txt);
 	}
 
-	public int getTextHeight()
-	{
+	public int getTextHeight() {
 		checkWidget();
 		return text.getLineHeight();
 	}
 
-	private void initAccessible()
-	{
-		getAccessible().addAccessibleListener(new AccessibleAdapter()
-		{
-			public void getHelp(AccessibleEvent e)
-			{
+	private void initAccessible() {
+		getAccessible().addAccessibleListener(new AccessibleAdapter() {
+			public void getHelp(AccessibleEvent e) {
 				e.result = getToolTipText();
 			}
 		});
 
-		getAccessible().addAccessibleControlListener(new AccessibleControlAdapter()
-		{
-			public void getChildAtPoint(AccessibleControlEvent e)
-			{
-				Point testPoint = toControl(new Point(e.x, e.y));
+		getAccessible().addAccessibleControlListener(
+				new AccessibleControlAdapter() {
+					public void getChildAtPoint(AccessibleControlEvent e) {
+						Point testPoint = toControl(new Point(e.x, e.y));
 
-				if (getBounds().contains(testPoint))
-				{
-					e.childID = ACC.CHILDID_SELF;
-				}
-			}
+						if (getBounds().contains(testPoint)) {
+							e.childID = ACC.CHILDID_SELF;
+						}
+					}
 
-			public void getChildCount(AccessibleControlEvent e)
-			{
-				e.detail = 0;
-			}
+					public void getChildCount(AccessibleControlEvent e) {
+						e.detail = 0;
+					}
 
-			public void getLocation(AccessibleControlEvent e)
-			{
-				Rectangle location = getBounds();
-				Point pt = toDisplay(new Point(location.x, location.y));
-				e.x = pt.x;
-				e.y = pt.y;
-				e.width = location.width;
-				e.height = location.height;
-			}
+					public void getLocation(AccessibleControlEvent e) {
+						Rectangle location = getBounds();
+						Point pt = toDisplay(new Point(location.x, location.y));
+						e.x = pt.x;
+						e.y = pt.y;
+						e.width = location.width;
+						e.height = location.height;
+					}
 
-			public void getRole(AccessibleControlEvent e)
-			{
-				e.detail = ACC.ROLE_COMBOBOX;
-			}
+					public void getRole(AccessibleControlEvent e) {
+						e.detail = ACC.ROLE_COMBOBOX;
+					}
 
-			public void getState(AccessibleControlEvent e)
-			{
-				e.detail = ACC.STATE_NORMAL;
-			}
+					public void getState(AccessibleControlEvent e) {
+						e.detail = ACC.STATE_NORMAL;
+					}
 
-			public void getValue(AccessibleControlEvent e)
-			{
-				e.result = text.getText();
-			}
-		});
+					public void getValue(AccessibleControlEvent e) {
+						e.result = text.getText();
+					}
+				});
 	}
 
-	private void internalLayout()
-	{
-		if (isDropped())
-		{
+	private void internalLayout() {
+		if (isDropped()) {
 			dropDown(false);
 		}
 
@@ -650,67 +575,60 @@ public final class DatePickerCombo extends Composite
 	}
 
 	/**
-	 * determines if you need to double click a date in the expanded calender control to hide it
-	 * default is false meaning you have to double click a date
+	 * determines if you need to double click a date in the expanded calender
+	 * control to hide it default is false meaning you have to double click a
+	 * date
 	 * 
 	 * @author sebthom
-	 *  
+	 * 
 	 * @param useSingleMouseClickToCommit
 	 */
-	public boolean isClosePopupWithSingleMouseClick()
-	{
+	public boolean isClosePopupWithSingleMouseClick() {
 		return isClosePopupWithSingleMouseClick;
 	}
 
-	private boolean isDropped()
-	{
+	private boolean isDropped() {
 		return popup.getVisible();
 	}
 
-	public boolean isFocusControl()
-	{
+	public boolean isFocusControl() {
 		checkWidget();
 
-		if (text.isFocusControl() || arrow.isFocusControl() || dp.isFocusControl() || popup.isFocusControl())
-		{
+		if (text.isFocusControl() || arrow.isFocusControl()
+				|| dp.isFocusControl() || popup.isFocusControl()) {
 			return true;
-		}
-		else
-		{
+		} else {
 			return super.isFocusControl();
 		}
 	}
 
-	private void popupEvent(Event event)
-	{
-		switch (event.type)
-		{
-			case SWT.Paint :
+	private void popupEvent(Event event) {
+		switch (event.type) {
+		case SWT.Paint:
 
-				// draw black rectangle around dp
-				Rectangle listRect = dp.getBounds();
-				Color black = getDisplay().getSystemColor(SWT.COLOR_BLACK);
-				event.gc.setForeground(black);
-				event.gc.drawRectangle(0, 0, listRect.width + 1, listRect.height + 1);
-				break;
+			// draw black rectangle around dp
+			Rectangle listRect = dp.getBounds();
+			Color black = getDisplay().getSystemColor(SWT.COLOR_BLACK);
+			event.gc.setForeground(black);
+			event.gc.drawRectangle(0, 0, listRect.width + 1,
+					listRect.height + 1);
+			break;
 
-			case SWT.Close :
-				event.doit = false;
-				dropDown(false);
-				break;
+		case SWT.Close:
+			event.doit = false;
+			dropDown(false);
+			break;
 
-			case SWT.Deactivate :
-				dropDown(false);
-				break;
+		case SWT.Deactivate:
+			dropDown(false);
+			break;
 		}
 	}
 
-	public void redraw(int x, int y, int width, int height, boolean all)
-	{
+	public void redraw(int x, int y, int width, int height, boolean all) {
 		checkWidget();
 
-		if (!all)
-		{
+		if (!all) {
 			return;
 		}
 
@@ -719,8 +637,7 @@ public final class DatePickerCombo extends Composite
 		location = dp.getLocation();
 		dp.redraw(x - location.x, y - location.y, width, height, all);
 
-		if (arrow != null)
-		{
+		if (arrow != null) {
 			location = arrow.getLocation();
 			arrow.redraw(x - location.x, y - location.y, width, height, all);
 		}
@@ -728,23 +645,22 @@ public final class DatePickerCombo extends Composite
 
 	/**
 	 * Removes the listener.
-	 *
+	 * 
 	 * @param listener
 	 *            the listener
-	 *
-	 * @exception SWTError(ERROR_THREAD_INVALID_ACCESS)
-	 *                when called from the wrong thread
-	 * @exception SWTError(ERROR_WIDGET_DISPOSED)
-	 *                when the widget has been disposed
-	 * @exception SWTError(ERROR_NULL_ARGUMENT)
-	 *                when listener is null
+	 * 
+	 * @exception SWTError
+	 *                (ERROR_THREAD_INVALID_ACCESS) when called from the wrong
+	 *                thread
+	 * @exception SWTError
+	 *                (ERROR_WIDGET_DISPOSED) when the widget has been disposed
+	 * @exception SWTError
+	 *                (ERROR_NULL_ARGUMENT) when listener is null
 	 */
-	public void removeModifyListener(ModifyListener listener)
-	{
+	public void removeModifyListener(ModifyListener listener) {
 		checkWidget();
 
-		if (listener == null)
-		{
+		if (listener == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
 
@@ -753,23 +669,22 @@ public final class DatePickerCombo extends Composite
 
 	/**
 	 * Removes the listener.
-	 *
+	 * 
 	 * @param listener
 	 *            the listener
-	 *
-	 * @exception SWTError(ERROR_THREAD_INVALID_ACCESS)
-	 *                when called from the wrong thread
-	 * @exception SWTError(ERROR_WIDGET_DISPOSED)
-	 *                when the widget has been disposed
-	 * @exception SWTError(ERROR_NULL_ARGUMENT)
-	 *                when listener is null
+	 * 
+	 * @exception SWTError
+	 *                (ERROR_THREAD_INVALID_ACCESS) when called from the wrong
+	 *                thread
+	 * @exception SWTError
+	 *                (ERROR_WIDGET_DISPOSED) when the widget has been disposed
+	 * @exception SWTError
+	 *                (ERROR_NULL_ARGUMENT) when listener is null
 	 */
-	public void removeSelectionListener(SelectionListener listener)
-	{
+	public void removeSelectionListener(SelectionListener listener) {
 		checkWidget();
 
-		if (listener == null)
-		{
+		if (listener == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
 
@@ -777,124 +692,110 @@ public final class DatePickerCombo extends Composite
 		removeListener(SWT.DefaultSelection, listener);
 	}
 
-	public void setBackground(Color color)
-	{
+	public void setBackground(Color color) {
 		super.setBackground(color);
 
-		if (text != null)
-		{
+		if (text != null) {
 			text.setBackground(color);
 		}
 
-		if (dp != null)
-		{
+		if (dp != null) {
 			dp.setBackground(color);
 		}
 
-		if (arrow != null)
-		{
+		if (arrow != null) {
 			arrow.setBackground(color);
 		}
 	}
 
 	/**
-	 * set if you need to double click a date in the expanded calender control to hide it
-	 * default is false meaning you have to double click a date
+	 * set if you need to double click a date in the expanded calender control
+	 * to hide it default is false meaning you have to double click a date
 	 * 
 	 * @author sebthom
 	 * 
 	 * @param useSingleMouseClickToCommit
 	 */
-	public void setClosePopupWithSingleMouseClick(boolean isClosePopupWithSingleMouseClick)
-	{
+	public void setClosePopupWithSingleMouseClick(
+			boolean isClosePopupWithSingleMouseClick) {
 		this.isClosePopupWithSingleMouseClick = isClosePopupWithSingleMouseClick;
 	}
 
 	/**
 	 * Selects an item.
 	 * <p>
-	 * If the item at an index is not selected, it is selected. Indices that
-	 * are out of range are ignored. Indexing is zero based.
-	 *
+	 * If the item at an index is not selected, it is selected. Indices that are
+	 * out of range are ignored. Indexing is zero based.
+	 * 
 	 * @param index
 	 *            the index of the item
-	 *
-	 * @exception SWTError(ERROR_THREAD_INVALID_ACCESS)
-	 *                when called from the wrong thread
-	 * @exception SWTError(ERROR_WIDGET_DISPOSED)
-	 *                when the widget has been disposed
+	 * 
+	 * @exception SWTError
+	 *                (ERROR_THREAD_INVALID_ACCESS) when called from the wrong
+	 *                thread
+	 * @exception SWTError
+	 *                (ERROR_WIDGET_DISPOSED) when the widget has been disposed
 	 */
-	public void setDate(Date date)
-	{
+	public void setDate(Date date) {
 		checkWidget();
 
-		//sebthom
-		if (date != null)
-		{
+		// sebthom
+		if (date != null) {
 			text.setText(DateFormat.getDateInstance().format(date));
 			text.selectAll();
-		}
-		else
-		{
+		} else {
 			text.setText("");
 		}
 
 		dp.setDate(date);
 	}
 
-	public boolean setFocus()
-	{
+	public boolean setFocus() {
 		checkWidget();
 		return text.setFocus();
 	}
 
-	public void setFont(Font font)
-	{
+	public void setFont(Font font) {
 		super.setFont(font);
 		text.setFont(font);
 		dp.setFont(font);
 		internalLayout();
 	}
 
-	public void setForeground(Color color)
-	{
+	public void setForeground(Color color) {
 		super.setForeground(color);
 
-		if (text != null)
-		{
+		if (text != null) {
 			text.setForeground(color);
 		}
 
-		if (dp != null)
-		{
+		if (dp != null) {
 			dp.setForeground(color);
 		}
 
-		if (arrow != null)
-		{
+		if (arrow != null) {
 			arrow.setForeground(color);
 		}
 	}
 
 	/**
 	 * Sets the new selection.
-	 *
+	 * 
 	 * @param selection
 	 *            point representing the start and the end of the new selection
-	 *
-	 * @exception SWTError(ERROR_THREAD_INVALID_ACCESS)
-	 *                when called from the wrong thread
-	 * @exception SWTError(ERROR_WIDGET_DISPOSED)
-	 *                when the widget has been disposed
-	 * @exception SWTError(ERROR_NULL_ARGUMENT)
-	 *                when selection is null
+	 * 
+	 * @exception SWTError
+	 *                (ERROR_THREAD_INVALID_ACCESS) when called from the wrong
+	 *                thread
+	 * @exception SWTError
+	 *                (ERROR_WIDGET_DISPOSED) when the widget has been disposed
+	 * @exception SWTError
+	 *                (ERROR_NULL_ARGUMENT) when selection is null
 	 */
-	public void setSelection(Point selection)
-	{
+	public void setSelection(Point selection) {
 		checkWidget();
 
-		if (selection == null)
-		{
+		if (selection == null) {
 			SWT.error(SWT.ERROR_NULL_ARGUMENT);
 		}
 
@@ -903,222 +804,192 @@ public final class DatePickerCombo extends Composite
 
 	/**
 	 * Sets the text limit
-	 *
+	 * 
 	 * @param limit
 	 *            new text limit
-	 *
-	 * @exception SWTError(ERROR_THREAD_INVALID_ACCESS)
-	 *                when called from the wrong thread
-	 * @exception SWTError(ERROR_WIDGET_DISPOSED)
-	 *                when the widget has been disposed
-	 * @exception SWTError(ERROR_CANNOT_BE_ZERO)
-	 *                when limit is 0
+	 * 
+	 * @exception SWTError
+	 *                (ERROR_THREAD_INVALID_ACCESS) when called from the wrong
+	 *                thread
+	 * @exception SWTError
+	 *                (ERROR_WIDGET_DISPOSED) when the widget has been disposed
+	 * @exception SWTError
+	 *                (ERROR_CANNOT_BE_ZERO) when limit is 0
 	 */
-	public void setTextLimit(int limit)
-	{
+	public void setTextLimit(int limit) {
 		checkWidget();
 		text.setTextLimit(limit);
 	}
 
-	public void setToolTipText(String string)
-	{
+	public void setToolTipText(String string) {
 		checkWidget();
 		super.setToolTipText(string);
 		arrow.setToolTipText(string);
 		text.setToolTipText(string);
 	}
 
-	public void setVisible(boolean visible)
-	{
+	public void setVisible(boolean visible) {
 		super.setVisible(visible);
 
-		if (!visible)
-		{
+		if (!visible) {
 			popup.setVisible(false);
 		}
 	}
 
-	private void textEvent(Event event)
-	{
-		switch (event.type)
-		{
-			case SWT.FocusIn :
-				{
-					if (hasFocus)
-					{
-						return;
-					}
+	private void textEvent(Event event) {
+		switch (event.type) {
+		case SWT.FocusIn: {
+			if (hasFocus) {
+				return;
+			}
 
-					hasFocus = true;
+			hasFocus = true;
 
-					if (getEditable())
-					{
-						text.selectAll();
-					}
+			if (getEditable()) {
+				text.selectAll();
+			}
 
-					Event e = new Event();
-					e.time = event.time;
-					notifyListeners(SWT.FocusIn, e);
+			Event e = new Event();
+			e.time = event.time;
+			notifyListeners(SWT.FocusIn, e);
+			break;
+		}
+
+		case SWT.FocusOut: {
+			Control focusControl = getDisplay().getFocusControl();
+
+			if ((focusControl == dp) || (focusControl == arrow)) {
+				return;
+			}
+
+			hasFocus = false;
+
+			Event e = new Event();
+			e.time = event.time;
+			notifyListeners(SWT.FocusOut, e);
+			break;
+		}
+
+		case SWT.KeyDown: {
+			if (event.character == SWT.ESC) {
+				// escape key cancels popup dp
+				dropDown(false);
+			}
+
+			if (event.character == SWT.CR) {
+				dropDown(false);
+
+				Event e = new Event();
+				e.time = event.time;
+				e.stateMask = event.stateMask;
+				notifyListeners(SWT.DefaultSelection, e);
+			}
+
+			// At this point the widget may have been disposed.
+			// If so, do not continue.
+			if (isDisposed()) {
+				break;
+			}
+
+			if ((event.keyCode == SWT.ARROW_UP)
+					|| (event.keyCode == SWT.ARROW_DOWN)) {
+				// Date oldDate = getDate();
+
+				// At this point the widget may have been disposed.
+				// If so, do not continue.
+				if (isDisposed()) {
 					break;
 				}
+			}
 
-			case SWT.FocusOut :
-				{
-					Control focusControl = getDisplay().getFocusControl();
+			// Further work : Need to add support for incremental
+			// search in
+			// pop up dp as characters typed in text widget
+			Event e = new Event();
+			e.time = event.time;
+			e.character = event.character;
+			e.keyCode = event.keyCode;
+			e.stateMask = event.stateMask;
+			notifyListeners(SWT.KeyDown, e);
+			break;
+		}
 
-					if ((focusControl == dp) || (focusControl == arrow))
-					{
-						return;
+		case SWT.KeyUp: {
+			Event e = new Event();
+			e.time = event.time;
+			e.character = event.character;
+			e.keyCode = event.keyCode;
+			e.stateMask = event.stateMask;
+			notifyListeners(SWT.KeyUp, e);
+			break;
+		}
+
+		case SWT.Modify: {
+			// sebthom
+			if (!popup.isVisible()) {
+				if (text.getText().length() == 0) {
+					dp.setDate(null);
+				} else {
+					try {
+						dp.setDate(SimpleDateFormat.getDateInstance().parse(
+								text.getText()));
+					} catch (ParseException pe) {
+						dp.setDate(null);
 					}
-
-					hasFocus = false;
-
-					Event e = new Event();
-					e.time = event.time;
-					notifyListeners(SWT.FocusOut, e);
-					break;
 				}
+			}
+			// dp.deselectAll ();
+			Event e = new Event();
+			e.time = event.time;
+			notifyListeners(SWT.Modify, e);
+			break;
+		}
 
-			case SWT.KeyDown :
-				{
-					if (event.character == SWT.ESC)
-					{
-						// escape key cancels popup dp
-						dropDown(false);
-					}
+		case SWT.MouseDown: {
+			if (event.button != 1 || text.getEditable()) {
+				return;
+			}
 
-					if (event.character == SWT.CR)
-					{
-						dropDown(false);
+			boolean dropped = isDropped();
+			text.selectAll();
 
-						Event e = new Event();
-						e.time = event.time;
-						e.stateMask = event.stateMask;
-						notifyListeners(SWT.DefaultSelection, e);
-					}
+			if (!dropped) {
+				setFocus();
+			}
+			dropDown(!dropped);
 
-					//At this point the widget may have been disposed.
-					// If so, do not continue.
-					if (isDisposed())
-					{
-						break;
-					}
+			break;
+		}
 
-					if ((event.keyCode == SWT.ARROW_UP) || (event.keyCode == SWT.ARROW_DOWN))
-					{
-						//Date oldDate = getDate();
+		case SWT.MouseUp: {
+			if (event.button != 1 || text.getEditable()) {
+				return;
+			}
+			text.selectAll();
+			break;
+		}
 
-						//At this point the widget may have been disposed.
-						// If so, do not continue.
-						if (isDisposed())
-						{
-							break;
-						}
-					}
+		case SWT.Traverse: {
+			switch (event.detail) {
+			case SWT.TRAVERSE_RETURN:
+			case SWT.TRAVERSE_ARROW_PREVIOUS:
+			case SWT.TRAVERSE_ARROW_NEXT:
+				// The enter causes default selection and
+				// the arrow keys are used to manipulate the dp
+				// contents so do not use them for traversal.
+				event.doit = false;
+				break;
+			}
 
-					// Further work : Need to add support for incremental
-					// search in
-					// pop up dp as characters typed in text widget
-					Event e = new Event();
-					e.time = event.time;
-					e.character = event.character;
-					e.keyCode = event.keyCode;
-					e.stateMask = event.stateMask;
-					notifyListeners(SWT.KeyDown, e);
-					break;
-				}
-
-			case SWT.KeyUp :
-				{
-					Event e = new Event();
-					e.time = event.time;
-					e.character = event.character;
-					e.keyCode = event.keyCode;
-					e.stateMask = event.stateMask;
-					notifyListeners(SWT.KeyUp, e);
-					break;
-				}
-
-			case SWT.Modify :
-				{
-					// sebthom
-					if (!popup.isVisible())
-					{
-						if (text.getText().length() == 0)
-						{
-							dp.setDate(null);
-						}
-						else
-						{
-							try
-							{
-								dp.setDate(SimpleDateFormat.getDateInstance().parse(text.getText()));
-							}
-							catch (ParseException pe)
-							{
-								dp.setDate(null);
-							}
-						}
-					}
-					//	dp.deselectAll ();
-					Event e = new Event();
-					e.time = event.time;
-					notifyListeners(SWT.Modify, e);
-					break;
-				}
-
-			case SWT.MouseDown :
-				{
-					if (event.button != 1 || text.getEditable())
-					{
-						return;
-					}
-
-					boolean dropped = isDropped();
-					text.selectAll();
-
-					if (!dropped)
-					{
-						setFocus();
-					}
-					dropDown(!dropped);
-
-					break;
-				}
-
-			case SWT.MouseUp :
-				{
-					if (event.button != 1 || text.getEditable())
-					{
-						return;
-					}
-					text.selectAll();
-					break;
-				}
-
-			case SWT.Traverse :
-				{
-					switch (event.detail)
-					{
-						case SWT.TRAVERSE_RETURN :
-						case SWT.TRAVERSE_ARROW_PREVIOUS :
-						case SWT.TRAVERSE_ARROW_NEXT :
-							// The enter causes default selection and
-							// the arrow keys are used to manipulate the dp
-							// contents so do not use them for traversal.
-							event.doit = false;
-							break;
-					}
-
-					Event e = new Event();
-					e.time = event.time;
-					e.detail = event.detail;
-					e.doit = event.doit;
-					e.keyCode = event.keyCode;
-					notifyListeners(SWT.Traverse, e);
-					event.doit = e.doit;
-					break;
-				}
+			Event e = new Event();
+			e.time = event.time;
+			e.detail = event.detail;
+			e.doit = event.doit;
+			e.keyCode = event.keyCode;
+			notifyListeners(SWT.Traverse, e);
+			event.doit = e.doit;
+			break;
+		}
 		}
 	}
 }

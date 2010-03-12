@@ -6,7 +6,6 @@ public class ActivateSpendingReportView extends AbstractActivateView {
 
 	public static final String ID = "net.deuce.moman.command.navigate.spendingReport";
 
-	@Override
 	public String getViewId() {
 		return SpendingReportView.ID;
 	}

@@ -8,7 +8,6 @@ public class CashFlowReportView extends AbstractReportView {
 
 	public static final String ID = CashFlowReportView.class.getName();
 
-	@Override
 	protected AbstractTransactionReportCanvas doCreateChartControl(
 			Composite parent, DateRangeCombo combo) {
 		return new CashFlowCanvas(parent, combo, SWT.NONE);

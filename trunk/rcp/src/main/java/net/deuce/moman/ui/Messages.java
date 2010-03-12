@@ -20,7 +20,6 @@
 
 package net.deuce.moman.ui;
 
-
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
@@ -31,38 +30,33 @@ import org.apache.commons.logging.LogFactory;
  * This class is used to get Strings to display in the User Interface
  * 
  */
-public class Messages
-{
+public class Messages {
 	private static final Log log = LogFactory.getLog(Messages.class);
-	
-    private static final String BUNDLE_NAME = "net.deuce.moman.ui.messages"; //$NON-NLS-1$
 
-    private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
+	private static final String BUNDLE_NAME = "net.deuce.moman.ui.messages"; //$NON-NLS-1$
 
+	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle
+			.getBundle(BUNDLE_NAME);
 
-    /**
-     * Default constuctor
-     */
-    private Messages()
-    {
-    }
+	/**
+	 * Default constuctor
+	 */
+	private Messages() {
+	}
 
-
-    /**
-     * Returns a String associated with the key given in parameter
-     * @param key the key associated to the String 
-     * @return the corresponding String
-     */
-    public static String getString( String key )
-    {
-        try
-        {
-            return RESOURCE_BUNDLE.getString( key );
-        }
-        catch ( MissingResourceException e )
-        {
-            log.warn( "Associated ressource not found for key " + key ); //$NON-NLS-1$
-            return '!' + key + '!';
-        }
-    }
+	/**
+	 * Returns a String associated with the key given in parameter
+	 * 
+	 * @param key
+	 *            the key associated to the String
+	 * @return the corresponding String
+	 */
+	public static String getString(String key) {
+		try {
+			return RESOURCE_BUNDLE.getString(key);
+		} catch (MissingResourceException e) {
+			log.warn("Associated ressource not found for key " + key); //$NON-NLS-1$
+			return '!' + key + '!';
+		}
+	}
 }

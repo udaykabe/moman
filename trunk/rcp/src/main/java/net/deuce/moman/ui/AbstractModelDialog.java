@@ -2,7 +2,7 @@ package net.deuce.moman.ui;
 
 import java.lang.reflect.ParameterizedType;
 
-import net.deuce.moman.model.AbstractEntity;
+import net.deuce.moman.entity.model.AbstractEntity;
 
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.resource.JFaceResources;
@@ -19,23 +19,28 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 @SuppressWarnings("unchecked")
-public abstract class AbstractModelDialog<E extends AbstractEntity> extends TitleAreaDialog {
-	
+public abstract class AbstractModelDialog<E extends AbstractEntity> extends
+		TitleAreaDialog {
+
 	public AbstractModelDialog(Shell parentShell) {
 		super(parentShell);
 	}
-	
-	@Override
+
 	public void create() {
 		super.create();
 		// Set the title
-		setTitle(((Class<E>)((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]).getSimpleName() + " Dialog");
+		setTitle(((Class<E>) ((ParameterizedType) getClass()
+				.getGenericSuperclass()).getActualTypeArguments()[0])
+				.getSimpleName()
+				+ " Dialog");
 		// Set the message
-//		setMessage("This is a TitleAreaDialog", IMessageProvider.INFORMATION);
+		// setMessage("This is a TitleAreaDialog",
+		// IMessageProvider.INFORMATION);
 
 	}
-	
-	protected Text createTextField(Composite parent, GridData gridData, String text, boolean password) {
+
+	protected Text createTextField(Composite parent, GridData gridData,
+			String text, boolean password) {
 		Label label = new Label(parent, SWT.NONE);
 		label.setText(text);
 		int style = SWT.BORDER;
@@ -46,11 +51,10 @@ public abstract class AbstractModelDialog<E extends AbstractEntity> extends Titl
 		textField.setLayoutData(gridData);
 		return textField;
 	}
-	
+
 	protected void createTextFields(Composite parent, GridData gridData) {
 	}
 
-	@Override
 	protected Control createDialogArea(Composite parent) {
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 2;
@@ -63,11 +67,10 @@ public abstract class AbstractModelDialog<E extends AbstractEntity> extends Titl
 		gridData.horizontalAlignment = GridData.FILL;
 
 		createTextFields(parent, gridData);
-	
+
 		return parent;
 	}
 
-	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		GridData gridData = new GridData();
 		gridData.verticalAlignment = GridData.FILL;
@@ -121,14 +124,13 @@ public abstract class AbstractModelDialog<E extends AbstractEntity> extends Titl
 	protected abstract boolean isValidInput();
 
 	// We allow the user to resize this dialog
-	@Override
+
 	protected boolean isResizable() {
 		return true;
 	}
 
 	protected abstract void saveInput();
 
-	@Override
 	protected void okPressed() {
 		saveInput();
 		super.okPressed();

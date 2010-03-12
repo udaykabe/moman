@@ -7,11 +7,10 @@ import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-public class AccountPage extends FieldEditorPreferencePage
-		implements IWorkbenchPreferencePage {
-	
-	public static final String ACCOUNT_IMPORT_MATCHING_DAY_THRESHOLD = 
-		"ACCOUNT_IMPORT_MATCHING_DAY_THRESHOLD";
+public class AccountPage extends FieldEditorPreferencePage implements
+		IWorkbenchPreferencePage {
+
+	public static final String ACCOUNT_IMPORT_MATCHING_DAY_THRESHOLD = "ACCOUNT_IMPORT_MATCHING_DAY_THRESHOLD";
 
 	public AccountPage() {
 		super(GRID);
@@ -22,7 +21,6 @@ public class AccountPage extends FieldEditorPreferencePage
 				"Import Matching &Threshold:", getFieldEditorParent()));
 	}
 
-	@Override
 	public void init(IWorkbench workbench) {
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
 		setDescription("Account Import Preferences");

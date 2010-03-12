@@ -1,9 +1,9 @@
 package net.deuce.moman.account.ui;
 
-import net.deuce.moman.fi.model.FinanacialInstitutionTextContentAdapter;
-import net.deuce.moman.fi.model.FinancialInstitution;
-import net.deuce.moman.fi.service.FinancialInstitutionService;
-import net.deuce.moman.service.ServiceNeeder;
+import net.deuce.moman.entity.ServiceProvider;
+import net.deuce.moman.entity.model.fi.FinancialInstitution;
+import net.deuce.moman.entity.service.fi.FinancialInstitutionService;
+import net.deuce.moman.fi.FinanacialInstitutionTextContentAdapter;
 
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.fieldassist.TextControlCreator;
@@ -20,21 +20,19 @@ import org.eclipse.ui.fieldassist.ContentAssistField;
 
 @SuppressWarnings("deprecation")
 public class FinancialInstitutionPage extends WizardPage {
-	
-	private FinancialInstitutionService service;
+
+	private FinancialInstitutionService service = ServiceProvider.instance().getFinancialInstitutionService();
 	private FinancialInstitution financialInstitution;
 
 	protected FinancialInstitutionPage() {
 		super("Financial Institution");
 		setTitle("Financial Institution");
-		service = ServiceNeeder.instance().getFinancialInstitutionService();
 	}
-	
+
 	public FinancialInstitution getFinancialInstitution() {
 		return financialInstitution;
 	}
 
-	@Override
 	public void createControl(Composite parent) {
 
 		Composite container = new Composite(parent, SWT.NULL);
@@ -45,20 +43,28 @@ public class FinancialInstitutionPage extends WizardPage {
 		label1.setText("Search:");
 
 		IContentProposalProvider contentProposalProvider = new FinancialInstitutionContentProposalProvider();
-		
-		char[] autoActivationCharacters = new char[] { 'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
-		
-		final ContentAssistField searchField = new ContentAssistField(container, SWT.BORDER | SWT.SINGLE, new TextControlCreator(),
-				new FinanacialInstitutionTextContentAdapter(), contentProposalProvider, null, autoActivationCharacters);
-		
-		Text text = (Text)searchField.getControl();
+
+		char[] autoActivationCharacters = new char[] { 'A', 'B', 'C', 'D', 'E',
+				'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q',
+				'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c',
+				'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
+				'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
+
+		final ContentAssistField searchField = new ContentAssistField(
+				container, SWT.BORDER | SWT.SINGLE, new TextControlCreator(),
+				new FinanacialInstitutionTextContentAdapter(),
+				contentProposalProvider, null, autoActivationCharacters);
+
+		Text text = (Text) searchField.getControl();
 		text.addModifyListener(new ModifyListener() {
-			@Override
+
 			public void modifyText(ModifyEvent e) {
-				String name = ((Text)e.getSource()).getText();
+				String name = ((Text) e.getSource()).getText();
 				if (service.doesFinancialInstitutionExistByName(name)) {
-					financialInstitution = service.getFinancialInstitutionByName(name);
-					((NewAccountWizard)getWizard()).setFinancialInstitution(financialInstitution);
+					financialInstitution = service
+							.getFinancialInstitutionByName(name);
+					((NewAccountWizard) getWizard())
+							.setFinancialInstitution(financialInstitution);
 					setPageComplete(true);
 				}
 			}

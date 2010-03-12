@@ -6,7 +6,6 @@ public class ActivateCashFlowReportView extends AbstractActivateView {
 
 	public static final String ID = "net.deuce.moman.command.navigate.cashFlowReport";
 
-	@Override
 	public String getViewId() {
 		return CashFlowReportView.ID;
 	}

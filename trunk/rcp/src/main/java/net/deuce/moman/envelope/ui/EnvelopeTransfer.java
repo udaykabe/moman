@@ -24,29 +24,31 @@ public class EnvelopeTransfer extends ByteArrayTransfer {
 	}
 
 	public void javaToNative(Object object, TransferData transferData) {
-		if (object == null || !(object instanceof String[]) || !isSupportedType(transferData)) {
+		if (object == null || !(object instanceof String[])
+				|| !isSupportedType(transferData)) {
 			DND.error(DND.ERROR_INVALID_DATA);
 			return;
 		}
-		
-		String[] myTypes = (String[]) object;	
- 		try {
- 			// write data to a byte array and then ask super to convert to pMedium
- 			ByteArrayOutputStream out = new ByteArrayOutputStream();
- 			DataOutputStream writeOut = new DataOutputStream(out);
- 			for (int i = 0, length = myTypes.length; i < length;  i++){
- 				byte[] buffer = myTypes[i].getBytes();
- 				writeOut.writeInt(buffer.length);
- 				writeOut.write(buffer);
- 			}
- 			byte[] buffer = out.toByteArray();
- 			writeOut.close();
- 
- 			super.javaToNative(buffer, transferData);
- 			
- 		} catch (IOException e) {
- 			e.printStackTrace();
- 		}
+
+		String[] myTypes = (String[]) object;
+		try {
+			// write data to a byte array and then ask super to convert to
+			// pMedium
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			DataOutputStream writeOut = new DataOutputStream(out);
+			for (int i = 0, length = myTypes.length; i < length; i++) {
+				byte[] buffer = myTypes[i].getBytes();
+				writeOut.writeInt(buffer.length);
+				writeOut.write(buffer);
+			}
+			byte[] buffer = out.toByteArray();
+			writeOut.close();
+
+			super.javaToNative(buffer, transferData);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public Object nativeToJava(TransferData transferData) {
@@ -82,12 +84,10 @@ public class EnvelopeTransfer extends ByteArrayTransfer {
 		return null;
 	}
 
-	@Override
 	protected String[] getTypeNames() {
 		return new String[] { MYTYPENAME };
 	}
 
-	@Override
 	protected int[] getTypeIds() {
 		return new int[] { MYTYPEID };
 	}

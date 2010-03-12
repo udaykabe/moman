@@ -1,11 +1,13 @@
 package net.deuce.moman.allocation.command;
 
-import net.deuce.moman.allocation.model.AllocationSet;
-import net.deuce.moman.allocation.service.AllocationSetService;
 import net.deuce.moman.allocation.ui.AllocationView;
+import net.deuce.moman.entity.ServiceProvider;
+import net.deuce.moman.entity.model.allocation.AllocationSet;
+import net.deuce.moman.entity.model.allocation.AllocationSetFactory;
+import net.deuce.moman.entity.service.allocation.AllocationSetService;
+import net.deuce.moman.entity.service.income.IncomeService;
 import net.deuce.moman.income.ui.SelectPaySourceDialog;
 import net.deuce.moman.operation.CreateEntityOperation;
-import net.deuce.moman.service.ServiceNeeder;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -20,19 +22,29 @@ public class NewSet extends AbstractHandler {
 
 	public static final String ID = "net.deuce.moman.allocation.command.newSet";
 
-	@Override
+	private IncomeService incomeService = ServiceProvider.instance().getIncomeService();
+
+	private AllocationSetService allocationSetService = ServiceProvider.instance().getAllocationSetService();
+
+	private AllocationSetFactory allocationSetFactory = ServiceProvider.instance().getAllocationSetFactory();
+
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		
-		if (ServiceNeeder.instance().getIncomeService().getEntities().size() > 0) {
-			IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow(event);
-			SelectPaySourceDialog dialog = new SelectPaySourceDialog(window.getShell());
+
+		if (incomeService.getEntities().size() > 0) {
+			IWorkbenchWindow window = HandlerUtil
+					.getActiveWorkbenchWindow(event);
+			SelectPaySourceDialog dialog = new SelectPaySourceDialog(window
+					.getShell());
 			dialog.create();
 			if (dialog.open() == Window.OK) {
 				try {
-					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPages()[0].showView(AllocationView.ID,null,IWorkbenchPage.VIEW_ACTIVATE);
-					AllocationSet allocationSet = ServiceNeeder.instance().getAllocationSetFactory().newEntity("Set Name", dialog.getEntity());
+					PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+							.getPages()[0].showView(AllocationView.ID, null,
+							IWorkbenchPage.VIEW_ACTIVATE);
+					AllocationSet allocationSet = allocationSetFactory
+							.newEntity("Set Name", dialog.getEntity());
 					new CreateEntityOperation<AllocationSet, AllocationSetService>(
-							allocationSet, ServiceNeeder.instance().getAllocationSetService()).execute();
+							allocationSet, allocationSetService).execute();
 				} catch (Exception e) {
 					e.printStackTrace();
 					throw new ExecutionException(e.getMessage(), e);
