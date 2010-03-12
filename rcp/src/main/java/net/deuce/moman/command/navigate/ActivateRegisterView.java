@@ -6,7 +6,6 @@ public class ActivateRegisterView extends AbstractActivateView {
 
 	public static final String ID = "net.deuce.moman.command.navigate.register";
 
-	@Override
 	public String getViewId() {
 		return RegisterView.ID;
 	}

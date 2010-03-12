@@ -6,7 +6,6 @@ public class ActivateImportView extends AbstractActivateView {
 
 	public static final String ID = "net.deuce.moman.command.navigate.import";
 
-	@Override
 	public String getViewId() {
 		return TransactionImportView.ID;
 	}

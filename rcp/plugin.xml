@@ -806,10 +806,6 @@
             commandId="net.deuce.moman.rule.command.delete">
       </handler>
       <handler
-            class="net.deuce.moman.command.importer.Edit"
-            commandId="net.deuce.moman.command.import.edit">
-      </handler>
-      <handler
             class="net.deuce.moman.command.importer.Delete"
             commandId="net.deuce.moman.command.import.delete">
       </handler>
@@ -958,6 +954,18 @@
             alias="/envelopeService"
             class="net.deuce.moman.servlet.EnvelopeServlet">
       </servlet>
+   </extension>
+   <extension
+         id="product1"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="moman.application"
+            name="DeployTest">
+         <property
+               name="appName"
+               value="DeployTest">
+         </property>
+      </product>
    </extension>
    
    

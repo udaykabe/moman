@@ -6,7 +6,6 @@ public class ActivateImportRuleView extends AbstractActivateView {
 
 	public static final String ID = "net.deuce.moman.command.navigate.importRule";
 
-	@Override
 	public String getViewId() {
 		return TransactionRuleView.ID;
 	}

@@ -13,28 +13,29 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.part.ViewPart;
 
 public class DemoView6 extends ViewPart {
-	
+
 	public static final String ID = DemoView6.class.getName();
-	
+
 	public DemoView6() {
 	}
 
-	@Override
 	public void createPartControl(Composite parent) {
-		String[] images = {
-				ISharedImages.IMG_OBJS_DND_INVALID_MASK,ISharedImages.IMG_OBJS_DND_STACK_SOURCE,ISharedImages.IMG_OBJS_DND_STACK_MASK,ISharedImages.IMG_OBJS_DND_OFFSCREEN_SOURCE,ISharedImages.IMG_OBJS_DND_OFFSCREEN_MASK
-		};
-		
+		String[] images = { ISharedImages.IMG_OBJS_DND_INVALID_MASK,
+				ISharedImages.IMG_OBJS_DND_STACK_SOURCE,
+				ISharedImages.IMG_OBJS_DND_STACK_MASK,
+				ISharedImages.IMG_OBJS_DND_OFFSCREEN_SOURCE,
+				ISharedImages.IMG_OBJS_DND_OFFSCREEN_MASK };
+
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 2;
 		parent.setLayout(layout);
 		GridData gridData = new GridData();
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.horizontalAlignment = GridData.FILL;
-		
-		for (int i=0; i<images.length; i++) {
+
+		for (int i = 0; i < images.length; i++) {
 			Image image = Activator.getDefault().getWorkbench()
-                    .getSharedImages().getImage(images[i]);
+					.getSharedImages().getImage(images[i]);
 			if (image != null) {
 				Label name = new Label(parent, SWT.NONE);
 				name.setText(images[i]);
@@ -45,8 +46,7 @@ public class DemoView6 extends ViewPart {
 			}
 		}
 	}
-	
-	@Override
+
 	public void setFocus() {
 	}
 

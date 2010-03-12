@@ -1,7 +1,8 @@
 package net.deuce.moman.envelope.command;
 
-import net.deuce.moman.envelope.model.Envelope;
-import net.deuce.moman.service.ServiceNeeder;
+import net.deuce.moman.entity.ServiceProvider;
+import net.deuce.moman.entity.model.envelope.Envelope;
+import net.deuce.moman.entity.service.envelope.EnvelopeService;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -13,15 +14,17 @@ public class Delete extends AbstractEnvelopeHandler {
 
 	public static final String ID = "net.deuce.moman.envelope.command.delete";
 
-	@Override
+	private EnvelopeService envelopeService = ServiceProvider.instance().getEnvelopeService();
+
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow(event);
-		Envelope envelope = getEnvelope(window);		
-		
+		Envelope envelope = getEnvelope(window);
+
 		if (envelope != null) {
-			if (MessageDialog.openQuestion(window.getShell(), "Delete Envelope?",
-					"Are you sure you want to delete the '" + envelope.getName() + "' envelope?")) {
-				ServiceNeeder.instance().getEnvelopeService().removeEnvelope(envelope);
+			if (MessageDialog.openQuestion(window.getShell(),
+					"Delete Envelope?", "Are you sure you want to delete the '"
+							+ envelope.getName() + "' envelope?")) {
+				envelopeService.removeEnvelope(envelope);
 			}
 		}
 		return null;

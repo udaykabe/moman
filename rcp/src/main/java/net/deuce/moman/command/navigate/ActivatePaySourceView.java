@@ -6,7 +6,6 @@ public class ActivatePaySourceView extends AbstractActivateView {
 
 	public static final String ID = "net.deuce.moman.command.navigate.paySource";
 
-	@Override
 	public String getViewId() {
 		return IncomeView.ID;
 	}

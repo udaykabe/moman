@@ -8,13 +8,13 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 public abstract class AbstractActivateView extends AbstractHandler {
-	
+
 	public abstract String getViewId();
 
-	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		try {
-			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPages()[0].showView(getViewId(),null,IWorkbenchPage.VIEW_ACTIVATE);
+			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPages()[0]
+					.showView(getViewId(), null, IWorkbenchPage.VIEW_ACTIVATE);
 		} catch (PartInitException e) {
 			e.printStackTrace();
 			throw new ExecutionException("show view failed", e);

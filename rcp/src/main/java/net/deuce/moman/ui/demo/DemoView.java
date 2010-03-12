@@ -13,19 +13,16 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.part.ViewPart;
 
 public class DemoView extends ViewPart {
-	
+
 	public static final String ID = DemoView.class.getName();
-	
+
 	public DemoView() {
 	}
 
-	@Override
 	public void createPartControl(Composite parent) {
-		String[] images = {
-				ISharedImages.IMG_DEC_FIELD_ERROR,
+		String[] images = { ISharedImages.IMG_DEC_FIELD_ERROR,
 				ISharedImages.IMG_DEC_FIELD_WARNING,
-				ISharedImages.IMG_DEF_VIEW,
-				ISharedImages.IMG_ELCL_COLLAPSEALL,
+				ISharedImages.IMG_DEF_VIEW, ISharedImages.IMG_ELCL_COLLAPSEALL,
 				ISharedImages.IMG_ELCL_COLLAPSEALL_DISABLED,
 				ISharedImages.IMG_ELCL_REMOVE,
 				ISharedImages.IMG_ELCL_REMOVE_DISABLED,
@@ -37,19 +34,18 @@ public class DemoView extends ViewPart {
 				ISharedImages.IMG_ELCL_SYNCED_DISABLED,
 				ISharedImages.IMG_ETOOL_CLEAR,
 				ISharedImages.IMG_ETOOL_CLEAR_DISABLED,
-				ISharedImages.IMG_ETOOL_DEF_PERSPECTIVE
-		};
-		
+				ISharedImages.IMG_ETOOL_DEF_PERSPECTIVE };
+
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 2;
 		parent.setLayout(layout);
 		GridData gridData = new GridData();
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.horizontalAlignment = GridData.FILL;
-		
-		for (int i=0; i<images.length; i++) {
+
+		for (int i = 0; i < images.length; i++) {
 			Image image = Activator.getDefault().getWorkbench()
-                    .getSharedImages().getImage(images[i]);
+					.getSharedImages().getImage(images[i]);
 			if (image != null) {
 				Label name = new Label(parent, SWT.NONE);
 				name.setText(images[i]);
@@ -60,8 +56,7 @@ public class DemoView extends ViewPart {
 			}
 		}
 	}
-	
-	@Override
+
 	public void setFocus() {
 	}
 

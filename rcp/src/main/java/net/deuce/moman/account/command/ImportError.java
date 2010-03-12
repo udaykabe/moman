@@ -10,7 +10,6 @@ public class ImportError extends AbstractHandler {
 
 	public static final String ID = "net.deuce.moman.account.command.importError";
 
-	@Override
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		MessageDialog.openError(Display.getCurrent().getActiveShell(), "Error",
 				"Error communicating with the bank: " + event.getTrigger());

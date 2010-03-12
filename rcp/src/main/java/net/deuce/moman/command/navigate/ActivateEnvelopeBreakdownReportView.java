@@ -6,7 +6,6 @@ public class ActivateEnvelopeBreakdownReportView extends AbstractActivateView {
 
 	public static final String ID = "net.deuce.moman.command.navigate.envelopeBreakdownReport";
 
-	@Override
 	public String getViewId() {
 		return EnvelopeBreakdownReportView.ID;
 	}

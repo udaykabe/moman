@@ -1,9 +1,10 @@
 package net.deuce.moman.report;
 
-import net.deuce.moman.account.model.Account;
-import net.deuce.moman.model.EntityEvent;
-import net.deuce.moman.model.EntityListener;
-import net.deuce.moman.service.ServiceNeeder;
+import net.deuce.moman.entity.ServiceProvider;
+import net.deuce.moman.entity.model.EntityEvent;
+import net.deuce.moman.entity.model.EntityListener;
+import net.deuce.moman.entity.model.account.Account;
+import net.deuce.moman.entity.service.account.AccountService;
 
 import org.eclipse.birt.chart.computation.DataPointHints;
 import org.eclipse.birt.chart.device.ICallBackNotifier;
@@ -39,8 +40,10 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DateRangeCombo;
 import org.eclipse.swt.widgets.Display;
+import org.springframework.beans.factory.annotation.Autowired;
 
-public abstract class AbstractReportCanvas extends Canvas implements ICallBackNotifier {
+public abstract class AbstractReportCanvas extends Canvas implements
+		ICallBackNotifier {
 
 	private DateRange dateRange = DateRange.currentMonth;
 	private IDeviceRenderer renderer;
@@ -48,9 +51,10 @@ public abstract class AbstractReportCanvas extends Canvas implements ICallBackNo
 	private GeneratedChartState state;
 	private Image cachedImage;
 
-	public AbstractReportCanvas(Composite parent, final DateRangeCombo combo, int style) {
+    public AbstractReportCanvas(Composite parent, final DateRangeCombo combo,
+			int style) {
 		super(parent, style);
-		
+
 		try {
 			PluginSettings ps = PluginSettings.instance();
 			renderer = ps.getDevice("dv.SWT");
@@ -59,16 +63,16 @@ public abstract class AbstractReportCanvas extends Canvas implements ICallBackNo
 			pex.printStackTrace();
 			throw new RuntimeException(pex);
 		}
-		
+
 		combo.addSelectionListener(new SelectionListener() {
-			@Override
+
 			public void widgetSelected(SelectionEvent e) {
 				if (dateRange != combo.getDateRange()) {
 					dateRange = combo.getDateRange();
 					regenerateChart();
 				}
 			}
-			@Override
+
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		});
@@ -92,25 +96,26 @@ public abstract class AbstractReportCanvas extends Canvas implements ICallBackNo
 						rect.height);
 			}
 		});
-		
-		ServiceNeeder.instance().getAccountService().addEntityListener(new EntityListener<Account>() {
-			@Override
+
+        AccountService accountService = ServiceProvider.instance().getAccountService();
+        accountService.addEntityListener(new EntityListener<Account>() {
+
 			public void entityRemoved(EntityEvent<Account> event) {
 				regenerateChart();
 			}
-			@Override
+
 			public void entityChanged(EntityEvent<Account> event) {
 				regenerateChart();
 			}
-			@Override
+
 			public void entityAdded(EntityEvent<Account> event) {
 				regenerateChart();
 			}
 		});
 	}
-	
+
 	protected abstract Chart doCreateChart();
-	
+
 	public DateRange getDateRange() {
 		return dateRange;
 	}
@@ -121,105 +126,100 @@ public abstract class AbstractReportCanvas extends Canvas implements ICallBackNo
 		}
 		return chart;
 	}
-	
-	protected Trigger createTrigger(ActionValue actionValue, ActionType actionType, TriggerCondition condition) {
+
+	protected Trigger createTrigger(ActionValue actionValue,
+			ActionType actionType, TriggerCondition condition) {
 		Action clickAction = ActionImpl.create(actionType, actionValue);
-		Trigger trigger = TriggerImpl.create(condition, clickAction);
-		return trigger;
-	}
-	
-	protected void addTrigger(Series series) {
-		ActionValue actionValue = CallBackValueImpl.create(getClass().getCanonicalName());
-		series.getTriggers().add(createTrigger(actionValue, ActionType.CALL_BACK_LITERAL, TriggerCondition.ONCLICK_LITERAL));
-	}
-	
-	@Override
-	public void callback(Object event, Object source, CallBackValue value) {
-		handleCallback((StructureSource)source, value, (DataPointHints)((StructureSource)source).getSource());
+		return TriggerImpl.create(condition, clickAction);
 	}
 
-	@Override
+	protected void addTrigger(Series series) {
+		ActionValue actionValue = CallBackValueImpl.create(getClass()
+				.getCanonicalName());
+		series.getTriggers().add(
+				createTrigger(actionValue, ActionType.CALL_BACK_LITERAL,
+						TriggerCondition.ONCLICK_LITERAL));
+	}
+
+	public void callback(Object event, Object source, CallBackValue value) {
+		handleCallback((StructureSource) source, value,
+				(DataPointHints) ((StructureSource) source).getSource());
+	}
+
 	public Chart getDesignTimeModel() {
 		return getChart();
 	}
 
-	@Override
 	public Chart getRunTimeModel() {
 		return getChart();
 	}
 
-	@Override
 	public Object peerInstance() {
 		return this;
 	}
 
-	@Override
 	public void regenerateChart() {
 		cachedImage = null;
 		chart = null;
 		redraw();
 	}
 
-	@Override
 	public void repaintChart() {
 		redraw();
 	}
 
 	private void buildChart() {
-        Point size = getSize();
-        Bounds bo = BoundsImpl.create(0, 0, size.x, size.y);
-        int resolution = renderer.getDisplayServer().getDpiResolution();
-	    bo.scale(72d / resolution);
-        try {
-         Generator gr = Generator.instance();
-         state = gr.build(renderer.getDisplayServer(),
-                             getChart(),
-                             bo,
-                             null,
-                             null,
-                             null);
-         IActionRenderer actionRenderer = getActionRenderer();
-         if (actionRenderer != null) {
-        	 state.getRunTimeContext().setActionRenderer(actionRenderer);
-         }
-        } catch (ChartException ex) {
-        	ex.printStackTrace();
-        	throw new RuntimeException(ex);
-        } catch (Throwable t) {
-        	t.printStackTrace();
-        }
-        
-    }
-	
+		Point size = getSize();
+		Bounds bo = BoundsImpl.create(0, 0, size.x, size.y);
+		int resolution = renderer.getDisplayServer().getDpiResolution();
+		bo.scale(72d / resolution);
+		try {
+			Generator gr = Generator.instance();
+			state = gr.build(renderer.getDisplayServer(), getChart(), bo, null,
+					null, null);
+			IActionRenderer actionRenderer = getActionRenderer();
+			if (actionRenderer != null) {
+				state.getRunTimeContext().setActionRenderer(actionRenderer);
+			}
+		} catch (ChartException ex) {
+			ex.printStackTrace();
+			throw new RuntimeException(ex);
+		} catch (Throwable t) {
+			t.printStackTrace();
+		}
+
+	}
+
 	protected IActionRenderer getActionRenderer() {
 		return null;
 	}
-	
+
 	private void drawToCachedImage(Rectangle size) {
-        GC gc = null;
-        try {
-            if (cachedImage != null) {
-                cachedImage.dispose();
-            }
-            cachedImage = new Image(Display.getCurrent(), size);
+		GC gc = null;
+		try {
+			if (cachedImage != null) {
+				cachedImage.dispose();
+			}
+			cachedImage = new Image(Display.getCurrent(), size);
 
-	        gc = new GC(cachedImage);
-	        renderer.setProperty(IDeviceRenderer.GRAPHICS_CONTEXT, gc);
+			gc = new GC(cachedImage);
+			renderer.setProperty(IDeviceRenderer.GRAPHICS_CONTEXT, gc);
 
-            Generator gr = Generator.instance();
-            gr.render(renderer, state);
-        } catch (ChartException ex) {
-        	ex.printStackTrace();
-        	throw new RuntimeException(ex);
-        } finally {
-            if (gc != null) {
-               gc.dispose();
-            }
-        }
-    }
-	
+			Generator gr = Generator.instance();
+			gr.render(renderer, state);
+		} catch (ChartException ex) {
+			ex.printStackTrace();
+			throw new RuntimeException(ex);
+		} finally {
+			if (gc != null) {
+				gc.dispose();
+			}
+		}
+	}
+
 	protected abstract DataSetResult createDataSet(boolean expense);
-	
-	protected void handleCallback(StructureSource source, CallBackValue value, DataPointHints dataPointHints) {
+
+	protected void handleCallback(StructureSource source, CallBackValue value,
+			DataPointHints dataPointHints) {
 	}
 }

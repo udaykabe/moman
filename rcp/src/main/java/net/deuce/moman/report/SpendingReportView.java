@@ -9,9 +9,8 @@ public class SpendingReportView extends AbstractReportView {
 
 	public static final String ID = SpendingReportView.class.getName();
 
-	@Override
-	protected Control doCreateChartControl(
-			Composite parent, DateRangeCombo combo) {
+	protected Control doCreateChartControl(Composite parent,
+			DateRangeCombo combo) {
 		return new SpendingComposite(parent, combo, SWT.NONE);
 	}
 

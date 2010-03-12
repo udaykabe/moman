@@ -1,0 +1,6 @@
+<ipojo>
+<instance component="net.deuce.moman.entity.model.transaction.impl.TransactionBuilderImpl"/>
+<instance component="net.deuce.moman.entity.model.transaction.impl.TransactionFactoryImpl"/>
+<instance component="net.deuce.moman.entity.model.transaction.impl.RepeatingTransactionBuilderImpl"/>
+<instance component="net.deuce.moman.entity.model.transaction.impl.RepeatingTransactionFactoryImpl"/>
+</ipojo>

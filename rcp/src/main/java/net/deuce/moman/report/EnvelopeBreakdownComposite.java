@@ -10,8 +10,8 @@ public class EnvelopeBreakdownComposite extends SpendingComposite {
 		super(parent, combo, style);
 	}
 
-	@Override
-	protected SpendingCanvas buildCanvas(SpendingComposite parent, DateRangeCombo combo, int style) {
+	protected SpendingCanvas buildCanvas(SpendingComposite parent,
+			DateRangeCombo combo, int style) {
 		return new EnvelopeBreakdownCanvas(this, combo, style);
 	}
 

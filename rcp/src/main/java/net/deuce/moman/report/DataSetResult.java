@@ -3,7 +3,7 @@ package net.deuce.moman.report;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.deuce.moman.transaction.model.InternalTransaction;
+import net.deuce.moman.entity.model.transaction.InternalTransaction;
 
 public class DataSetResult {
 
@@ -11,7 +11,7 @@ public class DataSetResult {
 	private double minValue = Double.MAX_VALUE;
 	private double maxValue = 0.0;
 	private List<List<InternalTransaction>> dataPointTransactions = new LinkedList<List<InternalTransaction>>();
-	
+
 	public DataSetResult(List<List<InternalTransaction>> dataPointTransactions,
 			List<Double> result, double minValue, double maxValue) {
 		super();

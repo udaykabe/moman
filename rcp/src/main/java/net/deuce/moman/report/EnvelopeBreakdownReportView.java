@@ -9,9 +9,8 @@ public class EnvelopeBreakdownReportView extends AbstractReportView {
 
 	public static final String ID = EnvelopeBreakdownReportView.class.getName();
 
-	@Override
-	protected Control doCreateChartControl(
-			Composite parent, DateRangeCombo combo) {
+	protected Control doCreateChartControl(Composite parent,
+			DateRangeCombo combo) {
 		return new EnvelopeBreakdownComposite(parent, combo, SWT.NONE);
 	}
 
