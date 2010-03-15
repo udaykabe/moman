@@ -82,7 +82,7 @@ public class ServiceManagerImpl implements ServiceManager {
 	public void initialize() {
 		loadDefaultEnvelopes();
 		loadFinancialInstitutions();
-		loadEntities(new File("/Users/nbolton/Documents/moman.xml"));
+		//loadEntities(new File("/Users/nbolton/Documents/moman.xml"));
 	}
 	
 	public void loadDefaultEnvelopes() {
@@ -119,7 +119,7 @@ public class ServiceManagerImpl implements ServiceManager {
 		clearCaches();
 		SAXReader reader = new SAXReader();
         try {
-			Document document = reader.read(new URL("file:///"+f.getAbsolutePath()));
+			Document document = reader.read(new URL("file://"+f.getAbsolutePath()));
 			Element root = document.getRootElement();
 			
 			DocumentConverterFactory.getInstance(
