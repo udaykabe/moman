@@ -1,11 +1,17 @@
 package net.deuce.moman.entity.service.preference.impl;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
+
+import javax.imageio.stream.FileImageInputStream;
 
 import net.deuce.moman.entity.service.preference.PreferenceService;
 
@@ -27,10 +33,10 @@ public class PreferenceServiceImpl implements PreferenceService {
 			defaultProperties = new Properties();
 			
 			if (file.exists()) {
-				FileReader reader = null;
+				InputStream reader = null;
 				
 				try {
-					reader = new FileReader(file);
+					reader = new  FileInputStream(file);
 					properties.load(reader);
 				} catch (Exception e) {
 					throw new RuntimeException(e);
@@ -50,13 +56,13 @@ public class PreferenceServiceImpl implements PreferenceService {
 		
 		loadPreferencesIfNecessary();
 		
-		FileWriter writer = null;
+		OutputStream writer = null;
 		
 		try {
 			if (!file.getParentFile().exists()) {
 				file.getParentFile().mkdirs();
 			}
-			writer = new FileWriter(file);
+			writer = new FileOutputStream(file);
 			properties.store(writer, null);
 		} catch (Exception e) {
 			throw new RuntimeException(e);

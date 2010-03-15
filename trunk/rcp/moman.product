@@ -12,10 +12,20 @@
 
    <windowImages/>
 
+
+   <launcher>
+      <solaris/>
+      <win useIco="false">
+         <bmp/>
+      </win>
+   </launcher>
+
+   <vm>
+   </vm>
+
    <plugins>
       <plugin id="com.ibm.icu"/>
-      <plugin id="moman" fragment=""/>
-      <plugin id="net.deuce.jfreechart.libs" fragment=""/>
+      <plugin id="net.deuce.moman.entity"/>
       <plugin id="org.apache.commons.codec"/>
       <plugin id="org.eclipse.birt.chart"/>
       <plugin id="org.eclipse.birt.chart.device.swt"/>
