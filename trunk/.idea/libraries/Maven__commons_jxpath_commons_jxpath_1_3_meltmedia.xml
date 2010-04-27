@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="Maven: commons-jxpath:commons-jxpath:1.3-meltmedia">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/commons-jxpath/commons-jxpath/1.3-meltmedia/commons-jxpath-1.3-meltmedia.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/commons-jxpath/commons-jxpath/1.3-meltmedia/commons-jxpath-1.3-meltmedia-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/../jxpath-meltmedia/src/java" />
+      <root url="jar://$MAVEN_REPOSITORY$/commons-jxpath/commons-jxpath/1.3-meltmedia/commons-jxpath-1.3-meltmedia-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

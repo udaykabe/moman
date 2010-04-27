@@ -1,0 +1,49 @@
+<!DOCTYPE hibernate-configuration PUBLIC
+    "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+  <session-factory>
+    <!-- Global Settings -->
+    <property name="hibernate.session_factory_name">${hibernate.session.factory.jndi.path}</property>
+    <property name="hibernate.query.substitutions">true 1, false 0</property>
+    <property name="hibernate.show_sql">false</property>
+    <!--property name="hibernate.current_session_context_class">org.hibnerate.context.ThreadLocalSessionContext</property-->
+
+    <!-- Connection Information -->
+    <property name="hibernate.connection.datasource">${hibernate.datasource.jndi.name}</property>
+
+    <!-- Container Configuration -->
+    <property name="hibernate.transaction.manager_lookup_class">${hibernate.transaction.manager.lookup.class}</property> 
+    <property name="jta.UserTransaction">${hibernate.jta.user.transaction.jndi.path}</property>
+
+    <!-- Database Configuration -->
+    <property name="hibernate.dialect">${hibernate.dialect}</property>
+    <property name="hibernate.transaction.factory_class">${hibernate.transaction.factory.class}</property>
+
+    <!-- Weblogic Specific Settings -->
+    <property name="hibernate.jndi.weblogic.jndi.replicateBindings">false</property>
+
+    <!-- Oracle Specific Settings -->
+    <property name="hibernate.jdbc.use_streams_for_binary">true</property>
+    <property name="hibernate.jdbc.batch_size">0</property>
+
+    <property name="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</property>
+
+    <!-- Application Specific Entities -->
+    <mapping class="net.deuce.moman.om.Account" />
+    <mapping class="net.deuce.moman.om.Allocation" />
+    <mapping class="net.deuce.moman.om.AllocationSet" />
+    <mapping class="net.deuce.moman.om.Envelope" />
+    <mapping class="net.deuce.moman.om.FinancialInstitution" />
+    <mapping class="net.deuce.moman.om.Income" />
+    <mapping class="net.deuce.moman.om.InternalTransaction" />
+    <mapping class="net.deuce.moman.om.Payee" />
+    <mapping class="net.deuce.moman.om.RepeatingTransaction" />
+    <mapping class="net.deuce.moman.om.Rule" />
+    <mapping class="net.deuce.moman.om.Split" />
+    <mapping class="net.deuce.moman.om.User" />
+
+
+  </session-factory>
+</hibernate-configuration>

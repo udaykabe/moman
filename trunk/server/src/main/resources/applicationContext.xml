@@ -1,0 +1,129 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+    http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-2.5.xsd
+       ">
+
+  <context:component-scan base-package="net.deuce.moman"/>
+  <context:annotation-config/>
+  <context:load-time-weaver weaver-class="org.jboss.instrument.classloading.JBoss5LoadTimeWeaver"/>
+  <tx:annotation-driven mode="aspectj" transaction-manager="transactionManager"/>
+
+  <bean id="localEntityManagerFactory"
+        class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+    <property name="dataSource" ref="dataSource"/>
+    <property name="persistenceUnitName" value="moman"/>
+  </bean>
+
+  <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+    <property name="entityManagerFactory" ref="localEntityManagerFactory"/>
+    <property name="dataSource" ref="dataSource"/>
+  </bean>
+
+  <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+    <property name="jndiName" value="java:/moman/DataSource"/>
+  </bean>
+
+  <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+    <property name="mappings">
+      <value>
+        /account=accountController
+        /allocation=allocationController
+        /bill=billController
+        /envelope=envelopeController
+        /fi=fiController
+        /income=incomeController
+        /payee=payeeController
+        /rt=rtController
+        /rule=ruleController
+        /sg=sgController
+        /transaction=transactionController
+      </value>
+    </property>
+  </bean>
+
+  <bean id="accountController" class="net.deuce.moman.controller.AccountController"/>
+  <bean id="allocationController" class="net.deuce.moman.controller.AllocationController"/>
+  <bean id="billController" class="net.deuce.moman.controller.BillController"/>
+  <bean id="envelopeController" class="net.deuce.moman.controller.EnvelopeController"/>
+  <bean id="fiController" class="net.deuce.moman.controller.FinancialInstitutionController"/>
+  <bean id="incomeController" class="net.deuce.moman.controller.IncomeController"/>
+  <bean id="payeeController" class="net.deuce.moman.controller.PayeeController"/>
+  <bean id="rtController" class="net.deuce.moman.controller.RepeatingTransactionController"/>
+  <bean id="ruleController" class="net.deuce.moman.controller.RuleController"/>
+  <bean id="sgController" class="net.deuce.moman.controller.SavingsGoalController"/>
+  <bean id="transactionController" class="net.deuce.moman.controller.TransactionController"/>
+
+  <bean name="WebServer" class="org.mortbay.jetty.Server" init-method="start">
+    <property name="connectors">
+      <list>
+        <bean name="LocalSocket" class="org.mortbay.jetty.nio.SelectChannelConnector">
+          <property name="host" value="localhost"/>
+          <property name="port" value="9085"/>
+        </bean>
+      </list>
+    </property>
+    <property name="handlers">
+      <list>
+        <bean class="org.mortbay.jetty.servlet.Context">
+          <property name="contextPath" value="/"/>
+          <property name="sessionHandler">
+            <bean class="org.mortbay.jetty.servlet.SessionHandler"/>
+          </property>
+          <property name="resourceBase" value="/var/www"/>
+          <property name="servletHandler">
+            <bean class="org.mortbay.jetty.servlet.ServletHandler">
+              <property name="servlets"> <!-- servlet definition -->
+                <list>
+                  <!-- default servlet -->
+                  <bean class="org.mortbay.jetty.servlet.ServletHolder">
+                    <property name="name" value="moman"/>
+                    <property name="servlet">
+                      <bean class="org.springframework.web.servlet.DispatcherServlet"/>
+                    </property>
+                    <property name="initParameters">
+                      <map>
+                        <entry key="contextConfigLocation" value="classpath:/moman-servlet.xml"/>
+                      </map>
+                    </property>
+                  </bean>
+                </list>
+              </property>
+              <property name="servletMappings">
+                <list><!-- servlet mapping -->
+                  <bean class="org.mortbay.jetty.servlet.ServletMapping">
+                    <property name="pathSpecs">
+                      <list>
+                        <value>/service/*</value>
+                      </list>
+                    </property>
+                    <property name="servletName" value="moman"/>
+                  </bean>
+                </list>
+              </property>
+            </bean>
+          </property>
+        </bean>
+        <!-- log handler -->
+        <bean class="org.mortbay.jetty.handler.RequestLogHandler">
+          <property name="requestLog">
+            <bean class="org.mortbay.jetty.NCSARequestLog">
+              <property name="append" value="true"/>
+              <property name="filename" value="/var/log/jetty/request.log.yyyy_mm_dd"/>
+              <property name="extended" value="true"/>
+              <property name="retainDays" value="999"/>
+              <property name="filenameDateFormat" value="yyyy-MM-dd"/>
+            </bean>
+          </property>
+        </bean>
+      </list>
+    </property>
+  </bean>
+</beans>

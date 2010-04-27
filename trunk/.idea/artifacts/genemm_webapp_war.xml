@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="genemm-webapp:war">
+    <output-path>$PROJECT_DIR$/webapp/target</output-path>
+    <root id="archive" name="genemm-webapp-1.0.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="genemm-webapp:war exploded" />
+    </root>
+  </artifact>
+</component>
