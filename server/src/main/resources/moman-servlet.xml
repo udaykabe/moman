@@ -1,0 +1,74 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+    http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-2.5.xsd
+       ">
+
+  <context:component-scan base-package="net.deuce.moman"/>
+  <context:annotation-config/>
+  <tx:annotation-driven mode="aspectj" transaction-manager="transactionManager"/>
+
+  <bean id="localEntityManagerFactory"
+        class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+    <property name="dataSource" ref="dataSource"/>
+    <property name="persistenceUnitName" value="moman"/>
+  </bean>
+
+  <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+    <property name="entityManagerFactory" ref="localEntityManagerFactory"/>
+    <property name="dataSource" ref="dataSource"/>
+  </bean>
+
+  <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+    <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+    <property name="url" value="jdbc:mysql://localhost:3306/moman"/>
+    <property name="username" value="jboss"/>
+    <property name="password" value="D0G@larg3"/>
+
+    <property name="maxActive" value="10"/>
+    <property name="maxIdle" value="10"/>
+    <property name="maxWait" value="60"/>
+    <property name="validationQuery" value="select 1"/>
+    <property name="removeAbandoned" value="true"/>
+    <property name="removeAbandonedTimeout" value="300"/>
+    <property name="logAbandoned" value="true"/>
+  </bean>
+
+  <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+    <property name="mappings">
+      <value>
+        /account=accountController
+        /allocation=allocationController
+        /bill=billController
+        /envelope=envelopeController
+        /fi=fiController
+        /income=incomeController
+        /payee=payeeController
+        /rt=rtController
+        /rule=ruleController
+        /sg=sgController
+        /transaction=transactionController
+      </value>
+    </property>
+  </bean>
+
+  <bean id="accountController" class="net.deuce.moman.controller.AccountController"/>
+  <bean id="allocationController" class="net.deuce.moman.controller.AllocationController"/>
+  <bean id="billController" class="net.deuce.moman.controller.BillController"/>
+  <bean id="envelopeController" class="net.deuce.moman.controller.EnvelopeController"/>
+  <bean id="fiController" class="net.deuce.moman.controller.FinancialInstitutionController"/>
+  <bean id="incomeController" class="net.deuce.moman.controller.IncomeController"/>
+  <bean id="payeeController" class="net.deuce.moman.controller.PayeeController"/>
+  <bean id="rtController" class="net.deuce.moman.controller.RepeatingTransactionController"/>
+  <bean id="ruleController" class="net.deuce.moman.controller.RuleController"/>
+  <bean id="sgController" class="net.deuce.moman.controller.SavingsGoalController"/>
+  <bean id="transactionController" class="net.deuce.moman.controller.TransactionController"/>
+
+</beans>

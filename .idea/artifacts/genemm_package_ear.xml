@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="ear" name="genemm-package:ear">
+    <output-path>$PROJECT_DIR$/package/target</output-path>
+    <root id="archive" name="genemm-package-1.0.0-SNAPSHOT.ear">
+      <element id="artifact" artifact-name="genemm-package:ear exploded" />
+    </root>
+  </artifact>
+</component>
