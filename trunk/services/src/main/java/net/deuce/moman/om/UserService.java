@@ -5,6 +5,7 @@ import org.dom4j.Element;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserService extends EntityService<User, UserDao> {
@@ -16,6 +17,12 @@ public class UserService extends EntityService<User, UserDao> {
     return userDao;
   }
 
+  @Transactional(readOnly = true)
+  public User getDefaultUser() {
+    return userDao.get(-1L);
+  }
+
+  @Transactional(readOnly = true)
   public User findByUsername(String username) {
     return userDao.findUser(username);
   }

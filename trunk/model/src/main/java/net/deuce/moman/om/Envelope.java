@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.*;
 
 @Entity
-@Table(name = "Envelope", uniqueConstraints = {@UniqueConstraint(columnNames = {"uuid"})})
+@Table(name = "Envelope", uniqueConstraints = {@UniqueConstraint(columnNames = {"uuid"}), @UniqueConstraint(columnNames = {"parent_id", "name"})})
 public class Envelope extends AbstractEntity<Envelope> {
 
   private static final long serialVersionUID = 1L;
@@ -24,7 +24,7 @@ public class Envelope extends AbstractEntity<Envelope> {
   private transient String parentId;
   private Envelope parent;
   private List<Envelope> children = new LinkedList<Envelope>();
-  private List<RepeatingTransaction> repeatingTransactions = new LinkedList<RepeatingTransaction>();
+  private transient Map<String, Envelope> childrenByName = null;
   private Boolean editable;
   private Boolean selected = Boolean.FALSE;
   private Boolean expanded = Boolean.TRUE;
@@ -58,45 +58,6 @@ public class Envelope extends AbstractEntity<Envelope> {
     this.savingsGoalOverrideAmount = savingsGoalOverrideAmount;
   }
 
-  /* TODO service method
-  public double expensesDuringPeriod(Account account, Frequency frequency) {
-    Calendar cal = new GregorianCalendar();
-    CalendarUtil.convertCalendarToMidnight(cal);
-
-    frequency.advanceCalendar(cal, true);
-
-    return calculateTransactionsSince(account, cal);
-  }
-
-  public double expensesDuringLastNDays(Account account, int days) {
-    Calendar cal = new GregorianCalendar();
-    CalendarUtil.convertCalendarToMidnight(cal);
-
-    cal.add(Calendar.DAY_OF_YEAR, -days);
-
-    return calculateTransactionsSince(account, cal);
-  }
-    List<InternalTransaction> transactions = null;
-    if (account != null) {
-      transactions = getAccountTransactions(account);
-    } else {
-      transactions = getAllTransactions();
-    }
-
-    double sum = 0.0;
-    for (InternalTransaction it : transactions) {
-      Calendar tcal = new GregorianCalendar();
-      tcal.setTime(it.getDate());
-      CalendarUtil.convertCalendarToMidnight(tcal);
-
-      if (tcal.after(cal)) {
-        sum += it.getAmount();
-      }
-    }
-    return sum;
-  }
-  */
-
   @ManyToOne
   @JoinColumn(name = "user_id")
   public User getUser() {
@@ -105,6 +66,11 @@ public class Envelope extends AbstractEntity<Envelope> {
 
   public void setUser(User user) {
     this.user = user;
+  }
+
+  @Transient
+  public boolean isDefault() {
+    return user == null;
   }
 
   @Basic
@@ -251,12 +217,6 @@ public class Envelope extends AbstractEntity<Envelope> {
     this.name = name;
   }
 
-  /* TODO service method
-   public String getChartLegendLabel() {
-     return name + " " + Constants.CURRENCY_VALIDATOR.format(getBalance());
-   }
-   */
-
   @Transient
   public String getParentId() {
     return parentId;
@@ -267,7 +227,7 @@ public class Envelope extends AbstractEntity<Envelope> {
   }
 
   @Transient
-  private boolean isBalanceDirty() {
+  protected boolean isBalanceDirty() {
     if (balance == null) return true;
     for (Envelope child : children) {
       if (child.isBalanceDirty()) return true;
@@ -275,28 +235,17 @@ public class Envelope extends AbstractEntity<Envelope> {
     return false;
   }
 
-  /* TODO service method
-    public Double getBalance() {
-      if (isBalanceDirty()) {
-
-        Double value = 0.0;
-        for (InternalTransaction t : getTransactions()) {
-          double splitAmount = t.getSplitAmount(this);
-          value += splitAmount;
-        }
-        for (Envelope e : children.values()) {
-          value += e.getBalance();
-        }
-        balance = value;
-
-      }
-
-      return Math.round(balance*100)/100.0;
-    }
-  */
+  @Basic
+  public Double getBalance() {
+    return balance;
+  }
 
   public void setBalance(Double balance) {
     this.balance = balance;
+  }
+
+  public void clearBalance() {
+    this.balance = null;
   }
 
   @Basic
@@ -327,24 +276,6 @@ public class Envelope extends AbstractEntity<Envelope> {
     this.selected = selected;
   }
 
-  /* TODO service method
-	public void setSelected(Boolean selected) {
-		if (propertyChanged(this.selected, selected)) {
-			this.selected = selected;
-			Envelope oldEnvelope = envelopeService.getSelectedEnvelope();
-			if (oldEnvelope != null) {
-				oldEnvelope.selected = false;
-			}
-			if (selected) {
-				envelopeService.setSelectedEnvelope(this);
-			} else {
-				envelopeService.setSelectedEnvelope(null);
-			}
-			getMonitor().fireEntityChanged(this, Properties.selected);
-		}
-	}
-	*/
-
   @Basic
   public Boolean isExpanded() {
     return evaluateBoolean(expanded);
@@ -373,7 +304,7 @@ public class Envelope extends AbstractEntity<Envelope> {
     return children.size() > 0;
   }
 
-  @OneToMany(mappedBy="parent")
+  @OneToMany(mappedBy="parent", cascade = CascadeType.ALL)
   @Column(name="id")
   public List<Envelope> getChildren() {
     return children;
@@ -382,117 +313,36 @@ public class Envelope extends AbstractEntity<Envelope> {
   public void setChildren(List<Envelope> children) {
     this.children = children;
   }
-  
-/* TODO service method
-   public void addChild(Envelope child) {
-     if (children.get(child.getName()) != null) {
-       throw new RuntimeException("Duplicate envelope name for " + this + ": '" + child.getName() + "'");
-     }
-     children.put(child.getName(), child);
-     getMonitor().fireEntityChanged(this, Properties.children);
-   }
 
-   public void removeChild(Envelope child) {
-     children.remove(child.getName());
-     getMonitor().fireEntityChanged(this, Properties.children);
-   }
+  @Transient
+  private Map<String, Envelope> getChildrenMap() {
+    if (childrenByName == null) {
+      childrenByName = new HashMap<String, Envelope>();
+      for (Envelope env : getChildren()) {
+        childrenByName.put(env.getName(), env);
+      }
+    }
+    return childrenByName;
+  }
 
-   public Envelope getChild(String name) {
-     return children.get(name);
-   }
+  public Envelope getChild(String name) {
+    Map<String, Envelope> map = getChildrenMap();
+    return map.get(name);
+  }
 
-   */
+  public void addChild(Envelope child) {
+    children.add(child);
+    child.setParent(this);
+    childrenByName.clear();
+    childrenByName = null;
+  }
 
-  /* TODO service method
-   public List<InternalTransaction> getAccountTransactions(Account account) {
-     List<InternalTransaction> list = transactions.get(account);
-     if (list == null) {
-       list = new ArrayList<InternalTransaction>();
-       transactions.put(account, list);
-     }
-
-     return list;
-   }
-
-   public List<InternalTransaction> getAccountTransactions(Account account, boolean deep) {
-     return getAccountTransactions(account, null, deep);
-   }
-
-   public List<InternalTransaction> getAccountTransactions(Account account, DataDateRange dateRange, boolean deep) {
-     List<InternalTransaction> list = new LinkedList<InternalTransaction>(getAccountTransactions(account));
-
-     if (deep) {
-       for (Envelope child : getChildren()) {
-         list.addAll(child.getAccountTransactions(account, deep));
-       }
-     }
-
-     if (dateRange != null) {
-       ListIterator<InternalTransaction> itr = list.listIterator();
-       while (itr.hasNext()) {
-         if (!CalendarUtil.dateInRange(itr.next().getDate(), dateRange)) {
-           itr.remove();
-         }
-       }
-     }
-
-     return list;
-   }
-
-   public void addTransaction(InternalTransaction transaction) {
-     addTransaction(transaction, true);
-   }
-
-
-   public void resetBalance() {
-     resetBalance(this);
-   }
-
-   private void resetBalance(Envelope envelope) {
-     if (envelope != null) {
-       dirty = true;
-       envelope.setBalance(null);
-       resetBalance(envelope.getParent());
-     }
-   }
-
-   public void addTransaction(InternalTransaction transaction, boolean notifyTransaction) {
-     if (transaction instanceof RepeatingTransaction) {
-       repeatingTransactions.add((RepeatingTransaction)transaction);
-       return;
-     }
-
-     Account account = transaction.getAccount();
-     getAccountTransactions(account).add(transaction);
-     resetBalance(this);
-     dirty = true;
-     getMonitor().fireEntityChanged(this, Properties.transactions);
-     if (notifyTransaction) {
-       transaction.addSplit(this, transaction.getAmount(), false);
-     }
-   }
-
-   public void removeTransaction(InternalTransaction transaction) {
-     removeTransaction(transaction, true);
-   }
-
-   public void removeTransaction(InternalTransaction transaction, boolean notifyTransaction) {
-
-     if (transaction instanceof RepeatingTransaction) {
-       repeatingTransactions.remove((RepeatingTransaction)transaction);
-       return;
-     }
-
-     Account account = transaction.getAccount();
-     List<InternalTransaction> l = getAccountTransactions(account);
-     l.remove(transaction);
-     getMonitor().fireEntityChanged(this, Properties.transactions);
-     resetBalance(this);
-     if (notifyTransaction) {
-       transaction.removeSplit(this, false);
-     }
-   }
-   */
+  public void removeChild(Envelope child) {
+    children.remove(child);
+    child.setParent(null);
+    childrenByName.clear();
+    childrenByName = null;
+  }
 
   public boolean contains(Envelope env) {
     return contains(env, false);
@@ -513,63 +363,6 @@ public class Envelope extends AbstractEntity<Envelope> {
     }
     return false;
   }
-
-  /* TODO service method
-   public List<InternalTransaction> getTransactions() {
-     List<Account> selectedAccounts = accountService.getSelectedAccounts();
-     List<InternalTransaction> list = new LinkedList<InternalTransaction>();
-
-     for (Entry<Account, List<InternalTransaction>> entry : transactions.entrySet()) {
-       if (selectedAccounts.size() == 0 || selectedAccounts.contains(entry.getKey())) {
-         list.addAll(entry.getValue());
-       }
-     }
-     return list;
-   }
-
-   public List<InternalTransaction> getTransactions(boolean deep) {
-     return getTransactions(null, deep);
-   }
-
-   public List<InternalTransaction> getTransactions(DataDateRange dateRange, boolean deep) {
-     List<InternalTransaction> list = getTransactions();
-     if (deep) {
-       for (Envelope child : getChildren()) {
-         list.addAll(child.getTransactions(true));
-       }
-     }
-
-     if (dateRange != null) {
-       ListIterator<InternalTransaction> itr = list.listIterator();
-       while (itr.hasNext()) {
-         if (!CalendarUtil.dateInRange(itr.next().getDate(), dateRange)) {
-           itr.remove();
-         }
-       }
-     }
-
-     return list;
-   }
-   */
-
-  /*
-  @OneToMany(mappedBy="parent")
-  @Column(name="id")
-  public List<RepeatingTransaction> getRepeatingTransactions() {
-    return repeatingTransactions;
-  }
-  */
-
-  /* TODO service method
-	public List<InternalTransaction> getAllTransactions() {
-		List<InternalTransaction> list = new LinkedList<InternalTransaction>();
-		
-		for (Entry<Account, List<InternalTransaction>> entry : transactions.entrySet()) {
-			list.addAll(entry.getValue());
-		}
-		return list;
-	}
-	*/
 
   @Transient
   public boolean isSpecialEnvelope() {

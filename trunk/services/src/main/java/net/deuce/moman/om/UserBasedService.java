@@ -1,5 +1,7 @@
 package net.deuce.moman.om;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -15,6 +17,7 @@ public abstract class UserBasedService<E extends AbstractEntity, ED extends User
     return list();
   }
 
+  @Transactional(readOnly = true)
   public List<E> listByUser(User user) {
     return getDao().listByUser(user);
   }
@@ -30,47 +33,17 @@ public abstract class UserBasedService<E extends AbstractEntity, ED extends User
     return list;
   }
 
-  public boolean entityExists(String uuid) {
-    return findEntity(uuid) != null;
-  }
-
-  public E findEntity(String uuid) {
-    return getByUuid(uuid);
-  }
-
-  public E getEntity(String uuid) {
-    E entity = findEntity(uuid);
-    if (entity == null) {
-      throw new RuntimeException("No entity exists with UUID " + uuid);
-    }
-    return entity;
-  }
-
-  public void addEntity(E entity) {
-    if (entity.getUuid() == null) {
-      throw new RuntimeException("No uuid set");
-    }
-
-    if (entity.getUuid() != null && entityExists(entity.getUuid())) {
-      throw new RuntimeException("Duplicate entity uuid: " + entity.getUuid());
-    }
-
-    persist(entity);
-  }
-
-  public void removeEntity(E entity) {
-    delete(entity);
-  }
-
+  @Transactional
   public void setEntities(User user, List<E> entities) {
     clearEntities(user);
     if (entities != null) {
       for (E entity : entities) {
-        addEntity(entity);
+        doAddEntity(entity);
       }
     }
   }
 
+  @Transactional
   public void clearEntities(User user) {
     getDao().deleteByUser(user);
   }

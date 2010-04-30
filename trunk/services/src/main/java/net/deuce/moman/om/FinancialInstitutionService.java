@@ -4,6 +4,7 @@ import org.dom4j.Document;
 import org.dom4j.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class FinancialInstitutionService extends EntityService<FinancialInstitut
   /**
    * Clears all entities.
    */
+  @Transactional
   public void clear() {
     getDao().clear();
   }

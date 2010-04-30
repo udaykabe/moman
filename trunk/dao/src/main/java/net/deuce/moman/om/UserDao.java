@@ -9,7 +9,6 @@ import javax.persistence.Query;
 @Component
 public class UserDao extends EntityDao<User> {
 
-  @Transactional(readOnly = true)
   public User findUser(String username) {
     Query query = getEntityManager().createQuery(String.format("select e from %s e where e.username = :username",
         User.class.getName()));

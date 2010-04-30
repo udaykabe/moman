@@ -7,6 +7,8 @@
       <root url="jar://$MAVEN_REPOSITORY$/org/hibernate/hibernate-core/3.3.1.GA/hibernate-core-3.3.1.GA-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
+      <root url="file://$PROJECT_DIR$/../../../dev/src/common/hibernate-3.3.1.GA/core/src/main/java" />
+      <root url="file://$PROJECT_DIR$/../../../dev/src/common/hibernate-3.3.1.GA/core/src/test/java" />
       <root url="jar://$MAVEN_REPOSITORY$/org/hibernate/hibernate-core/3.3.1.GA/hibernate-core-3.3.1.GA-sources.jar!/" />
     </SOURCES>
   </library>

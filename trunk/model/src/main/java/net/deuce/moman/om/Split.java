@@ -3,17 +3,15 @@ package net.deuce.moman.om;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "Split", uniqueConstraints = {@UniqueConstraint(columnNames = {"uuid"})})
+@Table(name = "Split", uniqueConstraints = {@UniqueConstraint(columnNames = {"uuid"}), @UniqueConstraint(columnNames = {"envelope_id", "transaction_id"})})
 public class Split extends AbstractEntity<Split> {
 
   private Envelope envelope;
   private Double amount;
   private InternalTransaction transaction;
 
-  public Split(Envelope envelope, Double amount) {
+  public Split() {
     super();
-    this.envelope = envelope;
-    this.amount = amount;
   }
 
   @ManyToOne
@@ -61,32 +59,27 @@ public class Split extends AbstractEntity<Split> {
     return "Split [amount=" + amount + ", envelope=" + envelope + "]";
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    if (!super.equals(o)) return false;
 
-  public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result
-        + ((envelope == null) ? 0 : envelope.hashCode());
-    return result;
-  }
+    Split split = (Split) o;
 
+    if (envelope != null ? !envelope.equals(split.envelope) : split.envelope != null) return false;
+    if (transaction != null ? !transaction.equals(split.transaction) : split.transaction != null) return false;
 
-  public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
-    Split other = (Split) obj;
-    if (envelope == null) {
-      if (other.envelope != null)
-        return false;
-    } else if (!envelope.equals(other.envelope))
-      return false;
     return true;
   }
 
+  @Override
+  public int hashCode() {
+    int result = super.hashCode();
+    result = 31 * result + (envelope != null ? envelope.hashCode() : 0);
+    result = 31 * result + (transaction != null ? transaction.hashCode() : 0);
+    return result;
+  }
 
   public int compare(Split o1, Split o2) {
     return o1.compareTo(o2);

@@ -146,12 +146,6 @@
         <version>2.5.6</version>
       </dependency>
 
-      <dependency>
-        <groupId>org.jboss.snowdrop</groupId>
-        <artifactId>snowdrop-weaving</artifactId>
-        <version>1.0.0.GA</version>
-      </dependency>
-
       <!-- Logging Dependencies -->
       <dependency>
         <groupId>org.slf4j</groupId>
@@ -302,7 +296,7 @@
       <dependency>
         <groupId>hsqldb</groupId>
         <artifactId>hsqldb</artifactId>
-        <version>1.8.0.1</version>
+        <version>1.8.0.10</version>
         <scope>test</scope>
       </dependency>
       <dependency>
@@ -310,17 +304,12 @@
         <artifactId>mysql-connector-java</artifactId>
         <version>5.1.10</version>
       </dependency>
-      <dependency>
-        <groupId>com.oracle</groupId>
-        <artifactId>ojdbc</artifactId>
-        <version>10.2.0.4</version>
-      </dependency>
 
       <!-- Testing Dependencies -->
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
-        <version>4.4</version>
+        <version>4.8.1</version>
         <scope>test</scope>
       </dependency>
 
