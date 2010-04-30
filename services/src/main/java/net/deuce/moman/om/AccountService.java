@@ -7,6 +7,7 @@ import org.dom4j.Element;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -14,15 +15,16 @@ import java.util.List;
 public class AccountService extends UserBasedService<Account, AccountDao> {
 
   @Autowired
-  private TransactionService transactionService;
+  private AccountDao accountDao;
 
   @Autowired
-  private AccountDao accountDao;
+  private TransactionDao transactionDao;
 
   protected AccountDao getDao() {
     return accountDao;
   }
 
+  @Transactional
   public void setInitialBalance(Account account, Double initialBalance) {
     Double currentValue = account.getInitialBalance();
 
@@ -44,9 +46,8 @@ public class AccountService extends UserBasedService<Account, AccountDao> {
 
       account.setInitialBalance(initialBalance);
 
-      /*
       if (difference != 0) {
-        for (InternalTransaction it : transactionService.getAccountTransactions(this, true)) {
+        for (InternalTransaction it : transactionDao.getAccountTransactions(account, true)) {
           if (it.getBalance() != null) {
             it.setBalance(it.getBalance() - difference);
           } else {
@@ -55,21 +56,17 @@ public class AccountService extends UserBasedService<Account, AccountDao> {
         }
       }
       if (initialBalance == null) {
-        InternalTransaction it = transactionService.getInitialBalanceTransaction(this);
+        InternalTransaction it = transactionDao.getInitialBalanceTransaction(account);
         if (it != null) {
-          transactionService.removeEntity(it);
+          transactionDao.delete(it);
         }
       }
-      */
     }
   }
 
+  @Transactional(readOnly = true)
   public List<Account> getSelectedAccounts(User user) {
     return getDao().listSelected(user);
-  }
-
-  public boolean doesAccountExist(Account account) {
-    return entityExists(account.getUuid());
   }
 
   public Class<Account> getType() {

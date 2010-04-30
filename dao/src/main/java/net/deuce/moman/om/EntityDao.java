@@ -2,6 +2,7 @@ package net.deuce.moman.om;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -28,13 +29,13 @@ public abstract class EntityDao<E extends AbstractEntity> {
     return em;
   }
 
-  @Transactional
+  @Transactional(propagation = Propagation.MANDATORY)
   public boolean delete(E entity) {
     em.remove(entity);
     return true;
   }
 
-  @Transactional
+  @Transactional(propagation = Propagation.MANDATORY)
   public boolean deleteByQuery(Query query) {
 
     Iterator<E> itr = query.getResultList().iterator();
@@ -55,7 +56,6 @@ public abstract class EntityDao<E extends AbstractEntity> {
   /**
    * Retrieve an entity based on the generated id.
    */
-  @Transactional(readOnly = true)
   public E get(Long id) {
     E entity = (E) em.find(entityClass, id);
     return entity;
@@ -64,9 +64,8 @@ public abstract class EntityDao<E extends AbstractEntity> {
   /**
    * Retrieve an entity based on the uuid.
    */
-  @Transactional(readOnly = true)
   public E get(String uuid) {
-    Query query = em.createQuery(String.format("select e from %s e where e.UUID = :uuid", getEntityClass().getName()));
+    Query query = em.createQuery(String.format("select e from %s e where e.uuid = :uuid", getEntityClass().getName()));
     query.setParameter("uuid", uuid);
     E entity = (E) query.getSingleResult();
     return entity;
@@ -76,16 +75,32 @@ public abstract class EntityDao<E extends AbstractEntity> {
     return entityClass;
   }
 
-  @Transactional(readOnly = true)
   public List<E> list() {
     return em.createQuery(String.format("select e from %s e", getEntityClass().getName())).getResultList();
   }
 
-  @Transactional
-  public E persist(E entity) {
-    em.persist(entity);
+  @Transactional(propagation = Propagation.MANDATORY)
+  public E saveOrUpdate(E entity) {
+    if (entity.getId() == null) {
+      em.persist(entity);
+    } else {
+      entity = em.merge(entity);
+    }
     return entity;
   }
+
+/*
+  @Transactional(propagation = Propagation.MANDATORY)
+  public E persist(E entity) {
+    em.persist(entity);
+    return get(entity.getUuid());
+  }
+
+  @Transactional(propagation = Propagation.MANDATORY)
+  public E update(E entity) {
+    return em.merge(entity);
+  }
+  */
 
   public void setEntityClass(Class<E> entityClass) {
     this.entityClass = entityClass;

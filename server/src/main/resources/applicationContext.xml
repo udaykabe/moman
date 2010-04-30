@@ -11,56 +11,6 @@
     http://www.springframework.org/schema/context/spring-context-2.5.xsd
        ">
 
-  <context:component-scan base-package="net.deuce.moman"/>
-  <context:annotation-config/>
-  <context:load-time-weaver weaver-class="org.jboss.instrument.classloading.JBoss5LoadTimeWeaver"/>
-  <tx:annotation-driven mode="aspectj" transaction-manager="transactionManager"/>
-
-  <bean id="localEntityManagerFactory"
-        class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-    <property name="dataSource" ref="dataSource"/>
-    <property name="persistenceUnitName" value="moman"/>
-  </bean>
-
-  <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-    <property name="entityManagerFactory" ref="localEntityManagerFactory"/>
-    <property name="dataSource" ref="dataSource"/>
-  </bean>
-
-  <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
-    <property name="jndiName" value="java:/moman/DataSource"/>
-  </bean>
-
-  <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
-    <property name="mappings">
-      <value>
-        /account=accountController
-        /allocation=allocationController
-        /bill=billController
-        /envelope=envelopeController
-        /fi=fiController
-        /income=incomeController
-        /payee=payeeController
-        /rt=rtController
-        /rule=ruleController
-        /sg=sgController
-        /transaction=transactionController
-      </value>
-    </property>
-  </bean>
-
-  <bean id="accountController" class="net.deuce.moman.controller.AccountController"/>
-  <bean id="allocationController" class="net.deuce.moman.controller.AllocationController"/>
-  <bean id="billController" class="net.deuce.moman.controller.BillController"/>
-  <bean id="envelopeController" class="net.deuce.moman.controller.EnvelopeController"/>
-  <bean id="fiController" class="net.deuce.moman.controller.FinancialInstitutionController"/>
-  <bean id="incomeController" class="net.deuce.moman.controller.IncomeController"/>
-  <bean id="payeeController" class="net.deuce.moman.controller.PayeeController"/>
-  <bean id="rtController" class="net.deuce.moman.controller.RepeatingTransactionController"/>
-  <bean id="ruleController" class="net.deuce.moman.controller.RuleController"/>
-  <bean id="sgController" class="net.deuce.moman.controller.SavingsGoalController"/>
-  <bean id="transactionController" class="net.deuce.moman.controller.TransactionController"/>
-
   <bean name="WebServer" class="org.mortbay.jetty.Server" init-method="start">
     <property name="connectors">
       <list>

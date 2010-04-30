@@ -190,42 +190,7 @@ public class Account extends AbstractEntity<Account> {
 	}
 
 	public void setInitialBalance(Double initialBalance) {
-		if (propertyChanged(this.initialBalance, initialBalance)) {
-			double difference = 0;
-			if (this.initialBalance != null) {
-				if (initialBalance != null) {
-					difference = this.initialBalance - initialBalance;
-				} else {
-					difference = this.initialBalance;
-				}
-			} else {
-				if (initialBalance != null) {
-					difference = -initialBalance;
-				} else {
-					difference = 0;
-				}
-			}
-
-			this.initialBalance = initialBalance;
-
-      /* TODO AccountService
-         if (difference != 0) {
-           for (InternalTransaction it : transactionService.getAccountTransactions(this, true)) {
-             if (it.getBalance() != null) {
-               it.setBalance(it.getBalance()-difference);
-             } else {
-               it.setBalance(-difference);
-             }
-           }
-         }
-         if (initialBalance == null) {
-           InternalTransaction it = transactionService.getInitialBalanceTransaction(this);
-           if (it != null) {
-             transactionService.removeEntity(it);
-           }
-         }
-         */
-		}
+    this.initialBalance = initialBalance;
 	}
 
   @Temporal(TemporalType.DATE)

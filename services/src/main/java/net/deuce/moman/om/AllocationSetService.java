@@ -6,6 +6,7 @@ import org.dom4j.Document;
 import org.dom4j.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
@@ -30,6 +31,7 @@ public class AllocationSetService extends UserBasedService<AllocationSet, Alloca
     return false;
   }
 
+  @Transactional
   public void moveAllocations(AllocationSet allocationSet, List<Integer> indexes, Allocation target, boolean before) {
     int startIndex = target.getIndex();
     if (before) {
@@ -42,16 +44,16 @@ public class AllocationSetService extends UserBasedService<AllocationSet, Alloca
     for (int i = startIndex; i < startIndex + indexes.size(); i++) {
       allocation = allocations.get(indexes.get(i - startIndex));
       allocation.setIndex(i);
-      allocationService.update(allocation);
+      allocationService.saveOrUpdate(allocation);
     }
 
     for (int i = startIndex + indexes.size(); i < allocations.size(); i++) {
       allocation = allocations.get(i);
       allocation.setIndex(allocations.get(i).getIndex() + indexes.size());
-      allocationService.update(allocation);
+      allocationService.saveOrUpdate(allocation);
     }
     Collections.sort(allocations);
-    update(allocationSet);
+    saveOrUpdate(allocationSet);
   }
 
   public Class<AllocationSet> getType() {

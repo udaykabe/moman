@@ -33,6 +33,26 @@
     </dependency>
   </dependencies>
 
+  <profiles>
+
+    <!-- Build mode profiles -->
+    <profile>
+      <id>development</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <!-- XChain configuration. -->
+        <watch-for-changes>true</watch-for-changes>
+
+        <!-- Email configuration. -->
+        <email-config-mode>test</email-config-mode>
+        <email-jndi-name>java:/Mail</email-jndi-name>
+
+      </properties>
+    </profile>
+  </profiles>
+
   <build>
     <resources>
       <resource>
@@ -44,7 +64,7 @@
       <extension>
         <groupId>mysql</groupId>
         <artifactId>mysql-connector-java</artifactId>
-        <version>5.0.5</version>
+        <version>5.1.10</version>
       </extension>
     </extensions>
     <plugins>

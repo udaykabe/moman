@@ -3,9 +3,7 @@ package net.deuce.moman.om;
 import net.sf.ofx4j.domain.data.common.TransactionType;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "Transaction", uniqueConstraints = {@UniqueConstraint(columnNames = {"uuid"})})
@@ -24,14 +22,14 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
   private Double balance;
   private Boolean initialBalance;
   private TransactionStatus status;
+  private Boolean custom = Boolean.FALSE;
 
   private InternalTransaction transferTransaction;
 
   private List<Split> split = new LinkedList<Split>();
+  private transient Map<Envelope, Split> envelopeSplitMap = null;
 
   private Account account;
-
-//	private Map<Envelope, Split> splitMap = new HashMap<Envelope, Split>();
 
   private transient InternalTransaction matchedTransaction;
   private transient String transferTransactionId;
@@ -47,6 +45,30 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
 
   public InternalTransaction() {
     super();
+  }
+
+  @Transient
+  private Map<Envelope, Split> getEnvelopeSplitMap() {
+    if (envelopeSplitMap == null) {
+      envelopeSplitMap = new HashMap<Envelope, Split>();
+      for (Split s : getSplit()) {
+        envelopeSplitMap.put(s.getEnvelope(), s);
+      }
+    }
+    return envelopeSplitMap;
+  }
+
+  @Transient
+  public Double getSplitAmount(Envelope env) {
+    Split split = getEnvelopeSplit(env);
+    if (split != null) {
+      return split.getAmount();
+    }
+    return 0.0;
+  }
+
+  public Split getEnvelopeSplit(Envelope env) {
+    return getEnvelopeSplitMap().get(env);
   }
 
   @Transient
@@ -100,50 +122,19 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
     this.amount = amount;
   }
 
-  /* TODO service method
-   public void setAmount(Double amount, SplitSelectionHandler handler) {
-     setAmount(amount, false, handler);
-   }
+  @Basic
+  public boolean isCustom() {
+    return evaluateBoolean(custom);
+  }
 
-   private boolean adjustSplits(double newAmount, SplitSelectionHandler handler) {
-     if (splitMap.size() == 0) return true;
+  @Transient
+  public Boolean getCustom() {
+    return custom;
+  }
 
-     List<Split> split = new LinkedList<Split>(splitMap.values());
-     if (split.size() == 1) {
-       split.get(0).setAmount(newAmount);
-     } else if (handler != null) {
-       return handler.handleSplitSelection(this, newAmount, split);
-     }
-     return true;
-   }
-
-   public void setAmount(Double amount, boolean adjustBalances, SplitSelectionHandler handler) {
-     if (propertyChanged(this.amount, amount)) {
-       double difference = 0.0;
-       if (this.amount != null) {
-         difference = this.amount - amount;
-       }
-       if (adjustSplits(amount, handler)) {
-         this.amount = amount;
-         if (amount > 0) {
-           type = TransactionType.CREDIT;
-         } else if (type == null || type != TransactionType.CHECK) {
-           type = TransactionType.DEBIT;
-         }
-         if (balance != null) {
-           setBalance(balance - difference);
-           for (Split split : splitMap.values()) {
-             split.getEnvelope().resetBalance();
-           }
-           getMonitor().fireEntityChanged(this, Properties.amount);
-         }
-         if (adjustBalances) {
-           transactionService.adjustBalances(this, false);
-         }
-       }
-     }
-   }
-   */
+  public void setCustom(Boolean custom) {
+    this.custom = custom;
+  }
 
   @Basic
   public boolean isInitialBalance() {
@@ -199,19 +190,6 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
   public void setDate(Date date) {
     this.date = date;
   }
-
-  /* TODO service method
-	public void setDate(Date date, boolean adjust) {
-		if (propertyChanged(this.date, date)) {
-			this.date = date;
-			getMonitor().fireEntityChanged(this, Properties.date);
-			
-			if (adjust) {
-				transactionService.adjustBalances(this, false);
-			}
-		}
-	}
-	*/
 
   @Basic
   public String getDescription() {
@@ -273,7 +251,7 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
     this.account = account;
   }
 
-  @OneToMany(mappedBy = "transaction")
+  @OneToMany(mappedBy = "transaction", cascade = CascadeType.ALL)
   @Column(name = "id")
   public List<Split> getSplit() {
     return split;
@@ -283,81 +261,24 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
     this.split = split;
   }
 
-/* TODO service method
-	public Double getSplitAmount(Envelope env) {
-		Split split = splitMap.get(env);
-		if (split != null) {
-			return split.getAmount();
-		} 
-		return 0.0;
-	}
+  public void addSplit(Split s) {
+    split.add(s);
+    envelopeSplitMap = null;
+  }
 
-	public void clearSplit() {
-		for (Envelope env : splitMap.keySet()) {
-			env.removeTransaction(this, false);
-		}
-		splitMap.clear();
-		getMonitor().fireEntityChanged(this, Properties.split);
-	}
-	
-	public void addSplit(Split item) {
-		addSplit(item, true);
-	}
-	
-	public void addSplit(Envelope envelope, Double amount) {
-		addSplit(new Split(envelope, amount), true);
-	}
-	
-	public void addSplit(Envelope envelope, Double amount, boolean notifyEnvelope) {
-		addSplit(new Split(envelope, amount), notifyEnvelope);
-	}
-	
-	public void addSplit(Split split, boolean notifyEnvelope) {
-		if (!splitMap.containsValue(split)) {
-			if (notifyEnvelope) {
-				split.getEnvelope().addTransaction(this, false);
-			}
-			splitMap.put(split.getEnvelope(), split);
-			getMonitor().fireEntityChanged(this, Properties.split);
-		}
-	}
+  public boolean removeSplit(Split s) {
+    envelopeSplitMap = null;
+    return split.remove(s);
+  }
 
-	public void removeSplit(Envelope envelope) {
-		removeSplit(envelope, true);
-	}
-	
-	public void removeSplit(Envelope envelope, boolean notifyEnvelope) {
-		if (notifyEnvelope) {
-			envelope.removeTransaction(this, false);
-		}
-		
-		if (splitMap.remove(envelope) != null) {
-			envelope.resetBalance();
-			getMonitor().fireEntityChanged(this, Properties.split);
-		}
-	}
-	
-	public List<Split> getSplit() {
-		return new LinkedList<Split>(splitMap.values());
-	}
-	
-	public void setSplit(List<Split> splitList) {
-		setSplit(splitList, true);
-	}
-	
-	public void setSplit(List<Split> splitList, boolean notify) {
-		clearSplit();
-		for (Split split : splitList) {
-			addSplit(split, notify);
-		}
-	}
-
-	*/
+  public void clearSplit() {
+    split.clear();
+    envelopeSplitMap = null;
+  }
 
   public int compareTo(InternalTransaction o) {
     return compare(this, o);
   }
-
 
   public int compare(InternalTransaction o1, InternalTransaction o2) {
     int dateCompare = o1.date.compareTo(o2.getDate());

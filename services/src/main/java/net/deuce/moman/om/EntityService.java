@@ -9,6 +9,7 @@ import org.hibernate.Query;
 import org.hibernate.criterion.Criterion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
@@ -36,6 +37,7 @@ public abstract class EntityService<E extends AbstractEntity, ED extends EntityD
   /**
    * Delete checks the delete permission and sets the delete flag.
    */
+  @Transactional
   public boolean deleteByUuid(String uuid) {
     E e = getByUuid(uuid);
     if (e != null) {
@@ -48,7 +50,6 @@ public abstract class EntityService<E extends AbstractEntity, ED extends EntityD
     try {
       E entity = entityClass.newInstance();
       entity.setUuid(createUuid());
-      persist(entity);
       return entity;
     } catch (Exception e) {
       throw new RuntimeException(e);
@@ -58,6 +59,7 @@ public abstract class EntityService<E extends AbstractEntity, ED extends EntityD
   /**
    * Delete checks the delete permission and sets the delete flag.
    */
+  @Transactional
   public boolean delete(E entity) {
     return getDao().delete(entity);
   }
@@ -65,6 +67,7 @@ public abstract class EntityService<E extends AbstractEntity, ED extends EntityD
   /**
    * Retrieve an entity based on the generated id.
    */
+  @Transactional(readOnly = true)
   public E get(Long id) {
     return getDao().get(id);
   }
@@ -79,6 +82,7 @@ public abstract class EntityService<E extends AbstractEntity, ED extends EntityD
   /**
    * Retrieve an entity based on the uuid.
    */
+  @Transactional(readOnly = true)
   public E get(String uuid) {
     return getDao().get(uuid);
   }
@@ -95,31 +99,63 @@ public abstract class EntityService<E extends AbstractEntity, ED extends EntityD
   /**
    * Simple list operation.
    */
+  @Transactional(readOnly = true)
   public List<E> list() {
     return getDao().list();
   }
 
-  /**
-   * Attempts to save, using the create permission in the security framework.
-   */
+  @Transactional(rollbackFor = Exception.class)
+  public E saveOrUpdate(E entity) {
+    return getDao().saveOrUpdate(entity);
+  }
+
+  /*
+  @Transactional(rollbackFor = Exception.class)
   public E persist(E entity) {
-    getDao().persist(entity);
-    return entity;
+    return getDao().persist(entity);
   }
 
-  public void setEntityClass(Class<E> entityClass) {
-    this.entityClass = entityClass;
-  }
-
-  /**
-   * Checks the update permission and persists the entity.
-   *
-   * @param entity
-   * @return
-   */
+  @Transactional
   public E update(E entity) {
-    getDao().persist(entity);
+    return getDao().update(entity);
+  }
+  */
+
+  public boolean entityExists(E entity) {
+    return get(entity.getUuid()) != null;
+  }
+
+  public E findEntity(String uuid) {
+    return getByUuid(uuid);
+  }
+
+  public E getEntity(String uuid) {
+    E entity = findEntity(uuid);
+    if (entity == null) {
+      throw new RuntimeException("No entity exists with UUID " + uuid);
+    }
     return entity;
+  }
+
+  @Transactional(readOnly = true)
+  public void addEntity(E entity) {
+    doAddEntity(entity);
+  }
+
+  protected void doAddEntity(E entity) {
+    if (entity.getUuid() == null) {
+      throw new RuntimeException("No uuid set");
+    }
+
+    if (entity.getUuid() != null && entityExists(entity)) {
+      throw new RuntimeException("Duplicate entity uuid: " + entity.getUuid());
+    }
+
+    getDao().saveOrUpdate(entity);
+  }
+
+  public void removeEntity(E entity) {
+    delete(entity);
   }
 
   public Document buildXml(List<E> entities) {

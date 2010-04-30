@@ -33,32 +33,11 @@
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
     </dependency>
-
-    <!-- Hibernate -->
     <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-core</artifactId>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-orm</artifactId>
+      <scope>provided</scope>
     </dependency>
-    <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-ehcache</artifactId>
-    </dependency>
-    <!--dependency>
-      <groupId>org.xchain</groupId>
-      <artifactId>xchain-hibernate</artifactId>
-    </dependency-->
-    <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-annotations</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-validator</artifactId>
-    </dependency>
-    <!--dependency>
-      <groupId>com.meltmedia.xchain</groupId>
-      <artifactId>meltmedia-xchain-hibernate</artifactId>
-    </dependency-->
 
     <!-- Testing Dependencies -->
     <dependency>
