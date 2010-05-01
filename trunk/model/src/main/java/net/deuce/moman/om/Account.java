@@ -60,7 +60,7 @@ public class Account extends AbstractEntity<Account> {
 		return o1.nickname.compareTo(o2.nickname);
 	}
 
-  @OneToMany(mappedBy="account")
+  @OneToMany(mappedBy="account", cascade = CascadeType.REMOVE)
   @Column(name="id")
   public List<InternalTransaction> getTransactions() {
     return transactions;

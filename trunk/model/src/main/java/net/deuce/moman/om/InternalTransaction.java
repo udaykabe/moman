@@ -251,7 +251,7 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
     this.account = account;
   }
 
-  @OneToMany(mappedBy = "transaction", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "transaction")
   @Column(name = "id")
   public List<Split> getSplit() {
     return split;
