@@ -61,7 +61,7 @@ public abstract class EntityService<E extends AbstractEntity, ED extends EntityD
    */
   @Transactional
   public boolean delete(E entity) {
-    return getDao().delete(entity);
+    return getDao().delete(get(entity.getId()));
   }
 
   /**

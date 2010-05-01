@@ -1,5 +1,7 @@
 package net.deuce.moman.om;
 
+import net.deuce.moman.job.AbstractCommand;
+import net.deuce.moman.job.Command;
 import net.deuce.moman.util.CalendarUtil;
 import net.deuce.moman.util.Constants;
 import net.deuce.moman.util.DataDateRange;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 @Service
@@ -41,6 +44,26 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
   @Transactional(readOnly = true)
   public Envelope getSelectedEnvelope(User user) {
     return envelopeDao.findSelected(user);
+  }
+
+  public Command setSelectedEnvelopeCommand(final Envelope env) {
+    return new AbstractCommand(Envelope.class.getSimpleName() + " setSelectedEnvelope(" + env.getUuid() + ")", true) {
+
+      public void doExecute() throws Exception {
+
+        final Envelope oldSelectedEnvelope = envelopeDao.findSelected(env.getUser());
+
+        setSelectedEnvelope(env);
+        setResultCode(HttpServletResponse.SC_OK);
+
+        setUndo(new AbstractCommand("Undo " + getName(), true) {
+          public void doExecute() throws Exception {
+            setSelectedEnvelope(oldSelectedEnvelope);
+            setResultCode(HttpServletResponse.SC_OK);
+          }
+        });
+      }
+    };
   }
 
   @Transactional
@@ -143,17 +166,22 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
     return Math.round(value * 100) / 100.0;
   }
 
-  @Transactional
-  public void setSelected(Envelope env, Boolean selected) {
-    if (env.propertyChanged(env.isSelected(), selected)) {
-      env.setSelected(selected);
-      Envelope oldEnvelope = getSelectedEnvelope(env.getUser());
-      if (oldEnvelope != null) {
-        oldEnvelope.setSelected(false);
-        saveOrUpdate(oldEnvelope);
+  public Command addChildCommand(final Envelope env, final Envelope child) {
+    return new AbstractCommand(Envelope.class.getSimpleName() + " addChild(" + env.getUuid() + ", " + child.getUuid() + ")", true) {
+
+      public void doExecute() throws Exception {
+
+        addChild(env, child);
+        setResultCode(HttpServletResponse.SC_OK);
+
+        setUndo(new AbstractCommand("Undo " + getName(), true) {
+          public void doExecute() throws Exception {
+            removeChild(env, child);
+            setResultCode(HttpServletResponse.SC_OK);
+          }
+        });
       }
-      saveOrUpdate(env);
-    }
+    };
   }
 
   @Transactional
@@ -162,10 +190,69 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
     saveOrUpdate(env);
   }
 
+  public Command removeChildCommand(final Envelope env, final Envelope child) {
+    return new AbstractCommand(Envelope.class.getSimpleName() + " removeChild(" + env.getUuid() + ", " + child.getUuid() + ")", true) {
+
+      public void doExecute() throws Exception {
+
+        boolean removed = removeChild(env, child);
+        setResultCode(HttpServletResponse.SC_OK);
+
+        if (removed) {
+          setUndo(new AbstractCommand("Undo " + getName(), true) {
+            public void doExecute() throws Exception {
+              addChild(env, child);
+              setResultCode(HttpServletResponse.SC_OK);
+            }
+          });
+        }
+      }
+    };
+  }
+
   @Transactional
-  public void removeChild(Envelope env, Envelope child) {
-    env.removeChild(child);
+  public boolean removeChild(Envelope env, Envelope child) {
+    boolean result = env.removeChild(child);
     saveOrUpdate(env);
+    return result;
+  }
+
+  public Command resetBalanceCommand(final Envelope env) {
+    return new AbstractCommand(Envelope.class.getSimpleName() + " resetBalance(" + env.getUuid() + ")", true) {
+
+      public void doExecute() throws Exception {
+
+        final List<Double> balances = new LinkedList<Double>();
+
+        Envelope parent = env;
+        while (parent != null) {
+          balances.add(env.getBalance());
+          parent = parent.getParent();
+        }
+
+        resetBalance(env);
+        setResultCode(HttpServletResponse.SC_OK);
+
+        setUndo(new AbstractCommand("Undo " + getName(), true) {
+          public void doExecute() throws Exception {
+            restoreBalances(env, balances);
+            setResultCode(HttpServletResponse.SC_OK);
+          }
+        });
+      }
+    };
+  }
+
+  @Transactional
+  public void restoreBalances(Envelope env, List<Double> balances) {
+
+    int i=0;
+    Envelope parent = env;
+    while (parent != null) {
+      parent.setBalance(balances.get(i++));
+      saveOrUpdate(parent);
+      parent = parent.getParent();
+    }
   }
 
   @Transactional
@@ -195,13 +282,38 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
     return getEntities(user);
   }
 
+  public Command transferCommand(final Account sourceAccount, final Account targetAccount,
+                       final Envelope source, final Envelope target, final double amount) {
+    return new AbstractCommand(Envelope.class.getSimpleName() + " transfer(" + source.getUuid() + ", " + target.getUuid() + ")", true) {
+
+      public void doExecute() throws Exception {
+
+        final TransferResult result = transfer(sourceAccount, targetAccount, source, target, amount);
+        setResultCode(HttpServletResponse.SC_OK);
+
+        setUndo(new AbstractCommand("Undo " + getName(), true) {
+          public void doExecute() throws Exception {
+            undoTransfer(result);
+            setResultCode(HttpServletResponse.SC_OK);
+          }
+        });
+      }
+    };
+  }
+
   @Transactional
-  public void transfer(Account sourceAccount, Account targetAccount,
+  public void undoTransfer(TransferResult result) {
+    transactionService.delete(result.getSourceTransaction());
+    transactionService.delete(result.getTargetTransaction());
+    splitService.delete(result.getSourceSplit());
+    splitService.delete(result.getTargetSplit());
+  }
+
+  @Transactional
+  public TransferResult transfer(Account sourceAccount, Account targetAccount,
                        Envelope source, Envelope target, double amount) {
 
     Date date = new Date();
-
-    Split splitItem;
 
     // source transaction
     InternalTransaction sTransaction = new InternalTransaction();
@@ -213,13 +325,13 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
     sTransaction.setAccount(sourceAccount);
     transactionService.doAddEntity(sTransaction);
 
-    splitItem = new Split();
-    splitItem.setEnvelope(source);
-    splitItem.setAmount(-amount);
-    splitItem.setTransaction(sTransaction);
-    splitService.saveOrUpdate(splitItem);
+    Split sourceSplit = new Split();
+    sourceSplit.setEnvelope(source);
+    sourceSplit.setAmount(-amount);
+    sourceSplit.setTransaction(sTransaction);
+    splitService.saveOrUpdate(sourceSplit);
 
-    sTransaction.addSplit(splitItem);
+    sTransaction.addSplit(sourceSplit);
 
 
     // target transaction
@@ -232,19 +344,21 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
     tTransaction.setAccount(targetAccount);
     transactionService.doAddEntity(tTransaction);
 
-    splitItem = new Split();
-    splitItem.setEnvelope(target);
-    splitItem.setAmount(amount);
-    splitItem.setTransaction(tTransaction);
-    splitService.saveOrUpdate(splitItem);
+    Split targetSplit = new Split();
+    targetSplit.setEnvelope(target);
+    targetSplit.setAmount(amount);
+    targetSplit.setTransaction(tTransaction);
+    splitService.saveOrUpdate(targetSplit);
 
-    tTransaction.addSplit(splitItem);
+    tTransaction.addSplit(targetSplit);
 
     sTransaction.setTransferTransaction(tTransaction);
     tTransaction.setTransferTransaction(sTransaction);
 
     transactionService.saveOrUpdate(sTransaction);
     transactionService.saveOrUpdate(tTransaction);
+
+    return new TransferResult(sTransaction, tTransaction, sourceSplit, targetSplit);
   }
 
   @Transactional
@@ -258,6 +372,30 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
     // TODO
   }
 
+  public Command addEnvelopeCommand(final Envelope envelope, final Envelope parent) {
+    return new AbstractCommand(Envelope.class.getSimpleName() + " addEnvelope(" + envelope.getUuid() + ", " + parent.getUuid() + ")", true) {
+
+      public void doExecute() throws Exception {
+
+        addEnvelope(envelope, parent);
+        setResultCode(HttpServletResponse.SC_OK);
+
+        setUndo(new AbstractCommand("Undo " + getName(), true) {
+          public void doExecute() throws Exception {
+            undoAddEnvelope(envelope, parent);
+            setResultCode(HttpServletResponse.SC_OK);
+          }
+        });
+      }
+    };
+  }
+
+  @Transactional
+  public void undoAddEnvelope(Envelope envelope, Envelope parent) {
+    removeChild(parent, envelope);
+    delete(envelope);
+  }
+
   @Transactional
   public void addEnvelope(Envelope envelope, Envelope parent) {
 
@@ -269,6 +407,42 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
 
     doAddEntity(envelope);
 
+  }
+
+  public Command removeEnvelopeCommand(final Envelope envelope) {
+    return new AbstractCommand(Envelope.class.getSimpleName() + " removeEnvelope(" + envelope.getUuid() + ")", true) {
+
+      public void doExecute() throws Exception {
+
+        final List<Rule> affectedRules = new LinkedList<Rule>();
+        final Envelope parent = envelope.getParent();
+
+        for (Rule rule : ruleService.getEntities(envelope.getUser())) {
+          if (rule.getEnvelope().equals(envelope)) {
+            affectedRules.add(rule);
+          }
+        }
+
+        removeEnvelope(envelope);
+        setResultCode(HttpServletResponse.SC_OK);
+
+        setUndo(new AbstractCommand("Undo " + getName(), true) {
+          public void doExecute() throws Exception {
+            undoRemoveEnvelope(envelope, parent, affectedRules);
+            setResultCode(HttpServletResponse.SC_OK);
+          }
+        });
+      }
+    };
+  }
+
+  @Transactional
+  public void undoRemoveEnvelope(Envelope envelope, Envelope parent, List<Rule> affectedRules) {
+    addEnvelope(envelope, parent);
+    for (Rule rule : affectedRules) {
+      rule.setEnvelope(envelope);
+      ruleService.saveOrUpdate(rule);
+    }
   }
 
   @Transactional
@@ -362,9 +536,38 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
     return list;
   }
 
+  public Command distributeToNegativeEnvelopesCommand(final Account account, final Envelope env, final double balance) {
+    return new AbstractCommand(Envelope.class.getSimpleName() + " distributeToNegativeEnvelopes(" + account.getUuid() + ", " + env.getUuid() + ")", true) {
+
+      public void doExecute() throws Exception {
+
+        final List<TransferResult> transferResults = new LinkedList<TransferResult>();
+        distributeToNegativeEnvelopes(account, env, balance, transferResults);
+        setResultCode(HttpServletResponse.SC_OK);
+
+        setUndo(new AbstractCommand("Undo " + getName(), true) {
+          public void doExecute() throws Exception {
+            undoDistributeToNegativeEnvelopes(transferResults);
+            setResultCode(HttpServletResponse.SC_OK);
+          }
+        });
+      }
+    };
+  }
 
   @Transactional
+  public void undoDistributeToNegativeEnvelopes(List<TransferResult> transferResults) {
+    for (TransferResult result : transferResults) {
+      undoTransfer(result);
+    }
+  }
+
   public double distributeToNegativeEnvelopes(Account account, Envelope env, double balance) {
+    return distributeToNegativeEnvelopes(account, env, balance, null);
+  }
+
+  @Transactional
+  public double distributeToNegativeEnvelopes(Account account, Envelope env, double balance, List<TransferResult> transferResults) {
     if (!env.isAvailable()) {
       if (balance > 0) {
         if (!env.hasChildren()) {
@@ -375,12 +578,15 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
             } else {
               transferAmount = balance;
             }
-            transfer(account, account, getAvailableEnvelope(account.getUser()), env, transferAmount);
+            TransferResult result = transfer(account, account, getAvailableEnvelope(account.getUser()), env, transferAmount);
+            if (transferResults != null) {
+              transferResults.add(result);
+            }
             return balance - transferAmount;
           }
         } else {
           for (Envelope child : env.getChildren()) {
-            balance = distributeToNegativeEnvelopes(account, child, balance);
+            balance = distributeToNegativeEnvelopes(account, child, balance, transferResults);
           }
         }
       }
@@ -443,4 +649,33 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
     return "envelopes";
   }
 
+  private static class TransferResult {
+    private InternalTransaction sourceTransaction;
+    private InternalTransaction targetTransaction;
+    private Split sourceSplit;
+    private Split targetSplit;
+
+    private TransferResult(InternalTransaction sourceTransaction, InternalTransaction targetTransaction, Split sourceSplit, Split targetSplit) {
+      this.sourceTransaction = sourceTransaction;
+      this.targetTransaction = targetTransaction;
+      this.sourceSplit = sourceSplit;
+      this.targetSplit = targetSplit;
+    }
+
+    public InternalTransaction getSourceTransaction() {
+      return sourceTransaction;
+    }
+
+    public InternalTransaction getTargetTransaction() {
+      return targetTransaction;
+    }
+
+    public Split getSourceSplit() {
+      return sourceSplit;
+    }
+
+    public Split getTargetSplit() {
+      return targetSplit;
+    }
+  }
 }

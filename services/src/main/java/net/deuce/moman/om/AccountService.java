@@ -1,5 +1,7 @@
 package net.deuce.moman.om;
 
+import net.deuce.moman.job.AbstractCommand;
+import net.deuce.moman.job.Command;
 import net.deuce.moman.util.Constants;
 import net.deuce.moman.util.Utils;
 import org.dom4j.Document;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Service
@@ -22,6 +25,26 @@ public class AccountService extends UserBasedService<Account, AccountDao> {
 
   protected AccountDao getDao() {
     return accountDao;
+  }
+
+  public Command setInitialBalanceCommand(final Account account, final Double initialBalance) {
+    return new AbstractCommand(Account.class.getSimpleName() + " setInitialBalance(" + account.getUuid() + ")", true) {
+
+      public void doExecute() throws Exception {
+
+        final Double oldInitialBalance = account.getInitialBalance();
+
+        setInitialBalance(account, initialBalance);
+        setResultCode(HttpServletResponse.SC_OK);
+
+        setUndo(new AbstractCommand("Undo " + getName(), true) {
+          public void doExecute() throws Exception {
+            setInitialBalance(account, oldInitialBalance);
+            setResultCode(HttpServletResponse.SC_OK);
+          }
+        });
+      }
+    };
   }
 
   @Transactional

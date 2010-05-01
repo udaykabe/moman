@@ -1,5 +1,6 @@
 package net.deuce.moman.controller;
 
+import net.deuce.moman.om.EntityService;
 import net.deuce.moman.om.FinancialInstitutionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
@@ -12,10 +13,7 @@ public class FinancialInstitutionController extends AbstractController {
   @Autowired
   private FinancialInstitutionService financialInstitutionService;
 
-  public ModelAndView handleRequest(HttpServletRequest req, HttpServletResponse res) throws Exception {
-
-    handleDefaultActions(req, res, financialInstitutionService);
-
-    return null;
+  protected EntityService getService() {
+    return financialInstitutionService;
   }
 }

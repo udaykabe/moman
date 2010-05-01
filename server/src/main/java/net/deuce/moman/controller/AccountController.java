@@ -1,6 +1,7 @@
 package net.deuce.moman.controller;
 
 import net.deuce.moman.om.AccountService;
+import net.deuce.moman.om.EntityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -13,19 +14,19 @@ public class AccountController extends AbstractController {
   @Autowired
   private AccountService accountService;
 
-  public ModelAndView handleRequest(HttpServletRequest req, HttpServletResponse res) throws Exception {
+  protected EntityService getService() {
+    return accountService;
+  }
 
-    if (handleDefaultActions(req, res, accountService)) return null;
+  public void handleActions(HttpServletRequest req, HttpServletResponse res) throws IOException {
 
     Parameter action = new Parameter("action", Integer.class);
 
     switch (action.getIntValue()) {
-      case 5: // NEW_DISCONNECTED
+      case 8: // NEW_DISCONNECTED
         newDisconnectedAccount(req, res);
         break;
     }
-
-    return null;
   }
   
   private void newDisconnectedAccount(HttpServletRequest req, HttpServletResponse res) throws IOException {

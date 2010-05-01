@@ -1,20 +1,23 @@
 package net.deuce.moman.controller;
 
-import net.deuce.moman.om.AbstractEntity;
-import net.deuce.moman.om.EntityService;
-import net.deuce.moman.om.InternalTransaction;
-import net.deuce.moman.om.UserService;
+import net.deuce.moman.job.AbstractCommand;
+import net.deuce.moman.job.Command;
+import net.deuce.moman.job.Result;
+import net.deuce.moman.job.UndoManager;
+import net.deuce.moman.om.*;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
+import org.quartz.TriggerListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
 import javax.persistence.NoResultException;
@@ -36,18 +39,30 @@ import java.util.regex.Pattern;
 public abstract class AbstractController implements Controller, ApplicationContextAware {
 
   private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
-  
+
+  private static final String NULL = "null";
+
   private Logger log = LoggerFactory.getLogger(getClass());
 
   private Map<Class<AbstractEntity>, Map<String, Method>> methodMap =
       new HashMap<Class<AbstractEntity>, Map<String, Method>>();
 
-  private Pattern functionPattern = Pattern.compile("^[ \t]*([a-zA-Z_0-9]+)[ \t]*\\([ \t]*([a-zA-Z_0-9-]+)?([ \t]*,[ \t]*([a-zA-Z_0-9-]+))*[ \t]*\\)[ \t]*$");
+  private Pattern commandPattern = Pattern.compile("^[ \t]*([a-zA-Z_0-9]+)[ \t]*\\([ \t]*([a-zA-Z_0-9-]+)?([ \t]*,[ \t]*([a-zA-Z_0-9-]+))*[ \t]*\\)[ \t]*$");
 
   private ApplicationContext applicationContext;
 
+
   @Autowired
   private UserService userService;
+
+  @Autowired
+  private UndoManager undoManager;
+
+  public UserService getUserService() {
+    return userService;
+  }
+
+  protected abstract EntityService getService();
 
   public void setApplicationContext(ApplicationContext applicationContext) {
     this.applicationContext = applicationContext;
@@ -88,6 +103,12 @@ public abstract class AbstractController implements Controller, ApplicationConte
     writer.write(doc);
   }
 
+  protected Element buildMessageElement(String msg) {
+    Element el = DocumentHelper.createElement("message");
+    el.setText(msg);
+    return el;
+  }
+
   protected void errorResponse(HttpServletResponse res, int status, Exception exception) throws IOException {
     Document doc = buildResponse();
     Element error = doc.getRootElement().addElement("error");
@@ -107,6 +128,27 @@ public abstract class AbstractController implements Controller, ApplicationConte
     sendResponse(res, doc);
   }
 
+  protected void sendResult(Result result, HttpServletResponse res) throws IOException {
+    if (result != null && result.getResult() != null) {
+      Document doc = buildResponse();
+      doc.getRootElement().add(result.getResult());
+      sendResponse(res, doc);
+    }
+  }
+
+  public ModelAndView handleRequest(HttpServletRequest req, HttpServletResponse res) throws Exception {
+
+    if (handleDefaultActions(req, res, getService())) return null;
+
+    handleActions(req, res);
+
+    return null;
+  }
+
+  protected void handleActions(HttpServletRequest req, HttpServletResponse res) throws IOException {
+
+  }
+
   protected boolean handleDefaultActions(HttpServletRequest req,
                                          HttpServletResponse res,
                                          EntityService service) throws IOException {
@@ -121,14 +163,14 @@ public abstract class AbstractController implements Controller, ApplicationConte
 
       switch (action.getIntValue()) {
         case 0: // NEW
-          newEntity(service, req, res);
+          sendResult(newEntity(service, req, res), res);
           return true;
         case 1: // EDIT
           uuid = new Parameter("uuid", String.class);
           params.add(uuid);
           if (!checkParameters(req, res, params)) return true;
 
-          editEntity(uuid.getValue(), service, req, res);
+          sendResult(editEntity(uuid.getValue(), service, req, res), res);
           return true;
         case 2: // GET
           uuid = new Parameter("uuid", String.class);
@@ -145,16 +187,16 @@ public abstract class AbstractController implements Controller, ApplicationConte
           params.add(uuid);
           if (!checkParameters(req, res, params)) return true;
 
-          deleteEntity(uuid.getValue(), service, req, res);
+          deleteEntity(uuid.getValue(), service, res);
           return true;
         case 5: // LIST PROPERTIES
           listEntityProperties(service, res);
           return true;
-        case 6: // LIST FUNCTIONS
-          listServiceMethods(service, res);
+        case 6: // LIST COMMANDS
+          listServiceCommands(service, res);
           return true;
-        case 7: // EXECUTE FUNCTIONS
-          executeMethod(service, req, res);
+        case 7: // EXECUTE COMMAND
+          executeCommand(service, req, res);
           return true;
       }
 
@@ -170,19 +212,19 @@ public abstract class AbstractController implements Controller, ApplicationConte
     }
   }
 
-  private void listServiceMethods(EntityService service, HttpServletResponse res) throws IOException {
+  private void listServiceCommands(EntityService service, HttpServletResponse res) throws IOException {
     Document doc = buildResponse();
-    Element root = doc.getRootElement().addElement("functions").addAttribute("type", service.getClass().getName());
+    Element root = doc.getRootElement().addElement("commands").addAttribute("type", service.getClass().getName());
 
     for (Method m : service.getClass().getDeclaredMethods()) {
-      if (!m.getName().startsWith("get") && !m.getName().startsWith("set") && !m.getName().startsWith("is")) {
+      if (m.getName().endsWith("Command")) {
         String name = m.getName().substring(0, 1).toLowerCase() + m.getName().substring(1);
-        Element function = root.addElement("function").addAttribute("name", name);
+        Element command = root.addElement("command").addAttribute("name", name);
         if (m.getReturnType() != null) {
-          function.addAttribute("returns", m.getReturnType().getName());
+          command.addAttribute("returns", m.getReturnType().getName());
         }
         for (Class type : m.getParameterTypes()) {
-          function.addElement("param").addAttribute("type", type.getName());
+          command.addElement("param").addAttribute("type", type.getName());
         }
       }
     }
@@ -190,24 +232,24 @@ public abstract class AbstractController implements Controller, ApplicationConte
     sendResponse(res, doc);
   }
 
-  private void executeMethod(EntityService service, HttpServletRequest req, HttpServletResponse res) throws IOException {
-    Parameter function = new Parameter("function", String.class);
+  private void executeCommand(EntityService service, HttpServletRequest req, HttpServletResponse res) throws IOException {
+    Parameter command = new Parameter("command", String.class);
 
-    if (!checkParameters(req, res, Arrays.asList(new Parameter[]{function}))) return;
+    if (!checkParameters(req, res, Arrays.asList(new Parameter[]{command}))) return;
 
-    Matcher m = functionPattern.matcher(function.getValue());
+    Matcher m = commandPattern.matcher(command.getValue());
     try {
       if (!m.find()) {
-        errorResponse(res, HttpServletResponse.SC_BAD_REQUEST, String.format("invalid function call: '%1$s'", function.getValue()));
+        errorResponse(res, HttpServletResponse.SC_BAD_REQUEST, String.format("invalid command call: '%1$s'", command.getValue()));
         return;
       }
     } catch (java.lang.IllegalStateException e) {
-      errorResponse(res, HttpServletResponse.SC_BAD_REQUEST, String.format("invalid function call: '%1$s', reason: %2$s", function.getValue(), e.getMessage()));
+      errorResponse(res, HttpServletResponse.SC_BAD_REQUEST, String.format("invalid command call: '%1$s', reason: %2$s", command.getValue(), e.getMessage()));
       return;
     }
 
 //  ([a-zA-Z_0-9]+)[ \t]*\\([ \t]*([a-zA-Z_0-9]+)?([ \t]*,[ \t]*([a-zA-Z_0-9]+))*[ \t]*\\)
-    String functionName = m.group(1);
+    String commandName = m.group(1);
     List<String> argStrings = new LinkedList<String>();
     if (m.groupCount() > 1) {
       if (m.group(2) != null) {
@@ -220,14 +262,14 @@ public abstract class AbstractController implements Controller, ApplicationConte
       }
     }
 
-    Method method = getMethod(service, functionName);
+    Method method = getMethod(service, commandName);
     if (method == null) {
-      errorResponse(res, HttpServletResponse.SC_NOT_FOUND, String.format("No function named '%1$s'", functionName));
+      errorResponse(res, HttpServletResponse.SC_NOT_FOUND, String.format("No command named '%1$s'", commandName));
       return;
     }
 
     if (argStrings.size() != method.getParameterTypes().length) {
-      errorResponse(res, HttpServletResponse.SC_BAD_REQUEST, String.format("Mismatched parameters for function '%1$s'", function.getValue()));
+      errorResponse(res, HttpServletResponse.SC_BAD_REQUEST, String.format("Mismatched parameters for command '%1$s'", command.getValue()));
       return;
     }
 
@@ -252,10 +294,10 @@ public abstract class AbstractController implements Controller, ApplicationConte
       } else if (paramTypes[i].getSuperclass().equals(AbstractEntity.class)) {
         EntityService entityService = null;
 
-        if (paramTypes[i].equals(InternalTransaction.class)) {
-          entityService = (EntityService) applicationContext.getBean(type.getSimpleName() + "Service", EntityService.class);
+        if (!paramTypes[i].equals(InternalTransaction.class)) {
+          entityService = (EntityService) applicationContext.getBean(type.getSimpleName().substring(0,1).toLowerCase() + type.getSimpleName().substring(1) + "Service", EntityService.class);
         } else {
-          entityService = (EntityService) applicationContext.getBean("TransactionService", EntityService.class);
+          entityService = (EntityService) applicationContext.getBean("transactionService", EntityService.class);
         }
         if (entityService == null) {
           errorResponse(res, HttpServletResponse.SC_BAD_REQUEST, String.format("no service found for type '%1$s'", type.getName()));
@@ -276,7 +318,7 @@ public abstract class AbstractController implements Controller, ApplicationConte
           errorResponse(res, HttpServletResponse.SC_BAD_REQUEST, String.format(type.getName() + " has no valueOf property"));
           return;
         } catch (Exception e) {
-          errorResponse(res, HttpServletResponse.SC_BAD_REQUEST, String.format("failed to construct arg list for function '%1$s', reason: %2$s", function.getValue(), e.getMessage()));
+          errorResponse(res, HttpServletResponse.SC_BAD_REQUEST, String.format("failed to construct arg list for command '%1$s', reason: %2$s", command.getValue(), e.getMessage()));
           return;
         }
       }
@@ -300,7 +342,7 @@ public abstract class AbstractController implements Controller, ApplicationConte
         sendResponse(res, doc);
       }
     } catch (Exception e) {
-      errorResponse(res, HttpServletResponse.SC_BAD_REQUEST, String.format("failed to execute function '%1$s', reason: %2$s", function.getValue(), e.getMessage()));
+      errorResponse(res, HttpServletResponse.SC_BAD_REQUEST, String.format("failed to execute command '%1$s', reason: %2$s", command.getValue(), e.getMessage()));
     }
 
   }
@@ -338,19 +380,44 @@ public abstract class AbstractController implements Controller, ApplicationConte
     sendResponse(res, doc);
   }
 
-  protected void deleteEntity(String uuid, EntityService service, HttpServletRequest req, HttpServletResponse res) throws IOException {
+  protected Result deleteEntity(String uuid, final EntityService service, final HttpServletResponse res) throws Exception {
     AbstractEntity entity = service.getByUuid(uuid);
     if (entity == null) {
       errorResponse(res, HttpServletResponse.SC_NOT_FOUND, String.format(service.getType().getSimpleName() + " with uuid '%1$s' does not exist", uuid));
-      return;
+      return null;
     }
-    service.delete(entity);
-    res.setStatus(HttpServletResponse.SC_OK);
+
+    final Long entityId = entity.getId();
+
+    Command command = new AbstractCommand("Delete " + service.getEntityClass().getSimpleName() + "(" + uuid + ")", true) {
+
+      public void doExecute() throws Exception {
+
+        final AbstractEntity entity = service.get(entityId);
+
+        service.delete(entity);
+
+        setResultCode(HttpServletResponse.SC_OK);
+
+        setUndo(new AbstractCommand("Undo " + getName(), true) {
+          public void doExecute() throws Exception {
+
+            entity.setId(null);
+            AbstractEntity newEntity = service.saveOrUpdate(entity);
+
+            setResultCode(HttpServletResponse.SC_OK);
+            setResult(buildEntitiesElement(newEntity, service));
+          }
+        });
+      }
+    };
+
+    return undoManager.execute(userService.getStaticUser(), command, null);
   }
 
   protected void listEntities(EntityService service, HttpServletResponse res) throws IOException {
     Document doc = buildResponse();
-    service.toXml(userService.findByUsername("nbolton"), doc);
+    service.toXml(userService.getStaticUser(), doc);
     sendResponse(res, doc);
   }
 
@@ -364,6 +431,12 @@ public abstract class AbstractController implements Controller, ApplicationConte
     sendEntity(entity, service, res);
   }
 
+  protected Element buildEntitiesElement(AbstractEntity entity, EntityService service) {
+    Element el = DocumentHelper.createElement(service.getRootElementName());
+    service.toXml(entity, el);
+    return el;
+  }
+
   protected void sendEntity(AbstractEntity entity, EntityService service, HttpServletResponse res) throws IOException {
 
     Document doc = buildResponse();
@@ -372,35 +445,83 @@ public abstract class AbstractController implements Controller, ApplicationConte
     sendResponse(res, doc);
   }
 
-  protected void editEntity(String uuid, EntityService service,
-                            HttpServletRequest req, HttpServletResponse res) throws IOException {
+  protected Result editEntity(final String uuid, final EntityService service,
+                              final HttpServletRequest req, final HttpServletResponse res) throws Exception {
 
     AbstractEntity entity = service.getByUuid(uuid);
     if (entity == null) {
       errorResponse(res, HttpServletResponse.SC_NOT_FOUND, String.format(service.getType().getSimpleName() + " with uuid '%1$s' does not exist", uuid));
-      return;
+      return null;
     }
 
+    final Long entityId = entity.getId();
+
+    final List<Parameter> propertyList = new LinkedList<Parameter>();
     String[] properties = req.getParameterValues("property");
     for (String s : properties) {
       String[] split = s.split("=");
       if (split.length < 1) {
         errorResponse(res, HttpServletResponse.SC_BAD_REQUEST, String.format("invalid property param '%1$s'", s));
-        return;
+        return null;
       }
       String name = split[0];
       String value = null;
       if (split.length > 1) {
         value = split[1];
       }
-      if (!setProperty(service, entity, name, value, res)) {
-        return;
-      }
+      propertyList.add(new Parameter(name, value));
     }
 
-    service.saveOrUpdate(entity);
+    final List<Parameter> oldPropertyValues = new LinkedList<Parameter>();
+    for (Parameter p : propertyList) {
+      String oldValue = getProperty(service, entity, p.getName(), res);
+      if (oldValue == null) return null;
 
-    getEntity(uuid, service, req, res);
+      // NULL is used to distinguish between getProperty returning null (which means there was an error)
+      // and the property value being null
+      if (oldValue == NULL) {
+        oldValue = null;
+      }
+      oldPropertyValues.add(new Parameter(p.getName(), oldValue));
+    }
+
+    Command command = new AbstractCommand("Edit " + service.getEntityClass().getSimpleName() + "(" + uuid + ")", true) {
+
+      public void doExecute() throws Exception {
+
+        AbstractEntity entity = service.get(entityId);
+
+        for (Parameter p : propertyList) {
+          if (!setProperty(service, entity, p.getName(), p.getValue(), res)) {
+            return;
+          }
+        }
+
+        entity = service.saveOrUpdate(entity);
+
+        setResultCode(HttpServletResponse.SC_OK);
+        setResult(buildEntitiesElement(entity, service));
+
+        setUndo(new AbstractCommand("Undo " + getName(), true) {
+          public void doExecute() throws Exception {
+            AbstractEntity entity = service.get(entityId);
+
+            for (Parameter p : oldPropertyValues) {
+              if (!setProperty(service, entity, p.getName(), p.getValue(), res)) {
+                return;
+              }
+            }
+
+            entity = service.saveOrUpdate(entity);
+
+            setResultCode(HttpServletResponse.SC_OK);
+            setResult(buildEntitiesElement(entity, service));
+          }
+        });
+      }
+    };
+
+    return undoManager.execute(userService.getStaticUser(), command, null);
   }
 
   private Method getMethod(Object source, String name) {
@@ -420,20 +541,69 @@ public abstract class AbstractController implements Controller, ApplicationConte
 
   private Method getSetterMethodForPropertyName(Object source, String name) {
     Map<String, Method> map = getMethodMap(source.getClass());
-    Method method = map.get(name);
+    String key = "set" + name;
+    Method method = map.get(key);
     if (method == null) {
       for (Method m : source.getClass().getDeclaredMethods()) {
         if (m.getName().startsWith("set")) {
           String setterName = m.getName().substring(3, 4).toLowerCase() + m.getName().substring(4);
           if (setterName.equals(name)) {
             method = m;
-            map.put(name, m);
+            map.put(key, m);
             break;
           }
         }
       }
     }
     return method;
+  }
+
+  private Method getGetterMethodForPropertyName(Object source, String name) {
+    Map<String, Method> map = getMethodMap(source.getClass());
+    String key = "get" + name;
+    Method method = map.get(key);
+    if (method == null) {
+      for (Method m : source.getClass().getDeclaredMethods()) {
+        for (String prefix : new String[]{"get", "is"}) {
+          if (m.getName().startsWith(prefix)) {
+            int len = prefix.length();
+            String getterName = m.getName().substring(len, len + 1).toLowerCase() + m.getName().substring(len + 1);
+            if (getterName.equals(name)) {
+              method = m;
+              map.put(key, m);
+              break;
+            }
+          }
+        }
+      }
+    }
+    return method;
+  }
+
+  private String getProperty(EntityService service, AbstractEntity entity, String name, HttpServletResponse res) throws IOException {
+
+    Method method = getGetterMethodForPropertyName(entity, name);
+    if (method == null) {
+      errorResponse(res, HttpServletResponse.SC_BAD_REQUEST, String.format(service.getType().getSimpleName() + " has no property '%1$s'", name));
+      return null;
+    }
+
+    Class type = method.getReturnType();
+    Object result = null;
+    try {
+      result = method.invoke(entity);
+    } catch (Exception e) {
+      errorResponse(res, HttpServletResponse.SC_BAD_REQUEST, String.format("failed to get '%1$s' property: %2$s", name, e.getMessage()));
+      return null;
+    }
+
+    if (result == null) {
+      return NULL;
+    } else if (result instanceof Date) {
+      return DATE_FORMAT.format((Date) result);
+    } else {
+      return result.toString();
+    }
   }
 
   private boolean setProperty(EntityService service, AbstractEntity entity, String name, String value,
@@ -481,29 +651,54 @@ public abstract class AbstractController implements Controller, ApplicationConte
     return true;
   }
 
-  protected void newEntity(EntityService service, HttpServletRequest req, HttpServletResponse res) throws IOException {
+  protected Result newEntity(final EntityService service, final HttpServletRequest req, final HttpServletResponse res) throws Exception {
 
-    AbstractEntity entity = service.newEntity();
+    final List<Parameter> propertyList = new LinkedList<Parameter>();
     String[] properties = req.getParameterValues("property");
     for (String s : properties) {
       String[] split = s.split("=");
       if (split.length < 1) {
         errorResponse(res, HttpServletResponse.SC_BAD_REQUEST, String.format("invalid property param '%1$s'", s));
-        return;
+        return null;
       }
       String name = split[0];
       String value = null;
       if (split.length > 1) {
         value = split[1];
       }
-      if (!setProperty(service, entity, name, value, res)) {
-        return;
-      }
+      propertyList.add(new Parameter(name, value));
     }
 
-    service.saveOrUpdate(entity);
+    Command command = new AbstractCommand("New " + service.getEntityClass().getSimpleName(), true) {
 
-    sendEntity(entity, service, res);
+      public void doExecute() throws Exception {
+        AbstractEntity entity = service.newEntity();
+        for (Parameter p : propertyList) {
+          if (!setProperty(service, entity, p.getName(), p.getValue(), res)) {
+            return;
+          }
+        }
+
+        entity = service.saveOrUpdate(entity);
+
+        setResultCode(HttpServletResponse.SC_OK);
+        setResult(buildEntitiesElement(entity, service));
+
+        final Long entityId = entity.getId();
+        setUndo(new AbstractCommand("Undo " + getName(), true) {
+          public void doExecute() throws Exception {
+            service.delete(service.get(entityId));
+            setResultCode(HttpServletResponse.SC_OK);
+          }
+        });
+      }
+    };
+
+    return undoManager.execute(userService.getStaticUser(), command, null);
+  }
+
+  protected UndoManager getUndoManager() {
+    return undoManager;
   }
 
   private Map<String, Method> getMethodMap(Class type) {
@@ -522,9 +717,13 @@ public abstract class AbstractController implements Controller, ApplicationConte
     private int intValue;
 
     public Parameter(String name, Class type) {
-      super();
       this.name = name;
       this.type = type;
+    }
+
+    public Parameter(String name, String value) {
+      this.name = name;
+      this.value = value;
     }
 
     public String getName() {

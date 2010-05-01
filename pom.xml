@@ -146,6 +146,12 @@
         <version>2.5.6</version>
       </dependency>
 
+      <dependency>
+        <groupId>quartz</groupId>
+        <artifactId>quartz</artifactId>
+        <version>1.8.0</version>
+      </dependency>
+
       <!-- Logging Dependencies -->
       <dependency>
         <groupId>org.slf4j</groupId>

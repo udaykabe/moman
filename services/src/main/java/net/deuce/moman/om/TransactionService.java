@@ -1,5 +1,7 @@
 package net.deuce.moman.om;
 
+import net.deuce.moman.job.AbstractCommand;
+import net.deuce.moman.job.Command;
 import net.deuce.moman.util.CalendarUtil;
 import net.deuce.moman.util.Constants;
 import net.deuce.moman.util.DataDateRange;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -85,34 +88,92 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
     return "transactions";
   }
 
-  public void setAmount(InternalTransaction transaction, Double amount, List<Split> newSplits) {
-    setAmount(transaction, amount, newSplits, false);
-  }
-
-  private boolean adjustSplits(InternalTransaction transaction, double newAmount, List<Split> newSplits) {
+  private boolean adjustSplits(InternalTransaction transaction, double newAmount, List<Split> newSplits, List<Split> affectedSplits) {
     List<Split> split = transaction.getSplit();
     if (split.size() == 0) return true;
 
-    transaction.clearSplit();
+    affectedSplits.addAll(transaction.getSplit());
+
+    clearSplit(transaction, affectedSplits);
 
     for (Split item : newSplits) {
       if (transaction.getAmount() < 0.0) {
+        Split savedSplit = new Split();
+        savedSplit.setId(item.getId());
         item.setAmount(-item.getAmount());
       }
       transaction.addSplit(item);
     }
-    transactionDao.saveOrUpdate(transaction);
+    saveOrUpdate(transaction);
+
     return true;
   }
 
+  public Command setAmountCommand(final InternalTransaction transaction, final Double amount, final List<Split> newSplits, final boolean adjustBalances) {
+    return new AbstractCommand(InternalTransaction.class.getSimpleName() + " setAmount(" + transaction.getUuid() + ")", true) {
+
+      public void doExecute() throws Exception {
+
+        final Double accountBalance = transaction.getAccount().getBalance();
+        final List<Envelope> affectedEnvelopes = new LinkedList<Envelope>();
+        final List<InternalTransaction> affectedTransactions = new LinkedList<InternalTransaction>();
+        final List<Split> affectedSplits = new LinkedList<Split>();
+        setAmount(transaction, amount, newSplits, adjustBalances, affectedEnvelopes, affectedTransactions, affectedSplits);
+        setResultCode(HttpServletResponse.SC_OK);
+
+        setUndo(new AbstractCommand("Undo " + getName(), true) {
+          public void doExecute() throws Exception {
+            undoAdjustBalances(transaction.getAccount(), accountBalance, affectedTransactions);
+            undoSetAmount(transaction, affectedEnvelopes, affectedSplits);
+            undoClearSplit(transaction, affectedSplits);
+            setResultCode(HttpServletResponse.SC_OK);
+          }
+        });
+      }
+    };
+  }
+
   @Transactional
-  public void setAmount(InternalTransaction transaction, Double amount, List<Split> newSplits, boolean adjustBalances) {
+  public void undoSetAmount(InternalTransaction transaction, List<Envelope> affectedEnvelopes, List<Split> affectedSplits) {
+
+    Envelope envelope;
+    for (Envelope affectedEnvelope : affectedEnvelopes) {
+      envelope = envelopeService.get(affectedEnvelope.getId());
+      envelope.setBalance(affectedEnvelope.getBalance());
+      envelopeService.saveOrUpdate(envelope);
+    }
+  }
+
+  private void saveAffectedTransaction(InternalTransaction transaction, List<InternalTransaction> affectedTransactions) {
+    InternalTransaction savedTransaction = new InternalTransaction();
+    savedTransaction.setId(transaction.getId());
+    savedTransaction.setAmount(transaction.getAmount());
+    savedTransaction.setType(transaction.getType());
+    savedTransaction.setBalance(transaction.getBalance());
+    savedTransaction.setDate(transaction.getDate());
+    affectedTransactions.add(savedTransaction);
+  }
+
+  private void saveAffectedEnvelope(Envelope envelope, List<Envelope> affectedEnvelopes) {
+    Envelope savedEnvelope = new Envelope();
+    savedEnvelope.setId(envelope.getId());
+    savedEnvelope.setBalance(envelope.getBalance());
+    affectedEnvelopes.add(savedEnvelope);
+  }
+
+  @Transactional
+  public void setAmount(InternalTransaction transaction, Double amount, List<Split> newSplits, boolean adjustBalances,
+                        List<Envelope> affectedEnvelopes, List<InternalTransaction> affectedTransactions,
+                        List<Split> affectedSplits) {
     if (transaction.propertyChanged(transaction.getAmount(), amount)) {
       double difference = 0.0;
       if (transaction.getAmount() != null) {
         difference = transaction.getAmount() - amount;
       }
-      if (adjustSplits(transaction, amount, newSplits)) {
+      if (adjustSplits(transaction, amount, newSplits, affectedSplits)) {
+
+        saveAffectedTransaction(transaction, affectedTransactions);
+
         transaction.setAmount(amount);
         if (amount > 0) {
           transaction.setType(TransactionType.CREDIT);
@@ -122,11 +183,13 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
         if (transaction.getBalance() != null) {
           transaction.setBalance(transaction.getBalance() - difference);
           for (Split split : transaction.getSplit()) {
+
+            saveAffectedEnvelope(split.getEnvelope(), affectedEnvelopes);
             envelopeService.resetBalance(split.getEnvelope());
           }
         }
         if (adjustBalances) {
-          adjustBalances(transaction, false);
+          adjustBalances(transaction, false, affectedTransactions);
         }
         saveOrUpdate(transaction);
       }
@@ -203,8 +266,45 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
     return transactionDao.getEnvelopeTransactions(env);
   }
 
+  public Command adjustBalancesCommand(final InternalTransaction transaction, final boolean remove) {
+    return new AbstractCommand(InternalTransaction.class.getSimpleName() + " adjustBalances(" + transaction.getUuid() + ")", true) {
+
+      public void doExecute() throws Exception {
+
+        final Account account = transaction.getAccount();
+        final Double accountBalance = account.getBalance();
+        final List<InternalTransaction> affectedTransactions = new LinkedList<InternalTransaction>();
+        adjustBalances(transaction, remove, affectedTransactions);
+        setResultCode(HttpServletResponse.SC_OK);
+
+        setUndo(new AbstractCommand("Undo " + getName(), true) {
+          public void doExecute() throws Exception {
+            undoAdjustBalances(account, accountBalance, affectedTransactions);
+            setResultCode(HttpServletResponse.SC_OK);
+          }
+        });
+      }
+    };
+  }
+
   @Transactional
-  public void adjustBalances(InternalTransaction transaction, boolean remove) {
+  public void undoAdjustBalances(Account account, Double accountBalance, List<InternalTransaction> affectedTransactions) {
+    account.setBalance(accountBalance);
+    accountService.saveOrUpdate(account);
+
+    InternalTransaction trans;
+    for (InternalTransaction affectedTransaction : affectedTransactions) {
+      trans = get(affectedTransaction.getId());
+      trans.setAmount(affectedTransaction.getAmount());
+      trans.setType(affectedTransaction.getType());
+      trans.setBalance(affectedTransaction.getBalance());
+      trans.setDate(affectedTransaction.getDate());
+      saveOrUpdate(trans);
+    }
+  }
+
+  @Transactional
+  public void adjustBalances(InternalTransaction transaction, boolean remove, List<InternalTransaction> affectedTransactions) {
 
     Double balance = null;
 
@@ -226,6 +326,7 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
           } catch (Exception e) {
             e.printStackTrace();
           }
+          saveAffectedTransaction(it, affectedTransactions);
           it.setBalance(balance);
           saveOrUpdate(it);
 
@@ -241,26 +342,104 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
 
   }
 
+  public Command setDateCommand(final InternalTransaction transaction, final Date date, final boolean adjust) {
+    return new AbstractCommand(InternalTransaction.class.getSimpleName() + " setDate(" + transaction.getUuid() + ")", true) {
+
+      public void doExecute() throws Exception {
+
+        final Double accountBalance = transaction.getAccount().getBalance();
+        final List<InternalTransaction> affectedTransactions = new LinkedList<InternalTransaction>();
+        setDate(transaction, date, adjust, affectedTransactions);
+        setResultCode(HttpServletResponse.SC_OK);
+
+        setUndo(new AbstractCommand("Undo " + getName(), true) {
+          public void doExecute() throws Exception {
+            undoAdjustBalances(transaction.getAccount(), accountBalance, affectedTransactions);
+            setResultCode(HttpServletResponse.SC_OK);
+          }
+        });
+      }
+    };
+  }
+
   @Transactional
-  public void setDate(InternalTransaction transaction, Date date, boolean adjust) {
+  public void setDate(InternalTransaction transaction, Date date, boolean adjust, List<InternalTransaction> affectedTransactions) {
     if (transaction.propertyChanged(transaction.getDate(), date)) {
 
+      saveAffectedTransaction(transaction, affectedTransactions);
       transaction.setDate(date);
 
       if (adjust) {
-        adjustBalances(transaction, false);
+        adjustBalances(transaction, false, affectedTransactions);
       }
     }
   }
 
-  @Transactional
-  public void clearSplit(InternalTransaction transaction) {
-    transaction.clearSplit();
-    transactionDao.saveOrUpdate(transaction);
+  public Command clearSplitCommand(final InternalTransaction transaction) {
+    return new AbstractCommand(InternalTransaction.class.getSimpleName() + " clearSplit(" + transaction.getUuid() + ")", true) {
+
+      public void doExecute() throws Exception {
+
+        final List<Split> affectedSplits = new LinkedList<Split>();
+
+        clearSplit(transaction, affectedSplits);
+        setResultCode(HttpServletResponse.SC_OK);
+
+        setUndo(new AbstractCommand("Undo " + getName(), true) {
+          public void doExecute() throws Exception {
+            undoClearSplit(transaction, affectedSplits);
+            setResultCode(HttpServletResponse.SC_OK);
+          }
+        });
+      }
+    };
   }
 
   @Transactional
-  public void addSplit(InternalTransaction transaction, Envelope envelope, Double amount) {
+  public void undoClearSplit(InternalTransaction transaction, List<Split> affectedSplits) {
+    transaction.clearSplit();
+    for (Split item : affectedSplits) {
+      addSplit(transaction, item.getEnvelope(), item.getAmount());
+    }
+  }
+
+  @Transactional
+  public void clearSplit(InternalTransaction transaction, List<Split> affectedSplits) {
+    affectedSplits.addAll(transaction.getSplit());
+    transaction.clearSplit();
+    saveOrUpdate(transaction);
+
+    for (Split item : affectedSplits) {
+      splitService.delete(item);
+    }
+  }
+
+  public Command addSplitCommand(final InternalTransaction transaction, final Envelope envelope, final Double amount) {
+    return new AbstractCommand(InternalTransaction.class.getSimpleName() + " addSplit(" + transaction.getUuid() + ")", true) {
+
+      public void doExecute() throws Exception {
+
+        final Split addedSplitItem = addSplit(transaction, envelope, amount);
+        setResultCode(HttpServletResponse.SC_OK);
+
+        setUndo(new AbstractCommand("Undo " + getName(), true) {
+          public void doExecute() throws Exception {
+            undoAddSplit(addedSplitItem);
+            setResultCode(HttpServletResponse.SC_OK);
+          }
+        });
+      }
+    };
+  }
+
+  @Transactional
+  public void undoAddSplit(Split splitItem) {
+    removeSplit(splitItem.getTransaction(), splitItem.getEnvelope());
+    splitService.delete(splitItem);
+  }
+
+  @Transactional
+  public Split addSplit(InternalTransaction transaction, Envelope envelope, Double amount) {
     Split item = new Split();
     item.setAmount(amount);
     item.setEnvelope(envelope);
@@ -272,6 +451,28 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
       transaction.addSplit(item);
       saveOrUpdate(transaction);
     }
+
+    return item;
+  }
+
+  public Command removeSplitCommand(final InternalTransaction transaction, final Envelope envelope) {
+    return new AbstractCommand(InternalTransaction.class.getSimpleName() + " removeSplit(" + transaction.getUuid() + ")", true) {
+
+      public void doExecute() throws Exception {
+
+        final Double splitAmount = transaction.getEnvelopeSplit(envelope).getAmount();
+
+        removeSplit(transaction, envelope);
+        setResultCode(HttpServletResponse.SC_OK);
+
+        setUndo(new AbstractCommand("Undo " + getName(), true) {
+          public void doExecute() throws Exception {
+            addSplit(transaction, envelope, splitAmount);
+            setResultCode(HttpServletResponse.SC_OK);
+          }
+        });
+      }
+    };
   }
 
   @Transactional
@@ -282,12 +483,64 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
     if (item != null && transaction.removeSplit(item)) {
       envelopeService.resetBalance(envelope);
     }
-    transactionDao.saveOrUpdate(transaction);
+    saveOrUpdate(transaction);
+    splitService.delete(item);
   }
 
   @Transactional
   public InternalTransaction getInitialBalanceTransaction(Account account) {
     return transactionDao.getInitialBalanceTransaction(account);
+  }
+
+  public Command clearCustomTransactionsCommand(final User user) {
+    return new AbstractCommand(InternalTransaction.class.getSimpleName() + " clearCustomTransactions", true) {
+
+      public void doExecute() throws Exception {
+
+        final List<InternalTransaction> savedTransactions = new LinkedList<InternalTransaction>();
+        savedTransactions.addAll(transactionDao.getCustomTransactions(user, false));
+
+        clearCustomTransactions(user);
+        setResultCode(HttpServletResponse.SC_OK);
+
+        setUndo(new AbstractCommand("Undo " + getName(), true) {
+          public void doExecute() throws Exception {
+            undoClearCustomTransactions(savedTransactions);
+            setResultCode(HttpServletResponse.SC_OK);
+          }
+        });
+      }
+    };
+  }
+
+  public InternalTransaction cloneTransaction(InternalTransaction trans) {
+    InternalTransaction transaction = new InternalTransaction();
+    transaction.setAccount(trans.getAccount());
+    transaction.setAmount(trans.getAmount());
+    transaction.setBalance(trans.getBalance());
+    transaction.setCheckNo(trans.getCheckNo());
+    transaction.setCustom(trans.isCustom());
+    transaction.setDate(trans.getDate());
+    transaction.setDescription(trans.getDescription());
+    transaction.setExternalId(trans.getExternalId());
+    transaction.setImported(trans.isImported());
+    transaction.setInitialBalance(trans.isInitialBalance());
+    transaction.setMatchedTransaction(trans.getMatchedTransaction());
+    transaction.setMemo(trans.getMemo());
+    transaction.setRef(trans.getRef());
+    transaction.setSplit(trans.getSplit());
+    transaction.setStatus(trans.getStatus());
+    transaction.setTransferTransaction(trans.getTransferTransaction());
+    transaction.setType(trans.getType());
+    transaction.setUuid(createUuid());
+    return transaction;
+  }
+
+  @Transactional
+  public void undoClearCustomTransactions(List<InternalTransaction> savedTransactions) {
+    for (InternalTransaction trans : savedTransactions) {
+      saveOrUpdate(cloneTransaction(trans));
+    }
   }
 
   @Transactional
