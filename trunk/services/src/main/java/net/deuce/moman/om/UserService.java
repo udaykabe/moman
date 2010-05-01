@@ -3,15 +3,18 @@ package net.deuce.moman.om;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class UserService extends EntityService<User, UserDao> {
+public class UserService extends EntityService<User, UserDao> implements InitializingBean {
 
   @Autowired
   private UserDao userDao;
+
+  private User staticUser;
 
   protected UserDao getDao() {
     return userDao;
@@ -51,4 +54,11 @@ public class UserService extends EntityService<User, UserDao> {
     return "users";
   }
 
+  public User getStaticUser() {
+    return staticUser;
+  }
+
+  public void afterPropertiesSet() throws Exception {
+    staticUser = findByUsername("nbolton");
+  }
 }

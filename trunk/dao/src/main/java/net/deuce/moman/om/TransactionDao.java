@@ -67,4 +67,5 @@ public class TransactionDao extends UserBasedDao<InternalTransaction> {
     query.setParameter("accountList", accounts);
     return query.getResultList();
   }
+
 }

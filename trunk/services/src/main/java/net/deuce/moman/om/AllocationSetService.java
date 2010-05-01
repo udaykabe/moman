@@ -1,6 +1,8 @@
 package net.deuce.moman.om;
 
 
+import net.deuce.moman.job.AbstractCommand;
+import net.deuce.moman.job.Command;
 import net.deuce.moman.util.Utils;
 import org.dom4j.Document;
 import org.dom4j.Element;
@@ -8,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,6 +32,30 @@ public class AllocationSetService extends UserBasedService<AllocationSet, Alloca
       if (allocationSet.getName().equals(name)) return true;
     }
     return false;
+  }
+
+  public Command moveAllocationsCommand(final AllocationSet allocationSet, final List<Integer> indexes, final Allocation target, final boolean before) {
+    return new AbstractCommand(AllocationSet.class.getSimpleName() + " moveAllocations(" + allocationSet.getUuid() + ")", true) {
+
+      public void doExecute() throws Exception {
+
+        final List<Allocation> oldList = allocationSet.getAllocations();
+
+        moveAllocations(allocationSet, indexes, target, before);
+        setResultCode(HttpServletResponse.SC_OK);
+
+        setUndo(new AbstractCommand("Undo " + getName(), true) {
+          public void doExecute() throws Exception {
+
+            int i=0;
+            for (Allocation a : oldList) {
+              a.setIndex(i++);
+            }
+            setResultCode(HttpServletResponse.SC_OK);
+          }
+        });
+      }
+    };
   }
 
   @Transactional

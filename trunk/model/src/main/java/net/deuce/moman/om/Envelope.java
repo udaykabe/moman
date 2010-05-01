@@ -337,11 +337,12 @@ public class Envelope extends AbstractEntity<Envelope> {
     childrenByName = null;
   }
 
-  public void removeChild(Envelope child) {
-    children.remove(child);
+  public boolean removeChild(Envelope child) {
+    boolean result = children.remove(child);
     child.setParent(null);
     childrenByName.clear();
     childrenByName = null;
+    return result;
   }
 
   public boolean contains(Envelope env) {

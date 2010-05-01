@@ -59,7 +59,6 @@ public class Split extends AbstractEntity<Split> {
     return "Split [amount=" + amount + ", envelope=" + envelope + "]";
   }
 
-  @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
@@ -73,7 +72,6 @@ public class Split extends AbstractEntity<Split> {
     return true;
   }
 
-  @Override
   public int hashCode() {
     int result = super.hashCode();
     result = 31 * result + (envelope != null ? envelope.hashCode() : 0);

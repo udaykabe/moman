@@ -31,12 +31,14 @@
     <orderEntry type="library" exported="" name="Maven: commons-beanutils:commons-beanutils:1.7.0" level="project" />
     <orderEntry type="library" exported="" name="Maven: commons-digester:commons-digester:1.8" level="project" />
     <orderEntry type="module" module-name="genemm-dao" exported="" />
+    <orderEntry type="library" exported="" name="Maven: org.springframework:spring-core:2.5.6" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.springframework:spring-context:2.5.6" level="project" />
     <orderEntry type="library" exported="" name="Maven: aopalliance:aopalliance:1.0" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.springframework:spring-beans:2.5.6" level="project" />
-    <orderEntry type="library" exported="" name="Maven: org.springframework:spring-core:2.5.6" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.springframework:spring-orm:2.5.6" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.springframework:spring-tx:2.5.6" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: quartz:quartz:1.8.0" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: javax.servlet:servlet-api:2.4" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.8.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.slf4j:slf4j-simple:1.5.6" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.slf4j:jcl-over-slf4j:1.5.6" level="project" />

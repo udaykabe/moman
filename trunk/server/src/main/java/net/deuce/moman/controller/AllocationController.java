@@ -2,6 +2,7 @@ package net.deuce.moman.controller;
 
 import net.deuce.moman.om.AccountService;
 import net.deuce.moman.om.AllocationSetService;
+import net.deuce.moman.om.EntityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -13,11 +14,7 @@ public class AllocationController extends AbstractController {
   @Autowired
   private AllocationSetService allocationSetService;
 
-  public ModelAndView handleRequest(HttpServletRequest req, HttpServletResponse res) throws Exception {
-
-    handleDefaultActions(req, res, allocationSetService);
-
-    return null;
+  protected EntityService getService() {
+    return allocationSetService;
   }
-
 }

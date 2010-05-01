@@ -56,6 +56,7 @@
         /rule=ruleController
         /sg=sgController
         /transaction=transactionController
+        /job=jobController
       </value>
     </property>
   </bean>
@@ -71,5 +72,6 @@
   <bean id="ruleController" class="net.deuce.moman.controller.RuleController"/>
   <bean id="sgController" class="net.deuce.moman.controller.SavingsGoalController"/>
   <bean id="transactionController" class="net.deuce.moman.controller.TransactionController"/>
+  <bean id="jobController" class="net.deuce.moman.controller.JobController"/>
 
 </beans>

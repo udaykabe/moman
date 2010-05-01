@@ -1,5 +1,6 @@
 package net.deuce.moman.controller;
 
+import net.deuce.moman.om.EntityService;
 import net.deuce.moman.om.Envelope;
 import net.deuce.moman.om.EnvelopeService;
 import net.deuce.moman.om.UserService;
@@ -21,6 +22,9 @@ public class BillController extends AbstractController {
   @Autowired
   private UserService userService;
 
+  protected EntityService getService() {
+    return envelopeService;
+  }
 
   public ModelAndView handleRequest(HttpServletRequest req, HttpServletResponse res) throws Exception {
 

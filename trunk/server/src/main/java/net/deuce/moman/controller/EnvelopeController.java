@@ -1,5 +1,6 @@
 package net.deuce.moman.controller;
 
+import net.deuce.moman.om.EntityService;
 import net.deuce.moman.om.EnvelopeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
@@ -12,10 +13,7 @@ public class EnvelopeController extends AbstractController {
   @Autowired
   private EnvelopeService envelopeService;
 
-  public ModelAndView handleRequest(HttpServletRequest req, HttpServletResponse res) throws Exception {
-
-    handleDefaultActions(req, res, envelopeService);
-
-    return null;
+  protected EntityService getService() {
+    return envelopeService;
   }
 }
