@@ -46,7 +46,7 @@ public class AllocationSet extends AbstractEntity<AllocationSet> {
     return allocations.size() > 0;
   }
 
-  @OneToMany(mappedBy = "allocationSet")
+  @OneToMany(mappedBy = "allocationSet", cascade = CascadeType.REMOVE)
   @Column(name = "id")
   public List<Allocation> getAllocations() {
     List<Allocation> list = new LinkedList<Allocation>(allocations);

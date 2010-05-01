@@ -304,7 +304,7 @@ public class Envelope extends AbstractEntity<Envelope> {
     return children.size() > 0;
   }
 
-  @OneToMany(mappedBy="parent", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy="parent", cascade = CascadeType.REMOVE)
   @Column(name="id")
   public List<Envelope> getChildren() {
     return children;

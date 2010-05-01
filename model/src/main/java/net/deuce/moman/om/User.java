@@ -47,7 +47,7 @@ public class User extends AbstractEntity<User> {
     return o1.username.compareTo(o2.username);
   }
 
-  @OneToMany(mappedBy="user")
+  @OneToMany(mappedBy="user", cascade = CascadeType.REMOVE)
   @Column(name="id")
   public List<Account> getAccounts() {
     return accounts;
