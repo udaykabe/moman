@@ -4,16 +4,17 @@ import net.deuce.moman.job.AbstractCommand;
 import net.deuce.moman.job.Command;
 import net.deuce.moman.job.Result;
 import net.deuce.moman.job.UndoManager;
-import net.deuce.moman.om.*;
+import net.deuce.moman.om.AbstractEntity;
+import net.deuce.moman.om.EntityService;
+import net.deuce.moman.om.InternalTransaction;
+import net.deuce.moman.om.UserService;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
-import org.quartz.TriggerListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -83,6 +84,8 @@ public abstract class AbstractController implements Controller, ApplicationConte
           errorResponse(res, HttpServletResponse.SC_BAD_REQUEST, String.format("parameter '%1$s' is not an number: '%2$s'", p.getName(), param));
           return false;
         }
+      } else if (p.getType().equals(Boolean.class)) {
+        p.setBoolValue(Boolean.valueOf(param));
       } else {
         p.setValue(param);
       }
@@ -145,7 +148,7 @@ public abstract class AbstractController implements Controller, ApplicationConte
     return null;
   }
 
-  protected void handleActions(HttpServletRequest req, HttpServletResponse res) throws IOException {
+  protected void handleActions(HttpServletRequest req, HttpServletResponse res) throws Exception {
 
   }
 
@@ -162,41 +165,44 @@ public abstract class AbstractController implements Controller, ApplicationConte
       if (!checkParameters(req, res, params)) return true;
 
       switch (action.getIntValue()) {
-        case 0: // NEW
+        case Actions.NEW_ENTITY:
           sendResult(newEntity(service, req, res), res);
           return true;
-        case 1: // EDIT
+        case Actions.EDIT_ENTITY:
           uuid = new Parameter("uuid", String.class);
           params.add(uuid);
           if (!checkParameters(req, res, params)) return true;
 
           sendResult(editEntity(uuid.getValue(), service, req, res), res);
           return true;
-        case 2: // GET
+        case Actions.GET_ENTITY:
           uuid = new Parameter("uuid", String.class);
           params.add(uuid);
           if (!checkParameters(req, res, params)) return true;
 
           getEntity(uuid.getValue(), service, req, res);
           return true;
-        case 3: // LIST
+        case Actions.LIST_ENTITIES:
           listEntities(service, res);
           return true;
-        case 4: // DELETE
+        case Actions.DELETE_ENTITY:
           uuid = new Parameter("uuid", String.class);
           params.add(uuid);
           if (!checkParameters(req, res, params)) return true;
 
           deleteEntity(uuid.getValue(), service, res);
           return true;
-        case 5: // LIST PROPERTIES
+        case Actions.LIST_ENTITY_PROPERTIES:
           listEntityProperties(service, res);
           return true;
-        case 6: // LIST COMMANDS
+        case Actions.LIST_SERVICE_COMMANDS:
           listServiceCommands(service, res);
           return true;
-        case 7: // EXECUTE COMMAND
+        case Actions.EXECUTE_COMMAND:
           executeCommand(service, req, res);
+          return true;
+        case Actions.GET_ENTITY_PROPERTY:
+          getEntityProperty(service, req, res);
           return true;
       }
 
@@ -229,6 +235,82 @@ public abstract class AbstractController implements Controller, ApplicationConte
       }
     }
 
+    sendResponse(res, doc);
+  }
+
+  private void getEntityProperty(EntityService service, HttpServletRequest req, HttpServletResponse res) throws IOException {
+
+    Parameter uuid = new Parameter("uuid", String.class);
+    Parameter property = new Parameter("property", String.class);
+    if (!checkParameters(req, res, Arrays.asList(new Parameter[]{uuid, property}))) return;
+
+    AbstractEntity entity = service.findEntity(uuid.getValue());
+
+    if (entity == null) {
+      errorResponse(res, HttpServletResponse.SC_NOT_FOUND, String.format("No %1$s exists with uuid = '%2$s'", service.getEntityClass().getSimpleName(), uuid.getValue()));
+      return;
+    }
+
+    Method method = getGetterMethodForPropertyName(entity, property.getValue());
+    if (method == null) {
+      errorResponse(res, HttpServletResponse.SC_BAD_REQUEST, String.format(service.getType().getSimpleName() + " has no property '%1$s'", property.getValue()));
+      return;
+    }
+
+    Object result = null;
+    try {
+      result = method.invoke(entity);
+    } catch (Exception e) {
+      errorResponse(res, HttpServletResponse.SC_BAD_REQUEST, String.format("failed to get '%1$s' property: %2$s", property.getValue(), e.getMessage()));
+      return;
+    }
+
+    EntityService entityService;
+
+    Document doc = buildResponse();
+    Element entityProperty = doc.getRootElement().addElement("entity-property")
+        .addAttribute("type", service.getEntityClass().getSimpleName())
+        .addAttribute("uuid", uuid.getValue());
+    entityProperty.addElement("name").setText(property.getValue());
+    Element valueElement = entityProperty.addElement("value");
+
+    if (result instanceof AbstractEntity) {
+
+      if (result instanceof InternalTransaction) {
+        entityService = (EntityService) applicationContext.getBean("transactionService", EntityService.class);
+      } else {
+        String type = result.getClass().getSimpleName().replaceAll("_.._javassist_[0-9]*", "");
+        entityService = (EntityService) applicationContext.getBean(type.substring(0, 1).toLowerCase() + type.substring(1) + "Service", EntityService.class);
+      }
+
+      Element root = valueElement.addElement(entityService.getRootElementName());
+      entityService.toXml((AbstractEntity)result, root);
+    } else if (result instanceof Collection) {
+
+      Collection<AbstractEntity> entities = (Collection<AbstractEntity>) result;
+      if (entities.size() > 0) {
+        AbstractEntity firstEntity = entities.iterator().next();
+
+        if (firstEntity instanceof InternalTransaction) {
+          entityService = (EntityService) applicationContext.getBean("transactionService", EntityService.class);
+        } else {
+          String type = firstEntity.getClass().getSimpleName().replaceAll("_.._javassist_[0-9]*", "");
+          entityService = (EntityService) applicationContext.getBean(type.substring(0, 1).toLowerCase() + type.substring(1) + "Service", EntityService.class);
+        }
+
+        Element root = valueElement.addElement(service.getRootElementName());
+
+        for (AbstractEntity ae : entities) {
+          entityService.toXml(ae, root);
+        }
+      }
+    } else if (result == null) {
+      valueElement.addAttribute("null", "true");
+    } else if (result instanceof Date) {
+      valueElement.setText(DATE_FORMAT.format((Date) result));
+    } else {
+      valueElement.setText(result.toString());
+    }
     sendResponse(res, doc);
   }
 
@@ -295,7 +377,7 @@ public abstract class AbstractController implements Controller, ApplicationConte
         EntityService entityService = null;
 
         if (!paramTypes[i].equals(InternalTransaction.class)) {
-          entityService = (EntityService) applicationContext.getBean(type.getSimpleName().substring(0,1).toLowerCase() + type.getSimpleName().substring(1) + "Service", EntityService.class);
+          entityService = (EntityService) applicationContext.getBean(type.getSimpleName().substring(0, 1).toLowerCase() + type.getSimpleName().substring(1) + "Service", EntityService.class);
         } else {
           entityService = (EntityService) applicationContext.getBean("transactionService", EntityService.class);
         }
@@ -588,7 +670,6 @@ public abstract class AbstractController implements Controller, ApplicationConte
       return null;
     }
 
-    Class type = method.getReturnType();
     Object result = null;
     try {
       result = method.invoke(entity);
@@ -715,6 +796,7 @@ public abstract class AbstractController implements Controller, ApplicationConte
     private Class type;
     private String value;
     private int intValue;
+    private boolean boolValue;
 
     public Parameter(String name, Class type) {
       this.name = name;
@@ -758,6 +840,13 @@ public abstract class AbstractController implements Controller, ApplicationConte
       this.intValue = intValue;
     }
 
+    public boolean getBoolValue() {
+      return boolValue;
+    }
+
+    public void setBoolValue(boolean boolValue) {
+      this.boolValue = boolValue;
+    }
   }
 
 }

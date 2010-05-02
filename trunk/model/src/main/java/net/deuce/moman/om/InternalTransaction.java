@@ -1,6 +1,8 @@
 package net.deuce.moman.om;
 
 import net.sf.ofx4j.domain.data.common.TransactionType;
+import org.hibernate.annotations.Sort;
+import org.hibernate.annotations.SortType;
 
 import javax.persistence.*;
 import java.util.*;
@@ -26,7 +28,7 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
 
   private InternalTransaction transferTransaction;
 
-  private List<Split> split = new LinkedList<Split>();
+  private SortedSet<Split> split = new TreeSet<Split>();
   private transient Map<Envelope, Split> envelopeSplitMap = null;
 
   private Account account;
@@ -94,7 +96,7 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
     this.transferTransactionId = transferTransactionId;
   }
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "transfer_id")
   public InternalTransaction getTransferTransaction() {
     return transferTransaction;
@@ -241,7 +243,7 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
     this.externalId = externalId;
   }
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "account_id")
   public Account getAccount() {
     return account;
@@ -251,13 +253,14 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
     this.account = account;
   }
 
-  @OneToMany(mappedBy = "transaction")
+  @OneToMany(mappedBy = "transaction", fetch = FetchType.LAZY)
   @Column(name = "id")
-  public List<Split> getSplit() {
+  @Sort(type = SortType.NATURAL)
+  public SortedSet<Split> getSplit() {
     return split;
   }
 
-  public void setSplit(List<Split> split) {
+  public void setSplit(SortedSet<Split> split) {
     this.split = split;
   }
 
@@ -281,7 +284,7 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
   }
 
   public int compare(InternalTransaction o1, InternalTransaction o2) {
-    int dateCompare = o1.date.compareTo(o2.getDate());
+    int dateCompare = compareObjects(o1.date, o2.date);
 
     if (dateCompare == 0) {
       if (o1.externalId != null && o2.getExternalId() != null) {
@@ -293,7 +296,7 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
       if (o2.externalId != null) {
         return 1;
       }
-      return o1.description.compareTo(o2.description);
+      return compareObjects(o1.description, o2.description);
     }
     return dateCompare;
   }

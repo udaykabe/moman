@@ -11,8 +11,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.SortedSet;
 
 @Service
 public class AllocationSetService extends UserBasedService<AllocationSet, AllocationSetDao> {
@@ -39,7 +41,7 @@ public class AllocationSetService extends UserBasedService<AllocationSet, Alloca
 
       public void doExecute() throws Exception {
 
-        final List<Allocation> oldList = allocationSet.getAllocations();
+        final SortedSet<Allocation> oldList = allocationSet.getAllocations();
 
         moveAllocations(allocationSet, indexes, target, before);
         setResultCode(HttpServletResponse.SC_OK);
@@ -66,7 +68,7 @@ public class AllocationSetService extends UserBasedService<AllocationSet, Alloca
     }
 
     Allocation allocation;
-    List<Allocation> allocations = allocationSet.getAllocations();
+    List<Allocation> allocations = new ArrayList<Allocation>(allocationSet.getAllocations());
 
     for (int i = startIndex; i < startIndex + indexes.size(); i++) {
       allocation = allocations.get(indexes.get(i - startIndex));

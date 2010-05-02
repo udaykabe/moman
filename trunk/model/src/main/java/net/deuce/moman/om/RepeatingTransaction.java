@@ -86,10 +86,10 @@ public class RepeatingTransaction extends InternalTransaction {
   }
 
   public int compare(RepeatingTransaction o1, RepeatingTransaction o2) {
-    int dateCompare = o1.getDateDue().compareTo(o2.getDateDue());
+    int dateCompare = compareObjects(o1.dateDue, o2.dateDue);
 
     if (dateCompare == 0) {
-      return o1.getDescription().compareTo(o2.getDescription());
+      return compareObjects(o1.getDescription(), o2.getDescription());
     }
     return dateCompare;
   }

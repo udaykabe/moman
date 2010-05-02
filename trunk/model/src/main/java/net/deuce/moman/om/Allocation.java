@@ -22,7 +22,7 @@ public class Allocation extends AbstractEntity<Allocation> {
   public Allocation() {
   }
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "set_id")
   public AllocationSet getAllocationSet() {
     return allocationSet;
@@ -32,7 +32,7 @@ public class Allocation extends AbstractEntity<Allocation> {
     this.allocationSet = allocationSet;
   }
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "envelope_id")
   public Envelope getEnvelope() {
     return envelope;
@@ -77,7 +77,7 @@ public class Allocation extends AbstractEntity<Allocation> {
 
 
   public int compare(Allocation o1, Allocation o2) {
-    return o1.index.compareTo(o2.getIndex());
+    return compareObjects(o1.index, o2.index);
   }
 
 

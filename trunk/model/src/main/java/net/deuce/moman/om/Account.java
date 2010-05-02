@@ -1,12 +1,13 @@
 package net.deuce.moman.om;
 
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import net.sf.ofx4j.domain.data.common.AccountStatus;
+import org.hibernate.annotations.Sort;
+import org.hibernate.annotations.SortType;
 
 import javax.persistence.*;
-
-import net.sf.ofx4j.domain.data.common.AccountStatus;
+import java.util.Date;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 @Entity
 @Table(name = "Account",  uniqueConstraints = {@UniqueConstraint(columnNames = {"uuid"})})
@@ -46,7 +47,7 @@ public class Account extends AbstractEntity<Account> {
 	
 	private Date lastReconciledDate;
 
-  private List<InternalTransaction> transactions = new LinkedList<InternalTransaction>();
+  private SortedSet<InternalTransaction> transactions = new TreeSet<InternalTransaction>();
 	
 	public Account() {
 		super();
@@ -57,16 +58,17 @@ public class Account extends AbstractEntity<Account> {
 	}
 	
 	public int compare(Account o1, Account o2) {
-		return o1.nickname.compareTo(o2.nickname);
+    return compareObjects(o1.nickname, o2.nickname);
 	}
 
-  @OneToMany(mappedBy="account", cascade = CascadeType.REMOVE)
+  @OneToMany(mappedBy="account", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   @Column(name="id")
-  public List<InternalTransaction> getTransactions() {
+  @Sort(type = SortType.NATURAL)
+  public SortedSet<InternalTransaction> getTransactions() {
     return transactions;
   }
 
-  public void setTransactions(List<InternalTransaction> transactions) {
+  public void setTransactions(SortedSet<InternalTransaction> transactions) {
     this.transactions = transactions;
   }
 
@@ -129,7 +131,7 @@ public class Account extends AbstractEntity<Account> {
     this.selected = selected;
 	}
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id")
   public User getUser() {
     return user;
@@ -211,7 +213,7 @@ public class Account extends AbstractEntity<Account> {
 		this.lastReconciledDate = lastReconciledDate;
 	}
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "fi_id")
 	public FinancialInstitution getFinancialInstitution() {
 		return financialInstitution;

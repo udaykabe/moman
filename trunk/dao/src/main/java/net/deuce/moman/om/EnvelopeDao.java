@@ -1,20 +1,15 @@
 package net.deuce.moman.om;
 
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
+import org.hibernate.Query;
 
-import javax.persistence.Query;
-import java.util.List;
-
-@Component
 public class EnvelopeDao extends UserBasedDao<Envelope> {
 
   private Envelope getSpecialEnvelope(User user, String attr) {
-    Query query = getEntityManager().createQuery(String.format("select e from %s e, %s u where e.user = u and u.id = :id and e.%s = :bool",
+    Query query = getSession().createQuery(String.format("select e from %s e, %s u where e.user = u and u.id = :id and e.%s = :bool",
         Envelope.class.getName(), User.class.getName(), attr));
     query.setParameter("id", user.getId());
     query.setParameter("bool", true);
-    return (Envelope) query.getSingleResult();
+    return (Envelope) query.uniqueResult();
   }
 
   public Envelope getRootEnvelope(User user) {

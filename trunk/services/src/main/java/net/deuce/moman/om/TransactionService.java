@@ -14,10 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 
 @Service
 public class TransactionService extends UserBasedService<InternalTransaction, TransactionDao> {
@@ -89,10 +86,8 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
   }
 
   private boolean adjustSplits(InternalTransaction transaction, double newAmount, List<Split> newSplits, List<Split> affectedSplits) {
-    List<Split> split = transaction.getSplit();
+    SortedSet<Split> split = transaction.getSplit();
     if (split.size() == 0) return true;
-
-    affectedSplits.addAll(transaction.getSplit());
 
     clearSplit(transaction, affectedSplits);
 
@@ -124,7 +119,7 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
         setUndo(new AbstractCommand("Undo " + getName(), true) {
           public void doExecute() throws Exception {
             undoAdjustBalances(transaction.getAccount(), accountBalance, affectedTransactions);
-            undoSetAmount(transaction, affectedEnvelopes, affectedSplits);
+            undoSetAmount(affectedEnvelopes);
             undoClearSplit(transaction, affectedSplits);
             setResultCode(HttpServletResponse.SC_OK);
           }
@@ -134,7 +129,7 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
   }
 
   @Transactional
-  public void undoSetAmount(InternalTransaction transaction, List<Envelope> affectedEnvelopes, List<Split> affectedSplits) {
+  public void undoSetAmount(List<Envelope> affectedEnvelopes) {
 
     Envelope envelope;
     for (Envelope affectedEnvelope : affectedEnvelopes) {
@@ -145,6 +140,7 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
   }
 
   private void saveAffectedTransaction(InternalTransaction transaction, List<InternalTransaction> affectedTransactions) {
+    if (affectedTransactions == null) return;
     InternalTransaction savedTransaction = new InternalTransaction();
     savedTransaction.setId(transaction.getId());
     savedTransaction.setAmount(transaction.getAmount());
@@ -155,6 +151,7 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
   }
 
   private void saveAffectedEnvelope(Envelope envelope, List<Envelope> affectedEnvelopes) {
+    if (affectedEnvelopes == null) return;
     Envelope savedEnvelope = new Envelope();
     savedEnvelope.setId(envelope.getId());
     savedEnvelope.setBalance(envelope.getBalance());
@@ -446,7 +443,7 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
     item.setTransaction(transaction);
     splitService.saveOrUpdate(item);
 
-    List<Split> split = transaction.getSplit();
+    SortedSet<Split> split = transaction.getSplit();
     if (!split.contains(item)) {
       transaction.addSplit(item);
       saveOrUpdate(transaction);
@@ -545,6 +542,20 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
 
   @Transactional
   public void clearCustomTransactions(User user) {
-    transactionDao.clearCustomTransactions(user);
+
+//    transactionDao.clearCustomTransactions(user);
+    for (InternalTransaction t : transactionDao.getCustomTransactions(user, false)) {
+      t.setCustom(false);
+      saveOrUpdate(t);
+    }
+  }
+
+  @Transactional(readOnly = true)
+  public InternalTransaction findTransactionByExternalId(User user, String externalId) {
+    return transactionDao.findTransactionsByExternalId(user, externalId);
+  }
+
+  public List<InternalTransaction> getCustomTransactions(User user, boolean reverse) {
+    return transactionDao.getCustomTransactions(user, reverse);
   }
 }

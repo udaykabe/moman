@@ -3,8 +3,6 @@ package net.deuce.moman.om;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import java.util.Comparator;
 
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
@@ -102,5 +100,12 @@ public abstract class AbstractEntity<E> implements Comparator<E>, Comparable<E> 
 		String name = getClass().getSimpleName();
 		return name.substring(0,1).toLowerCase() + name.substring(1);
 	}
+
+  protected int compareObjects(Comparable o1, Comparable o2) {
+    if (o1 != null && o2 == null) return -1;
+    if (o1 == null && o2 != null) return 1;
+    if (o1 == null && o2 == null) return 0;
+    return o1.compareTo(o2);
+  }
 	
 }

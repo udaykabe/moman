@@ -14,7 +14,7 @@ public class Split extends AbstractEntity<Split> {
     super();
   }
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "envelope_id")
   public Envelope getEnvelope() {
     return envelope;
@@ -34,7 +34,7 @@ public class Split extends AbstractEntity<Split> {
   }
 
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "transaction_id")
   public InternalTransaction getTransaction() {
     return transaction;
@@ -80,7 +80,7 @@ public class Split extends AbstractEntity<Split> {
   }
 
   public int compare(Split o1, Split o2) {
-    return o1.compareTo(o2);
+    return compareObjects(o1, o2);
   }
 
 

@@ -22,7 +22,7 @@ public class Payee extends AbstractEntity<Payee> {
 
 
   public int compare(Payee o1, Payee o2) {
-    return o1.description.compareTo(o2.description);
+    return compareObjects(o1.description, o2.description);
   }
 
   @Basic
@@ -34,7 +34,7 @@ public class Payee extends AbstractEntity<Payee> {
     this.description = description;
   }
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "envelope_id")
   public Envelope getEnvelope() {
     return envelope;

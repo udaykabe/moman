@@ -63,7 +63,7 @@ public class FinancialInstitution extends AbstractEntity<FinancialInstitution> {
 
 
   public int compare(FinancialInstitution o1, FinancialInstitution o2) {
-    return o1.name.compareTo(o2.name);
+    return compareObjects(o1.name, o2.name);
   }
 
   @Id

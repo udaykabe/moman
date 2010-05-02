@@ -1,11 +1,14 @@
 package net.deuce.moman.om;
 
+import org.hibernate.annotations.Sort;
+import org.hibernate.annotations.SortType;
+
 import javax.persistence.*;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 @Entity
-@Table(name = "User",  uniqueConstraints = {@UniqueConstraint(columnNames = {"uuid"})})
+@Table(name = "User", uniqueConstraints = {@UniqueConstraint(columnNames = {"uuid"})})
 public class User extends AbstractEntity<User> {
 
   private static final long serialVersionUID = 1L;
@@ -14,7 +17,7 @@ public class User extends AbstractEntity<User> {
 
   private String password;
 
-  private List<Account> accounts = new LinkedList<Account>();
+  private SortedSet<Account> accounts = new TreeSet<Account>();
 
   public User() {
     super();
@@ -44,16 +47,17 @@ public class User extends AbstractEntity<User> {
 
 
   public int compare(User o1, User o2) {
-    return o1.username.compareTo(o2.username);
+    return compareObjects(o1.username, o2.username);
   }
 
-  @OneToMany(mappedBy="user", cascade = CascadeType.REMOVE)
-  @Column(name="id")
-  public List<Account> getAccounts() {
+  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+  @Column(name = "id")
+  @Sort(type = SortType.NATURAL)
+  public SortedSet<Account> getAccounts() {
     return accounts;
   }
 
-  public void setAccounts(List<Account> accounts) {
+  public void setAccounts(SortedSet<Account> accounts) {
     this.accounts = accounts;
   }
 
