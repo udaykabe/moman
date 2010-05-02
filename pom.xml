@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
 
@@ -160,33 +161,9 @@
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-simple</artifactId>
+        <artifactId>slf4j-log4j12</artifactId>
         <version>1.5.6</version>
-      </dependency>
-      <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>jcl104-over-slf4j</artifactId>
-        <version>1.5.6</version>
-      </dependency>
-      <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>jcl-over-slf4j</artifactId>
-        <version>1.5.6</version>
-      </dependency>
-      <dependency>
-        <groupId>ch.qos.logback</groupId>
-        <artifactId>logback-classic</artifactId>
-        <version>0.9.15</version>
-      </dependency>
-      <!--
-        This is a fake dependency to remove commons-logging from all transitive dependencies
-        as SLF4J is wrapping the commons-logging API's for us.
-        See: http://day-to-day-stuff.blogspot.com/2007/10/announcement-version-99-does-not-exist.html
-      -->
-      <dependency>
-        <groupId>commons-logging</groupId>
-        <artifactId>commons-logging</artifactId>
-        <version>99.0-does-not-exist</version>
+        <scope>runtime</scope>
       </dependency>
 
       <!-- Module Dependencies -->
@@ -201,6 +178,16 @@
         <groupId>org.hibernate</groupId>
         <artifactId>hibernate-entitymanager</artifactId>
         <version>3.4.0.GA</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.persistence</groupId>
+            <artifactId>persistence-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.hibernate</groupId>
+            <artifactId>ejb3-persistence</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.hibernate</groupId>
@@ -225,6 +212,10 @@
           <exclusion>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.persistence</groupId>
+            <artifactId>persistence-api</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -268,7 +259,7 @@
         <version>1.0.1B</version>
         <scope>provided</scope>
       </dependency>
-      
+
       <!--dependency>
         <groupId>org.xchain</groupId>
         <artifactId>xchain-core</artifactId>
@@ -334,10 +325,12 @@
     <jndi-prefix>java:/moman</jndi-prefix>
     <hibernate.session.factory.jndi.path>${jndi-prefix}/SessionFactory</hibernate.session.factory.jndi.path>
     <hibernate.datasource.jndi.name>${jndi-prefix}/DataSource</hibernate.datasource.jndi.name>
-    <hibernate.transaction.manager.lookup.class>org.hibernate.transaction.JBossTransactionManagerLookup</hibernate.transaction.manager.lookup.class>
+    <hibernate.transaction.manager.lookup.class>org.hibernate.transaction.JBossTransactionManagerLookup
+    </hibernate.transaction.manager.lookup.class>
     <hibernate.jta.user.transaction.jndi.path>java:comp/UserTransaction</hibernate.jta.user.transaction.jndi.path>
     <hibernate.dialect>org.hibernate.dialect.MySQLDialect</hibernate.dialect>
-    <hibernate.transaction.factory.class>org.hibernate.transaction.JTATransactionFactory</hibernate.transaction.factory.class>
+    <hibernate.transaction.factory.class>org.hibernate.transaction.JTATransactionFactory
+    </hibernate.transaction.factory.class>
     <jta-lookup-strategy>org.xchain.framework.transaction.JBossLookupStrategy</jta-lookup-strategy>
   </properties>
 

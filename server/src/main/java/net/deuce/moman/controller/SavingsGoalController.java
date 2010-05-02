@@ -30,19 +30,19 @@ public class SavingsGoalController extends AbstractController {
     if (!checkParameters(req, res, Arrays.asList(new AbstractController.Parameter[]{action}))) return null;
 
     switch (action.getIntValue()) {
-      case 0: // NEW
+      case Actions.NEW_ENTITY:
         newSavingsGoal(req, res);
         break;
-      case 1: // EDIT
+      case Actions.EDIT_ENTITY:
         editSavingsGoal(req, res);
         break;
-      case 2: // GET
+      case Actions.GET_ENTITY:
         getSavingsGoal(req, res);
         break;
-      case 3: // LIST
+      case Actions.LIST_ENTITIES:
         listSavingsGoals(res);
         break;
-      case 4: // DELETE
+      case Actions.DELETE_ENTITY:
         deleteSavingsGoal(req, res);
         break;
     }

@@ -33,19 +33,19 @@ public class BillController extends AbstractController {
     if (!checkParameters(req, res, Arrays.asList(new Parameter[]{action}))) return null;
 
     switch (action.getIntValue()) {
-      case 0: // NEW
+      case Actions.NEW_ENTITY:
         newBill(req, res);
         break;
-      case 1: // EDIT
+      case Actions.EDIT_ENTITY:
         editBill(req, res);
         break;
-      case 2: // GET
+      case Actions.GET_ENTITY:
         getBill(req, res);
         break;
-      case 3: // LIST
+      case Actions.LIST_ENTITIES:
         listBills(res);
         break;
-      case 4: // DELETE
+      case Actions.DELETE_ENTITY:
         deleteBill(req, res);
         break;
     }

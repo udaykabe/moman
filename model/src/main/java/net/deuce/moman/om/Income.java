@@ -1,14 +1,11 @@
 package net.deuce.moman.om;
 
+import net.deuce.moman.util.CalendarUtil;
+
+import javax.persistence.*;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-
-import net.deuce.moman.util.CalendarUtil;
-
-import org.dom4j.Document;
-
-import javax.persistence.*;
 
 @Entity
 @Table(name = "Income", uniqueConstraints = {@UniqueConstraint(columnNames = {"uuid"})})
@@ -32,7 +29,7 @@ public class Income extends AbstractEntity<Income> {
 
 	
 	public int compare(Income o1, Income o2) {
-		return o1.name.compareTo(o2.name);
+    return compareObjects(o1.name, o2.name);
 	}
 
   @Basic

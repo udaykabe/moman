@@ -60,16 +60,9 @@
       <scope>test</scope>
     </dependency>
 
-    <!-- Logging Dependencies -->
     <dependency>
       <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-simple</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>jcl104-over-slf4j</artifactId>
-      <scope>provided</scope>
+      <artifactId>slf4j-api</artifactId>
     </dependency>
 
   </dependencies>

@@ -12,9 +12,10 @@ public class CommandWrappedTrigger extends Trigger {
   private String id;
 
   public CommandWrappedTrigger(String id, Command command) {
-    this.trigger = (SimpleTrigger) TriggerUtils.makeImmediateTrigger(1, 0);
+    this.trigger = (SimpleTrigger) TriggerUtils.makeImmediateTrigger(1, 1);
     this.id = id;
     this.command = command;
+    trigger.setName(command.getName());
   }
 
   public String getId() {

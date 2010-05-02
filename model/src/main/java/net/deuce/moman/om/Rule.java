@@ -72,7 +72,7 @@ public class Rule extends AbstractEntity<Rule> {
     this.enabled = enabled;
   }
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "envelope_id")
   public Envelope getEnvelope() {
     return envelope;
@@ -128,7 +128,7 @@ public class Rule extends AbstractEntity<Rule> {
 
 
   public int compare(Rule o1, Rule o2) {
-    return o1.expression.compareTo(o2.expression);
+    return compareObjects(o1.expression, o2.expression);
   }
 
   private static interface RuleExecutor {

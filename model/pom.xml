@@ -31,6 +31,10 @@
       <groupId>commons-validator</groupId>
       <artifactId>commons-validator</artifactId>
     </dependency>
+    <dependency>
+      <groupId>javax.persistence</groupId>
+      <artifactId>persistence-api</artifactId>
+    </dependency>
   </dependencies>
 
   <profiles>

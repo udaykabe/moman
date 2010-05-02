@@ -22,7 +22,7 @@
     </property>
     <property name="handlers">
       <list>
-        <bean class="org.mortbay.jetty.servlet.Context">
+        <bean id="webContext" class="org.mortbay.jetty.servlet.Context">
           <property name="contextPath" value="/"/>
           <property name="sessionHandler">
             <bean class="org.mortbay.jetty.servlet.SessionHandler"/>

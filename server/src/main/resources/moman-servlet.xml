@@ -13,19 +13,46 @@
 
   <context:annotation-config/>
   <context:component-scan base-package="net.deuce.moman"/>
-  <tx:annotation-driven mode="aspectj" transaction-manager="transactionManager"/>
-  <context:load-time-weaver/>
+  <!--<tx:annotation-driven mode="aspectj" transaction-manager="transactionManager"/>-->
+  <!--<context:load-time-weaver/>-->
 
-  <bean id="localEntityManagerFactory"
+  <!--bean id="localEntityManagerFactory"
         class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
     <property name="dataSource" ref="dataSource"/>
     <property name="persistenceUnitName" value="moman"/>
+  </bean-->
+
+  <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+    <property name="sessionFactory" ref="sessionFactory"/>
   </bean>
 
-  <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-    <property name="entityManagerFactory" ref="localEntityManagerFactory"/>
-    <property name="dataSource" ref="dataSource"/>
+  <bean id="openSessionInViewInterceptor"
+        class="org.springframework.orm.hibernate3.support.OpenSessionInViewInterceptor">
+    <property name="sessionFactory" ref="sessionFactory"/>
+    <property name="flushModeName" value="FLUSH_AUTO"/>
   </bean>
+
+  <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+    <property name="dataSource" ref="dataSource"/>
+    <property name="hibernateProperties">
+      <map>
+        <entry key="hibernate.dialect" value="${hibernate.dialect}"/>
+        <entry key="hibernate.archive.autodetection" value="class"/>
+        <entry key="hibernate.show_sql" value="false"/>
+        <entry key="hibernate.format_sql" value="true"/>
+        <entry key="hbm2ddl.auto" value="update"/>
+
+        <entry key="hibernate.cache.use_second_level_cache" value="true"/>
+        <entry key="hibernate.cache.use_query_cache" value="true"/>
+        <entry key="hibernate.cache.use_minimal_puts" value="true"/>
+        <entry key="hibernate.cache.provider_class" value="org.hibernate.cache.EhCacheProvider"/>
+        <entry key="hibernate.cache.provider_configuration_file_resource_path" value="/ehcache.xml"/>
+      </map>
+    </property>
+    <property name="configLocation" value="classpath:hibernate.cfg.xml"/>
+    <property name="configurationClass" value="org.hibernate.cfg.AnnotationConfiguration"/>
+  </bean>
+
 
   <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
     <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
@@ -33,8 +60,8 @@
     <property name="username" value="jboss"/>
     <property name="password" value="D0G@larg3"/>
 
-    <property name="maxActive" value="10"/>
-    <property name="maxIdle" value="10"/>
+    <property name="maxActive" value="50"/>
+    <property name="maxIdle" value="20"/>
     <property name="maxWait" value="60"/>
     <property name="validationQuery" value="select 1"/>
     <property name="removeAbandoned" value="true"/>
@@ -59,6 +86,11 @@
         /job=jobController
       </value>
     </property>
+    <property name="interceptors">
+      <list>
+        <ref bean="openSessionInViewInterceptor"/>
+      </list>
+    </property>
   </bean>
 
   <bean id="accountController" class="net.deuce.moman.controller.AccountController"/>
@@ -73,5 +105,25 @@
   <bean id="sgController" class="net.deuce.moman.controller.SavingsGoalController"/>
   <bean id="transactionController" class="net.deuce.moman.controller.TransactionController"/>
   <bean id="jobController" class="net.deuce.moman.controller.JobController"/>
+
+  <bean id="accountDao" class="net.deuce.moman.om.AccountDao" parent="userBasedDao"/>
+  <bean id="allocationDao" class="net.deuce.moman.om.AllocationDao" parent="userBasedDao"/>
+  <bean id="allocationSetDao" class="net.deuce.moman.om.AllocationSetDao" parent="userBasedDao"/>
+  <bean id="envelopeDao" class="net.deuce.moman.om.EnvelopeDao" parent="userBasedDao"/>
+  <bean id="incomeDao" class="net.deuce.moman.om.IncomeDao" parent="userBasedDao"/>
+  <bean id="payeeDao" class="net.deuce.moman.om.PayeeDao" parent="userBasedDao"/>
+  <bean id="repeatingTransactionDao" class="net.deuce.moman.om.RepeatingTransactionDao" parent="userBasedDao"/>
+  <bean id="ruleDao" class="net.deuce.moman.om.RuleDao" parent="userBasedDao"/>
+  <bean id="splitDao" class="net.deuce.moman.om.SplitDao" parent="userBasedDao"/>
+  <bean id="transactionDao" class="net.deuce.moman.om.TransactionDao" parent="userBasedDao"/>
+
+  <bean id="financialInstitutionDao" class="net.deuce.moman.om.FinancialInstitutionDao" parent="entityDao"/>
+  <bean id="userDao" class="net.deuce.moman.om.UserDao" parent="entityDao"/>
+
+  <bean id="userBasedDao" class="net.deuce.moman.om.UserBasedDao" abstract="true" parent="entityDao"/>
+
+  <bean id="entityDao" class="net.deuce.moman.om.EntityDao" abstract="true">
+    <property name="sessionFactory" ref="sessionFactory"/>
+  </bean>
 
 </beans>

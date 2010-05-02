@@ -1,52 +1,56 @@
 package net.deuce.moman.om;
 
+import org.hibernate.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import java.lang.reflect.ParameterizedType;
 import java.util.Iterator;
 import java.util.List;
 
 @SuppressWarnings("unchecked")
-public abstract class EntityDao<E extends AbstractEntity> {
+public abstract class EntityDao<E extends AbstractEntity> extends HibernateDaoSupport {
 
   protected Class<E> entityClass = (Class<E>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
   private final Logger log = LoggerFactory.getLogger(getClass());
 
-  @PersistenceContext(unitName = "moman")
-  protected EntityManager em;
+//  @PersistenceContext(unitName = "moman")
+//  protected EntityManager em;
 
   public EntityDao() {
     this.entityClass = (Class<E>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
   }
 
+  /*
   public EntityManager getEntityManager() {
     return em;
   }
+  */
 
   @Transactional(propagation = Propagation.MANDATORY)
   public boolean delete(E entity) {
-    em.remove(entity);
+//    em.remove(entity);
+    getHibernateTemplate().delete(entity);
     return true;
   }
 
   @Transactional(propagation = Propagation.MANDATORY)
   public boolean deleteByQuery(Query query) {
 
-    Iterator<E> itr = query.getResultList().iterator();
+    Iterator<E> itr = query.list().iterator();
 
     int count = 0;
     while (itr.hasNext()) {
       delete(itr.next());
       if (++count % 100 == 0) {
         //flush a batch of updates and release memory:
-        em.flush();
-        em.clear();
+//        em.flush();
+//        em.clear();
+        getHibernateTemplate().flush();
+        getHibernateTemplate().clear();
       }
     }
 
@@ -57,7 +61,8 @@ public abstract class EntityDao<E extends AbstractEntity> {
    * Retrieve an entity based on the generated id.
    */
   public E get(Long id) {
-    E entity = (E) em.find(entityClass, id);
+//    E entity = (E) em.find(entityClass, id);
+    E entity = (E)getHibernateTemplate().get(entityClass, id);
     return entity;
   }
 
@@ -65,9 +70,10 @@ public abstract class EntityDao<E extends AbstractEntity> {
    * Retrieve an entity based on the uuid.
    */
   public E get(String uuid) {
-    Query query = em.createQuery(String.format("select e from %s e where e.uuid = :uuid", getEntityClass().getName()));
+//    Query query = em.createQuery(String.format("select e from %s e where e.uuid = :uuid", getEntityClass().getName()));
+    Query query = getSession().createQuery(String.format("select e from %s e where e.uuid = :uuid", getEntityClass().getName()));
     query.setParameter("uuid", uuid);
-    E entity = (E) query.getSingleResult();
+    E entity = (E) query.uniqueResult();
     return entity;
   }
 
@@ -76,15 +82,15 @@ public abstract class EntityDao<E extends AbstractEntity> {
   }
 
   public List<E> list() {
-    return em.createQuery(String.format("select e from %s e", getEntityClass().getName())).getResultList();
+    return getSession().createQuery(String.format("select e from %s e", getEntityClass().getName())).list();
   }
 
   @Transactional(propagation = Propagation.MANDATORY)
   public E saveOrUpdate(E entity) {
     if (entity.getId() == null) {
-      em.persist(entity);
+      getHibernateTemplate().persist(entity);
     } else {
-      entity = em.merge(entity);
+      entity = (E) getHibernateTemplate().merge(entity);
     }
     return entity;
   }

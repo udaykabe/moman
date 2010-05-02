@@ -1,6 +1,7 @@
 package net.deuce.moman.om;
 
-import net.deuce.moman.util.CalendarUtil;
+import org.hibernate.annotations.Sort;
+import org.hibernate.annotations.SortType;
 
 import javax.persistence.*;
 import java.util.*;
@@ -23,7 +24,7 @@ public class Envelope extends AbstractEntity<Envelope> {
   private Double budget;
   private transient String parentId;
   private Envelope parent;
-  private List<Envelope> children = new LinkedList<Envelope>();
+  private SortedSet<Envelope> children = new TreeSet<Envelope>();
   private transient Map<String, Envelope> childrenByName = null;
   private Boolean editable;
   private Boolean selected = Boolean.FALSE;
@@ -58,7 +59,7 @@ public class Envelope extends AbstractEntity<Envelope> {
     this.savingsGoalOverrideAmount = savingsGoalOverrideAmount;
   }
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id")
   public User getUser() {
     return user;
@@ -290,7 +291,7 @@ public class Envelope extends AbstractEntity<Envelope> {
     this.expanded = expanded;
   }
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "parent_id")
   public Envelope getParent() {
     return parent;
@@ -304,13 +305,14 @@ public class Envelope extends AbstractEntity<Envelope> {
     return children.size() > 0;
   }
 
-  @OneToMany(mappedBy="parent", cascade = CascadeType.REMOVE)
+  @OneToMany(mappedBy="parent", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   @Column(name="id")
-  public List<Envelope> getChildren() {
+  @Sort(type = SortType.NATURAL)
+  public SortedSet<Envelope> getChildren() {
     return children;
   }
 
-  public void setChildren(List<Envelope> children) {
+  public void setChildren(SortedSet<Envelope> children) {
     this.children = children;
   }
 
@@ -387,7 +389,8 @@ public class Envelope extends AbstractEntity<Envelope> {
 
     if (!o1.hasChildren() && o2.hasChildren()) return -1;
     if (o1.hasChildren() && !o2.hasChildren()) return 1;
-    return o1.name.compareTo(o2.getName());
+
+    return compareObjects(o1.name, o2.name);
   }
 
 

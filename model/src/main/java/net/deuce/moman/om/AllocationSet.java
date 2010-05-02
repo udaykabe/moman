@@ -1,10 +1,11 @@
 package net.deuce.moman.om;
 
+import org.hibernate.annotations.Sort;
+import org.hibernate.annotations.SortType;
+
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 @Entity
 @Table(name = "AllocationSet", uniqueConstraints = {@UniqueConstraint(columnNames = {"uuid"})})
@@ -14,7 +15,7 @@ public class AllocationSet extends AbstractEntity<AllocationSet> {
 
   private String name;
   private Income income;
-  private List<Allocation> allocations = new ArrayList<Allocation>();
+  private SortedSet<Allocation> allocations = new TreeSet<Allocation>();
 
   public AllocationSet() {
   }
@@ -32,7 +33,7 @@ public class AllocationSet extends AbstractEntity<AllocationSet> {
     this.name = name;
   }
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "income_id")
   public Income getIncome() {
     return income;
@@ -46,15 +47,14 @@ public class AllocationSet extends AbstractEntity<AllocationSet> {
     return allocations.size() > 0;
   }
 
-  @OneToMany(mappedBy = "allocationSet", cascade = CascadeType.REMOVE)
+  @OneToMany(mappedBy = "allocationSet", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   @Column(name = "id")
-  public List<Allocation> getAllocations() {
-    List<Allocation> list = new LinkedList<Allocation>(allocations);
-    Collections.sort(list);
-    return list;
+  @Sort(type = SortType.NATURAL)
+  public SortedSet<Allocation> getAllocations() {
+    return allocations;
   }
 
-  public void setAllocations(List<Allocation> allocations) {
+  public void setAllocations(SortedSet<Allocation> allocations) {
     this.allocations = allocations;
   }
 
@@ -84,7 +84,7 @@ public class AllocationSet extends AbstractEntity<AllocationSet> {
 
 
   public int compare(AllocationSet o1, AllocationSet o2) {
-    return o1.name.compareTo(o2.getName());
+    return o1.name.compareTo(o2.name);
   }
 
 
