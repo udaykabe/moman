@@ -2,11 +2,13 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/android/android.iml" filepath="$PROJECT_DIR$/android/android.iml" />
       <module fileurl="file://$PROJECT_DIR$/dao/genemm-dao.iml" filepath="$PROJECT_DIR$/dao/genemm-dao.iml" />
       <module fileurl="file://$PROJECT_DIR$/services/genemm-services.iml" filepath="$PROJECT_DIR$/services/genemm-services.iml" />
       <module fileurl="file://$PROJECT_DIR$/model/moman-model.iml" filepath="$PROJECT_DIR$/model/moman-model.iml" />
       <module fileurl="file://$PROJECT_DIR$/moman-parent.iml" filepath="$PROJECT_DIR$/moman-parent.iml" />
       <module fileurl="file://$PROJECT_DIR$/server/moman-server.iml" filepath="$PROJECT_DIR$/server/moman-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/util/moman-util.iml" filepath="$PROJECT_DIR$/util/moman-util.iml" />
     </modules>
   </component>
 </project>

@@ -185,6 +185,31 @@ public abstract class EntityService<E extends AbstractEntity, ED extends EntityD
     }
   }
 
+  public Element toXml(List<E> entities) {
+    return toXml(entities, -1, 0);
+  }
+
+  public Element toXml(List<E> entities, int from, int count) {
+
+    Element root = DocumentHelper.createElement(getRootElementName());
+
+    if (from < 0) {
+      from = 0;
+      count = entities.size();
+    }
+
+    root.addAttribute("from", Integer.toString(from));
+    root.addAttribute("totalSize", Integer.toString(entities.size()));
+
+    int pageSize = 0;
+    for (int i=from; (i-from) < count && i<entities.size(); i++, pageSize++) {
+      toXml(entities.get(i), root);
+    }
+    root.addAttribute("pageSize", Integer.toString(pageSize));
+    return root;
+  }
+
+
   public abstract Class<E> getType();
 
   public abstract String getRootElementName();
@@ -192,4 +217,5 @@ public abstract class EntityService<E extends AbstractEntity, ED extends EntityD
   public abstract void toXml(E entity, Element root);
 
   public abstract void toXml(User user, Document root);
+
 }

@@ -8,6 +8,7 @@ import net.deuce.moman.util.DataDateRange;
 import net.deuce.moman.util.Utils;
 import net.sf.ofx4j.domain.data.common.TransactionType;
 import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,12 +55,10 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
         final Envelope oldSelectedEnvelope = envelopeDao.findSelected(env.getUser());
 
         setSelectedEnvelope(env);
-        setResultCode(HttpServletResponse.SC_OK);
 
         setUndo(new AbstractCommand("Undo " + getName(), true) {
           public void doExecute() throws Exception {
             setSelectedEnvelope(oldSelectedEnvelope);
-            setResultCode(HttpServletResponse.SC_OK);
           }
         });
       }
@@ -78,9 +77,29 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
     saveOrUpdate(env);
   }
 
+  public Command getMonthlyEnvelopeCommand(final User user) {
+    return new AbstractCommand(Envelope.class.getSimpleName() + " getMonthlyEnvelope()", true) {
+      public void doExecute() throws Exception {
+        List<Envelope> list = new LinkedList<Envelope>();
+        list.add(getMonthlyEnvelope(user));
+        setResult(toXml(list));
+      }
+    };
+  }
+
   @Transactional(readOnly = true)
   public Envelope getMonthlyEnvelope(User user) {
     return envelopeDao.getMonthlyEnvelope(user);
+  }
+
+  public Command getRootEnvelopeCommand(final User user) {
+    return new AbstractCommand(Envelope.class.getSimpleName() + " getRootEnvelope()", true) {
+      public void doExecute() throws Exception {
+        List<Envelope> list = new LinkedList<Envelope>();
+        list.add(getRootEnvelope(user));
+        setResult(toXml(list));
+      }
+    };
   }
 
   @Transactional(readOnly = true)
@@ -88,14 +107,44 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
     return envelopeDao.getRootEnvelope(user);
   }
 
+  public Command getSavingsGoalsEnvelopeCommand(final User user) {
+    return new AbstractCommand(Envelope.class.getSimpleName() + " getSavingsGoalsEnvelope()", true) {
+      public void doExecute() throws Exception {
+        List<Envelope> list = new LinkedList<Envelope>();
+        list.add(getSavingsGoalsEnvelope(user));
+        setResult(toXml(list));
+      }
+    };
+  }
+
   @Transactional(readOnly = true)
   public Envelope getSavingsGoalsEnvelope(User user) {
     return envelopeDao.getSavingsGoalsEnvelope(user);
   }
 
+  public Command getUnassignedEnvelopeCommand(final User user) {
+    return new AbstractCommand(Envelope.class.getSimpleName() + " getUnassignedEnvelope()", true) {
+      public void doExecute() throws Exception {
+        List<Envelope> list = new LinkedList<Envelope>();
+        list.add(getUnassignedEnvelope(user));
+        setResult(toXml(list));
+      }
+    };
+  }
+
   @Transactional(readOnly = true)
   public Envelope getUnassignedEnvelope(User user) {
     return envelopeDao.getUnassignedEnvelope(user);
+  }
+
+  public Command getAvailableEnvelopeCommand(final User user) {
+    return new AbstractCommand(Envelope.class.getSimpleName() + " getAvailableEnvelope()", true) {
+      public void doExecute() throws Exception {
+        List<Envelope> list = new LinkedList<Envelope>();
+        list.add(getAvailableEnvelope(user));
+        setResult(toXml(list));
+      }
+    };
   }
 
   @Transactional(readOnly = true)
@@ -172,12 +221,10 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
       public void doExecute() throws Exception {
 
         addChild(env, child);
-        setResultCode(HttpServletResponse.SC_OK);
 
         setUndo(new AbstractCommand("Undo " + getName(), true) {
           public void doExecute() throws Exception {
             removeChild(env, child);
-            setResultCode(HttpServletResponse.SC_OK);
           }
         });
       }
@@ -196,13 +243,11 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
       public void doExecute() throws Exception {
 
         boolean removed = removeChild(env, child);
-        setResultCode(HttpServletResponse.SC_OK);
 
         if (removed) {
           setUndo(new AbstractCommand("Undo " + getName(), true) {
             public void doExecute() throws Exception {
               addChild(env, child);
-              setResultCode(HttpServletResponse.SC_OK);
             }
           });
         }
@@ -231,12 +276,10 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
         }
 
         resetBalance(env);
-        setResultCode(HttpServletResponse.SC_OK);
 
         setUndo(new AbstractCommand("Undo " + getName(), true) {
           public void doExecute() throws Exception {
             restoreBalances(env, balances);
-            setResultCode(HttpServletResponse.SC_OK);
           }
         });
       }
@@ -289,12 +332,10 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
       public void doExecute() throws Exception {
 
         final TransferResult result = transfer(sourceAccount, targetAccount, source, target, amount);
-        setResultCode(HttpServletResponse.SC_OK);
 
         setUndo(new AbstractCommand("Undo " + getName(), true) {
           public void doExecute() throws Exception {
             undoTransfer(result);
-            setResultCode(HttpServletResponse.SC_OK);
           }
         });
       }
@@ -378,12 +419,10 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
       public void doExecute() throws Exception {
 
         addEnvelope(envelope, parent);
-        setResultCode(HttpServletResponse.SC_OK);
 
         setUndo(new AbstractCommand("Undo " + getName(), true) {
           public void doExecute() throws Exception {
             undoAddEnvelope(envelope, parent);
-            setResultCode(HttpServletResponse.SC_OK);
           }
         });
       }
@@ -424,12 +463,10 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
         }
 
         removeEnvelope(envelope);
-        setResultCode(HttpServletResponse.SC_OK);
 
         setUndo(new AbstractCommand("Undo " + getName(), true) {
           public void doExecute() throws Exception {
             undoRemoveEnvelope(envelope, parent, affectedRules);
-            setResultCode(HttpServletResponse.SC_OK);
           }
         });
       }
@@ -543,12 +580,10 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
 
         final List<TransferResult> transferResults = new LinkedList<TransferResult>();
         distributeToNegativeEnvelopes(account, env, balance, transferResults);
-        setResultCode(HttpServletResponse.SC_OK);
 
         setUndo(new AbstractCommand("Undo " + getName(), true) {
           public void doExecute() throws Exception {
             undoDistributeToNegativeEnvelopes(transferResults);
-            setResultCode(HttpServletResponse.SC_OK);
           }
         });
       }
@@ -604,7 +639,7 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
     addOptionalBooleanElement(el, "root", env.isRoot());
     addOptionalBooleanElement(el, "unassigned", env.isUnassigned());
     addOptionalBooleanElement(el, "monthly", env.isMonthly());
-    addOptionalBooleanElement(el, "savings-goals", env.isSavingsGoals());
+    addOptionalBooleanElement(el, "savingsGoals", env.isSavingsGoals());
     addOptionalBooleanElement(el, "available", env.isAvailable());
     addOptionalBooleanElement(el, "expanded", env.isEnabled());
     addOptionalBooleanElement(el, "enabled", env.isEnabled());
@@ -612,13 +647,14 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
     addElement(el, "index", env.getIndex());
     addElement(el, "frequency", env.getFrequency().name());
     addElement(el, "budget", Utils.formatDouble(env.getBudget()));
+    addElement(el, "balance", Utils.formatDouble(getBalance(env)));
 
     addElement(el, "dueDay", env.getDueDay().toString());
     if (env.getSavingsGoalDate() != null) {
-      addElement(el, "savings-goal-date", Constants.SHORT_DATE_FORMAT.format(env.getSavingsGoalDate()));
+      addElement(el, "savingsGoalDate", Constants.SHORT_DATE_FORMAT.format(env.getSavingsGoalDate()));
     }
     if (env.getSavingsGoalOverrideAmount() != null) {
-      addElement(el, "savings-goal-override", Utils.formatDouble(env.getSavingsGoalOverrideAmount()));
+      addElement(el, "savingsGoalOverrideAmount", Utils.formatDouble(env.getSavingsGoalOverrideAmount()));
     }
 
     if (env.getParent() != null) {
@@ -635,7 +671,6 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
       buildEnvelope(env, root, "envelope");
     }
   }
-
 
   public void toXml(Envelope entity, Element parent) {
     buildEnvelope(entity, parent, "envelope");

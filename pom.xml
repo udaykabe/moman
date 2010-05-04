@@ -33,6 +33,12 @@
       </dependency>
 
       <dependency>
+        <groupId>android</groupId>
+        <artifactId>android</artifactId>
+        <version>2.1_r1</version>
+      </dependency>
+
+      <dependency>
         <groupId>jetty</groupId>
         <artifactId>jetty</artifactId>
         <version>6.1.24</version>
@@ -48,6 +54,18 @@
         <groupId>commons-digester</groupId>
         <artifactId>commons-digester</artifactId>
         <version>1.8</version>
+      </dependency>
+
+      <dependency>
+        <groupId>commons-httpclient</groupId>
+        <artifactId>commons-httpclient</artifactId>
+        <version>3.1</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.ccil.cowan.tagsoup</groupId>
+        <artifactId>tagsoup</artifactId>
+        <version>1.2</version>
       </dependency>
 
       <dependency>
@@ -353,7 +371,9 @@
   </build>
 
   <modules>
+    <module>util</module>
     <module>model</module>
+    <module>android</module>
     <module>dao</module>
     <module>services</module>
     <module>server</module>

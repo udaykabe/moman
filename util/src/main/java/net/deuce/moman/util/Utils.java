@@ -11,8 +11,8 @@ public class Utils {
 	
 	private static Random random = new Random(System.currentTimeMillis());
 	private static Pattern currencyPattern;
-	private static NumberFormat CURRENCY_FORMAT = NumberFormat.getCurrencyInstance();
-	private static NumberFormat DOUBLE_FORMAT;
+	public final static NumberFormat CURRENCY_FORMAT = NumberFormat.getCurrencyInstance();
+	public final static NumberFormat DOUBLE_FORMAT;
 	
 	static {
 		DOUBLE_FORMAT = NumberFormat.getNumberInstance();

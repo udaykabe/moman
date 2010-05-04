@@ -4,6 +4,8 @@ import org.dom4j.Element;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
+import javax.servlet.http.HttpServletResponse;
+
 public abstract class AbstractCommand implements Command {
 
   private String id;
@@ -11,7 +13,7 @@ public abstract class AbstractCommand implements Command {
   private boolean immediate;
   private Element result;
   private Command undoCommand;
-  private int resultCode;
+  private int resultCode = HttpServletResponse.SC_OK;
   private boolean running = false;
   private Exception exception;
 

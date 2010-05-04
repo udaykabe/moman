@@ -14,6 +14,11 @@
 
   <dependencies>
     <dependency>
+      <groupId>net.deuce.moman</groupId>
+      <artifactId>moman-util</artifactId>
+      <version>${pom.version}</version>
+    </dependency>
+    <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-core</artifactId>
       <scope>compile</scope>

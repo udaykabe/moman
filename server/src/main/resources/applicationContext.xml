@@ -11,12 +11,22 @@
     http://www.springframework.org/schema/context/spring-context-2.5.xsd
        ">
 
+
+  <bean name="multicastThread" class="net.deuce.moman.multicast.MulticastServerThread" init-method="start">
+    <property name="waitSeconds" value="5000"/>
+    <property name="daemon" value="true"/>
+  </bean>
+
   <bean name="WebServer" class="org.mortbay.jetty.Server" init-method="start">
     <property name="connectors">
       <list>
         <bean name="LocalSocket" class="org.mortbay.jetty.nio.SelectChannelConnector">
           <property name="host" value="localhost"/>
           <property name="port" value="9085"/>
+        </bean>
+        <bean name="LocalSocket" class="org.mortbay.jetty.nio.SelectChannelConnector">
+          <property name="host" value="achilles.local"/>
+          <property name="port" value="9086"/>
         </bean>
       </list>
     </property>
