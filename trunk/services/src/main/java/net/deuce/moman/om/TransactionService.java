@@ -6,18 +6,21 @@ import net.deuce.moman.util.CalendarUtil;
 import net.deuce.moman.util.Constants;
 import net.deuce.moman.util.DataDateRange;
 import net.deuce.moman.util.Utils;
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
 import net.sf.ofx4j.domain.data.common.TransactionType;
 import org.dom4j.Document;
 import org.dom4j.Element;
+import org.hibernate.LazyInitializationException;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 @Service
-public class TransactionService extends UserBasedService<InternalTransaction, TransactionDao> {
+public class TransactionService extends UserBasedService<InternalTransaction, TransactionDao> implements InitializingBean {
 
   @Autowired
   private TransactionDao transactionDao;
@@ -31,6 +34,9 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
   @Autowired
   private EnvelopeService envelopeService;
 
+  private CacheManager cacheManager;
+  private Cache queryCache;
+
   protected TransactionDao getDao() {
     return transactionDao;
   }
@@ -43,12 +49,12 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
     if (trans.getDate() != null) {
       addElement(el, "date", Constants.DATE_FORMAT.format(trans.getDate()));
     }
-    addElement(el, "desc", trans.getDescription());
-    addOptionalElement(el, "extid", trans.getExternalId());
-    addOptionalBooleanElement(el, "initial-balance", trans.isInitialBalance());
+    addElement(el, "description", trans.getDescription());
+    addOptionalElement(el, "externalId", trans.getExternalId());
+    addOptionalBooleanElement(el, "initialBalance", trans.isInitialBalance());
     addOptionalElement(el, "balance", Utils.formatDouble(trans.getBalance()));
     addElement(el, "memo", trans.getMemo());
-    addElement(el, "check", trans.getCheckNo());
+    addElement(el, "checkNo", trans.getCheckNo());
     addElement(el, "ref", trans.getRef());
     addElement(el, "status", trans.getStatus().name());
     if (trans.getTransferTransaction() != null) {
@@ -56,10 +62,14 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
     }
     Element sel = el.addElement("split");
     Element eel;
+    try {
     for (Split item : trans.getSplit()) {
       eel = sel.addElement("envelope");
       eel.addAttribute("id", item.getEnvelope().getUuid());
       eel.addAttribute("amount", Utils.formatDouble(item.getAmount()));
+    }
+    } catch (LazyInitializationException e) {
+      throw e; 
     }
   }
 
@@ -104,7 +114,7 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
     return true;
   }
 
-  public Command setAmountCommand(final InternalTransaction transaction, final Double amount, final List<Split> newSplits, final boolean adjustBalances) {
+  public Command setAmountCommand(final InternalTransaction transaction, final Double amount, final List<Split> newSplits, final Boolean adjustBalances) {
     return new AbstractCommand(InternalTransaction.class.getSimpleName() + " setAmount(" + transaction.getUuid() + ")", true) {
 
       public void doExecute() throws Exception {
@@ -114,14 +124,12 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
         final List<InternalTransaction> affectedTransactions = new LinkedList<InternalTransaction>();
         final List<Split> affectedSplits = new LinkedList<Split>();
         setAmount(transaction, amount, newSplits, adjustBalances, affectedEnvelopes, affectedTransactions, affectedSplits);
-        setResultCode(HttpServletResponse.SC_OK);
 
         setUndo(new AbstractCommand("Undo " + getName(), true) {
           public void doExecute() throws Exception {
             undoAdjustBalances(transaction.getAccount(), accountBalance, affectedTransactions);
             undoSetAmount(affectedEnvelopes);
             undoClearSplit(transaction, affectedSplits);
-            setResultCode(HttpServletResponse.SC_OK);
           }
         });
       }
@@ -192,10 +200,53 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
       }
     }
   }
-
   @Transactional(readOnly = true)
   public List<InternalTransaction> getAccountTransactions(Account account, boolean reverse) {
     return transactionDao.getAccountTransactions(account, reverse);
+  }
+
+  private void walkDom(List<InternalTransaction> transactions) {
+    for (InternalTransaction trans : transactions) {
+      trans.getAccount().getFinancialInstitution();
+      trans.getMatchedTransaction();
+      for (Split item : trans.getSplit()) {
+        item.getEnvelope();
+      }
+      trans.getTransferTransaction();
+    }
+  }
+
+  public Command getSelectedAccountTransactionsCommand(final Envelope env, final Boolean deep, final Boolean transfers, final Boolean reverse, final Integer from, final Integer count) {
+    return new AbstractCommand(Envelope.class.getSimpleName() + " getSelectedAccountTransactions()", true) {
+      public void doExecute() throws Exception {
+        String key = new StringBuffer(env.getUuid()).append(deep.toString()).append(transfers.toString()).append(reverse.toString()).toString();
+        net.sf.ehcache.Element cacheElement = queryCache.get(key);
+        if (cacheElement == null) {
+
+          List<InternalTransaction> fetchedTransactions = getSelectedAccountTransactions(env, deep, transfers);
+
+          if (fetchedTransactions.size() > 1) {
+            if (reverse) {
+              Collections.sort(fetchedTransactions, fetchedTransactions.get(0).getReverseComparator());
+            } else {
+              Collections.sort(fetchedTransactions, fetchedTransactions.get(0).getForwardComparator());
+            }
+          }
+
+          cacheElement = new net.sf.ehcache.Element(key, fetchedTransactions);
+          queryCache.put(cacheElement);
+
+          // first time through navigate the entire object graph because subsequent pages
+          // won't be fully available on future requests
+          walkDom(fetchedTransactions);
+
+        }
+
+        List<InternalTransaction> transactions = (List<InternalTransaction>) cacheElement.getValue();
+
+        setResult(toXml(transactions, from, count));
+      }
+    };
   }
 
   @Transactional(readOnly = true)
@@ -204,15 +255,15 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
     return transactionDao.getEnvelopeTransactionsForAccounts(env, selectedAccounts);
   }
 
-  public List<InternalTransaction> getSelectedAccountTransactions(Envelope env, boolean deep) {
-    return getSelectedAccountTransactions(env, null, deep);
+  public List<InternalTransaction> getSelectedAccountTransactions(Envelope env, boolean deep, boolean transfers) {
+    return getSelectedAccountTransactions(env, null, deep, transfers);
   }
 
-  public List<InternalTransaction> getSelectedAccountTransactions(Envelope env, DataDateRange dateRange, boolean deep) {
+  public List<InternalTransaction> getSelectedAccountTransactions(Envelope env, DataDateRange dateRange, boolean deep, boolean transfers) {
     List<InternalTransaction> list = getSelectedAccountTransactions(env);
     if (deep) {
       for (Envelope child : env.getChildren()) {
-        list.addAll(getSelectedAccountTransactions(child, true));
+        list.addAll(getSelectedAccountTransactions(child, true, transfers));
       }
     }
 
@@ -225,12 +276,37 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
       }
     }
 
+    if (!transfers) {
+      ListIterator<InternalTransaction> itr = list.listIterator();
+      while (itr.hasNext()) {
+        if (itr.next().isEnvelopeTransfer()) {
+          itr.remove();
+        }
+      }
+    }
+
     return list;
+  }
+
+  public Command getAccountTransactionsWithRangeCommand(final Envelope envelope, final Account account, final DataDateRange dateRange, final Boolean deep) {
+    return new AbstractCommand(Envelope.class.getSimpleName() + " getAccountTransactions()", true) {
+      public void doExecute() throws Exception {
+        setResult(toXml(getAccountTransactions(envelope, account, dateRange, deep)));
+      }
+    };
   }
 
   @Transactional(readOnly = true)
   public List<InternalTransaction> getAccountTransactions(Envelope envelope, Account account) {
     return transactionDao.getAccountEnvelopeTransactions(account, envelope, false);
+  }
+
+  public Command getAccountTransactionsCommand(final Envelope envelope, final Account account, final Boolean deep) {
+    return new AbstractCommand(Envelope.class.getSimpleName() + " getAccountTransactions()", true) {
+      public void doExecute() throws Exception {
+        setResult(toXml(getAccountTransactions(envelope, account, null, deep)));
+      }
+    };
   }
 
   public List<InternalTransaction> getAccountTransactions(Envelope env, Account account, boolean deep) {
@@ -263,7 +339,7 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
     return transactionDao.getEnvelopeTransactions(env);
   }
 
-  public Command adjustBalancesCommand(final InternalTransaction transaction, final boolean remove) {
+  public Command adjustBalancesCommand(final InternalTransaction transaction, final Boolean remove) {
     return new AbstractCommand(InternalTransaction.class.getSimpleName() + " adjustBalances(" + transaction.getUuid() + ")", true) {
 
       public void doExecute() throws Exception {
@@ -272,12 +348,10 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
         final Double accountBalance = account.getBalance();
         final List<InternalTransaction> affectedTransactions = new LinkedList<InternalTransaction>();
         adjustBalances(transaction, remove, affectedTransactions);
-        setResultCode(HttpServletResponse.SC_OK);
 
         setUndo(new AbstractCommand("Undo " + getName(), true) {
           public void doExecute() throws Exception {
             undoAdjustBalances(account, accountBalance, affectedTransactions);
-            setResultCode(HttpServletResponse.SC_OK);
           }
         });
       }
@@ -339,7 +413,7 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
 
   }
 
-  public Command setDateCommand(final InternalTransaction transaction, final Date date, final boolean adjust) {
+  public Command setDateCommand(final InternalTransaction transaction, final Date date, final Boolean adjust) {
     return new AbstractCommand(InternalTransaction.class.getSimpleName() + " setDate(" + transaction.getUuid() + ")", true) {
 
       public void doExecute() throws Exception {
@@ -347,12 +421,10 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
         final Double accountBalance = transaction.getAccount().getBalance();
         final List<InternalTransaction> affectedTransactions = new LinkedList<InternalTransaction>();
         setDate(transaction, date, adjust, affectedTransactions);
-        setResultCode(HttpServletResponse.SC_OK);
 
         setUndo(new AbstractCommand("Undo " + getName(), true) {
           public void doExecute() throws Exception {
             undoAdjustBalances(transaction.getAccount(), accountBalance, affectedTransactions);
-            setResultCode(HttpServletResponse.SC_OK);
           }
         });
       }
@@ -380,12 +452,10 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
         final List<Split> affectedSplits = new LinkedList<Split>();
 
         clearSplit(transaction, affectedSplits);
-        setResultCode(HttpServletResponse.SC_OK);
 
         setUndo(new AbstractCommand("Undo " + getName(), true) {
           public void doExecute() throws Exception {
             undoClearSplit(transaction, affectedSplits);
-            setResultCode(HttpServletResponse.SC_OK);
           }
         });
       }
@@ -417,12 +487,10 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
       public void doExecute() throws Exception {
 
         final Split addedSplitItem = addSplit(transaction, envelope, amount);
-        setResultCode(HttpServletResponse.SC_OK);
 
         setUndo(new AbstractCommand("Undo " + getName(), true) {
           public void doExecute() throws Exception {
             undoAddSplit(addedSplitItem);
-            setResultCode(HttpServletResponse.SC_OK);
           }
         });
       }
@@ -460,12 +528,10 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
         final Double splitAmount = transaction.getEnvelopeSplit(envelope).getAmount();
 
         removeSplit(transaction, envelope);
-        setResultCode(HttpServletResponse.SC_OK);
 
         setUndo(new AbstractCommand("Undo " + getName(), true) {
           public void doExecute() throws Exception {
             addSplit(transaction, envelope, splitAmount);
-            setResultCode(HttpServletResponse.SC_OK);
           }
         });
       }
@@ -498,12 +564,10 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
         savedTransactions.addAll(transactionDao.getCustomTransactions(user, false));
 
         clearCustomTransactions(user);
-        setResultCode(HttpServletResponse.SC_OK);
 
         setUndo(new AbstractCommand("Undo " + getName(), true) {
           public void doExecute() throws Exception {
             undoClearCustomTransactions(savedTransactions);
-            setResultCode(HttpServletResponse.SC_OK);
           }
         });
       }
@@ -557,5 +621,11 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
 
   public List<InternalTransaction> getCustomTransactions(User user, boolean reverse) {
     return transactionDao.getCustomTransactions(user, reverse);
+  }
+
+  public void afterPropertiesSet() throws Exception {
+    cacheManager = CacheManager.create();
+    queryCache = new Cache("transactionService", 100, false, false, 300, 300);
+    cacheManager.addCache(queryCache);
   }
 }

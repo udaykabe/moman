@@ -5,6 +5,7 @@ import net.deuce.moman.job.Command;
 import net.deuce.moman.util.Constants;
 import net.deuce.moman.util.Utils;
 import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,12 +36,10 @@ public class AccountService extends UserBasedService<Account, AccountDao> {
         final Double oldInitialBalance = account.getInitialBalance();
 
         setInitialBalance(account, initialBalance);
-        setResultCode(HttpServletResponse.SC_OK);
 
         setUndo(new AbstractCommand("Undo " + getName(), true) {
           public void doExecute() throws Exception {
             setInitialBalance(account, oldInitialBalance);
-            setResultCode(HttpServletResponse.SC_OK);
           }
         });
       }
@@ -95,7 +94,6 @@ public class AccountService extends UserBasedService<Account, AccountDao> {
   public Class<Account> getType() {
     return Account.class;
   }
-
 
   public void toXml(User user, Document doc) {
 

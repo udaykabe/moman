@@ -55,6 +55,20 @@
           <module name="moman-webapp" />
         </modules>
       </facet-type>
+      <facet-type id="android">
+        <modules>
+          <module name="MJAndroid">
+            <files>
+              <file url="file://$PROJECT_DIR$/MJAndroid/AndroidManifest.xml" />
+            </files>
+          </module>
+          <module name="demo">
+            <files>
+              <file url="file://$PROJECT_DIR$/demo/AndroidManifest.xml" />
+            </files>
+          </module>
+        </modules>
+      </facet-type>
     </autodetection-disabled>
   </component>
   <component name="IdProvider" IDEtalkID="32114FDC0022CE576D2524397789C1E2" />
@@ -85,6 +99,11 @@
         <option value="$PROJECT_DIR$/webapp/pom.xml" />
         <option value="$PROJECT_DIR$/pom.xml" />
       </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/android/pom.xml" />
+      </set>
     </option>
   </component>
   <component name="ModuleEditorState">
@@ -195,6 +214,9 @@
     </configuration>
   </component>
   <component name="ShelveChangesManager" show_recycled="false" />
+  <component name="SvnBranchConfigurationManager">
+    <option name="mySupportsUserInfoFilter" value="true" />
+  </component>
   <component name="SvnConfiguration">
     <option name="USER" value="" />
     <option name="PASSWORD" value="" />

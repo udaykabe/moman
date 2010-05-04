@@ -4,10 +4,8 @@ import net.deuce.moman.job.AbstractCommand;
 import net.deuce.moman.job.Command;
 import net.deuce.moman.job.Result;
 import net.deuce.moman.job.UndoManager;
-import net.deuce.moman.om.AbstractEntity;
-import net.deuce.moman.om.EntityService;
-import net.deuce.moman.om.InternalTransaction;
-import net.deuce.moman.om.UserService;
+import net.deuce.moman.om.*;
+import net.deuce.moman.util.DataDateRange;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -45,10 +43,10 @@ public abstract class AbstractController implements Controller, ApplicationConte
 
   private Logger log = LoggerFactory.getLogger(getClass());
 
-  private Map<Class<AbstractEntity>, Map<String, Method>> methodMap =
-      new HashMap<Class<AbstractEntity>, Map<String, Method>>();
+  private Map<Class<AbstractEntity>, Map<String, Method>> methodMap = new HashMap<Class<AbstractEntity>, Map<String, Method>>();
 
-  private Pattern commandPattern = Pattern.compile("^[ \t]*([a-zA-Z_0-9]+)[ \t]*\\([ \t]*([a-zA-Z_0-9-]+)?([ \t]*,[ \t]*([a-zA-Z_0-9-]+))*[ \t]*\\)[ \t]*$");
+//  private Pattern commandPattern = Pattern.compile("^[ \t]*([a-zA-Z_0-9]+)[ \t]*\\([ \t]*([a-zA-Z_0-9-]+)?([ \t]*,[ \t]*([a-zA-Z_0-9-]+))*[ \t]*\\)[ \t]*$");
+  private Pattern commandPattern = Pattern.compile("^[ \t]*([a-zA-Z_0-9]+)([ \t]+([a-zA-Z_0-9-]+)?([ \t]*,[ \t]*([a-zA-Z_0-9-]+))?([ \t]*,[ \t]*([a-zA-Z_0-9-]+))?([ \t]*,[ \t]*([a-zA-Z_0-9-]+))?([ \t]*,[ \t]*([a-zA-Z_0-9-]+))?([ \t]*,[ \t]*([a-zA-Z_0-9-]+))?([ \t]*,[ \t]*([a-zA-Z_0-9-]+))?([ \t]*,[ \t]*([a-zA-Z_0-9-]+))?([ \t]*,[ \t]*([a-zA-Z_0-9-]+))?([ \t]*,[ \t]*([a-zA-Z_0-9-]+))?[ \t]*)?$");
 
   private ApplicationContext applicationContext;
 
@@ -284,7 +282,7 @@ public abstract class AbstractController implements Controller, ApplicationConte
       }
 
       Element root = valueElement.addElement(entityService.getRootElementName());
-      entityService.toXml((AbstractEntity)result, root);
+      entityService.toXml((AbstractEntity) result, root);
     } else if (result instanceof Collection) {
 
       Collection<AbstractEntity> entities = (Collection<AbstractEntity>) result;
@@ -333,11 +331,14 @@ public abstract class AbstractController implements Controller, ApplicationConte
 //  ([a-zA-Z_0-9]+)[ \t]*\\([ \t]*([a-zA-Z_0-9]+)?([ \t]*,[ \t]*([a-zA-Z_0-9]+))*[ \t]*\\)
     String commandName = m.group(1);
     List<String> argStrings = new LinkedList<String>();
+    for (int i=0; i<=m.groupCount(); i++) {
+      System.out.println("ZZZ group " + i + ": " + m.group(i));
+    }
     if (m.groupCount() > 1) {
-      if (m.group(2) != null) {
-        argStrings.add(m.group(2));
+      if (m.group(3) != null) {
+        argStrings.add(m.group(3));
       }
-      for (int i = 4; i <= m.groupCount(); i++) {
+      for (int i = 5; i <= m.groupCount(); i+=2) {
         if (m.group(i) != null) {
           argStrings.add(m.group(i));
         }
@@ -350,7 +351,20 @@ public abstract class AbstractController implements Controller, ApplicationConte
       return;
     }
 
-    if (argStrings.size() != method.getParameterTypes().length) {
+    int userParamPos = -1;
+    for (int i = 0; userParamPos < 0 && i < method.getParameterTypes().length; i++) {
+      if (method.getParameterTypes()[i].equals(User.class)) {
+        userParamPos = i;
+      }
+    }
+
+    int paramOffset = 0;
+
+    if (userParamPos >= 0) paramOffset--;
+
+    int argStringParams = method.getParameterTypes().length + paramOffset;
+
+    if (argStrings.size() != argStringParams) {
       errorResponse(res, HttpServletResponse.SC_BAD_REQUEST, String.format("Mismatched parameters for command '%1$s'", command.getValue()));
       return;
     }
@@ -358,10 +372,32 @@ public abstract class AbstractController implements Controller, ApplicationConte
     List<Object> args = new LinkedList<Object>();
     Class[] paramTypes = method.getParameterTypes();
 
+    paramOffset = 0;
+
     for (int i = 0; i < paramTypes.length; i++) {
 
+      if (userParamPos >= 0 && i == userParamPos) {
+        args.add(userService.getStaticUser());
+        continue;
+      }
+
+      /*
+      if (dataDateRangePos >= 0 && i == dataDateRangePos) {
+        String date1 = argStrings.get(i);
+        String date2 = argStrings.get(i+1);
+        try {
+          args.add(new DataDateRange(DATE_FORMAT.parse(date1), DATE_FORMAT.parse(date2)));
+          paramOffset++;
+          continue;
+        } catch (ParseException e) {
+          errorResponse(res, HttpServletResponse.SC_BAD_REQUEST, String.format("invalid date range date format '%1$s', '%2%s' needs to be (yyyy-MM-dd)", date1, date2));
+          return;
+        }
+      }
+      */
+
       Class type = paramTypes[i];
-      String value = argStrings.get(i);
+      String value = argStrings.get(i+paramOffset);
 
       if (type.equals(Date.class) || type.equals(Timestamp.class) || type.equals(java.util.Date.class)) {
         try {
@@ -373,7 +409,7 @@ public abstract class AbstractController implements Controller, ApplicationConte
         }
       } else if (type.equals(String.class)) {
         args.add(value);
-      } else if (paramTypes[i].getSuperclass().equals(AbstractEntity.class)) {
+      } else if (!paramTypes[i].isPrimitive() && paramTypes[i].getSuperclass().equals(AbstractEntity.class)) {
         EntityService entityService = null;
 
         if (!paramTypes[i].equals(InternalTransaction.class)) {
@@ -391,6 +427,8 @@ public abstract class AbstractController implements Controller, ApplicationConte
           return;
         }
         args.add(entity);
+      } else if (type.equals(DataDateRange.class)) {
+
       } else {
         try {
           Method valueOfMethod = type.getDeclaredMethod("valueOf", String.class);
@@ -409,21 +447,32 @@ public abstract class AbstractController implements Controller, ApplicationConte
     try {
       Object returnValue = method.invoke(service, args.toArray());
       if (returnValue != null) {
-        String value;
-        if (returnValue instanceof Date) {
-          value = DATE_FORMAT.format(returnValue);
-        } else if (returnValue instanceof AbstractEntity) {
-          getEntity(((AbstractEntity) returnValue).getUuid(), service, req, res);
-          return;
-        } else {
-          value = returnValue.toString();
-        }
 
-        Document doc = buildResponse();
-        doc.getRootElement().addElement("return-value").addAttribute("value", value);
-        sendResponse(res, doc);
+        if (returnValue instanceof Command) {
+          Command cmd = (Command)returnValue;
+          cmd.doExecute();
+
+          Document doc = buildResponse();
+          doc.getRootElement().add(cmd.getResult());
+          sendResponse(res, doc);
+        } else {
+          String value;
+          if (returnValue instanceof Date) {
+            value = DATE_FORMAT.format(returnValue);
+          } else if (returnValue instanceof AbstractEntity) {
+            getEntity(((AbstractEntity) returnValue).getUuid(), service, req, res);
+            return;
+          } else {
+            value = returnValue.toString();
+          }
+
+          Document doc = buildResponse();
+          doc.getRootElement().addElement("return-value").addAttribute("value", value);
+          sendResponse(res, doc);
+        }
       }
     } catch (Exception e) {
+      e.printStackTrace();
       errorResponse(res, HttpServletResponse.SC_BAD_REQUEST, String.format("failed to execute command '%1$s', reason: %2$s", command.getValue(), e.getMessage()));
     }
 

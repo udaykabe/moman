@@ -3,6 +3,7 @@ package net.deuce.moman.om;
 import org.hibernate.Query;
 
 import java.util.List;
+import java.util.ListIterator;
 
 public class TransactionDao extends UserBasedDao<InternalTransaction> {
 
@@ -15,8 +16,8 @@ public class TransactionDao extends UserBasedDao<InternalTransaction> {
   }
 
   public List<InternalTransaction> getAccountEnvelopeTransactions(Account account, Envelope env, boolean reverse) {
-    Query query = getSession().createQuery(String.format("select distinct t from %s t, %s a, %s e, %s s where t.custom = :bool and t.account = a and t.split = s and s.envelope = e and and a.id = :aid and e.id = :eid order by t.externalId, t.description %s",
-        InternalTransaction.class.getName(), Envelope.class.getName(), Split.class.getName(), reverse ? "desc" : "asc"));
+    Query query = getSession().createQuery(String.format("select distinct t from %s t, %s a, %s e, %s s where t.custom = :bool and t.account = a and s.transaction = t and s.envelope = e and a.id = :aid and e.id = :eid order by t.externalId, t.description %s",
+        InternalTransaction.class.getName(), Account.class.getName(), Envelope.class.getName(), Split.class.getName(), reverse ? "desc" : "asc"));
     query.setParameter("bool", false);
     query.setParameter("aid", account.getId());
     query.setParameter("eid", env.getId());
@@ -56,7 +57,7 @@ public class TransactionDao extends UserBasedDao<InternalTransaction> {
   }
 
   public List<InternalTransaction> getEnvelopeTransactions(Envelope env) {
-    Query query = getSession().createQuery(String.format("select t from %s t, %s e, %s s where t.custom = :bool and t.split = s and s.envelope = e and e.id = :id",
+    Query query = getSession().createQuery(String.format("select t from %s t, %s e, %s s where t.custom = :bool and s.transaction = t and s.envelope = e and e.id = :id",
         InternalTransaction.class.getName(), Envelope.class.getName(), Split.class.getName()));
     query.setParameter("bool", false);
     query.setParameter("id", env.getId());
@@ -64,17 +65,30 @@ public class TransactionDao extends UserBasedDao<InternalTransaction> {
   }
 
   public List<InternalTransaction> getEnvelopeTransactionsForAccounts(Envelope env, List<Account> accounts) {
+    /*
     if (accounts == null || accounts.size() == 0) {
       return getEnvelopeTransactions(env);
     }
 
-    StringBuffer sql = new StringBuffer(String.format("select t from %s t, %s e, %s s, %s a where t.split = s and s.envelope = e and e.id = :id and e.account in (:accountList)",
-        InternalTransaction.class.getName(), Envelope.class.getName(), Split.class.getName()));
+    StringBuffer sql = new StringBuffer(String.format("select t from %s t, %s e, %s s, %s a where t.custom = :bool and s.transaction = t and s.envelope = e and e.id = :id and t.account in (:accountList)",
+        InternalTransaction.class.getName(), Envelope.class.getName(), Split.class.getName(), Account.class.getName()));
 
     Query query = getSession().createQuery(sql.toString());
     query.setParameter("id", env.getId());
+    query.setParameter("bool", false);
     query.setParameter("accountList", accounts);
     return query.list();
+    */
+
+    List<InternalTransaction> list = getEnvelopeTransactions(env);
+    ListIterator<InternalTransaction> itr = list.listIterator();
+    while (itr.hasNext()) {
+      if (!accounts.contains(itr.next().getAccount())) {
+        itr.remove();
+      }
+    }
+
+    return list;
   }
 
 }

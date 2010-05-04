@@ -22,8 +22,17 @@
     </dependency>
     <dependency>
       <groupId>net.deuce.moman</groupId>
+      <artifactId>moman-util</artifactId>
+      <version>${pom.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>net.deuce.moman</groupId>
       <artifactId>moman-dao</artifactId>
       <version>${pom.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>net.sf.ehcache</groupId>
+      <artifactId>ehcache-core</artifactId>
     </dependency>
     <dependency>
       <groupId>commons-validator</groupId>
