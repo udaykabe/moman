@@ -85,10 +85,10 @@ public class Transactions extends BaseActivity {
     EnvelopeClient current = Moman.currentEnvelope.peek();
 
     try {
-      HttpRequest req = HttpRequest.newGetRequest(buildBaseUrl() + "transaction");
-      req.addParameter("action", "7");
-      req.addParameter("command", String.format("getSelectedAccountTransactionsCommand %1$s, true, false, true, %2$d, %3$d",
-          current.getUuid(), transactionListPosition, TRANSACTION_LIST_PAGE_SIZE));
+      HttpRequest req = HttpRequest.newGetRequest(buildBaseUrl(
+          new String[]{"transaction", "executeCommand", "getSelectedAccountTransactionsCommand",
+              current.getUuid(), "true", "false", "true", Integer.toString(transactionListPosition),
+              Integer.toString(TRANSACTION_LIST_PAGE_SIZE)}));
 
       Document doc = HttpRequestUtils.executeRequest(req.buildMethod(), true, false);
 

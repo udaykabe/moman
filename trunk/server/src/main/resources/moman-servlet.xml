@@ -159,15 +159,17 @@
     </property>
   </bean>
 
-  <bean id="newEntityController" class="net.deuce.moman.controller.command.NewEntityController"/>
-  <bean id="editEntityController" class="net.deuce.moman.controller.command.EditEntityController"/>
-  <bean id="getEntityController" class="net.deuce.moman.controller.command.GetEntityController"/>
   <bean id="listEntitiesController" class="net.deuce.moman.controller.command.ListEntitiesController"/>
+  <bean id="getEntityController" class="net.deuce.moman.controller.command.GetEntityController"/>
   <bean id="deleteEntityController" class="net.deuce.moman.controller.command.DeleteEntityController"/>
   <bean id="listEntityPropertiesController" class="net.deuce.moman.controller.command.ListEntityPropertiesController"/>
   <bean id="listServiceCommandsController" class="net.deuce.moman.controller.command.ListServiceCommandsController"/>
   <bean id="executeCommandController" class="net.deuce.moman.controller.command.ExecuteCommandController"/>
-  <bean id="getEntityPropertyController" class="net.deuce.moman.controller.command.GetEntityPropertyController"/>
+
+  <bean id="newEntityController" parent="entityAccessingController" class="net.deuce.moman.controller.command.NewEntityController"/>
+  <bean id="editEntityController" parent="entityAccessingController" class="net.deuce.moman.controller.command.EditEntityController"/>
+  <bean id="getEntityPropertyController" parent="entityAccessingController" class="net.deuce.moman.controller.command.GetEntityPropertyController"/>
+  <bean id="entityAccessingController" abstract="true" class="net.deuce.moman.controller.command.EntityAccessingController"/>
 
   <bean id="checkJobStatusController" parent="abstractJobCommandController"
         class="net.deuce.moman.controller.command.CheckJobStatusCommandController"/>
@@ -218,4 +220,8 @@
 
   <bean id="financialInstitutionImportTransactionCommand" class="net.deuce.moman.om.FinancialInstitutionImportTransactionCommand"
         scope="prototype"/>
+
+  <bean id="dynamicCommandBuilder" class="net.deuce.moman.controller.command.ReflectionCommandBuilder"/>
+
+  <bean id="entityAdapter" class="net.deuce.moman.controller.command.ReflectionEntityAdapter"/>
 </beans>

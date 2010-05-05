@@ -13,7 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.LinkedList;
 import java.util.List;
 
-public class EditEntityController extends AbstractCommandController {
+public class EditEntityController extends EntityAccessingController {
+
+
   public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
     String uuid = getUuidParameter(request, response);
@@ -26,15 +28,15 @@ public class EditEntityController extends AbstractCommandController {
       return null;
     }
 
-    if ( ((pathInfo.length-4) % 2) != 0 ) {
+    if (((pathInfo.length - 4) % 2) != 0) {
       errorResponse(response, HttpServletResponse.SC_BAD_REQUEST, "Mismatched property/value list");
       return null;
     }
 
     List<Parameter> properties = new LinkedList<Parameter>();
 
-    for (int i=4; i<pathInfo.length; i+=2) {
-      properties.add(new Parameter(pathInfo[i], pathInfo[i+1]));
+    for (int i = 4; i < pathInfo.length; i += 2) {
+      properties.add(new Parameter(pathInfo[i], pathInfo[i + 1]));
     }
 
     sendResult(editEntity(uuid, properties, request, response), response);
@@ -56,7 +58,14 @@ public class EditEntityController extends AbstractCommandController {
 
     final List<Parameter> oldPropertyValues = new LinkedList<Parameter>();
     for (Parameter p : properties) {
-      String oldValue = getProperty(service, entity, p.getName(), res);
+
+      EntityResult entityResult = getEntityAdapter().getProperty(service, entity, p.getName());
+      if (entityResult.getException() != null || entityResult.getMessage() != null) {
+        errorResponse(res, entityResult.getResponseCode(), entityResult.getException(), entityResult.getMessage());
+        return null;
+      }
+
+      String oldValue = (String) entityResult.getValue();
       if (oldValue == null) return null;
 
       // NULL is used to distinguish between getProperty returning null (which means there was an error)
@@ -74,7 +83,10 @@ public class EditEntityController extends AbstractCommandController {
         AbstractEntity entity = service.get(entityId);
 
         for (Parameter p : properties) {
-          if (!setProperty(service, entity, p.getName(), p.getValue(), res)) {
+          EntityResult entityResult = getEntityAdapter().setProperty(service, entity, p.getName(), p.getValue());
+          if (entityResult.getException() != null || entityResult.getMessage() != null) {
+            setResultCode(entityResult.getResponseCode());
+            setResult(buildErrorResponse(entityResult.getException(), entityResult.getMessage()));
             return;
           }
         }
@@ -89,7 +101,10 @@ public class EditEntityController extends AbstractCommandController {
             AbstractEntity entity = service.get(entityId);
 
             for (Parameter p : oldPropertyValues) {
-              if (!setProperty(service, entity, p.getName(), p.getValue(), res)) {
+              EntityResult entityResult = getEntityAdapter().setProperty(service, entity, p.getName(), p.getValue());
+              if (entityResult.getException() != null || entityResult.getMessage() != null) {
+                setResultCode(entityResult.getResponseCode());
+                setResult(buildErrorResponse(entityResult.getException(), entityResult.getMessage()));
                 return;
               }
             }

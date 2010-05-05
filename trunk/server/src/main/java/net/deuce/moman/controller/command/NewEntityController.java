@@ -13,25 +13,25 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.LinkedList;
 import java.util.List;
 
-public class NewEntityController extends AbstractCommandController {
+public class NewEntityController extends EntityAccessingController {
 
   public ModelAndView handleRequest(HttpServletRequest request, final HttpServletResponse response) throws Exception {
 
     String[] pathInfo = request.getPathInfo().split("/");
 
-    if (pathInfo.length < 4) {
+    if (pathInfo.length < 6) {
       errorResponse(response, HttpServletResponse.SC_BAD_REQUEST, "No properties/values given");
       return null;
     }
 
-    if (((pathInfo.length - 3) % 2) != 0) {
+    if (((pathInfo.length - 4) % 2) != 0) {
       errorResponse(response, HttpServletResponse.SC_BAD_REQUEST, "Mismatched property/value list");
       return null;
     }
 
     List<Parameter> properties = new LinkedList<Parameter>();
 
-    for (int i = 3; i < pathInfo.length; i += 2) {
+    for (int i = 4; i < pathInfo.length; i += 2) {
       properties.add(new Parameter(pathInfo[i], pathInfo[i + 1]));
     }
 
@@ -47,7 +47,10 @@ public class NewEntityController extends AbstractCommandController {
       public void doExecute() throws Exception {
         AbstractEntity entity = service.newEntity();
         for (Parameter p : properties) {
-          if (!setProperty(service, entity, p.getName(), p.getValue(), response)) {
+          EntityResult entityResult = getEntityAdapter().setProperty(service, entity, p.getName(), p.getValue());
+          if (entityResult.getException() != null || entityResult.getMessage() != null) {
+            setResultCode(entityResult.getResponseCode());
+            setResult(buildErrorResponse(entityResult.getException(), entityResult.getMessage()));
             return;
           }
         }

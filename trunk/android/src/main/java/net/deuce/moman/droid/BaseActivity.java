@@ -26,14 +26,18 @@ public abstract class BaseActivity extends Activity {
   protected static final int MENU_TRANSFER = 3;
   protected static final int MENU_SERVER = 4;
 
-  protected static final String BASE_URL_FORMAT = "http://%1$s/service/";
+  protected static final String BASE_URL_FORMAT = "http://%1$s/service";
   protected static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
-//  protected static String SERVER = "10.0.2.2:9086";
+//  protected static String SERVER = "10.0.2.2:9085";
   protected static String SERVER = "192.168.1.198:9086";
 
-  protected static String buildBaseUrl() {
-    return String.format(BASE_URL_FORMAT, SERVER);
+  protected static String buildBaseUrl(String... args) {
+    StringBuffer sb = new StringBuffer(String.format(BASE_URL_FORMAT, SERVER));
+    for (String s : args) {
+      sb.append('/').append(s);
+    }
+    return sb.toString();
   }
 
   protected abstract void doOnCreate(Bundle savedInstanceState) throws ConnectException;
@@ -138,8 +142,7 @@ public abstract class BaseActivity extends Activity {
       EntityClient client = (EntityClient) clientType.newInstance();
       client.getServiceName();
 
-      HttpRequest req = HttpRequest.newGetRequest(buildBaseUrl() + client.getServiceName());
-      req.addParameter("action", "3");
+      HttpRequest req = HttpRequest.newGetRequest(buildBaseUrl((new String[]{client.getServiceName(), "list"})));
 
       Document doc = HttpRequestUtils.executeRequest(req.buildMethod(), true, false);
 

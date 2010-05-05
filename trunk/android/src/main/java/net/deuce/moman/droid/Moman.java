@@ -117,10 +117,7 @@ public class Moman extends BaseActivity {
   protected List<EnvelopeClient> getChildren(EnvelopeClient parent) {
 
     try {
-      HttpRequest req = HttpRequest.newGetRequest(buildBaseUrl() + "envelope");
-      req.addParameter("action", "14");
-      req.addParameter("uuid", parent.getUuid());
-      req.addParameter("property", "children");
+      HttpRequest req = HttpRequest.newGetRequest(buildBaseUrl(new String[]{"envelope", "getEntityProperty", parent.getUuid(), "children"}));
 
       Document doc = HttpRequestUtils.executeRequest(req.buildMethod(), true, false);
 
@@ -145,9 +142,7 @@ public class Moman extends BaseActivity {
   protected EnvelopeClient getRootEnvelope() {
 
     try {
-      HttpRequest req = HttpRequest.newGetRequest(buildBaseUrl() + "envelope");
-      req.addParameter("action", "7");
-      req.addParameter("command", "getRootEnvelopeCommand");
+      HttpRequest req = HttpRequest.newGetRequest(buildBaseUrl(new String[]{"envelope", "executeCommand", "getRootEnvelopeCommand"}));
 
       Document doc = HttpRequestUtils.executeRequest(req.buildMethod(), true, false);
 
