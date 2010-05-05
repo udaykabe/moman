@@ -10,11 +10,10 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Date;
 
-public class GetEntityPropertyController extends AbstractCommandController {
+public class GetEntityPropertyController extends EntityAccessingController {
 
   public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
@@ -37,29 +36,7 @@ public class GetEntityPropertyController extends AbstractCommandController {
 
   protected void getEntityProperty(String uuid, String property, HttpServletRequest req, HttpServletResponse res) throws IOException {
 
-    final EntityService service = getService(req);
-    AbstractEntity entity = service.findEntity(uuid);
-
-    if (entity == null) {
-      errorResponse(res, HttpServletResponse.SC_NOT_FOUND, String.format("No %1$s exists with uuid = '%2$s'", service.getEntityClass().getSimpleName(), uuid));
-      return;
-    }
-
-    Method method = getGetterMethodForPropertyName(entity, property);
-    if (method == null) {
-      errorResponse(res, HttpServletResponse.SC_BAD_REQUEST, String.format(service.getType().getSimpleName() + " has no property '%1$s'", property));
-      return;
-    }
-
-    Object result = null;
-    try {
-      result = method.invoke(entity);
-    } catch (Exception e) {
-      errorResponse(res, HttpServletResponse.SC_BAD_REQUEST, String.format("failed to get '%1$s' property: %2$s", property, e.getMessage()));
-      return;
-    }
-
-    EntityService entityService;
+    EntityService service = getService(req);
 
     Document doc = buildResponse();
     Element entityProperty = doc.getRootElement().addElement("entity-property")
@@ -68,20 +45,29 @@ public class GetEntityPropertyController extends AbstractCommandController {
     entityProperty.addElement("name").setText(property);
     Element valueElement = entityProperty.addElement("value");
 
-    if (result instanceof AbstractEntity) {
+    EntityResult result = getEntityAdapter().getProperty(service, uuid, property);
+    if (result.getException() != null || result.getMessage() != null) {
+      errorResponse(res, result.getResponseCode(), result.getException(), result.getMessage());
+      return;
+    }
 
-      if (result instanceof InternalTransaction) {
+    EntityService entityService;
+    Object value = result.getValue();
+
+    if (value instanceof AbstractEntity) {
+
+      if (value instanceof InternalTransaction) {
         entityService = (EntityService) getApplicationContext().getBean("transactionService", EntityService.class);
       } else {
-        String type = result.getClass().getSimpleName().replaceAll("_.._javassist_[0-9]*", "");
+        String type = value.getClass().getSimpleName().replaceAll("_.._javassist_[0-9]*", "");
         entityService = (EntityService) getApplicationContext().getBean(type.substring(0, 1).toLowerCase() + type.substring(1) + "Service", EntityService.class);
       }
 
       Element root = valueElement.addElement(entityService.getRootElementName());
-      entityService.toXml((AbstractEntity) result, root);
-    } else if (result instanceof Collection) {
+      entityService.toXml((AbstractEntity) value, root);
+    } else if (value instanceof Collection) {
 
-      Collection<AbstractEntity> entities = (Collection<AbstractEntity>) result;
+      Collection<AbstractEntity> entities = (Collection<AbstractEntity>) value;
       if (entities.size() > 0) {
         AbstractEntity firstEntity = entities.iterator().next();
 
@@ -98,12 +84,12 @@ public class GetEntityPropertyController extends AbstractCommandController {
           entityService.toXml(ae, root);
         }
       }
-    } else if (result == null) {
+    } else if (value == null) {
       valueElement.addAttribute("null", "true");
-    } else if (result instanceof Date) {
-      valueElement.setText(getDateFormat().format((Date) result));
+    } else if (value instanceof Date) {
+      valueElement.setText(getDateFormat().format((Date) value));
     } else {
-      valueElement.setText(result.toString());
+      valueElement.setText(value.toString());
     }
     sendResponse(res, doc);
   }

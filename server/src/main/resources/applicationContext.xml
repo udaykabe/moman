@@ -25,7 +25,7 @@
           <property name="port" value="9085"/>
         </bean>
         <bean name="LocalSocket" class="org.mortbay.jetty.nio.SelectChannelConnector">
-          <property name="host" value="achilles.local"/>
+          <property name="host" value="192.168.1.198"/>
           <property name="port" value="9086"/>
         </bean>
       </list>
