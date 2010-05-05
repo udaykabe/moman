@@ -4,17 +4,13 @@ import net.deuce.moman.job.AbstractCommand;
 import net.deuce.moman.job.Command;
 import net.deuce.moman.util.CalendarUtil;
 import net.deuce.moman.util.Constants;
-import net.deuce.moman.util.DataDateRange;
 import net.deuce.moman.util.Utils;
 import net.sf.ofx4j.domain.data.common.TransactionType;
-import org.dom4j.Document;
-import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 @Service
@@ -661,15 +657,6 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
       el.addElement("parent").addAttribute("id", env.getParent().getUuid());
     }
 
-  }
-
-  public void toXml(User user, Document doc) {
-
-    Element root = doc.getRootElement().addElement(getRootElementName());
-
-    for (Envelope env : getEntities(user)) {
-      buildEnvelope(env, root, "envelope");
-    }
   }
 
   public void toXml(Envelope entity, Element parent) {

@@ -4,14 +4,8 @@ import net.deuce.moman.om.EntityService;
 import net.deuce.moman.om.EnvelopeService;
 import net.deuce.moman.om.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Arrays;
-
-public class SavingsGoalController extends AbstractController {
+public class SavingsGoalController extends DispatcherController {
 
   @Autowired
   private EnvelopeService envelopeService;
@@ -23,11 +17,12 @@ public class SavingsGoalController extends AbstractController {
     return envelopeService;
   }
 
+  /*
   public ModelAndView handleRequest(HttpServletRequest req, HttpServletResponse res) throws Exception {
 
-    AbstractController.Parameter action = new AbstractController.Parameter("action", Integer.class);
+    Parameter.Parameter action = new Parameter.Parameter("action", Integer.class);
 
-    if (!checkParameters(req, res, Arrays.asList(new AbstractController.Parameter[]{action}))) return null;
+    if (!checkParameters(req, res, Arrays.asList(new Parameter.Parameter[]{action}))) return null;
 
     switch (action.getIntValue()) {
       case Actions.NEW_ENTITY:
@@ -55,7 +50,6 @@ public class SavingsGoalController extends AbstractController {
   }
 
   private void listSavingsGoals(HttpServletResponse res) throws IOException {
-    /*
     Document doc = buildResponse();
     Element root = doc.getRootElement().addElement("bills");
 
@@ -63,7 +57,6 @@ public class SavingsGoalController extends AbstractController {
       envelopeService.buildEnvelope(env, root, "bill");
     }
     sendResponse(res, doc);
-    */
   }
 
   private void getSavingsGoal(HttpServletRequest req, HttpServletResponse res) throws IOException {
@@ -74,4 +67,5 @@ public class SavingsGoalController extends AbstractController {
 
   private void newSavingsGoal(HttpServletRequest req, HttpServletResponse res) throws IOException {
   }
+    */
 }

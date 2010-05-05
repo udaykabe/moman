@@ -1,6 +1,5 @@
 package net.deuce.moman.droid;
 
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -14,9 +13,7 @@ import net.deuce.moman.util.Utils;
 import org.dom4j.Document;
 import org.dom4j.Element;
 
-import java.io.IOException;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.LinkedList;

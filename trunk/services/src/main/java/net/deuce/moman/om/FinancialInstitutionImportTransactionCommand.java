@@ -37,9 +37,15 @@ public class FinancialInstitutionImportTransactionCommand extends AbstractComman
 //  @Autowired
 //	private PreferenceService preferenceService;
 
-  public FinancialInstitutionImportTransactionCommand(Account account, boolean force) {
-    super("TransactionProcessor", false);
-    this.account = account;
+  public FinancialInstitutionImportTransactionCommand() {
+    super("TransactionProcessor", true);
+  }
+
+  public boolean isForce() {
+    return force;
+  }
+
+  public void setForce(boolean force) {
     this.force = force;
   }
 
@@ -90,6 +96,10 @@ public class FinancialInstitutionImportTransactionCommand extends AbstractComman
 
   public Account getAccount() {
     return account;
+  }
+
+  public void setAccount(Account account) {
+    this.account = account;
   }
 
   public Date getLastDownloadedDate() {

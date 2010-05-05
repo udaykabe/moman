@@ -1,8 +1,6 @@
 package net.deuce.moman.job;
 
 import org.dom4j.Element;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 
 import javax.servlet.http.HttpServletResponse;
 

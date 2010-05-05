@@ -2,7 +2,6 @@ package net.deuce.moman.droid.model;
 
 import net.deuce.moman.droid.HttpRequest;
 import net.deuce.moman.droid.HttpRequestUtils;
-import org.apache.commons.httpclient.HttpClient;
 import org.dom4j.Document;
 import org.dom4j.Element;
 

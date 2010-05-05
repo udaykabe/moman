@@ -1,6 +1,5 @@
 package net.deuce.moman.droid;
 
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.Gravity;

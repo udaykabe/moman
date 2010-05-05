@@ -908,5 +908,17 @@ used with JMX monitors.
     <bootstrapCacheLoaderFactory
         class="net.sf.ehcache.distribution.RMIBootstrapCacheLoaderFactory"/>
   </cache>
+
+  <cache name="jobCache"
+         maxElementsInMemory="100"
+         eternal="false"
+         timeToIdleSeconds="300"
+         timeToLiveSeconds="300"
+         overflowToDisk="false">
+    <cacheEventListenerFactory
+        class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"/>
+    <bootstrapCacheLoaderFactory
+        class="net.sf.ehcache.distribution.RMIBootstrapCacheLoaderFactory"/>
+  </cache>
 </ehcache>
 

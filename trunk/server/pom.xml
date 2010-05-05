@@ -39,6 +39,11 @@
       <artifactId>dom4j</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>jaxen</groupId>
+      <artifactId>jaxen</artifactId>
+    </dependency>
+
     <!-- Module Dependencies -->
     <!--dependency>
       <groupId>net.deuce.moman</groupId>

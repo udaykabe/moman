@@ -1,5 +1,7 @@
 package net.deuce.moman.om;
 
+import org.dom4j.Document;
+import org.dom4j.Element;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
@@ -46,6 +48,15 @@ public abstract class UserBasedService<E extends AbstractEntity, ED extends User
   @Transactional
   public void clearEntities(User user) {
     getDao().deleteByUser(user);
+  }
+
+  public void toXml(User user, Document doc) {
+
+    Element root = doc.getRootElement().addElement(getRootElementName());
+
+    for (E entity: getEntities(user)) {
+      toXml(entity, root);
+    }
   }
 
 }

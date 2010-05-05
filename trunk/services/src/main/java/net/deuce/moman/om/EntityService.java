@@ -4,20 +4,20 @@ import net.deuce.moman.util.Utils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
-import org.hibernate.Criteria;
-import org.hibernate.Query;
-import org.hibernate.criterion.Criterion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
-public abstract class EntityService<E extends AbstractEntity, ED extends EntityDao<E>> {
+public abstract class EntityService<E extends AbstractEntity, ED extends EntityDao<E>> implements ApplicationContextAware {
 
   private final Logger log = LoggerFactory.getLogger(getClass());
   private Class<E> entityClass;
+  private ApplicationContext applicationContext;
 
   /**
    * This constructor uses some reflection magic to infer the type of entity that this service manages.  It needs to be passed explicitly in the future.
@@ -209,6 +209,13 @@ public abstract class EntityService<E extends AbstractEntity, ED extends EntityD
     return root;
   }
 
+  public ApplicationContext getApplicationContext() {
+    return applicationContext;
+  }
+
+  public void setApplicationContext(ApplicationContext applicationContext) {
+    this.applicationContext = applicationContext;
+  }
 
   public abstract Class<E> getType();
 
@@ -216,6 +223,13 @@ public abstract class EntityService<E extends AbstractEntity, ED extends EntityD
 
   public abstract void toXml(E entity, Element root);
 
-  public abstract void toXml(User user, Document root);
+  public void toXml(Document doc) {
+
+    Element root = doc.getRootElement().addElement(getRootElementName());
+
+    for (E e: list()) {
+      toXml(e, root);
+    }
+  }
 
 }

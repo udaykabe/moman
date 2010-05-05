@@ -1,16 +1,9 @@
 package net.deuce.moman.controller;
 
-import net.deuce.moman.job.Result;
 import net.deuce.moman.om.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
-
-public class AccountController extends AbstractController {
+public class AccountController extends DispatcherController {
 
   @Autowired
   private AccountService accountService;
@@ -32,12 +25,13 @@ public class AccountController extends AbstractController {
     return accountService;
   }
 
+  /*
   public void handleActions(HttpServletRequest req, HttpServletResponse res) throws Exception {
 
-    Parameter action = new Parameter("action", Integer.class);
-    Parameter uuid;
-    Parameter force;
-    List<Parameter> params = new LinkedList<Parameter>();
+    Parameter.Parameter action = new Parameter.Parameter("action", Integer.class);
+    Parameter.Parameter uuid;
+    Parameter.Parameter force;
+    List<Parameter.Parameter> params = new LinkedList<Parameter.Parameter>();
     params.add(action);
 
     if (!checkParameters(req, res, params)) return;
@@ -47,9 +41,9 @@ public class AccountController extends AbstractController {
         newDisconnectedAccount(req, res);
         break;
       case Actions.IMPORT_ACCOUNT_TRANSACTIONS:
-        uuid = new Parameter("uuid", String.class);
+        uuid = new Parameter.Parameter("uuid", String.class);
         params.add(uuid);
-        force = new Parameter("force", Boolean.class);
+        force = new Parameter.Parameter("force", Boolean.class);
         params.add(force);
         if (!checkParameters(req, res, params)) return;
         sendResult(importAccountTransactions(uuid.getValue(), force.getBoolValue()), res);
@@ -70,4 +64,5 @@ public class AccountController extends AbstractController {
 
   private void newDisconnectedAccount(HttpServletRequest req, HttpServletResponse res) throws IOException {
   }
+  */
 }

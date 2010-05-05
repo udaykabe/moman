@@ -1,7 +1,6 @@
 package net.deuce.moman.job;
 
 import org.dom4j.Element;
-import org.quartz.Job;
 
 public interface Command extends Runnable {
   public String getId();
