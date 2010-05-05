@@ -9,7 +9,6 @@ import net.deuce.moman.util.Utils;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ofx4j.domain.data.common.TransactionType;
-import org.dom4j.Document;
 import org.dom4j.Element;
 import org.hibernate.LazyInitializationException;
 import org.springframework.beans.factory.InitializingBean;
@@ -70,15 +69,6 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
     }
     } catch (LazyInitializationException e) {
       throw e; 
-    }
-  }
-
-  public void toXml(User user, Document doc) {
-
-    Element root = doc.getRootElement().addElement("transactions");
-
-    for (InternalTransaction trans : getEntities(user)) {
-      toXml(trans, root);
     }
   }
 

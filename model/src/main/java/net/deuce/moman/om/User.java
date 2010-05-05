@@ -19,6 +19,8 @@ public class User extends AbstractEntity<User> {
 
   private SortedSet<Account> accounts = new TreeSet<Account>();
 
+  private SortedSet<Device> devices = new TreeSet<Device>();
+
   public User() {
     super();
   }
@@ -59,6 +61,17 @@ public class User extends AbstractEntity<User> {
 
   public void setAccounts(SortedSet<Account> accounts) {
     this.accounts = accounts;
+  }
+
+  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+  @Column(name = "id")
+  @Sort(type = SortType.NATURAL)
+  public SortedSet<Device> getDevices() {
+    return devices;
+  }
+
+  public void setDevices(SortedSet<Device> devices) {
+    this.devices = devices;
   }
 
   @Id

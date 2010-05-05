@@ -1,8 +1,6 @@
 package net.deuce.moman.om;
 
-import org.dom4j.Document;
 import org.dom4j.Element;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,16 +27,6 @@ public class UserService extends EntityService<User, UserDao> implements Initial
   public User findByUsername(String username) {
     return userDao.findUser(username);
   }
-
-  public void toXml(User user, Document doc) {
-
-    Element root = doc.getRootElement().addElement(getRootElementName());
-
-    for (User u : list()) {
-      toXml(u, root);
-    }
-  }
-
 
   public void toXml(User user, Element parent) {
     Element el = parent.addElement("user");

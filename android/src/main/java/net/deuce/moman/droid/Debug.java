@@ -1,13 +1,9 @@
 package net.deuce.moman.droid;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.Gravity;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.*;
+import android.widget.ScrollView;
+import android.widget.TextView;
 
 public class Debug extends BaseActivity {
 

@@ -2,7 +2,6 @@ package net.deuce.moman.om;
 
 import net.deuce.moman.util.Constants;
 import net.deuce.moman.util.Utils;
-import org.dom4j.Document;
 import org.dom4j.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,15 +15,6 @@ public class IncomeService extends UserBasedService<Income, IncomeDao> {
 
   protected IncomeDao getDao() {
     return incomeDao;
-  }
-
-  public void toXml(User user, Document doc) {
-
-    Element root = doc.getRootElement().addElement(getRootElementName());
-
-    for (Income income : getEntities(user)) {
-      toXml(income, root);
-    }
   }
 
   public void toXml(Income income, Element parent) {

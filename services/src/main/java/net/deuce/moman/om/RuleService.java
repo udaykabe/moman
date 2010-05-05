@@ -1,7 +1,6 @@
 package net.deuce.moman.om;
 
 import net.deuce.moman.util.Utils;
-import org.dom4j.Document;
 import org.dom4j.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,15 +13,6 @@ public class RuleService extends UserBasedService<Rule, RuleDao> {
 
   protected RuleDao getDao() {
     return ruleDao;
-  }
-
-  public void toXml(User user, Document doc) {
-
-    Element root = doc.getRootElement().addElement(getRootElementName());
-
-    for (Rule rule : getEntities(user)) {
-      toXml(rule, root);
-    }
   }
 
   public void toXml(Rule rule, Element parent) {

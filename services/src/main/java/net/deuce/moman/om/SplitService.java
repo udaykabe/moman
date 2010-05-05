@@ -1,7 +1,6 @@
 package net.deuce.moman.om;
 
 import net.deuce.moman.util.Utils;
-import org.dom4j.Document;
 import org.dom4j.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,15 +13,6 @@ public class SplitService extends UserBasedService<Split, SplitDao> {
 
   protected SplitDao getDao() {
     return splitDao;
-  }
-
-  public void toXml(User user, Document doc) {
-
-    Element root = doc.getRootElement().addElement(getRootElementName());
-
-    for (Split split : getEntities(user)) {
-      toXml(split, root);
-    }
   }
 
   public void toXml(Split split, Element parent) {

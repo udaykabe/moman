@@ -33,6 +33,7 @@
     <mapping class="net.deuce.moman.om.Rule" />
     <mapping class="net.deuce.moman.om.Split" />
     <mapping class="net.deuce.moman.om.User" />
+    <mapping class="net.deuce.moman.om.Device" />
 
 
   </session-factory>

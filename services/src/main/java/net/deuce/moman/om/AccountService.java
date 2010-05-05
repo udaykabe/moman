@@ -4,15 +4,11 @@ import net.deuce.moman.job.AbstractCommand;
 import net.deuce.moman.job.Command;
 import net.deuce.moman.util.Constants;
 import net.deuce.moman.util.Utils;
-import org.dom4j.Document;
-import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Service
@@ -93,15 +89,6 @@ public class AccountService extends UserBasedService<Account, AccountDao> {
 
   public Class<Account> getType() {
     return Account.class;
-  }
-
-  public void toXml(User user, Document doc) {
-
-    Element root = doc.getRootElement().addElement("accounts");
-
-    for (Account account : getEntities(user)) {
-      toXml(account, root);
-    }
   }
 
   public void toXml(Account account, Element parent) {

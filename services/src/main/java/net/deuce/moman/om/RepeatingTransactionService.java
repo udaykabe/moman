@@ -1,7 +1,6 @@
 package net.deuce.moman.om;
 
 import net.deuce.moman.util.Constants;
-import org.dom4j.Document;
 import org.dom4j.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,15 +26,6 @@ public class RepeatingTransactionService extends UserBasedService<RepeatingTrans
     addElement(el, "original-date-due", Constants.DATE_FORMAT.format(repeatingTransaction.getOriginalDateDue()));
     addElement(el, "frequency", repeatingTransaction.getFrequency().name());
     addElement(el, "count", repeatingTransaction.getCount().toString());
-  }
-
-  public void toXml(User user, Document doc) {
-
-    Element root = doc.getRootElement().addElement(getRootElementName());
-
-    for (RepeatingTransaction trans : getEntities(user)) {
-      toXml(trans, root);
-    }
   }
 
   public void toXml(RepeatingTransaction entity, Element parent) {

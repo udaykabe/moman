@@ -3,15 +3,11 @@ package net.deuce.moman.om;
 
 import net.deuce.moman.job.AbstractCommand;
 import net.deuce.moman.job.Command;
-import net.deuce.moman.util.Utils;
-import org.dom4j.Document;
-import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -102,15 +98,6 @@ public class AllocationSetService extends UserBasedService<AllocationSet, Alloca
     sel = el.addElement(allocationService.getRootElementName());
     for (Allocation allocation : allocationSet.getAllocations()) {
       allocationService.toXml(allocation, sel);
-    }
-  }
-
-  public void toXml(User user, Document doc) {
-
-    Element root = doc.getRootElement().addElement(getRootElementName());
-
-    for (AllocationSet allocationSet : getEntities(user)) {
-      toXml(allocationSet, root);
     }
   }
 

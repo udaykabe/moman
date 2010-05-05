@@ -9,9 +9,9 @@ import net.sf.ofx4j.domain.data.banking.AccountType;
 import net.sf.ofx4j.domain.data.banking.BankAccountDetails;
 import net.sf.ofx4j.domain.data.banking.BankAccountInfo;
 import net.sf.ofx4j.domain.data.signup.AccountProfile;
-import org.dom4j.Document;
 import org.dom4j.Element;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,13 +40,13 @@ public class FinancialInstitutionService extends EntityService<FinancialInstitut
     getDao().clear();
   }
 
-  public void toXml(User user, Document doc) {
-
-    Element root = doc.getRootElement().addElement(getRootElementName());
-
-    for (FinancialInstitution fi : list()) {
-      toXml(fi, root);
-    }
+  public FinancialInstitutionImportTransactionCommand importTransactionsCommand(final Account account, final Boolean forceFull) {
+    FinancialInstitutionImportTransactionCommand command =
+        (FinancialInstitutionImportTransactionCommand) getApplicationContext().getBean(
+            "financialInstitutionImportTransactionCommand", FinancialInstitutionImportTransactionCommand.class);
+    command.setAccount(account);
+    command.setForce(forceFull);
+    return command;
   }
 
   public TransactionFetchResult fetchTransactions(Account account, Date startDate, Date endDate) throws Exception {

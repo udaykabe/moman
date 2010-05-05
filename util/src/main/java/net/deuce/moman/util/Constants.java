@@ -1,10 +1,10 @@
 package net.deuce.moman.util;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-
 import org.apache.commons.validator.routines.CurrencyValidator;
 import org.apache.commons.validator.routines.PercentValidator;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 public class Constants {
 

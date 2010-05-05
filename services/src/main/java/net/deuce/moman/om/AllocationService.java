@@ -1,13 +1,9 @@
 package net.deuce.moman.om;
 
 import net.deuce.moman.util.Utils;
-import org.dom4j.Document;
-import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class AllocationService extends UserBasedService<Allocation, AllocationDao> {
@@ -17,15 +13,6 @@ public class AllocationService extends UserBasedService<Allocation, AllocationDa
 
   protected AllocationDao getDao() {
     return allocationDao;
-  }
-
-  public void toXml(User user, Document doc) {
-
-    Element root = doc.getRootElement().addElement(getRootElementName());
-
-    for (Allocation allocation: getEntities(user)) {
-      toXml(allocation, root);
-    }
   }
 
   public void toXml(Allocation allocation, Element parent) {

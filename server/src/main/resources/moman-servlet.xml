@@ -62,7 +62,7 @@
 
     <property name="maxActive" value="50"/>
     <property name="maxIdle" value="20"/>
-    <property name="maxWait" value="60"/>
+    <property name="maxWait" value="300"/>
     <property name="validationQuery" value="select 1"/>
     <property name="removeAbandoned" value="true"/>
     <property name="removeAbandonedTimeout" value="300"/>
@@ -72,18 +72,20 @@
   <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
     <property name="mappings">
       <value>
-        /account=accountController
-        /allocation=allocationController
-        /bill=billController
-        /envelope=envelopeController
-        /fi=fiController
-        /income=incomeController
-        /payee=payeeController
-        /rt=rtController
-        /rule=ruleController
-        /sg=sgController
-        /transaction=transactionController
-        /job=jobController
+        /account/**=accountController
+        /allocation/**=allocationController
+        /allocationSet/**=allocationSetController
+        /bill/**=billController
+        /envelope/**=envelopeController
+        /fi/**=fiController
+        /income/**=incomeController
+        /payee/**=payeeController
+        /rt/**=rtController
+        /rule/**=ruleController
+        /sg/**=sgController
+        /transaction/**=transactionController
+        /job/**=jobController
+        /device/**=deviceController
       </value>
     </property>
     <property name="interceptors">
@@ -93,18 +95,90 @@
     </property>
   </bean>
 
-  <bean id="accountController" class="net.deuce.moman.controller.AccountController"/>
-  <bean id="allocationController" class="net.deuce.moman.controller.AllocationController"/>
-  <bean id="billController" class="net.deuce.moman.controller.BillController"/>
-  <bean id="envelopeController" class="net.deuce.moman.controller.EnvelopeController"/>
-  <bean id="fiController" class="net.deuce.moman.controller.FinancialInstitutionController"/>
-  <bean id="incomeController" class="net.deuce.moman.controller.IncomeController"/>
-  <bean id="payeeController" class="net.deuce.moman.controller.PayeeController"/>
-  <bean id="rtController" class="net.deuce.moman.controller.RepeatingTransactionController"/>
-  <bean id="ruleController" class="net.deuce.moman.controller.RuleController"/>
-  <bean id="sgController" class="net.deuce.moman.controller.SavingsGoalController"/>
-  <bean id="transactionController" class="net.deuce.moman.controller.TransactionController"/>
-  <bean id="jobController" class="net.deuce.moman.controller.JobController"/>
+  <bean id="accountController" parent="dispatcherController" class="net.deuce.moman.controller.AccountController"/>
+  <bean id="allocationController" parent="dispatcherController"
+        class="net.deuce.moman.controller.AllocationController"/>
+  <bean id="allocationSetController" parent="dispatcherController"
+        class="net.deuce.moman.controller.AllocationSetController"/>
+  <bean id="billController" parent="dispatcherController" class="net.deuce.moman.controller.BillController"/>
+  <bean id="envelopeController" parent="dispatcherController" class="net.deuce.moman.controller.EnvelopeController"/>
+  <bean id="fiController" parent="dispatcherController"
+        class="net.deuce.moman.controller.FinancialInstitutionController"/>
+  <bean id="incomeController" parent="dispatcherController" class="net.deuce.moman.controller.IncomeController"/>
+  <bean id="payeeController" parent="dispatcherController" class="net.deuce.moman.controller.PayeeController"/>
+  <bean id="rtController" parent="dispatcherController"
+        class="net.deuce.moman.controller.RepeatingTransactionController"/>
+  <bean id="ruleController" parent="dispatcherController" class="net.deuce.moman.controller.RuleController"/>
+  <bean id="sgController" parent="dispatcherController" class="net.deuce.moman.controller.SavingsGoalController"/>
+  <bean id="transactionController" parent="dispatcherController"
+        class="net.deuce.moman.controller.TransactionController"/>
+  <bean id="deviceController" parent="dispatcherController"
+        class="net.deuce.moman.controller.DeviceController"/>
+
+  <bean id="jobController" parent="dispatcherController" class="net.deuce.moman.controller.JobController">
+    <property name="handlerMappings">
+      <list>
+        <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+          <property name="mappings">
+            <value>
+              /check=checkJobStatusController
+              /undo=undoCommandController
+              /redo=redoCommandController
+            </value>
+          </property>
+        </bean>
+      </list>
+    </property>
+    <property name="cache" ref="jobCache"/>
+  </bean>
+
+  <bean id="dispatcherController" abstract="true" class="net.deuce.moman.controller.DispatcherController">
+    <property name="handlerMappings">
+      <list>
+        <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+          <property name="mappings">
+            <value>
+              */new/**=newEntityController
+              */edit/**=editEntityController
+              */get/*=getEntityController
+              */list=listEntitiesController
+              */delete/*=deleteEntityController
+              */listEntityProperties=listEntityPropertiesController
+              */listServiceCommands=listServiceCommandsController
+              */executeCommand/**=executeCommandController
+              */getEntityProperty/**=getEntityPropertyController
+            </value>
+          </property>
+        </bean>
+      </list>
+    </property>
+    <property name="handlerAdapters">
+      <list>
+        <bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter"/>
+      </list>
+    </property>
+  </bean>
+
+  <bean id="newEntityController" class="net.deuce.moman.controller.command.NewEntityController"/>
+  <bean id="editEntityController" class="net.deuce.moman.controller.command.EditEntityController"/>
+  <bean id="getEntityController" class="net.deuce.moman.controller.command.GetEntityController"/>
+  <bean id="listEntitiesController" class="net.deuce.moman.controller.command.ListEntitiesController"/>
+  <bean id="deleteEntityController" class="net.deuce.moman.controller.command.DeleteEntityController"/>
+  <bean id="listEntityPropertiesController" class="net.deuce.moman.controller.command.ListEntityPropertiesController"/>
+  <bean id="listServiceCommandsController" class="net.deuce.moman.controller.command.ListServiceCommandsController"/>
+  <bean id="executeCommandController" class="net.deuce.moman.controller.command.ExecuteCommandController"/>
+  <bean id="getEntityPropertyController" class="net.deuce.moman.controller.command.GetEntityPropertyController"/>
+
+  <bean id="checkJobStatusController" parent="abstractJobCommandController"
+        class="net.deuce.moman.controller.command.CheckJobStatusCommandController"/>
+  <bean id="undoCommandController" parent="abstractJobCommandController"
+        class="net.deuce.moman.controller.command.UndoCommandController"/>
+  <bean id="redoCommandController" parent="abstractJobCommandController"
+        class="net.deuce.moman.controller.command.RedoCommandController"/>
+
+  <bean id="abstractJobCommandController" abstract="true" class="net.deuce.moman.controller.command.AbstractJobCommandController">
+    <property name="cache" ref="jobCache"/>
+  </bean>
 
   <bean id="accountDao" class="net.deuce.moman.om.AccountDao" parent="userBasedDao"/>
   <bean id="allocationDao" class="net.deuce.moman.om.AllocationDao" parent="userBasedDao"/>
@@ -119,6 +193,7 @@
 
   <bean id="financialInstitutionDao" class="net.deuce.moman.om.FinancialInstitutionDao" parent="entityDao"/>
   <bean id="userDao" class="net.deuce.moman.om.UserDao" parent="entityDao"/>
+  <bean id="deviceDao" class="net.deuce.moman.om.DeviceDao" parent="entityDao"/>
 
   <bean id="userBasedDao" class="net.deuce.moman.om.UserBasedDao" abstract="true" parent="entityDao"/>
 
@@ -126,4 +201,21 @@
     <property name="sessionFactory" ref="sessionFactory"/>
   </bean>
 
+  <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+    <property name="configLocation">
+      <value>classpath:ehcache.xml</value>
+    </property>
+  </bean>
+
+  <bean id="jobCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+    <property name="cacheManager">
+      <ref local="cacheManager"/>
+    </property>
+    <property name="cacheName">
+      <value>jobCache</value>
+    </property>
+  </bean>
+
+  <bean id="financialInstitutionImportTransactionCommand" class="net.deuce.moman.om.FinancialInstitutionImportTransactionCommand"
+        scope="prototype"/>
 </beans>
