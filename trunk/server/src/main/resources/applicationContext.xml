@@ -28,6 +28,10 @@
           <property name="host" value="192.168.1.198"/>
           <property name="port" value="9086"/>
         </bean>
+        <!--bean name="LocalSocket" class="org.mortbay.jetty.nio.SelectChannelConnector">
+          <property name="host" value="172.22.2.164"/>
+          <property name="port" value="9087"/>
+        </bean-->
       </list>
     </property>
     <property name="handlers">

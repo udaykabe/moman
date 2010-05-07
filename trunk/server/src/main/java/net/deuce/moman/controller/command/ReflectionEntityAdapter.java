@@ -2,6 +2,7 @@ package net.deuce.moman.controller.command;
 
 import net.deuce.moman.om.AbstractEntity;
 import net.deuce.moman.om.EntityService;
+import net.deuce.moman.om.InternalTransaction;
 
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
@@ -68,26 +69,35 @@ public class ReflectionEntityAdapter extends BaseReflectionUtilities implements 
     }
 
     Class type = method.getParameterTypes()[0];
+    Object propertyValue;
     if (type.equals(Date.class) || type.equals(Timestamp.class) || type.equals(java.util.Date.class)) {
       try {
-        Date date = getDateFormat().parse(value);
-        method.invoke(entity, date);
+        propertyValue = getDateFormat().parse(value);
       } catch (ParseException e) {
         return new EntityResult(HttpServletResponse.SC_BAD_REQUEST, e, String.format("invalid date format '%1$s', needs to be (yyyy-MM-dd)", value));
-      } catch (Exception e) {
-        return new EntityResult(HttpServletResponse.SC_BAD_REQUEST, e, String.format("failed to set Date '%1$s' property with value '%2$s': %3$s", name, value, e.getMessage()));
       }
+    } else if (!type.isPrimitive() && type.getSuperclass().equals(AbstractEntity.class)) {
+        EntityService entityService;
+
+        if (!type.equals(InternalTransaction.class)) {
+          entityService = (EntityService) getApplicationContext().getBean(type.getSimpleName().substring(0, 1).toLowerCase() + type.getSimpleName().substring(1) + "Service", EntityService.class);
+        } else {
+          entityService = (EntityService) getApplicationContext().getBean("transactionService", EntityService.class);
+        }
+        if (entityService == null) {
+          return new EntityResult(HttpServletResponse.SC_BAD_REQUEST, null, String.format("no service found for type '%1$s'", type.getName()));
+        }
+        AbstractEntity entityProperty = entityService.getByUuid(value);
+        if (entityProperty == null) {
+          return new EntityResult(HttpServletResponse.SC_NOT_FOUND, null, String.format("no " + type.getName() + " entity exist with uuid '%1$s'", value));
+        }
+      propertyValue = entityProperty;
     } else if (type.equals(String.class)) {
-      try {
-        method.invoke(entity, value);
-      } catch (Exception e) {
-        return new EntityResult(HttpServletResponse.SC_BAD_REQUEST, e, String.format("failed to set String '%1$s' property with value '%2$s': %3$s", name, value, e.getMessage()));
-      }
+      propertyValue = value;
     } else {
       try {
         Method valueOfMethod = type.getDeclaredMethod("valueOf", String.class);
-        Object valueOf = valueOfMethod.invoke(null, value);
-        method.invoke(entity, valueOf);
+        propertyValue = valueOfMethod.invoke(null, value);
       } catch (NoSuchMethodException e) {
         return new EntityResult(HttpServletResponse.SC_BAD_REQUEST, e, String.format(type.getName() + " has no valueOf property", name));
       } catch (Exception e) {
@@ -95,6 +105,11 @@ public class ReflectionEntityAdapter extends BaseReflectionUtilities implements 
       }
     }
 
+    try {
+      method.invoke(entity, propertyValue);
+    } catch (Exception e) {
+      return new EntityResult(HttpServletResponse.SC_BAD_REQUEST, e, String.format("failed to set String '%1$s' property with value '%2$s': %3$s", name, value, e.getMessage()));
+    }
     return OK;
   }
 

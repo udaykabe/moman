@@ -13,6 +13,7 @@ import org.dom4j.Element;
 
 import java.io.*;
 import java.net.ConnectException;
+import java.net.InetAddress;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.LinkedList;
@@ -29,8 +30,12 @@ public abstract class BaseActivity extends Activity {
   protected static final String BASE_URL_FORMAT = "http://%1$s/service";
   protected static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
-//  protected static String SERVER = "10.0.2.2:9085";
-  protected static String SERVER = "192.168.1.198:9086";
+  protected static String LOCALHOST = "10.0.2.2:9085";
+  protected static String HOME = "192.168.1.198:9086";
+  protected static String WORK = "172.22.2.164:9087";
+  protected static String SERVER = null;
+
+  protected static String[] PREFERRED_SERVERS = {LOCALHOST, HOME, WORK};
 
   protected static String buildBaseUrl(String... args) {
     StringBuffer sb = new StringBuffer(String.format(BASE_URL_FORMAT, SERVER));
@@ -42,9 +47,35 @@ public abstract class BaseActivity extends Activity {
 
   protected abstract void doOnCreate(Bundle savedInstanceState) throws ConnectException;
 
+  private String findPreferredServer() {
+
+    String foundServer = null;
+    for (String server : PREFERRED_SERVERS) {
+      try {
+        InetAddress address = InetAddress.getByName(SERVER.split(":")[0]);
+        if (address.isReachable(2000)) {
+          foundServer = server;
+        }
+      } catch (Exception e) {
+      }
+    }
+
+    return foundServer;
+  }
+
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
+    if (SERVER == null) {
+      String server = findPreferredServer();
+      if (server == null) {
+        server();
+        return;
+      } else {
+        SERVER = server;
+      }
+    }
 
     try {
       doOnCreate(savedInstanceState);
@@ -83,7 +114,9 @@ public abstract class BaseActivity extends Activity {
   }
 
   @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
+  public boolean onOptionsItemSelected
+      (MenuItem
+          item) {
     switch (item.getItemId()) {
       case MENU_ACCOUNTS:
         accounts();

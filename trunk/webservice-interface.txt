@@ -1,0 +1,154 @@
+
+Entity               | Service
+---------------------+---------------
+account              | account
+allocation           | allocation
+allocationSet        | allocationSet
+device               | device
+envelope             | envelope
+financialInsitution  | fi
+income               | income
+internalTransaction  | transaction
+rule                 | rule
+
+For each entity, you can perform simple crud operations. The URL syntax is as follows:
+
+Get Entity
+http://localhost:9085/service/<SERVICE>/get/<UUID>
+
+http://localhost:9085/service/rule/get/9bc239f0-25cb-3719-bbc2-a358ada032ed
+<moman>
+  <transactions>
+    <rule id="9bc239f0-25cb-3719-bbc2-a358ada032ed">
+      <enabled>true</enabled>
+      <expression>SAFEWAY</expression>
+      <conversion></conversion>
+      <condition>Contains</condition>
+      <envelope id="b23f80a6-2918-3b6c-86f4-20270dc0a171"/>
+    </rule>
+  </transactions>
+</moman>
+
+List Entities
+http://localhost:9085/service/<SERVICE>/list
+
+http://localhost:9085/service/rule/list
+<moman>
+  <transactions>
+    <rule id="1b713147-8d14-3468-8110-2faf7ee9f8a0">
+      <enabled>true</enabled>
+      <expression>usps</expression>
+      <conversion></conversion>
+      <condition>Contains</condition>
+      <envelope id="e047e972-c543-3bec-a788-c8f139e36d1e"/>
+    </rule>
+    <rule id="385eafd3-2985-350e-968c-1c47121dc230">
+      <enabled>true</enabled>
+      <expression>OFFICE MAX</expression>
+      <conversion></conversion>
+      <condition>Contains</condition>
+      <envelope id="b603a5c1-2875-3196-a787-881bac2ee77d"/>
+    </rule>
+    <rule id="b15e4871-8ffa-3326-8848-d1f3e5f32d74">
+      <enabled>true</enabled>
+      <expression>ROSITA'S</expression>
+      <conversion></conversion>
+      <condition>Contains</condition>
+      <envelope id="c9d488fa-953e-384f-b98c-4897895e5335"/>
+    </rule>
+  </transactions>
+</moman>
+
+New Entity
+http://localhost:9085/service/<SERVICE>/new/<PROPERTY1>/<VALUE1>/.../<PROPERTY-N>/<VALUE-N>
+
+http://localhost:9085/service/rule/new/enabled/false/expression/weee/condition/Contains/envelope/937e343b-8760-3030-9e5b-c947471e3672 
+<moman>
+  <transactions>
+    <rule id="0c347d1e-6178-323a-9fd5-cce0eeb8ec6d">
+      <expression>weee</expression>
+      <conversion></conversion>
+      <condition>Contains</condition>
+      <envelope id="937e343b-8760-3030-9e5b-c947471e3672"/>
+    </rule>
+  </transactions>
+</moman>
+
+Edit Entity
+http://localhost:9085/service/<SERVICE>/edit/<UUID>/<PROPERTY1>/<VALUE1>/.../<PROPERTY-N>/<VALUE-N>
+
+http://localhost:9085/service/rule/edit/0c347d1e-6178-323a-9fd5-cce0eeb8ec6d/enabled/true
+<moman>
+  <transactions>
+    <rule id="0c347d1e-6178-323a-9fd5-cce0eeb8ec6d">
+      <enabled>true</enabled>
+      <expression>weee</expression>
+      <conversion></conversion>
+      <condition>Contains</condition>
+      <envelope id="937e343b-8760-3030-9e5b-c947471e3672"/>
+    </rule>
+  </transactions>
+</moman>
+
+Delete Entity
+http://localhost:9085/service/<SERVICE>/delete/<UUID>
+
+http://localhost:9085/service/rule/delete/0c347d1e-6178-323a-9fd5-cce0eeb8ec6d
+(empty response body, but 200 response code)
+
+------------------------------------------------------
+Each entity has direct access to its properties
+
+To get a list of the available properties for a given entity:
+
+http://localhost:9085/service/<SERVICE>/listEntityProperties
+
+http://localhost:9085/service/rule/listEntityProperties
+<moman>
+  <properties>
+    <property name="expression"/>
+    <property name="amount"/>
+    <property name="enabled"/>
+    <property name="conversion"/>
+    <property name="condition"/>
+    <property name="envelope"/>
+  </properties>
+</moman>
+
+To get an entity property value:
+
+http://localhost:9085/service/<SERVICE>/getEntityProperty/<UUID>/<PROPERTY NAME>
+
+http://localhost:9085/service/rule/getEntityProperty/1b713147-8d14-3468-8110-2faf7ee9f8a0/expression
+<moman>
+  <entity-property type="Rule" uuid="1b713147-8d14-3468-8110-2faf7ee9f8a0">
+    <name>expression</name>
+    <value>usps</value>
+  </entity-property>
+</moman>
+
+---------------------------------------------------
+
+Services offer a list of available commands.
+
+Listing of available commands from a service:
+
+http://localhost:9085/service/<SERVICE>/listServiceCommands
+
+http://localhost:9085/service/account/listServiceCommands
+<moman>
+  <commands type="net.deuce.moman.om.AccountService">
+    <command name="setInitialBalanceCommand" returns="net.deuce.moman.job.Command">
+      <param type="net.deuce.moman.om.Account"/>
+      <param type="java.lang.Double"/>
+    </command>
+  </commands>
+</moman>
+
+Invoking a command:
+
+http://localhost:9085/service/<SERVICE>/executeCommand/<PARAM1>/<VALUE1>/.../<PARAM-N>/<VALUE-N>
+
+http://localhost:9085/service/account/executeCommand/setInitialBalanceCommand/b18a445d-6b91-32c2-9cbc-86eafce597d0/100
+(no response body, but 200 response code)
+
