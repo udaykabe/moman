@@ -45,19 +45,6 @@ public class Moman extends BaseActivity {
 
 //    if (true) throw new RuntimeException("Weeeee");
 
-    boolean goToServerActivitiy = false;
-    try {
-      InetAddress address = InetAddress.getByName(SERVER.split(":")[0]);
-      goToServerActivitiy = !address.isReachable(5000);
-    } catch (Exception e) {
-      goToServerActivitiy = true;
-    }
-
-    if (goToServerActivitiy) {
-      server();
-      return;
-    }
-
     ScrollView sv = new ScrollView(this);
     ll = new LinearLayout(this);
     ll.setOrientation(LinearLayout.VERTICAL);

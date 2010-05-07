@@ -57,9 +57,11 @@ public class ExecuteCommandController extends AbstractCommandController {
     Command cmd = builderResult.getCommand();
     Result result = undoManager.execute(getUserService().getStaticUser(), cmd, null);
 
-    Document doc = buildResponse();
-    doc.getRootElement().add(result.getResult());
-    sendResponse(res, doc);
+    if (result.getResult() != null) {
+      Document doc = buildResponse();
+      doc.getRootElement().add(result.getResult());
+      sendResponse(res, doc);
+    }
 
   }
 }
