@@ -9,6 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLDecoder;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class ExecuteCommandController extends AbstractCommandController {
     List<String> command = new LinkedList<String>();
 
     for (int i = 3; i < pathInfo.length; i++) {
-      command.add(pathInfo[i]);
+      command.add(URLDecoder.decode(pathInfo[i], "UTF-8"));
     }
 
     executeCommand(command, request, response);

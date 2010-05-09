@@ -1,4 +1,4 @@
-package net.deuce.moman.droid;
+package net.deuce.moman.client;
 
 import org.apache.commons.httpclient.*;
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -126,7 +126,7 @@ public class HttpRequestUtils {
             Document document = reader.read(contentStream);
             return document;
           } catch (DocumentException de) {
-            return executeRequest(method, false, false);
+            throw new RuntimeException(de);
           }
         }
       }

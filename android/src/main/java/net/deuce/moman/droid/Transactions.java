@@ -6,8 +6,10 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.widget.*;
-import net.deuce.moman.droid.model.EnvelopeClient;
-import net.deuce.moman.droid.model.TransactionClient;
+import net.deuce.moman.client.HttpRequest;
+import net.deuce.moman.client.HttpRequestUtils;
+import net.deuce.moman.client.model.EnvelopeClient;
+import net.deuce.moman.client.model.TransactionClient;
 import net.deuce.moman.util.Utils;
 import org.dom4j.Document;
 import org.dom4j.Element;
@@ -61,7 +63,7 @@ public class Transactions extends BaseActivity {
     for (TransactionClient trans : getTransactions()) {
       TableRow row = createRow(trans);
       LayoutUtils.Layout.WidthWrap_HeightWrap.applyTableLayoutParams(row);
-      row.setPadding(5, 5, 5, 5);
+      row.setPadding(2, 2, 2, 2);
       table.addView(row);
     }
 
@@ -119,23 +121,23 @@ public class Transactions extends BaseActivity {
 
     TextView date = new TextView(this);
     date.setText(DATE_FORMAT.format(trans.getDate()));
-    date.setPadding(5, 5, 5, 5);
+    date.setPadding(2, 2, 2, 2);
     LayoutUtils.Layout.WidthWrap_HeightWrap.applyTableRowParams(date);
 
     TextView desc = new TextView(this);
     desc.setText(trans.getDescription());
-    desc.setPadding(5, 5, 5, 5);
+    desc.setPadding(2, 2, 2, 2);
     desc.setWidth(200);
     LayoutUtils.Layout.WidthWrap_HeightWrap.applyTableRowParams(desc);
 
     TextView amount = new TextView(this);
     amount.setText(Utils.CURRENCY_FORMAT.format(trans.getAmount()));
-    amount.setPadding(5, 5, 5, 5);
+    amount.setPadding(2, 2, 2, 2);
     LayoutUtils.Layout.WidthWrap_HeightWrap.applyTableRowParams(amount);
 
     TextView balance = new TextView(this);
     balance.setText(Utils.CURRENCY_FORMAT.format(trans.getBalance()));
-    balance.setPadding(5, 5, 5, 5);
+    balance.setPadding(2, 2, 2, 2);
     LayoutUtils.Layout.WidthWrap_HeightWrap.applyTableRowParams(balance);
 
     row.addView(date);

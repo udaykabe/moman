@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.URLDecoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
@@ -80,7 +81,7 @@ public abstract class AbstractCommandController implements Controller, Applicati
       return null;
     }
 
-    return pathInfo[3];
+    return URLDecoder.decode(pathInfo[3], "UTF-8");
   }
 
   protected Document buildResponse() {

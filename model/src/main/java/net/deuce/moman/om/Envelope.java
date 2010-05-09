@@ -335,14 +335,14 @@ public class Envelope extends AbstractEntity<Envelope> {
   public void addChild(Envelope child) {
     children.add(child);
     child.setParent(this);
-    childrenByName.clear();
+    if (childrenByName != null) childrenByName.clear();
     childrenByName = null;
   }
 
   public boolean removeChild(Envelope child) {
     boolean result = children.remove(child);
     child.setParent(null);
-    childrenByName.clear();
+    if (childrenByName != null) childrenByName.clear();
     childrenByName = null;
     return result;
   }

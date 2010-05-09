@@ -1,7 +1,7 @@
-package net.deuce.moman.droid.model;
+package net.deuce.moman.client.model;
 
-import net.deuce.moman.droid.HttpRequest;
-import net.deuce.moman.droid.HttpRequestUtils;
+import net.deuce.moman.client.HttpRequest;
+import net.deuce.moman.client.HttpRequestUtils;
 import org.dom4j.Document;
 import org.dom4j.Element;
 
@@ -30,30 +30,30 @@ public abstract class EntityClient {
 
   public abstract String getServiceName();
 
-  protected String getProperty(String name) {
+  public String getProperty(String name) {
     return properties.get(name);
   }
 
-  protected boolean getBoolean(String name) {
+  public boolean getBoolean(String name) {
     return Boolean.valueOf(properties.get(name));
   }
 
-  protected long getLong(String name) {
+  public long getLong(String name) {
     String val = properties.get(name);
     return val != null ? Long.valueOf(properties.get(name)) : 0L;
   }
 
-  protected int getInt(String name) {
+  public int getInt(String name) {
     String val = properties.get(name);
     return val != null ? Integer.valueOf(properties.get(name)) : 0;
   }
 
-  protected double getDouble(String name) {
+  public double getDouble(String name) {
     String val = properties.get(name);
     return val != null ? Double.valueOf(properties.get(name)) : 0.0;
   }
 
-  protected Date getDate(String name) {
+  public Date getDate(String name) {
     try {
       String val = properties.get(name);
       return val != null ? DATE_FORMAT.parse(properties.get(name)) : null;
@@ -62,27 +62,27 @@ public abstract class EntityClient {
     }
   }
 
-  protected void setProperty(String name, String value) {
+  public void setProperty(String name, String value) {
     properties.put(name, value);
   }
 
-  protected void setBoolean(String name, boolean value) {
+  public void setBoolean(String name, boolean value) {
     properties.put(name, Boolean.toString(value));
   }
 
-  protected void setLong(String name, long value) {
+  public void setLong(String name, long value) {
     properties.put(name, Long.toString(value));
   }
 
-  protected void setInt(String name, int value) {
+  public void setInt(String name, int value) {
     properties.put(name, Integer.toString(value));
   }
 
-  protected void setDouble(String name, double value) {
+  public void setDouble(String name, double value) {
     properties.put(name, Double.toString(value));
   }
 
-  protected void setDate(String name, Date value) {
+  public void setDate(String name, Date value) {
     properties.put(name, DATE_FORMAT.format(value));
   }
 

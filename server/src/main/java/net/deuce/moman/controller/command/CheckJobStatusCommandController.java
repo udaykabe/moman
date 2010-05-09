@@ -8,6 +8,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLDecoder;
 
 public class CheckJobStatusCommandController extends AbstractJobCommandController {
 
@@ -19,7 +20,7 @@ public class CheckJobStatusCommandController extends AbstractJobCommandControlle
       return null;
     }
 
-    String uuid = pathInfo[3];
+    String uuid = URLDecoder.decode(pathInfo[3], "UTF-8");
 
     checkJobStatus(uuid, response);
 

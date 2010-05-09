@@ -36,6 +36,8 @@ public abstract class DispatcherController implements Controller {
 
   public ModelAndView handleRequest(HttpServletRequest req, HttpServletResponse res) throws Exception {
 
+    log.info("processing " + req.getPathInfo());
+
     req.setAttribute(ENTITY_SERVICE_ATTRIBUTE, getService());
 
     HandlerExecutionChain mappedHandler = getHandler(req);
