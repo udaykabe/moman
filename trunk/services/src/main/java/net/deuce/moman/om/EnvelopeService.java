@@ -338,6 +338,16 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
     };
   }
 
+  @Override
+  public boolean delete(Envelope entity) {
+    return super.delete(entity);
+  }
+
+  @Override
+  public boolean deleteByUuid(String uuid) {
+    return super.deleteByUuid(uuid);
+  }
+
   @Transactional
   public void undoTransfer(TransferResult result) {
     transactionService.delete(result.getSourceTransaction());

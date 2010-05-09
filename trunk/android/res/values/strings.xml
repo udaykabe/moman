@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="hello">Android FlashLight</string>
-  <string name="app_name">Droman weee</string>
+  <string name="app_name">Droman</string>
   <string name="accounts">Accounts</string>
   <string name="transactions">Transactions</string>
   <string name="server">Server</string>
   <string name="debug">Debug</string>
+  <string name="envelopeEdit">Edit Envelope</string>
+  <string name="envelopeDelete">Delete Envelope</string>
+  <string name="envelopeSelect">Select Envelope</string>
   <color name="all_white">#FFFFFF</color>
   <color name="all_black">#000000</color>
 </resources>

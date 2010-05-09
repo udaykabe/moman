@@ -7,6 +7,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLDecoder;
 
 public class GetEntityController extends AbstractCommandController {
 
@@ -18,7 +19,7 @@ public class GetEntityController extends AbstractCommandController {
       return null;
     }
 
-    String uuid = pathInfo[3];
+    String uuid = URLDecoder.decode(pathInfo[3], "UTF-8");
 
     getEntity(uuid, request, response);
 

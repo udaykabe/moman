@@ -7,7 +7,9 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import net.deuce.moman.droid.model.EntityClient;
+import net.deuce.moman.client.HttpRequest;
+import net.deuce.moman.client.HttpRequestUtils;
+import net.deuce.moman.client.model.EntityClient;
 import org.dom4j.Document;
 import org.dom4j.Element;
 
@@ -52,9 +54,10 @@ public abstract class BaseActivity extends Activity {
     String foundServer = null;
     for (String server : PREFERRED_SERVERS) {
       try {
-        InetAddress address = InetAddress.getByName(SERVER.split(":")[0]);
+        InetAddress address = InetAddress.getByName(server.split(":")[0]);
         if (address.isReachable(2000)) {
           foundServer = server;
+          break;
         }
       } catch (Exception e) {
       }

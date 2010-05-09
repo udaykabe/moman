@@ -16,6 +16,12 @@
     </activity>
     <activity android:name=".Debug" android:label="@string/debug">
     </activity>
+    <activity android:name=".EnvelopeEdit" android:label="@string/envelopeEdit">
+    </activity>
+    <activity android:name=".EnvelopeDelete" android:label="@string/envelopeDelete">
+    </activity>
+    <activity android:name=".EnvelopeSelect" android:label="@string/envelopeSelect">
+    </activity>
   </application>
 
   <uses-permission android:name="android.permission.INTERNET"></uses-permission>

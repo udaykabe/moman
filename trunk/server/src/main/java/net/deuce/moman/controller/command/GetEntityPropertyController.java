@@ -10,6 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.Collection;
 import java.util.Date;
 
@@ -27,7 +28,7 @@ public class GetEntityPropertyController extends EntityAccessingController {
       return null;
     }
 
-    String property = pathInfo[4];
+    String property = URLDecoder.decode(pathInfo[4], "UTF-8");
 
     getEntityProperty(uuid, property, request, response);
 

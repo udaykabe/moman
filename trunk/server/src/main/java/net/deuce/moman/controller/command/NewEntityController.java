@@ -10,6 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLDecoder;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class NewEntityController extends EntityAccessingController {
     List<Parameter> properties = new LinkedList<Parameter>();
 
     for (int i = 4; i < pathInfo.length; i += 2) {
-      properties.add(new Parameter(pathInfo[i], pathInfo[i + 1]));
+      properties.add(new Parameter(URLDecoder.decode(pathInfo[i], "UTF-8"), URLDecoder.decode(pathInfo[i + 1], "UTF-8")));
     }
 
     sendResult(newEntity(properties, request, response), response);

@@ -5,8 +5,8 @@ import android.view.Menu;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-import net.deuce.moman.droid.model.AccountClient;
-import net.deuce.moman.droid.model.EntityClient;
+import net.deuce.moman.client.model.AccountClient;
+import net.deuce.moman.client.model.EntityClient;
 
 public class Accounts extends BaseActivity {
 

@@ -379,6 +379,7 @@
   <modules>
     <module>util</module>
     <module>model</module>
+    <module>client</module>
     <!--module>android</module-->
     <module>dao</module>
     <module>services</module>

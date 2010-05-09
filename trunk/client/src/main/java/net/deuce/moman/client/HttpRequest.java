@@ -1,4 +1,4 @@
-package net.deuce.moman.droid;
+package net.deuce.moman.client;
 
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpMethod;

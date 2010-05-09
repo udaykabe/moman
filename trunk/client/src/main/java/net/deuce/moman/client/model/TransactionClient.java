@@ -1,4 +1,4 @@
-package net.deuce.moman.droid.model;
+package net.deuce.moman.client.model;
 
 import java.util.Date;
 
