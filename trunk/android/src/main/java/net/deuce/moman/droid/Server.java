@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import net.deuce.moman.client.service.EntityClientService;
 
 public class Server extends BaseActivity {
 
@@ -29,7 +30,7 @@ public class Server extends BaseActivity {
     ll.addView(label);
 
     final EditText server = new EditText(this);
-    server.setText(SERVER.split(":")[0]);
+    server.setText(EntityClientService.getServer().split(":")[0]);
     server.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
     server.setInputType(InputType.TYPE_TEXT_VARIATION_URI);
     ll.addView(server);
@@ -41,7 +42,7 @@ public class Server extends BaseActivity {
     ll.addView(label);
 
     final EditText port = new EditText(this);
-    port.setText(SERVER.split(":")[1]);
+    port.setText(EntityClientService.getServer().split(":")[1]);
     port.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
     port.setInputType(InputType.TYPE_TEXT_VARIATION_URI);
     ll.addView(port);
@@ -50,7 +51,7 @@ public class Server extends BaseActivity {
     ok.setText("Ok");
     ok.setOnClickListener(new View.OnClickListener() {
       public void onClick(View view) {
-        SERVER = server.getText().toString() + ":" + port.getText().toString();
+        EntityClientService.setServer(server.getText().toString() + ":" + port.getText().toString());
         Intent intent = new Intent(Server.this, Moman.class);
         startActivity(intent);
       }

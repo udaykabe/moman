@@ -1,8 +1,6 @@
 package net.deuce.moman.droid;
 
-import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -10,43 +8,34 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.widget.*;
-import net.deuce.moman.client.HttpRequest;
-import net.deuce.moman.client.HttpRequestUtils;
-import net.deuce.moman.client.model.AccountClient;
-import net.deuce.moman.client.model.EntityClient;
 import net.deuce.moman.client.model.EnvelopeClient;
+import net.deuce.moman.client.service.EnvelopeClientService;
+import net.deuce.moman.client.service.NoAvailableServerException;
 import net.deuce.moman.util.Utils;
-import org.dom4j.Document;
-import org.dom4j.Element;
-
-import java.net.URLEncoder;
 
 public class EnvelopeEdit extends BaseActivity {
 
-  private static final int MENU_ENVELOPES = 1;
-  private static final int MENU_QUIT = 2;
-
   private Button ok;
-  private String name;
-  private Boolean enabled;
-  private Double budget;
+
+  private EnvelopeClient editedClient;
+
+  private EnvelopeClientService clientService = EnvelopeClientService.instance();
 
   /**
    * Called when the activity is first created.
    */
   @Override
-  protected void doOnCreate(Bundle savedInstanceState) {
+  protected void doOnCreate(Bundle savedInstanceState) throws NoAvailableServerException {
 
     TableLayout table = new TableLayout(this);
     LayoutUtils.Layout.WidthFill_HeightFill.applyViewGroupParams(table);
 
     AnimUtils.setLayoutAnim_slideupfrombottom(table, this);
 
-    EnvelopeClient env = Moman.targetEnvelope;
+    EnvelopeClient env = clientService.getTargetEnvelope();
 
-    enabled = env.isEnabled();
-    name = env.getName();
-    budget = env.getBudget();
+    editedClient = new EnvelopeClient();
+    editedClient.clone(env);
 
     createEnabledRow(table, env);
 
@@ -89,10 +78,12 @@ public class EnvelopeEdit extends BaseActivity {
     value.addTextChangedListener(new TextWatcher() {
       public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
       }
+
       public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
       }
+
       public void afterTextChanged(Editable editable) {
-        name = value.getText().toString();
+        editedClient.setName(value.getText().toString());
       }
     });
 
@@ -114,7 +105,7 @@ public class EnvelopeEdit extends BaseActivity {
     value.setChecked(env.isEnabled());
     value.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
       public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-        enabled = value.isChecked();
+        editedClient.setEnabled(value.isChecked());
       }
     });
     row.addView(value);
@@ -141,13 +132,15 @@ public class EnvelopeEdit extends BaseActivity {
     value.addTextChangedListener(new TextWatcher() {
       public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
       }
+
       public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
       }
+
       public void afterTextChanged(Editable editable) {
         if (Utils.validateCurrency(value.getText().toString())) {
           value.setBackgroundColor(Color.WHITE);
           ok.setEnabled(true);
-          budget = Utils.parseCurrency(value.getText().toString());
+          editedClient.setBudget(Utils.parseCurrency(value.getText().toString()));
         } else {
           value.setBackgroundColor(Color.RED);
           ok.setEnabled(false);
@@ -162,32 +155,13 @@ public class EnvelopeEdit extends BaseActivity {
   }
 
   private void finishUp() {
-    persist(Moman.targetEnvelope);
-    finish(); 
-  }
-
-  @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
-    menu.add(0, MENU_QUIT, 0, "Quit");
-    return true;
-  }
-  
-  protected void persist(EnvelopeClient env) {
     try {
-
-      if (!env.getName().equals(name) || env.isEnabled() != enabled.booleanValue() || env.getBudget() != budget.doubleValue()) {
-        HttpRequest req = HttpRequest.newGetRequest(buildBaseUrl(new String[]{
-            "envelope", "edit", env.getUuid(),
-            "name", URLEncoder.encode(name, "UTF-8"),
-            "enabled", Boolean.toString(enabled),
-            "budget", Double.toString(budget)
-        }));
-
-        HttpRequestUtils.executeRequest(req.buildMethod(), true, false);
-      }
-
-    } catch (Exception e) {
+      clientService.persist(editedClient, clientService.getTargetEnvelope());
+      clientService.getTargetEnvelope().clone(editedClient);
+    } catch (NoAvailableServerException e) {
       throw new RuntimeException(e);
     }
+    finish();
   }
+
 }

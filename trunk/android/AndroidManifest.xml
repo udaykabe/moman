@@ -22,6 +22,12 @@
     </activity>
     <activity android:name=".EnvelopeSelect" android:label="@string/envelopeSelect">
     </activity>
+    <activity android:name=".EnvelopeTransfer" android:label="@string/envelopeTransfer">
+    </activity>
+    <activity android:name=".ImportTransactions" android:label="@string/importTransactions">
+    </activity>
+    <activity android:name=".AccountSelect" android:label="@string/accountSelect">
+    </activity>
   </application>
 
   <uses-permission android:name="android.permission.INTERNET"></uses-permission>

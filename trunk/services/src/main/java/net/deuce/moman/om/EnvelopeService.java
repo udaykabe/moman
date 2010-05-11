@@ -321,13 +321,13 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
     return getEntities(user);
   }
 
-  public Command transferCommand(final Account sourceAccount, final Account targetAccount,
-                       final Envelope source, final Envelope target, final double amount) {
+  public Command transferCommand(final Account account,
+                       final Envelope source, final Envelope target, final Double amount) {
     return new AbstractCommand(Envelope.class.getSimpleName() + " transfer(" + source.getUuid() + ", " + target.getUuid() + ")", true) {
 
       public void doExecute() throws Exception {
 
-        final TransferResult result = transfer(sourceAccount, targetAccount, source, target, amount);
+        final TransferResult result = transfer(account, source, target, amount);
 
         setUndo(new AbstractCommand("Undo " + getName(), true) {
           public void doExecute() throws Exception {
@@ -354,22 +354,24 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
     transactionService.delete(result.getTargetTransaction());
     splitService.delete(result.getSourceSplit());
     splitService.delete(result.getTargetSplit());
+    result.getSourceEnvelope().clearBalance();
+    result.getTargetEnvelope().clearBalance();
   }
 
   @Transactional
-  public TransferResult transfer(Account sourceAccount, Account targetAccount,
-                       Envelope source, Envelope target, double amount) {
+  public TransferResult transfer(Account account, Envelope source, Envelope target, double amount) {
 
     Date date = new Date();
 
     // source transaction
     InternalTransaction sTransaction = new InternalTransaction();
+    sTransaction.setUuid(createUuid());
     sTransaction.setAmount(-amount);
     sTransaction.setType(TransactionType.XFER);
     sTransaction.setDate(date);
     sTransaction.setDescription("Transfer to " + target.getName());
     sTransaction.setStatus(TransactionStatus.reconciled);
-    sTransaction.setAccount(sourceAccount);
+    sTransaction.setAccount(account);
     transactionService.doAddEntity(sTransaction);
 
     Split sourceSplit = new Split();
@@ -383,12 +385,13 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
 
     // target transaction
     InternalTransaction tTransaction = new InternalTransaction();
+    tTransaction.setUuid(createUuid());
     tTransaction.setAmount(amount);
     tTransaction.setType(TransactionType.XFER);
     tTransaction.setDate(date);
     tTransaction.setDescription("Transfer from " + source.getName());
     tTransaction.setStatus(TransactionStatus.reconciled);
-    tTransaction.setAccount(targetAccount);
+    tTransaction.setAccount(account);
     transactionService.doAddEntity(tTransaction);
 
     Split targetSplit = new Split();
@@ -405,7 +408,10 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
     transactionService.saveOrUpdate(sTransaction);
     transactionService.saveOrUpdate(tTransaction);
 
-    return new TransferResult(sTransaction, tTransaction, sourceSplit, targetSplit);
+    source.clearBalance();
+    target.clearBalance();
+
+    return new TransferResult(source, target, sTransaction, tTransaction, sourceSplit, targetSplit);
   }
 
   @Transactional
@@ -619,7 +625,7 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
             } else {
               transferAmount = balance;
             }
-            TransferResult result = transfer(account, account, getAvailableEnvelope(account.getUser()), env, transferAmount);
+            TransferResult result = transfer(account, getAvailableEnvelope(account.getUser()), env, transferAmount);
             if (transferResults != null) {
               transferResults.add(result);
             }
@@ -686,12 +692,26 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
     private InternalTransaction targetTransaction;
     private Split sourceSplit;
     private Split targetSplit;
+    private Envelope sourceEnvelope;
+    private Envelope targetEnvelope;
 
-    private TransferResult(InternalTransaction sourceTransaction, InternalTransaction targetTransaction, Split sourceSplit, Split targetSplit) {
+    private TransferResult(Envelope sourceEnvelope, Envelope targetEnvelope,
+                           InternalTransaction sourceTransaction, InternalTransaction targetTransaction,
+                           Split sourceSplit, Split targetSplit) {
+      this.sourceEnvelope = sourceEnvelope;
+      this.targetEnvelope = targetEnvelope;
       this.sourceTransaction = sourceTransaction;
       this.targetTransaction = targetTransaction;
       this.sourceSplit = sourceSplit;
       this.targetSplit = targetSplit;
+    }
+
+    public Envelope getSourceEnvelope() {
+      return sourceEnvelope;
+    }
+
+    public Envelope getTargetEnvelope() {
+      return targetEnvelope;
     }
 
     public InternalTransaction getSourceTransaction() {
