@@ -3,38 +3,45 @@ package net.deuce.moman.droid;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.view.GestureDetector;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.*;
-import net.deuce.moman.client.HttpRequest;
-import net.deuce.moman.client.HttpRequestUtils;
 import net.deuce.moman.client.model.EnvelopeClient;
-import net.deuce.moman.util.Utils;
-import org.dom4j.Document;
-import org.dom4j.Element;
+import net.deuce.moman.client.service.EnvelopeClientService;
+import net.deuce.moman.client.service.NoAvailableServerException;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Stack;
 
 public class Moman extends BaseActivity {
+
+  private static final int SWIPE_MIN_DISTANCE = 120;
+  private static final int SWIPE_MAX_OFF_PATH = 250;
+  private static final int SWIPE_THRESHOLD_VELOCITY = 200;
 
   protected static final int MENU_QUIT = 0;
   protected static final int MENU_ACCOUNTS = 1;
   protected static final int MENU_TRANSACTIONS = 2;
   protected static final int MENU_TRANSFER = 3;
 
-  protected static final String TARGET_ENVELOPE = "TARGET_ENVELOPE";
-  protected static final String CURRENT_ENVELOPE = "CURRENT_ENVELOPE";
   protected static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
-  protected static Stack<EnvelopeClient> currentEnvelope;
-  protected static EnvelopeClient targetEnvelope;
-  protected static EnvelopeClient selectedEnvelope;
-
   private LinearLayout ll;
+  private TextView title;
+
+  private EnvelopeClientService clientService = EnvelopeClientService.instance();
+
+  private boolean needsRedisplay = false;
+
+  private Animation slideLeftIn;
+  private Animation slideLeftOut;
+  private Animation slideRightIn;
+  private Animation slideRightOut;
+
 
   @Override
   public void onSaveInstanceState(Bundle savedInstanceState) {
@@ -45,7 +52,7 @@ public class Moman extends BaseActivity {
    * Called when the activity is first created.
    */
   @Override
-  protected void doOnCreate(Bundle savedInstanceState) {
+  protected void doOnCreate(Bundle savedInstanceState) throws NoAvailableServerException {
 
 //    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
@@ -53,9 +60,13 @@ public class Moman extends BaseActivity {
 
 //    if (true) throw new RuntimeException("Weeeee");
 
-    if (currentEnvelope == null) {
-      currentEnvelope = new Stack<EnvelopeClient>();
-      currentEnvelope.push(getRootEnvelope());
+    slideLeftIn = AnimationUtils.loadAnimation(this, R.anim.slide_left_in);
+    slideLeftOut = AnimationUtils.loadAnimation(this, R.anim.slide_left_out);
+    slideRightIn = AnimationUtils.loadAnimation(this, R.anim.slide_right_in);
+    slideRightOut = AnimationUtils.loadAnimation(this, R.anim.slide_right_out);
+
+    if (clientService.currentStackSize() == 0) {
+      clientService.pushCurrent(clientService.getRootEnvelope());
     }
 
     ScrollView sv = new ScrollView(this);
@@ -68,12 +79,12 @@ public class Moman extends BaseActivity {
     setContentView(sv);
   }
 
-  private void displayEnvelopes() {
+  private void displayEnvelopes() throws NoAvailableServerException {
 
     ll.removeAllViews();
 
-    TextView title = new TextView(this);
-    title.setText(getEnvelopeLabel(currentEnvelope.peek()));
+    title = new TextView(this);
+    title.setText(getEnvelopeLabel(clientService.peekCurrent()));
     title.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
     title.setTypeface(Typeface.DEFAULT_BOLD);
     title.setTextSize(title.getTextSize() + 2);
@@ -86,7 +97,7 @@ public class Moman extends BaseActivity {
 
     ll.addView(table);
 
-    for (final EnvelopeClient client : getChildren(currentEnvelope.peek())) {
+    for (final EnvelopeClient client : clientService.getChildren(clientService.peekCurrent())) {
       TableRow row = createRow(client);
       LayoutUtils.Layout.WidthWrap_HeightWrap.applyTableLayoutParams(row);
       row.setPadding(2, 2, 2, 2);
@@ -98,23 +109,72 @@ public class Moman extends BaseActivity {
   public TableRow createRow(final EnvelopeClient env) {
     TableRow row = new TableRow(this);
 
+    final TextView envelopeButton = new TextView(this);
+    envelopeButton.setText(getEnvelopeLabel(env));
+    envelopeButton.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
+    envelopeButton.setOnClickListener(new View.OnClickListener() {
+      public void onClick(View view) {
+        try {
+          clientService.pushCurrent(env);
+          displayEnvelopes();
+        } catch (NoAvailableServerException e) {
+          throw new RuntimeException(e);
+        }
+      }
+    });
+    envelopeButton.setOnLongClickListener(new View.OnLongClickListener() {
+      public boolean onLongClick(View view) {
+        clientService.setTargetEnvelope(env);
+        Intent intent = new Intent(Moman.this, EnvelopeEdit.class);
+        startActivity(intent);
+        return false;
+      }
+    });
+    envelopeButton.setOnTouchListener(new View.OnTouchListener() {
+      public boolean onTouch(View view, MotionEvent motionEvent) {
+
+        GestureDetector.OnGestureListener gestureListener = new GestureDetector.SimpleOnGestureListener() {
+          @Override
+          public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+              clientService.setTargetEnvelope(env);
+              Intent intent = new Intent(Moman.this, EnvelopeEdit.class);
+              startActivity(intent);
+              return true;
+            } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+            }
+            return false;
+          }
+        };
+
+        return new GestureDetector(gestureListener).onTouchEvent(motionEvent);
+      }
+    });
+    LayoutUtils.Layout.WidthWrap_HeightWrap.applyTableRowParams(envelopeButton);
+
+    /*
     Button envelopeButton = new Button(this);
     envelopeButton.setText(getEnvelopeLabel(env));
     envelopeButton.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
     envelopeButton.setOnClickListener(new View.OnClickListener() {
       public void onClick(View view) {
-        currentEnvelope.push(env);
-        displayEnvelopes();
+        try {
+          clientService.pushCurrent(env);
+          displayEnvelopes();
+        } catch (NoAvailableServerException e) {
+          throw new RuntimeException(e);
+        }
       }
     });
     LayoutUtils.Layout.WidthWrap_HeightWrap.applyTableRowParams(envelopeButton);
+    */
 
     Button editButton = new Button(this);
     editButton.setText("E");
     editButton.setGravity(Gravity.RIGHT | Gravity.CENTER_VERTICAL);
     editButton.setOnClickListener(new View.OnClickListener() {
       public void onClick(View view) {
-        targetEnvelope = env;
+        clientService.setTargetEnvelope(env);
         Intent intent = new Intent(Moman.this, EnvelopeEdit.class);
         startActivity(intent);
       }
@@ -127,7 +187,7 @@ public class Moman extends BaseActivity {
     moveButton.setGravity(Gravity.RIGHT | Gravity.CENTER_VERTICAL);
     moveButton.setOnClickListener(new View.OnClickListener() {
       public void onClick(View view) {
-        targetEnvelope = env;
+        clientService.setTargetEnvelope(env);
         Intent intent = new Intent(Moman.this, EnvelopeSelect.class);
         startActivity(intent);
       }
@@ -140,7 +200,7 @@ public class Moman extends BaseActivity {
     deleteButton.setGravity(Gravity.RIGHT | Gravity.CENTER_VERTICAL);
     deleteButton.setOnClickListener(new View.OnClickListener() {
       public void onClick(View view) {
-        targetEnvelope = env;
+        clientService.setTargetEnvelope(env);
         Intent intent = new Intent(Moman.this, EnvelopeDelete.class);
         startActivity(intent);
       }
@@ -157,87 +217,48 @@ public class Moman extends BaseActivity {
   }
 
   @Override
+  protected void transfer() {
+    needsRedisplay = true;
+    super.transfer();
+  }
+
+  @Override
   protected void onRestart() {
     super.onRestart();
 
-    if (selectedEnvelope != null) {
-      moveEnvelope(selectedEnvelope, targetEnvelope);
-    }
+    try {
+      if (needsRedisplay) {
+        title.setText(getEnvelopeLabel(clientService.peekCurrent()));
+        displayEnvelopes();
+        needsRedisplay = false;
+        return;
+      }
 
-    if (targetEnvelope != null) {
-      targetEnvelope = null;
-      displayEnvelopes();
+      if (clientService.getSelectedEnvelope() != null) {
+        clientService.moveEnvelope(clientService.getSelectedEnvelope(), clientService.getTargetEnvelope());
+        clientService.setSelectedEnvelope(null);
+      }
+
+      if (clientService.getTargetEnvelope() != null) {
+        clientService.setTargetEnvelope(null);
+        displayEnvelopes();
+      }
+    } catch (NoAvailableServerException e) {
+      throw new RuntimeException(e);
     }
 
   }
 
   public void onBackPressed() {
-    if (currentEnvelope.size() > 1) {
-      currentEnvelope.pop();
-      displayEnvelopes();
+    if (clientService.currentStackSize() > 1) {
+      try {
+        clientService.popCurrent();
+        displayEnvelopes();
+      } catch (NoAvailableServerException e) {
+        throw new RuntimeException(e);
+      }
     } else {
       super.onBackPressed();
-    }
-  }
-
-  private String getEnvelopeLabel(EnvelopeClient env) {
-    return env.getName() + " (" + Utils.CURRENCY_FORMAT.format(env.getBalance()) + ")";
-  }
-
-  protected List<EnvelopeClient> getChildren(EnvelopeClient parent) {
-
-    try {
-      HttpRequest req = HttpRequest.newGetRequest(buildBaseUrl(new String[]{"envelope", "getEntityProperty", parent.getUuid(), "children"}));
-
-      Document doc = HttpRequestUtils.executeRequest(req.buildMethod(), true, false);
-
-      List<EnvelopeClient> list = new LinkedList<EnvelopeClient>();
-
-      List<Element> entities = doc.selectNodes("//envelope");
-      if (entities == null || entities.size() == 0) return list;
-
-      EnvelopeClient client;
-      for (Element entity : entities) {
-        client = new EnvelopeClient();
-        client.buildEntityClient(client, entity);
-        list.add(client);
-      }
-
-      return list;
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  protected void moveEnvelope(EnvelopeClient env, EnvelopeClient child) {
-
-    try {
-      HttpRequest req = HttpRequest.newGetRequest(buildBaseUrl(new String[]{"envelope", "executeCommand", "addChildCommand",
-        env.getUuid(), child.getUuid()}));
-      Document doc = HttpRequestUtils.executeRequest(req.buildMethod(), true, true);
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  protected EnvelopeClient getRootEnvelope() {
-
-    try {
-      HttpRequest req = HttpRequest.newGetRequest(buildBaseUrl(new String[]{"envelope", "executeCommand", "getRootEnvelopeCommand"}));
-
-      Document doc = HttpRequestUtils.executeRequest(req.buildMethod(), true, false);
-
-      Element rootEnvelope = (Element) doc.selectSingleNode("//envelope");
-      if (rootEnvelope == null) {
-        throw new RuntimeException("No root envelope exists.");
-      }
-
-      EnvelopeClient client = new EnvelopeClient();
-      client.buildEntityClient(client, rootEnvelope);
-
-      return client;
-    } catch (Exception e) {
-      throw new RuntimeException(e);
     }
   }
 

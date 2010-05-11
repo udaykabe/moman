@@ -60,7 +60,9 @@
           <root url="jar://$MODULE_DIR$/libs/moman-client-lib-1.0.0-SNAPSHOT.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="file://$MODULE_DIR$/../client/src/main/java" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
@@ -83,6 +85,7 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" scope="PROVIDED" name="Android 2.1 Platform" level="application" />
   </component>
 </module>
 

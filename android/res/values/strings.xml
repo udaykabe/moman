@@ -8,6 +8,9 @@
   <string name="envelopeEdit">Edit Envelope</string>
   <string name="envelopeDelete">Delete Envelope</string>
   <string name="envelopeSelect">Select Envelope</string>
+  <string name="envelopeTransfer">Envelope Transfer</string>
+  <string name="importTransactions">Import Bank Transactions</string>
+  <string name="accountSelect">Select Account</string>
   <color name="all_white">#FFFFFF</color>
   <color name="all_black">#000000</color>
 </resources>

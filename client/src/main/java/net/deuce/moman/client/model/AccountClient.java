@@ -1,5 +1,8 @@
 package net.deuce.moman.client.model;
 
+import net.deuce.moman.client.model.EntityClient;
+import net.deuce.moman.client.model.FinancialInstitutionClient;
+
 import java.util.Date;
 
 public class AccountClient extends EntityClient {

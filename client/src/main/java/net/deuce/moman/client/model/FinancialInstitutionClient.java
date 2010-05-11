@@ -1,5 +1,7 @@
 package net.deuce.moman.client.model;
 
+import net.deuce.moman.client.model.EntityClient;
+
 
 public class FinancialInstitutionClient extends EntityClient {
 

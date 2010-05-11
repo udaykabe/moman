@@ -3,44 +3,55 @@ package net.deuce.moman.droid;
 import android.os.Bundle;
 import android.view.Menu;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import net.deuce.moman.client.model.AccountClient;
-import net.deuce.moman.client.model.EntityClient;
+import net.deuce.moman.client.service.AccountClientService;
+import net.deuce.moman.client.service.NoAvailableServerException;
 
 public class Accounts extends BaseActivity {
 
   private static final int MENU_ENVELOPES = 1;
   private static final int MENU_QUIT = 2;
 
+  private AccountClientService clientService = AccountClientService.instance();
+
   /**
    * Called when the activity is first created.
    */
   @Override
-  protected void doOnCreate(Bundle savedInstanceState) {
+  protected void doOnCreate(Bundle savedInstanceState) throws NoAvailableServerException {
 
 //    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-    
+
     ScrollView sv = new ScrollView(this);
     LinearLayout ll = new LinearLayout(this);
     ll.setOrientation(LinearLayout.VERTICAL);
     sv.addView(ll);
 
-    for (EntityClient client : getEntityList(AccountClient.class)) {
-      AccountClient accountClient = (AccountClient) client;
-      CheckBox b = new CheckBox(this);
-      b.setText(accountClient.getNickname());
-      b.setChecked(accountClient.isSelected());
+    for (final AccountClient client : clientService.list(null)) {
+      final CheckBox b = new CheckBox(this);
+      b.setText(client.getNickname());
+      b.setChecked(client.isSelected());
+      b.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+          client.setSelected(b);
+          try {
+            clientService.persist(client);
+          } catch (NoAvailableServerException e) {
+            throw new RuntimeException(e);
+          }
+        }
+      });
       ll.addView(b);
     }
 
     setContentView(sv);
   }
 
-  @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
-    menu.add(0, MENU_ENVELOPES, 0, "Envelopes");
-    menu.add(0, MENU_QUIT, 0, "Quit");
-    return true;
+  protected boolean showAccountsMenuItem() {
+    return false;
   }
+
 }

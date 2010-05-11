@@ -22,7 +22,7 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
   private String checkNo;
   private String ref;
   private Double balance;
-  private Boolean initialBalance;
+  private Boolean initialBalance = Boolean.FALSE;
   private TransactionStatus status;
   private Boolean custom = Boolean.FALSE;
 

@@ -30,6 +30,12 @@ public abstract class EntityClient {
 
   public abstract String getServiceName();
 
+  public void clone(EntityClient original) {
+    for (Map.Entry<String, String> entry : original.properties.entrySet()) {
+      setProperty(entry.getKey(), entry.getValue());
+    }
+  }
+
   public String getProperty(String name) {
     return properties.get(name);
   }

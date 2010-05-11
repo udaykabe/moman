@@ -32,6 +32,14 @@ public class HttpRequestUtils {
 
   //private static Logger log = Logger.getLogger(HttpRequestUtils.class.getName());
 
+  public String buildBaseUrl(String baseUrl, String... args) {
+    StringBuffer sb = new StringBuffer(baseUrl);
+    for (String s : args) {
+      sb.append('/').append(s);
+    }
+    return sb.toString();
+  }
+
   public static GetMethod buildRequestMethod(String req, Map<String, String> headers)
       throws Exception {
     String[] split = req.split("\\?");

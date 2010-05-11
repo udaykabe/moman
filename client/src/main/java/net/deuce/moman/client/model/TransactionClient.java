@@ -1,5 +1,7 @@
 package net.deuce.moman.client.model;
 
+import net.deuce.moman.client.model.EntityClient;
+
 import java.util.Date;
 
 public class TransactionClient extends EntityClient {
