@@ -7,6 +7,7 @@ import net.sf.ofx4j.domain.data.common.Transaction;
 import net.sf.ofx4j.domain.data.common.TransactionType;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
@@ -14,6 +15,7 @@ import java.util.*;
 public class FinancialInstitutionImportTransactionCommand extends AbstractCommand implements ImportTransactionCommand {
 
   private Account account;
+  private int matchedDayThreshold = 7;
   private boolean force = false;
   private Set<Envelope> modifiedEnvelopes = new HashSet<Envelope>();
   //	private File f =  new File("/Users/nbolton/src/personal/moman/importedTransactions.xml");
@@ -39,6 +41,14 @@ public class FinancialInstitutionImportTransactionCommand extends AbstractComman
 
   public FinancialInstitutionImportTransactionCommand() {
     super("TransactionProcessor", true);
+  }
+
+  public int getMatchedDayThreshold() {
+    return matchedDayThreshold;
+  }
+
+  public void setMatchedDayThreshold(int matchedDayThreshold) {
+    this.matchedDayThreshold = matchedDayThreshold;
   }
 
   public boolean isForce() {
@@ -192,11 +202,11 @@ public class FinancialInstitutionImportTransactionCommand extends AbstractComman
         InternalTransaction t = new InternalTransaction();
         t.setUuid(transactionService.createUuid());
         t.setExternalId(bt.getId());
+        t.setCheckNo(bt.getCheckNumber());
         t.setAmount(bt.getAmount());
         t.setDate(bt.getDatePosted());
         t.setDescription(bt.getName());
         t.setMemo(bt.getMemo());
-        t.setCheckNo(bt.getCheckNumber());
         t.setRef(bt.getReferenceNumber());
         t.setStatus(TransactionStatus.cleared);
         t.setAccount(account);
@@ -204,27 +214,19 @@ public class FinancialInstitutionImportTransactionCommand extends AbstractComman
         t.setCustom(true);
         t.setInitialBalance(false);
 
+        if ("201004300".equals(t.getExternalId())) {
+          System.out.println();
+        }
+
         if (t.getType() == null) {
           if (bt.getTransactionType() == TransactionType.OTHER) {
-            if (t.getCheckNo() != null && t.getCheckNo().length() > 0) {
-              t.setType(TransactionType.CHECK);
-            } else if (t.getAmount() >= 0) {
-              t.setType(TransactionType.CREDIT);
-            } else {
-              t.setType(TransactionType.DEBIT);
-            }
+            t.determineAndSetType();
           } else {
             t.setType(bt.getTransactionType());
           }
         }
 
         transactionService.saveOrUpdate(t);
-        if (t.getAmount() > 0) {
-          t.clearSplit();
-          transactionService.addSplit(t, envelopeService.getAvailableEnvelope(account.getUser()), t.getAmount());
-        } else {
-          transactionService.addSplit(t, envelopeService.getUnassignedEnvelope(account.getUser()), t.getAmount());
-        }
 
         transactions.add(t);
 
@@ -244,12 +246,32 @@ public class FinancialInstitutionImportTransactionCommand extends AbstractComman
         initialDownloadCheck(transactions);
         matchPreviouslyDownloadedTransactions(transactions);
         findMatchedTransactions(transactions);
-        applyRules(transactions);
         addUnmatchedTransactions(transactions);
+        applyRules(transactions);
+
+        // set default split if none was set
+        for (InternalTransaction t : transactions) {
+          if ("201005062".equals(t.getExternalId())) {
+            System.out.println("ZZZ");
+          }
+          if (!t.isMatched()) {
+            if (t.getSplit().size() == 0) {
+              if (t.getAmount() > 0) {
+                transactionService.addSplit(t, envelopeService.getAvailableEnvelope(account.getUser()), t.getAmount());
+              } else {
+                transactionService.addSplit(t, envelopeService.getUnassignedEnvelope(account.getUser()), t.getAmount());
+              }
+            }
+          }
+        }
 
         // transfer to as many negative envelopes as possible
         envelopeService.distributeToNegativeEnvelopes(account, envelopeService.getRootEnvelope(account.getUser()), envelopeService.getAvailableEnvelope(account.getUser()).getBalance());
       }
+    }
+
+    if (transactions.size() > 0) {
+      transactionService.clearQueryCache();
     }
 
     return transactions;
@@ -264,8 +286,8 @@ public class FinancialInstitutionImportTransactionCommand extends AbstractComman
             if (rule.getConversion() != null && rule.getConversion().length() > 0) {
               t.setDescription(rule.getConversion());
             }
-            t.clearSplit();
             transactionService.addSplit(t, rule.getEnvelope(), t.getAmount());
+            break;
           }
         }
         for (Split item : t.getSplit()) {
@@ -319,9 +341,7 @@ public class FinancialInstitutionImportTransactionCommand extends AbstractComman
 
     for (InternalTransaction t : transactions) {
       if (!t.isMatched()) {
-        InternalTransaction cloned = transactionService.cloneTransaction(t);
-        cloned.setCustom(false);
-        cloned.setSplit(t.getSplit());
+        t.setCustom(false);
         transactionService.saveOrUpdate(t);
       }
     }
@@ -337,7 +357,7 @@ public class FinancialInstitutionImportTransactionCommand extends AbstractComman
       if (existingTransaction != null && t.getAmount().doubleValue() == existingTransaction.getAmount().doubleValue()) {
         System.out.println("ZZZ matched " + t);
         t.setMatchedTransaction(existingTransaction);
-        t.setSplit(existingTransaction.getSplit());
+//        t.setSplit(existingTransaction.getSplit());
         transactionService.saveOrUpdate(t);
       }
     }
@@ -347,8 +367,6 @@ public class FinancialInstitutionImportTransactionCommand extends AbstractComman
 
 //		int threshold = preferenceService.getInt("ACCOUNT_IMPORT_MATCHING_DAY_THRESHOLD");
 
-    int threshold = 7;
-
     List<InternalTransaction> register = transactionService.getAccountTransactions(account, true);
     for (InternalTransaction importedTransaction : transactions) {
 
@@ -357,9 +375,9 @@ public class FinancialInstitutionImportTransactionCommand extends AbstractComman
       if (!importedTransaction.isMatched()) {
 
         Calendar lowerBound = CalendarUtil.convertToCalendar(importedTransaction.getDate());
-        lowerBound.add(Calendar.DATE, -threshold);
+        lowerBound.add(Calendar.DATE, -matchedDayThreshold);
         Calendar upperBound = CalendarUtil.convertToCalendar(importedTransaction.getDate());
-        upperBound.add(Calendar.DATE, threshold);
+        upperBound.add(Calendar.DATE, matchedDayThreshold);
 
         System.out.println("ZZZ lowerBound " + Constants.SHORT_DATE_FORMAT.format(lowerBound.getTime()));
         System.out.println("ZZZ upperBound " + Constants.SHORT_DATE_FORMAT.format(upperBound.getTime()));
@@ -372,9 +390,13 @@ public class FinancialInstitutionImportTransactionCommand extends AbstractComman
               break;
             }
 
+            if (t.getDescription().contains("STARBUCKS") && importedTransaction.getDescription().contains("STARBUCKS")) {
+              System.out.println();
+            }
+
             if (t.getAmount().doubleValue() == importedTransaction.getAmount().doubleValue() && !t.isEnvelopeTransfer()) {
               importedTransaction.setMatchedTransaction(t);
-              importedTransaction.setSplit(t.getSplit());
+//              importedTransaction.setSplit(t.getSplit());
               t.setExternalId(importedTransaction.getExternalId());
               t.setStatus(TransactionStatus.cleared);
               transactionService.saveOrUpdate(importedTransaction);

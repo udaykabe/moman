@@ -23,7 +23,7 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
   private String ref;
   private Double balance;
   private Boolean initialBalance = Boolean.FALSE;
-  private TransactionStatus status;
+  private TransactionStatus status = TransactionStatus.open;
   private Boolean custom = Boolean.FALSE;
 
   private InternalTransaction transferTransaction;
@@ -122,6 +122,18 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
 
   public void setAmount(Double amount) {
     this.amount = amount;
+  }
+
+  public void determineAndSetType() {
+    if (checkNo == null || checkNo.length() == 0) {
+      if (amount >= 0) {
+        setType(TransactionType.CREDIT);
+      } else {
+        setType(TransactionType.DEBIT);
+      }
+    } else {
+      setType(TransactionType.CHECK);
+    }
   }
 
   @Basic
@@ -257,11 +269,15 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
   @Column(name = "id")
   @Sort(type = SortType.NATURAL)
   public SortedSet<Split> getSplit() {
+    if (isMatched()) {
+      return matchedTransaction.getSplit();
+    }
     return split;
   }
 
   public void setSplit(SortedSet<Split> split) {
-    this.split = split;
+    this.split.clear();
+    this.split.addAll(split);
   }
 
   public void addSplit(Split s) {

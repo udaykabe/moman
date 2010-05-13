@@ -152,3 +152,80 @@ http://localhost:9085/service/<SERVICE>/executeCommand/<PARAM1>/<VALUE1>/.../<PA
 http://localhost:9085/service/account/executeCommand/setInitialBalanceCommand/b18a445d-6b91-32c2-9cbc-86eafce597d0/100
 (no response body, but 200 response code)
 
+---------------------------------------------------------
+
+Getting register transactions for all selected accounts
+
+http://localhost:9085/service/transaction/executeCommand/getSelectedAccountTransactionsCommand/<ENVELOPE UUID>/<DEEP true|false>/<INCLUDE TRANSFERS true|false>/<REVERSE true|false>/<STARTING POSITION>/<PAGE SIZE>
+
+http://localhost:9085/service/transaction/executeCommand/getSelectedAccountTransactionsCommand/7535ece0-3111-3ed6-b77f-a031b675075e/true/false/true/0/10
+
+<moman>
+  <transactions from="0" totalSize="623" pageSize="10">
+    <transaction id="1c602b6b-e3a2-3e07-b603-2631472eff2a">
+      <account id="b5111398-4b3f-3f29-aeaa-c744be68a3a9"/>
+      <amount>-99.95</amount>
+      <type>DEBIT</type>
+      <date>2010-04-27 12:00:00 AM</date>
+      <description>CAMEL VW SUBARU MAZDA PH</description>
+      <externalId>201004272</externalId>
+      <balance>368.42</balance>
+      <memo>04/26CAMEL VW</memo>
+      <checkNo></checkNo>
+      <ref></ref>
+      <status>cleared</status>
+      <split>
+        <envelope id="e047e972-c543-3bec-a788-c8f139e36d1e" amount="-99.95"/>
+      </split>
+    </transaction>
+    <transaction id="2baeca4e-1571-38e0-9c59-b9954cdc68f5">
+      <account id="b5111398-4b3f-3f29-aeaa-c744be68a3a9"/>
+      <amount>-8.59</amount>
+      <type>DEBIT</type>
+      <date>2010-04-27 12:00:00 AM</date>
+      <description>Z S GREEK QPS P</description>
+      <externalId>201004271</externalId>
+      <balance>468.37</balance>
+      <memo>04/26Z S GREEK</memo>
+      <checkNo></checkNo>
+      <ref></ref>
+      <status>cleared</status>
+      <split>
+        <envelope id="c9d488fa-953e-384f-b98c-4897895e5335" amount="-8.59"/>
+      </split>
+    </transaction>
+  </transactions>
+</moman>
+
+Creating a new transaction
+
+http://localhost:9085/service/transaction/new/amount/<AMOUNT>/date/<DATE>/description/<DESCRIPTION>/account/<ACCOUNT UUID>
+
+http://localhost:9085/service/transaction/new/amount/1000/date/2010-05-11/description/DIFFUSION/account/b5111398-4b3f-3f29-aeaa-c744be68a3a9
+
+<moman>
+  <transactions>
+    <transaction id="34780c6b-6170-3483-aa95-d77b9b3f86d3">
+      <account id="b5111398-4b3f-3f29-aeaa-c744be68a3a9"/>
+      <amount>1000</amount>
+      <type>CREDIT</type>
+      <date>2010-05-11 12:00:00 AM</date>
+      <description>DIFFUSION</description>
+      <memo></memo>
+      <checkNo></checkNo>
+      <ref></ref>
+      <status>open</status>
+      <split>
+        <envelope id="b1b440f0-ca34-36af-b024-491fac0779e3" amount="1000"/>
+      </split>
+    </transaction>
+  </transactions>
+</moman>
+
+Deleting a transaction
+
+http://localhost:9085/service/transaction/delete/<TRANSACTION UUID>
+
+http://localhost:9085/service/transaction/delete/34780c6b-6170-3483-aa95-d77b9b3f86d3
+(empty response body, but 200 response code)
+
