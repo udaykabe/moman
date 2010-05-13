@@ -4,8 +4,8 @@ import net.deuce.moman.controller.Parameter;
 import net.deuce.moman.job.AbstractCommand;
 import net.deuce.moman.job.Command;
 import net.deuce.moman.job.Result;
-import net.deuce.moman.om.AbstractEntity;
-import net.deuce.moman.om.EntityService;
+import net.deuce.moman.om.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,23 +16,26 @@ import java.util.List;
 
 public class NewEntityController extends EntityAccessingController {
 
+  @Autowired
+  private EnvelopeService envelopeService;
+
   public ModelAndView handleRequest(HttpServletRequest request, final HttpServletResponse response) throws Exception {
 
     String[] pathInfo = request.getPathInfo().split("/");
 
-    if (pathInfo.length < 6) {
+    if (pathInfo.length < 5) {
       errorResponse(response, HttpServletResponse.SC_BAD_REQUEST, "No properties/values given");
       return null;
     }
 
-    if (((pathInfo.length - 4) % 2) != 0) {
+    if (((pathInfo.length - 3) % 2) != 0) {
       errorResponse(response, HttpServletResponse.SC_BAD_REQUEST, "Mismatched property/value list");
       return null;
     }
 
     List<Parameter> properties = new LinkedList<Parameter>();
 
-    for (int i = 4; i < pathInfo.length; i += 2) {
+    for (int i = 3; i < pathInfo.length; i += 2) {
       properties.add(new Parameter(URLDecoder.decode(pathInfo[i], "UTF-8"), URLDecoder.decode(pathInfo[i + 1], "UTF-8")));
     }
 
@@ -56,18 +59,32 @@ public class NewEntityController extends EntityAccessingController {
           }
         }
 
-        entity = service.saveOrUpdate(entity);
+        Command undoCommand = null;
+
+        if (service instanceof TransactionService) {
+          InternalTransaction t = (InternalTransaction)entity;
+          t.determineAndSetType();
+          Command cmd = ((TransactionService)service).newTransactionCommand(t, null);
+          undoCommand = cmd.getUndo();
+          cmd.doExecute();
+        } else {
+          entity = service.saveOrUpdate(entity);
+        }
 
         setResultCode(HttpServletResponse.SC_OK);
         setResult(buildEntitiesElement(entity, service));
 
-        final Long entityId = entity.getId();
-        setUndo(new AbstractCommand("Undo " + getName(), true) {
-          public void doExecute() throws Exception {
-            service.delete(service.get(entityId));
-            setResultCode(HttpServletResponse.SC_OK);
-          }
-        });
+        if (undoCommand != null) {
+          setUndo(undoCommand);
+        } else {
+          final Long entityId = entity.getId();
+          setUndo(new AbstractCommand("Undo " + getName(), true) {
+            public void doExecute() throws Exception {
+              service.delete(service.get(entityId));
+              setResultCode(HttpServletResponse.SC_OK);
+            }
+          });
+        }
       }
     };
 

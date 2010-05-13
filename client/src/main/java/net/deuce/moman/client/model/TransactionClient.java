@@ -38,6 +38,14 @@ public class TransactionClient extends EntityClient {
     return getProperty("externalId");
   }
 
+  public String getMatchedTransactionId() {
+    return getProperty("matchedTransactionId");
+  }
+
+  public boolean isMatched() {
+    return getMatchedTransactionId() != null;
+  }
+
   public double getBalance() {
     return getDouble("balance");
   }

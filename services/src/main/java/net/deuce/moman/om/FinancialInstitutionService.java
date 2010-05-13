@@ -40,7 +40,7 @@ public class FinancialInstitutionService extends EntityService<FinancialInstitut
     getDao().clear();
   }
 
-  public FinancialInstitutionImportTransactionCommand importTransactionsCommand(final Account account, final Boolean forceFull) {
+  public FinancialInstitutionImportTransactionCommand importTransactionsCommand(final Account account, final Boolean forceFull, final Integer matchedDayThreshold) {
     FinancialInstitutionImportTransactionCommand command =
         (FinancialInstitutionImportTransactionCommand) getApplicationContext().getBean(
             "financialInstitutionImportTransactionCommand", FinancialInstitutionImportTransactionCommand.class);

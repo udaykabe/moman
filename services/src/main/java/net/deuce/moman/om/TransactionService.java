@@ -33,6 +33,9 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
   @Autowired
   private EnvelopeService envelopeService;
 
+  @Autowired
+  private UserService userService;
+
   private CacheManager cacheManager;
   private Cache queryCache;
 
@@ -56,20 +59,30 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
     addElement(el, "checkNo", trans.getCheckNo());
     addElement(el, "ref", trans.getRef());
     addElement(el, "status", trans.getStatus().name());
+    if ("201005062".equals(trans.getExternalId())) {
+      System.out.println("ZZZ");
+    }
+    if (trans.isMatched()) {
+      el.addElement("matchedTransaction").addAttribute("id", trans.getMatchedTransaction().getUuid());
+    }
     if (trans.getTransferTransaction() != null) {
       el.addElement("etransfer").addAttribute("id", trans.getTransferTransaction().getUuid());
     }
     Element sel = el.addElement("split");
     Element eel;
     try {
-    for (Split item : trans.getSplit()) {
-      eel = sel.addElement("envelope");
-      eel.addAttribute("id", item.getEnvelope().getUuid());
-      eel.addAttribute("amount", Utils.formatDouble(item.getAmount()));
-    }
+      for (Split item : trans.getSplit()) {
+        eel = sel.addElement("envelope");
+        eel.addAttribute("id", item.getEnvelope().getUuid());
+        eel.addAttribute("amount", Utils.formatDouble(item.getAmount()));
+      }
     } catch (LazyInitializationException e) {
-      throw e; 
+      throw e;
     }
+  }
+
+  public void clearQueryCache() {
+    queryCache.removeAll();
   }
 
   public void toXml(InternalTransaction trans, Element parent) {
@@ -89,7 +102,8 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
     SortedSet<Split> split = transaction.getSplit();
     if (split.size() == 0) return true;
 
-    clearSplit(transaction, affectedSplits);
+    affectedSplits.addAll(transaction.getSplit());
+    clearSplit(transaction);
 
     for (Split item : newSplits) {
       if (transaction.getAmount() < 0.0) {
@@ -100,6 +114,8 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
       transaction.addSplit(item);
     }
     saveOrUpdate(transaction);
+
+    queryCache.removeAll();
 
     return true;
   }
@@ -188,8 +204,10 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
         }
         saveOrUpdate(transaction);
       }
+      queryCache.removeAll();
     }
   }
+
   @Transactional(readOnly = true)
   public List<InternalTransaction> getAccountTransactions(Account account, boolean reverse) {
     return transactionDao.getAccountTransactions(account, reverse);
@@ -364,6 +382,35 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
     }
   }
 
+  public Command newTransactionCommand(final InternalTransaction transaction, final Envelope envelope) {
+    return new AbstractCommand(InternalTransaction.class.getSimpleName() + " newTransaction(" + transaction.getUuid() + ")", true) {
+
+      public void doExecute() throws Exception {
+
+        final Account account = transaction.getAccount();
+        final Double accountBalance = account.getBalance();
+        final List<InternalTransaction> affectedTransactions = new LinkedList<InternalTransaction>();
+        final List<Split> affectedSplits = new LinkedList<Split>();
+
+        saveOrUpdate(transaction);
+        if (envelope != null) {
+          affectedSplits.add(addSplit(transaction, envelope, transaction.getAmount()));
+        } else {
+          affectedSplits.add(addSplit(transaction, envelopeService.getUnassignedEnvelope(userService.getStaticUser()), transaction.getAmount()));
+        }
+        adjustBalances(transaction, false, affectedTransactions);
+
+        setUndo(new AbstractCommand("Undo " + getName(), true) {
+          public void doExecute() throws Exception {
+            undoAdjustBalances(account, accountBalance, affectedTransactions);
+            undoAddSplit(affectedSplits.get(0));
+            delete(transaction);
+          }
+        });
+      }
+    };
+  }
+
   @Transactional
   public void adjustBalances(InternalTransaction transaction, boolean remove, List<InternalTransaction> affectedTransactions) {
 
@@ -400,6 +447,7 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
 
     account.setBalance(balance);
     accountService.saveOrUpdate(account);
+    queryCache.removeAll();
 
   }
 
@@ -431,6 +479,8 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
       if (adjust) {
         adjustBalances(transaction, false, affectedTransactions);
       }
+
+      queryCache.removeAll();
     }
   }
 
@@ -440,8 +490,9 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
       public void doExecute() throws Exception {
 
         final List<Split> affectedSplits = new LinkedList<Split>();
+        affectedSplits.addAll(transaction.getSplit());
 
-        clearSplit(transaction, affectedSplits);
+        clearSplit(transaction);
 
         setUndo(new AbstractCommand("Undo " + getName(), true) {
           public void doExecute() throws Exception {
@@ -461,14 +512,16 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
   }
 
   @Transactional
-  public void clearSplit(InternalTransaction transaction, List<Split> affectedSplits) {
-    affectedSplits.addAll(transaction.getSplit());
+  public void clearSplit(InternalTransaction transaction) {
+
+    for (Split item : transaction.getSplit()) {
+      splitService.delete(item);
+    }
+
     transaction.clearSplit();
     saveOrUpdate(transaction);
 
-    for (Split item : affectedSplits) {
-      splitService.delete(item);
-    }
+    queryCache.removeAll();
   }
 
   public Command addSplitCommand(final InternalTransaction transaction, final Envelope envelope, final Double amount) {
@@ -499,13 +552,16 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
     item.setAmount(amount);
     item.setEnvelope(envelope);
     item.setTransaction(transaction);
-    splitService.saveOrUpdate(item);
 
     SortedSet<Split> split = transaction.getSplit();
-    if (!split.contains(item)) {
-      transaction.addSplit(item);
-      saveOrUpdate(transaction);
+    if (split.contains(item)) {
+      throw new RuntimeException("Duplicate split item (" + item + ") added to " + transaction);
     }
+
+    splitService.saveOrUpdate(item);
+    transaction.addSplit(item);
+    saveOrUpdate(transaction);
+    queryCache.removeAll();
 
     return item;
   }
@@ -538,6 +594,7 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
     }
     saveOrUpdate(transaction);
     splitService.delete(item);
+    queryCache.removeAll();
   }
 
   @Transactional
@@ -602,6 +659,7 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
       t.setCustom(false);
       saveOrUpdate(t);
     }
+    queryCache.removeAll();
   }
 
   @Transactional(readOnly = true)

@@ -137,7 +137,7 @@ public abstract class EntityService<E extends AbstractEntity, ED extends EntityD
     return entity;
   }
 
-  @Transactional(readOnly = true)
+  @Transactional
   public void addEntity(E entity) {
     doAddEntity(entity);
   }
