@@ -95,8 +95,8 @@
   <component name="FileColors" enabled="true" enabledForTabs="true" />
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="Envelope.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/model/src/main/java/net/deuce/moman/om/Envelope.java">
+      <file leaf-file-name="RepeatingTransactionService.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/services/src/main/java/net/deuce/moman/om/RepeatingTransactionService.java">
           <provider selected="true" editor-type-id="text-editor">
             <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
               <folding />
@@ -104,83 +104,80 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="applicationContext.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/server/src/main/resources/applicationContext.xml">
-          <provider editor-type-id="com.intellij.spring.perspectives.SpringBeansStructureEditorProvider">
-            <state />
-          </provider>
+      <file leaf-file-name="RuleService.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/services/src/main/java/net/deuce/moman/om/RuleService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="6" column="0" selection-start="324" selection-end="324" vertical-scroll-proportion="-0.0">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="EnvelopeService.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="NewEntityController.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/server/src/main/java/net/deuce/moman/controller/command/NewEntityController.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="2" column="0" selection-start="45" selection-end="45" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CrudTests.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/server/src/test/java/net/deuce/moman/CrudTests.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AccountStatus.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="jar://$MAVEN_REPOSITORY$/net/sf/ofx4j/ofx4j/1.2/ofx4j-1.2-sources.jar!/net/sf/ofx4j/domain/data/common/AccountStatus.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AccountService.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/services/src/main/java/net/deuce/moman/om/AccountService.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="145" column="2" selection-start="5206" selection-end="5206" vertical-scroll-proportion="0.98421055">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="EnvelopeService.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/services/src/main/java/net/deuce/moman/om/EnvelopeService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="472" column="46" selection-start="14624" selection-end="14654" vertical-scroll-proportion="0.33274022">
+            <state line="124" column="0" selection-start="3843" selection-end="4307" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="log4j.properties" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/server/src/main/resources/log4j.properties">
+      <file leaf-file-name="FinancialInstitutionService.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/services/src/main/java/net/deuce/moman/om/FinancialInstitutionService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+            <state line="49" column="0" selection-start="1843" selection-end="3648" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="UndoCommandController.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/server/src/main/java/net/deuce/moman/controller/command/UndoCommandController.java">
+      <file leaf-file-name="Account.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/model/src/main/java/net/deuce/moman/om/Account.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+            <state line="1" column="0" selection-start="28" selection-end="28" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DispatcherController.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/server/src/main/java/net/deuce/moman/controller/DispatcherController.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="25" column="0" selection-start="1053" selection-end="1053" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ListEntitiesController.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/server/src/main/java/net/deuce/moman/controller/command/ListEntitiesController.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="UserBasedDao.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/dao/src/main/java/net/deuce/moman/om/UserBasedDao.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="EntityDao.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/dao/src/main/java/net/deuce/moman/om/EntityDao.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="18" column="0" selection-start="726" selection-end="726" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="UserBasedService.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/services/src/main/java/net/deuce/moman/om/UserBasedService.java">
+      <file leaf-file-name="UserBasedEntity.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/model/src/main/java/net/deuce/moman/om/UserBasedEntity.java">
           <provider selected="true" editor-type-id="text-editor">
             <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
               <folding />
@@ -198,22 +195,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/services/src/main/java/net/deuce/moman/om/EntityService.java" />
-        <option value="$PROJECT_DIR$/services/src/main/java/net/deuce/moman/om/TransactionService.java" />
-        <option value="$PROJECT_DIR$/model/src/main/java/net/deuce/moman/om/InternalTransaction.java" />
-        <option value="$PROJECT_DIR$/services/src/main/java/net/deuce/moman/om/FinancialInstitutionImportTransactionCommand.java" />
-        <option value="$PROJECT_DIR$/server/src/main/java/net/deuce/moman/controller/command/NewEntityController.java" />
-        <option value="$PROJECT_DIR$/services/src/main/java/net/deuce/moman/om/FinancialInstitutionService.java" />
-        <option value="$PROJECT_DIR$/services/src/main/java/net/deuce/moman/om/UserService.java" />
-        <option value="$PROJECT_DIR$/model/test-data.sql" />
-        <option value="$PROJECT_DIR$/server/src/main/java/net/deuce/moman/controller/BillController.java" />
-        <option value="$PROJECT_DIR$/server/src/main/java/net/deuce/moman/controller/SavingsGoalController.java" />
         <option value="$PROJECT_DIR$/server/src/main/resources/moman-servlet.xml" />
         <option value="$PROJECT_DIR$/services/src/main/java/net/deuce/moman/om/UserBasedService.java" />
         <option value="$PROJECT_DIR$/dao/src/main/java/net/deuce/moman/om/UserBasedDao.java" />
         <option value="$PROJECT_DIR$/server/src/main/java/net/deuce/moman/controller/command/UndoCommandController.java" />
         <option value="$PROJECT_DIR$/server/src/main/resources/log4j.properties" />
         <option value="$PROJECT_DIR$/services/src/main/java/net/deuce/moman/om/EnvelopeService.java" />
+        <option value="$PROJECT_DIR$/model/src/main/java/net/deuce/moman/om/Account.java" />
+        <option value="$PROJECT_DIR$/model/src/main/java/net/deuce/moman/om/Device.java" />
+        <option value="$PROJECT_DIR$/model/src/main/java/net/deuce/moman/om/Envelope.java" />
+        <option value="$PROJECT_DIR$/model/src/main/java/net/deuce/moman/om/Income.java" />
+        <option value="$PROJECT_DIR$/model/src/main/java/net/deuce/moman/om/Payee.java" />
+        <option value="$PROJECT_DIR$/model/src/main/java/net/deuce/moman/om/Rule.java" />
+        <option value="$PROJECT_DIR$/model/src/main/java/net/deuce/moman/om/UserBasedEntity.java" />
+        <option value="$PROJECT_DIR$/server/src/main/java/net/deuce/moman/controller/command/NewEntityController.java" />
+        <option value="$PROJECT_DIR$/services/src/main/java/net/deuce/moman/om/FinancialInstitutionService.java" />
+        <option value="$PROJECT_DIR$/services/src/main/java/net/deuce/moman/om/AccountService.java" />
       </list>
     </option>
   </component>
@@ -1761,17 +1758,17 @@
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.18026184" sideWeight="0.9705144" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18026184" sideWeight="0.9705144" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3796576" sideWeight="0.60183686" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3796576" sideWeight="0.60183686" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.28309023" sideWeight="0.3836858" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.28309023" sideWeight="0.50956696" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.6114965" sideWeight="0.6408912" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.28309023" sideWeight="0.2225579" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.28309023" sideWeight="0.2960725" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3222558" sideWeight="0.38411668" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Android Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32326284" sideWeight="0.61210155" order="9" side_tool="true" content_ui="tabs" />
@@ -1818,40 +1815,72 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/eclipse/entity/src/main/java/net/deuce/moman/entity/service/impl/ServiceManagerImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="144" column="0" selection-start="4200" selection-end="4200" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/eclipse/entity/src/main/java/net/deuce/moman/entity/service/transaction/AbstractTransactionProcessor.java">
+    <entry file="file://$PROJECT_DIR$/model/src/main/java/net/deuce/moman/om/Rule.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server/src/main/java/net/deuce/moman/controller/BillController.java">
+    <entry file="file://$PROJECT_DIR$/model/src/main/java/net/deuce/moman/om/Split.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="0" selection-start="354" selection-end="354" vertical-scroll-proportion="0.0">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server/src/main/java/net/deuce/moman/controller/SavingsGoalController.java">
+    <entry file="file://$PROJECT_DIR$/services/src/main/java/net/deuce/moman/om/AllocationSetService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="0" selection-start="348" selection-end="348" vertical-scroll-proportion="0.0">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server/src/main/resources/moman-servlet.xml">
-      <provider editor-type-id="com.intellij.spring.perspectives.SpringBeansStructureEditorProvider">
-        <state />
-      </provider>
+    <entry file="file://$PROJECT_DIR$/services/src/main/java/net/deuce/moman/om/DeviceService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="96" column="0" selection-start="4115" selection-end="4115" vertical-scroll-proportion="-0.0">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/services/src/main/java/net/deuce/moman/om/IncomeService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/services/src/main/java/net/deuce/moman/om/PayeeService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/services/src/main/java/net/deuce/moman/om/RepeatingTransactionService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/services/src/main/java/net/deuce/moman/om/RuleService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/src/main/java/net/deuce/moman/om/UserBasedEntity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/src/main/java/net/deuce/moman/controller/command/NewEntityController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2" column="0" selection-start="45" selection-end="45" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -1863,75 +1892,37 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server/src/main/java/net/deuce/moman/controller/DispatcherController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="25" column="0" selection-start="1053" selection-end="1053" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/src/main/java/net/deuce/moman/controller/command/ListEntitiesController.java">
+    <entry file="jar://$MAVEN_REPOSITORY$/net/sf/ofx4j/ofx4j/1.2/ofx4j-1.2-sources.jar!/net/sf/ofx4j/domain/data/common/AccountStatus.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/src/main/java/net/deuce/moman/om/Envelope.java">
+    <entry file="file://$PROJECT_DIR$/model/src/main/java/net/deuce/moman/om/Account.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/services/src/main/java/net/deuce/moman/om/UserBasedService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dao/src/main/java/net/deuce/moman/om/EntityDao.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="0" selection-start="726" selection-end="726" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dao/src/main/java/net/deuce/moman/om/UserBasedDao.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/src/main/java/net/deuce/moman/controller/command/UndoCommandController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/src/main/resources/applicationContext.xml">
-      <provider editor-type-id="com.intellij.spring.perspectives.SpringBeansStructureEditorProvider">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="0" selection-start="324" selection-end="324" vertical-scroll-proportion="-0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/src/main/resources/log4j.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+        <state line="1" column="0" selection-start="28" selection-end="28" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/services/src/main/java/net/deuce/moman/om/EnvelopeService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="472" column="46" selection-start="14624" selection-end="14654" vertical-scroll-proportion="0.33274022">
+        <state line="124" column="0" selection-start="3843" selection-end="4307" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/services/src/main/java/net/deuce/moman/om/FinancialInstitutionService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="49" column="0" selection-start="1843" selection-end="3648" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/services/src/main/java/net/deuce/moman/om/AccountService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="145" column="2" selection-start="5206" selection-end="5206" vertical-scroll-proportion="0.98421055">
           <folding />
         </state>
       </provider>

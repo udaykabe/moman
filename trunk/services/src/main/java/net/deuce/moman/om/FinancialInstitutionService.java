@@ -1,5 +1,7 @@
 package net.deuce.moman.om;
 
+import net.deuce.moman.job.AbstractCommand;
+import net.deuce.moman.job.Command;
 import net.sf.ofx4j.client.AccountStatement;
 import net.sf.ofx4j.client.BankAccount;
 import net.sf.ofx4j.client.context.DefaultApplicationContext;
@@ -84,42 +86,6 @@ public class FinancialInstitutionService extends EntityService<FinancialInstitut
 				statement.getLedgerBalance().getAmount(),
 				endDate,
 				statement.getTransactionList().getTransactions());
-	}
-
-	public List<Account> getAvailableAccounts(FinancialInstitution financialInstitution,
-			String username, String password) throws Exception {
-		List<Account> list = new LinkedList<Account>();
-
-		OFXApplicationContextHolder.setCurrentContext(new DefaultApplicationContext("QWIN", "1700"));
-
-		BaseFinancialInstitutionData data = new BaseFinancialInstitutionData(financialInstitution.getFinancialInstitutionId());
-		data.setOFXURL(new URL(financialInstitution.getUrl()));
-		data.setOrganization(financialInstitution.getOrganization());
-		data.setFinancialInstitutionId(financialInstitution.getFinancialInstitutionId());
-		net.sf.ofx4j.client.FinancialInstitutionService service = new net.sf.ofx4j.client.impl.FinancialInstitutionServiceImpl();
-		net.sf.ofx4j.client.FinancialInstitution fi = service.getFinancialInstitution(data);
-
-		Collection<AccountProfile> profiles = fi.readAccountProfiles(username, password);
-		Account account;
-
-		for (AccountProfile profile : profiles) {
-			BankAccountInfo bankInfo = profile.getBankSpecifics();
-
-			account = new Account();
-      account.setSelected(Boolean.TRUE);
-      account.setNickname(profile.getDescription());
-      account.setBankId(bankInfo.getBankAccount().getBankId());
-      account.setAccountId(bankInfo.getBankAccount().getAccountNumber());
-      account.setUsername(username);
-      account.setPassword(password);
-      account.setStatus(bankInfo.getStatus());
-      account.setSupportsDownloading(bankInfo.getSupportsTransactionDetailOperations());
-      account.setBalance(0.0);
-      account.setOnlineBalance(0.0);
-      account.setLastReconciledEndingBalance(0.0);
-			list.add(account);
-		}
-		return list;
 	}
 
   public void toXml(FinancialInstitution fi, Element parent) {

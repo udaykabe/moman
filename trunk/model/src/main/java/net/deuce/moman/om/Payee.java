@@ -4,13 +4,14 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "Payee", uniqueConstraints = {@UniqueConstraint(columnNames = {"uuid"})})
-public class Payee extends AbstractEntity<Payee> {
+public class Payee extends AbstractEntity<Payee> implements UserBasedEntity {
 
   private static final long serialVersionUID = 1L;
 
   private String description;
   private Envelope envelope;
   private Double amount;
+  private User user;
 
   public Payee() {
     super();
@@ -25,6 +26,16 @@ public class Payee extends AbstractEntity<Payee> {
     return compareObjects(o1.description, o2.description);
   }
 
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id")
+  public User getUser() {
+    return user;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
+  }
+  
   @Basic
   public String getDescription() {
     return description;

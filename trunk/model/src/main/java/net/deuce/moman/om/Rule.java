@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "Rule", uniqueConstraints = {@UniqueConstraint(columnNames = {"uuid"})})
-public class Rule extends AbstractEntity<Rule> {
+public class Rule extends AbstractEntity<Rule> implements UserBasedEntity {
 
   private static final long serialVersionUID = 1L;
 
@@ -20,11 +20,22 @@ public class Rule extends AbstractEntity<Rule> {
   private Condition condition;
   private Envelope envelope;
   private Boolean enabled;
+  private User user;
 
   private transient RuleExecutor ruleExecutor;
 
   public Rule() {
     super();
+  }
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id")
+  public User getUser() {
+    return user;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
   }
 
   @Basic
