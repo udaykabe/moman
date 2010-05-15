@@ -5,10 +5,12 @@ import net.deuce.moman.job.Command;
 import net.deuce.moman.job.Result;
 import net.deuce.moman.om.AbstractEntity;
 import net.deuce.moman.om.EntityService;
+import org.dom4j.Element;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
 
 public class DeleteEntityController extends AbstractCommandController {
 
@@ -50,7 +52,7 @@ public class DeleteEntityController extends AbstractCommandController {
             AbstractEntity newEntity = service.saveOrUpdate(entity);
 
             setResultCode(HttpServletResponse.SC_OK);
-            setResult(buildEntitiesElement(newEntity, service));
+            setResult(Arrays.asList(new Element[]{buildEntitiesElement(newEntity, service)}));
           }
         });
       }

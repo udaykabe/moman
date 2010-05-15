@@ -4,6 +4,7 @@ import net.deuce.moman.job.Command;
 import net.deuce.moman.job.Result;
 import net.deuce.moman.job.UndoManager;
 import org.dom4j.Document;
+import org.dom4j.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -60,7 +61,9 @@ public class ExecuteCommandController extends AbstractCommandController {
 
     if (result.getResult() != null) {
       Document doc = buildResponse();
-      doc.getRootElement().add(result.getResult());
+      for (Element el : result.getResult()) {
+        doc.getRootElement().add(el);
+      }
       sendResponse(res, doc);
     }
 

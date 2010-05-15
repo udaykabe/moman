@@ -3,13 +3,14 @@ package net.deuce.moman.job;
 import org.dom4j.Element;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 public abstract class AbstractCommand implements Command {
 
   private String id;
   private String name;
   private boolean immediate;
-  private Element result;
+  private List<Element> result;
   private Command undoCommand;
   private int resultCode = HttpServletResponse.SC_OK;
   private boolean running = false;
@@ -40,11 +41,11 @@ public abstract class AbstractCommand implements Command {
     return immediate;
   }
 
-  public Element getResult() {
+  public List<Element> getResult() {
     return result;
   }
 
-  public void setResult(Element result) {
+  public void setResult(List<Element> result) {
     this.result = result;
   }
 

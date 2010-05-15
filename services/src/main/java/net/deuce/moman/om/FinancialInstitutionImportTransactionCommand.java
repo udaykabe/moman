@@ -36,6 +36,9 @@ public class FinancialInstitutionImportTransactionCommand extends AbstractComman
   @Autowired
   private FinancialInstitutionService financialInstitutionService;
 
+  @Autowired
+  private UserService userService;
+
 //  @Autowired
 //	private PreferenceService preferenceService;
 
@@ -165,13 +168,22 @@ public class FinancialInstitutionImportTransactionCommand extends AbstractComman
         envelopeService.resetBalance(env);
       }
 
-      Element element = DocumentHelper.createElement("transactions");
+      List<Element> list = new LinkedList<Element>();
+      Element element = DocumentHelper.createElement(transactionService.getRootElementName());
+      list.add(element);
 
       for (InternalTransaction trans : transactions) {
         transactionService.toXml(trans, element);
       }
 
-      setResult(element);
+      element = DocumentHelper.createElement(envelopeService.getRootElementName());
+      list.add(element);
+
+      for (Envelope env : envelopeService.getEntities(userService.getDefaultUser())) {
+        envelopeService.toXml(env, element);
+      }
+
+      setResult(list);
     }
   }
 
@@ -214,10 +226,6 @@ public class FinancialInstitutionImportTransactionCommand extends AbstractComman
         t.setCustom(true);
         t.setInitialBalance(false);
 
-        if ("201004300".equals(t.getExternalId())) {
-          System.out.println();
-        }
-
         if (t.getType() == null) {
           if (bt.getTransactionType() == TransactionType.OTHER) {
             t.determineAndSetType();
@@ -251,9 +259,6 @@ public class FinancialInstitutionImportTransactionCommand extends AbstractComman
 
         // set default split if none was set
         for (InternalTransaction t : transactions) {
-          if ("201005062".equals(t.getExternalId())) {
-            System.out.println("ZZZ");
-          }
           if (!t.isMatched()) {
             if (t.getSplit().size() == 0) {
               if (t.getAmount() > 0) {
@@ -266,7 +271,7 @@ public class FinancialInstitutionImportTransactionCommand extends AbstractComman
         }
 
         // transfer to as many negative envelopes as possible
-        envelopeService.distributeToNegativeEnvelopes(account, envelopeService.getRootEnvelope(account.getUser()), envelopeService.getAvailableEnvelope(account.getUser()).getBalance());
+        //envelopeService.distributeToNegativeEnvelopes(account, envelopeService.getRootEnvelope(account.getUser()), envelopeService.getAvailableEnvelope(account.getUser()).getBalance());
       }
     }
 
@@ -388,10 +393,6 @@ public class FinancialInstitutionImportTransactionCommand extends AbstractComman
               System.out.println("ZZZ out of range - imported: " + Constants.SHORT_DATE_FORMAT.format(importedTransaction.getDate())
                   + " existing: " + Constants.SHORT_DATE_FORMAT.format(t.getDate()));
               break;
-            }
-
-            if (t.getDescription().contains("STARBUCKS") && importedTransaction.getDescription().contains("STARBUCKS")) {
-              System.out.println();
             }
 
             if (t.getAmount().doubleValue() == importedTransaction.getAmount().doubleValue() && !t.isEnvelopeTransfer()) {

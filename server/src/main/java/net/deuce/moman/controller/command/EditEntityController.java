@@ -6,11 +6,13 @@ import net.deuce.moman.job.Command;
 import net.deuce.moman.job.Result;
 import net.deuce.moman.om.AbstractEntity;
 import net.deuce.moman.om.EntityService;
+import org.dom4j.Element;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLDecoder;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -87,7 +89,7 @@ public class EditEntityController extends EntityAccessingController {
           EntityResult entityResult = getEntityAdapter().setProperty(service, entity, p.getName(), p.getValue());
           if (entityResult.getException() != null || entityResult.getMessage() != null) {
             setResultCode(entityResult.getResponseCode());
-            setResult(buildErrorResponse(entityResult.getException(), entityResult.getMessage()));
+            setResult(Arrays.asList(new Element[]{buildErrorResponse(entityResult.getException(), entityResult.getMessage())}));
             return;
           }
         }
@@ -95,7 +97,7 @@ public class EditEntityController extends EntityAccessingController {
         entity = service.saveOrUpdate(entity);
 
         setResultCode(HttpServletResponse.SC_OK);
-        setResult(buildEntitiesElement(entity, service));
+        setResult(Arrays.asList(new Element[]{buildEntitiesElement(entity, service)}));
 
         setUndo(new AbstractCommand("Undo " + getName(), true) {
           public void doExecute() throws Exception {
@@ -105,7 +107,7 @@ public class EditEntityController extends EntityAccessingController {
               EntityResult entityResult = getEntityAdapter().setProperty(service, entity, p.getName(), p.getValue());
               if (entityResult.getException() != null || entityResult.getMessage() != null) {
                 setResultCode(entityResult.getResponseCode());
-                setResult(buildErrorResponse(entityResult.getException(), entityResult.getMessage()));
+                setResult(Arrays.asList(new Element[]{buildErrorResponse(entityResult.getException(), entityResult.getMessage())}));
                 return;
               }
             }
@@ -113,7 +115,7 @@ public class EditEntityController extends EntityAccessingController {
             entity = service.saveOrUpdate(entity);
 
             setResultCode(HttpServletResponse.SC_OK);
-            setResult(buildEntitiesElement(entity, service));
+            setResult(Arrays.asList(new Element[]{buildEntitiesElement(entity, service)}));
           }
         });
       }

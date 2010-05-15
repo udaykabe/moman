@@ -78,7 +78,7 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
       public void doExecute() throws Exception {
         List<Envelope> list = new LinkedList<Envelope>();
         list.add(getMonthlyEnvelope(user));
-        setResult(toXml(list));
+        setResult(Arrays.asList(new Element[]{toXml(list)}));
       }
     };
   }
@@ -93,7 +93,7 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
       public void doExecute() throws Exception {
         List<Envelope> list = new LinkedList<Envelope>();
         list.add(getRootEnvelope(user));
-        setResult(toXml(list));
+        setResult(Arrays.asList(new Element[]{toXml(list)}));
       }
     };
   }
@@ -108,7 +108,7 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
       public void doExecute() throws Exception {
         List<Envelope> list = new LinkedList<Envelope>();
         list.add(getSavingsGoalsEnvelope(user));
-        setResult(toXml(list));
+        setResult(Arrays.asList(new Element[]{toXml(list)}));
       }
     };
   }
@@ -123,7 +123,7 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
       public void doExecute() throws Exception {
         List<Envelope> list = new LinkedList<Envelope>();
         list.add(getUnassignedEnvelope(user));
-        setResult(toXml(list));
+        setResult(Arrays.asList(new Element[]{toXml(list)}));
       }
     };
   }
@@ -138,7 +138,7 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
       public void doExecute() throws Exception {
         List<Envelope> list = new LinkedList<Envelope>();
         list.add(getAvailableEnvelope(user));
-        setResult(toXml(list));
+        setResult(Arrays.asList(new Element[]{toXml(list)}));
       }
     };
   }

@@ -2,12 +2,14 @@ package net.deuce.moman.job;
 
 import org.dom4j.Element;
 
+import java.util.List;
+
 public class Result {
 
   private int resultCode;
-  private Element result;
+  private List<Element> result;
 
-  public Result(int resultCode, Element result) {
+  public Result(int resultCode, List<Element> result) {
     this.resultCode = resultCode;
     this.result = result;
   }
@@ -16,7 +18,7 @@ public class Result {
     return resultCode;
   }
 
-  public Element getResult() {
+  public List<Element> getResult() {
     return result;
   }
 }
