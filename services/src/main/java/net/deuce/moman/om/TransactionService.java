@@ -396,7 +396,7 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
         if (envelope != null) {
           affectedSplits.add(addSplit(transaction, envelope, transaction.getAmount()));
         } else {
-          affectedSplits.add(addSplit(transaction, envelopeService.getUnassignedEnvelope(userService.getStaticUser()), transaction.getAmount()));
+          affectedSplits.add(addSplit(transaction, envelopeService.getUnassignedEnvelope(userService.getDefaultUser()), transaction.getAmount()));
         }
         adjustBalances(transaction, false, affectedTransactions);
 

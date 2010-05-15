@@ -53,7 +53,7 @@ public class ReflectionCommandBuilder extends BaseReflectionUtilities implements
     for (int i = 0; i < paramTypes.length; i++) {
 
       if (userParamPos >= 0 && i == userParamPos) {
-        args.add(userService.getStaticUser());
+        args.add(userService.getDefaultUser());
         continue;
       }
 

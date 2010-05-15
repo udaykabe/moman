@@ -11,7 +11,7 @@ public class UndoCommandController extends AbstractJobCommandController {
 
   public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
     Result result = undo();
-    if (result != null && result.getResult() != null) {
+    if (result != null && (result.getResult() != null || result.getResultCode() == HttpServletResponse.SC_OK)) {
       sendResult(result, response);
     } else {
       response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -21,7 +21,7 @@ public class UndoCommandController extends AbstractJobCommandController {
   }
 
   protected Result undo() throws Exception {
-    User user = getUserService().getStaticUser();
+    User user = getUserService().getDefaultUser();
     return new Result(HttpServletResponse.SC_OK, getUndoManager().undo(user));
   }
 }

@@ -16,7 +16,7 @@ public abstract class UserBasedService<E extends AbstractEntity, ED extends User
   }
 
   public List<E> getEntities(User user) {
-    return list();
+    return getOrderedEntities(user, false);
   }
 
   @Transactional(readOnly = true)

@@ -1,5 +1,5 @@
-insert into User (id, uuid, username, password) values (-1, '83d7132b-3af7-3b69-bf5b-715df990', 'default', '');
-insert into User (id, uuid, username, password) values (1, '83d7142b-3af7-3b69-bf5b-715df990', 'nbolton', '');
+insert into User (id, uuid, username, password) values (-1, '83d7132b-3af7-3b69-bf5b-715df990', 'template', '');
+insert into User (id, uuid, username, password) values (1, '83d7142b-3af7-3b69-bf5b-715df990', 'default', '');
 
 insert into FinancialInstitution (id, financialInstitutionId, name, organization, url, uuid) values(182, '5575', 'ShareBuilder', 'ShareBuilder', 'https://ofx.sharebuilder.com', 'eed41eef-0d44-38f2-b4b6-77962d5d87f3');
 insert into FinancialInstitution (id, financialInstitutionId, name, organization, url, uuid) values(193, '1001', 'TD Banknorth', 'Banknorth', 'https://secure.tdbanknorth.com/scripts/serverext.dll', '6abfa595-643d-324b-9955-cd42e568ae71');

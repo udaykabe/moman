@@ -53,7 +53,7 @@ public class SavingsGoalController extends DispatcherController {
     Document doc = buildResponse();
     Element root = doc.getRootElement().addElement("bills");
 
-    for (Envelope env : envelopeService.getBills(userService.findByUsername("nbolton"))) {
+    for (Envelope env : envelopeService.getBills(userService.getDefaultUser())) {
       envelopeService.buildEnvelope(env, root, "bill");
     }
     sendResponse(res, doc);

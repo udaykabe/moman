@@ -56,6 +56,6 @@ public class DeleteEntityController extends AbstractCommandController {
       }
     };
 
-    return getUndoManager().execute(getUserService().getStaticUser(), command, null);
+    return getUndoManager().execute(getUserService().getDefaultUser(), command, null);
   }
 }

@@ -211,6 +211,62 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
     return Math.round(value * 100) / 100.0;
   }
 
+  public Command saveAsTemplateCommand() {
+
+    final User user = userService.getDefaultUser();
+    return new AbstractCommand(Envelope.class.getSimpleName() + " saveAsTemplate(" + user.getUuid() + ")", true) {
+
+      public void doExecute() throws Exception {
+
+        final Envelope oldRoot = getRootEnvelope(userService.getTemplateUser());
+        saveAsTemplate(user);
+
+        setUndo(new AbstractCommand("Undo " + getName(), true) {
+          public void doExecute() throws Exception {
+            User templateUser = userService.getTemplateUser();
+            envelopeDao.deleteByUser(templateUser);
+            if (oldRoot != null) {
+              saveAs(null, oldRoot, userService.getTemplateUser());
+            }
+          }
+        });
+      }
+    };
+  }
+
+  @Transactional
+  public void saveAsTemplate(User user) {
+    envelopeDao.deleteByUser(userService.getTemplateUser());
+    saveAs(null, getRootEnvelope(user), userService.getTemplateUser());
+  }
+
+  private void saveAs(Envelope parent, Envelope env, User user) {
+    Envelope defaultEnvelope = new Envelope();
+    defaultEnvelope.setName(env.getName());
+    defaultEnvelope.setFrequency(env.getFrequency());
+    defaultEnvelope.setBudget(0.0);
+    defaultEnvelope.setParent(parent);
+    defaultEnvelope.setEditable(env.isEditable());
+    defaultEnvelope.setRoot(env.isRoot());
+    defaultEnvelope.setMonthly(env.isMonthly());
+    defaultEnvelope.setSavingsGoals(env.isSavingsGoals());
+    defaultEnvelope.setUnassigned(env.isUnassigned());
+    defaultEnvelope.setAvailable(env.isAvailable());
+    defaultEnvelope.setDueDay(env.getDueDay());
+    defaultEnvelope.setIndex(env.getIndex());
+    defaultEnvelope.setSavingsGoalDate(env.getSavingsGoalDate());
+    defaultEnvelope.setSavingsGoalOverrideAmount(env.getSavingsGoalOverrideAmount());
+    defaultEnvelope.setUser(user);
+    defaultEnvelope.setUuid(createUuid());
+    saveOrUpdate(defaultEnvelope);
+    if (parent != null) {
+      addChild(parent, defaultEnvelope);
+    }
+    for (Envelope child : env.getChildren()) {
+      saveAs(defaultEnvelope, child, user);
+    }
+  }
+
   public Command addChildCommand(final Envelope env, final Envelope child) {
     return new AbstractCommand(Envelope.class.getSimpleName() + " addChild(" + env.getUuid() + ", " + child.getUuid() + ")", true) {
 
@@ -414,15 +470,29 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
     return new TransferResult(source, target, sTransaction, tTransaction, sourceSplit, targetSplit);
   }
 
-  @Transactional
-  public void importDefaultEnvelopes(User user) {
-    Envelope defaultRootEnvelope = getRootEnvelope(userService.getDefaultUser());
-    importDefaultEnvelope(user, defaultRootEnvelope);
+  public Command importTemplateEnvelopesCommand() {
+    final User user = userService.getDefaultUser();
+    return new AbstractCommand(Envelope.class.getSimpleName() + " importTemplateEnvelopes(" + user.getUuid() + ")", true) {
+      public void doExecute() throws Exception {
+        final Envelope oldRoot = getRootEnvelope(user);
+        importTemplateEnvelopes(user);
+        setUndo(new AbstractCommand("Undo " + getName(), true) {
+          public void doExecute() throws Exception {
+            envelopeDao.deleteByUser(user);
+            if (oldRoot != null) {
+              saveAs(null, oldRoot, user);
+            }
+          }
+        });
+      }
+    };
   }
 
-  private void importDefaultEnvelope(User user, Envelope defaultEnvelope) {
-    Envelope env = new Envelope();
-    // TODO
+  @Transactional
+  public void importTemplateEnvelopes(User user) {
+    envelopeDao.deleteByUser(user);
+    Envelope defaultRootEnvelope = getRootEnvelope(userService.getTemplateUser());
+    saveAs(null, defaultRootEnvelope, user);
   }
 
   public Command addEnvelopeCommand(final Envelope envelope, final Envelope parent) {
