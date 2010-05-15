@@ -338,3 +338,75 @@ http://localhost:9085/service/account/executeCommand/getAvailableAccountsCommand
   </accounts>
 </moman>
 
+-------------------------------------------------------
+
+Fetch transactions from financial institution
+
+http://localhost:9085/service/fi/executeCommand/importTransactionsCommand/<ACCOUNT UUID>/<FORCE FULL DOWNLOAD true|false>/<MATCHING DAY THRESHOLD>
+
+http://localhost:9085/service/fi/executeCommand/importTransactionsCommand/b5111398-4b3f-3f29-aeaa-c744be68a3a9/false/7
+
+<moman>
+  <transactions from="0" totalSize="623" pageSize="10">
+    <transaction id="1c602b6b-e3a2-3e07-b603-2631472eff2a">
+      <account id="b5111398-4b3f-3f29-aeaa-c744be68a3a9"/>
+      <amount>-99.95</amount>
+      <type>DEBIT</type>
+      <date>2010-04-27 12:00:00 AM</date>
+      <description>CAMEL VW SUBARU MAZDA PH</description>
+      <externalId>201004272</externalId>
+      <balance>368.42</balance>
+      <memo>04/26CAMEL VW</memo>
+      <checkNo></checkNo>
+      <ref></ref>
+      <status>cleared</status>
+      <split>
+        <envelope id="e047e972-c543-3bec-a788-c8f139e36d1e" amount="-99.95"/>
+      </split>
+    </transaction>
+    <transaction id="2baeca4e-1571-38e0-9c59-b9954cdc68f5">
+      <account id="b5111398-4b3f-3f29-aeaa-c744be68a3a9"/>
+      <amount>-8.59</amount>
+      <type>DEBIT</type>
+      <date>2010-04-27 12:00:00 AM</date>
+      <description>Z S GREEK QPS P</description>
+      <externalId>201004271</externalId>
+      <balance>468.37</balance>
+      <memo>04/26Z S GREEK</memo>
+      <checkNo></checkNo>
+      <ref></ref>
+      <status>cleared</status>
+      <split>
+        <envelope id="c9d488fa-953e-384f-b98c-4897895e5335" amount="-8.59"/>
+      </split>
+    </transaction>
+  </transactions>
+  <envelopes>
+    <envelope id="da74da90-779a-345c-8957-7dbb0691d974">
+      <editable>true</editable>
+      <expanded>true</expanded>
+      <enabled>true</enabled>
+      <name>Debt</name>
+      <index>1</index>
+      <frequency>MONTHLY</frequency>
+      <budget>9500</budget>
+      <balance>0</balance>
+      <dueDay>1</dueDay>
+      <savingsGoalDate>2011-02-07</savingsGoalDate>
+      <parent id="e7cd2398-1a02-3928-aa39-5fe9ca739463"/>
+    </envelope>
+    <envelope id="6306dc22-f2e7-3099-ad2d-fa5cf01ed857">
+      <editable>true</editable>
+      <expanded>true</expanded>
+      <enabled>true</enabled>
+      <name>Financial Services</name>
+      <index>7</index>
+      <frequency>MONTHLY</frequency>
+      <budget>0</budget>
+      <balance>0</balance>
+      <dueDay>0</dueDay>
+      <parent id="afb1b796-4a2c-3072-8f1b-c7ecd33e5992"/>
+    </envelope>
+  </envelopes>
+</moman>
+
