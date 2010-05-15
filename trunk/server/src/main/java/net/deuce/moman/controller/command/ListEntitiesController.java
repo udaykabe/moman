@@ -21,7 +21,7 @@ public class ListEntitiesController extends AbstractCommandController {
 
     EntityService service = getService(req);
     if (service instanceof UserBasedService) {
-      ((UserBasedService) service).toXml(getUserService().getStaticUser(), doc);
+      ((UserBasedService) service).toXml(getUserService().getDefaultUser(), doc);
     } else {
       service.toXml(doc);
     }

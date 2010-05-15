@@ -12,14 +12,14 @@ public class UserService extends EntityService<User, UserDao> implements Initial
   @Autowired
   private UserDao userDao;
 
-  private User staticUser;
+  private User defaultUser;
 
   protected UserDao getDao() {
     return userDao;
   }
 
   @Transactional(readOnly = true)
-  public User getDefaultUser() {
+  public User getTemplateUser() {
     return userDao.get(-1L);
   }
 
@@ -42,11 +42,11 @@ public class UserService extends EntityService<User, UserDao> implements Initial
     return "users";
   }
 
-  public User getStaticUser() {
-    return staticUser;
+  public User getDefaultUser() {
+    return defaultUser;
   }
 
   public void afterPropertiesSet() throws Exception {
-    staticUser = findByUsername("nbolton");
+    defaultUser = findByUsername("default");
   }
 }

@@ -21,7 +21,7 @@ public class RedoCommandController extends AbstractJobCommandController {
   }
 
   protected Result redo() throws Exception {
-    User user = getUserService().getStaticUser();
+    User user = getUserService().getDefaultUser();
     return new Result(HttpServletResponse.SC_OK, getUndoManager().redo(user));
   }
 

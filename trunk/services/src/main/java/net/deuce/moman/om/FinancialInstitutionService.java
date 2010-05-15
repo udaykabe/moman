@@ -80,36 +80,6 @@ public class FinancialInstitutionService extends EntityService<FinancialInstitut
 
 		statement = bankAccount.readStatement(startDate, endDate);
 
-		/*
-		FileWriter fileWriter = new FileWriter("/Users/nbolton/Downloads/importedTransactions.ofx");
-		try {
-			StatementRange range = new StatementRange();
-		    range.setIncludeTransactions(true);
-		    range.setStart(startDate);
-		    range.setEnd(endDate);
-
-		    FinancialInstitutionWrapper wiggy = new FinancialInstitutionWrapper(data, new OFXV1Connection());
-		    RequestEnvelope request = wiggy.createRequest(account.getUsername(), account.getPassword());
-		    TransactionWrappedRequestMessage requestTransaction = new BankStatementRequestTransaction();
-		    BankStatementRequest bankRequest = new BankStatementRequest();
-		    bankRequest.setAccount(bankAccountDetails);
-		    bankRequest.setStatementRange(range);
-		    requestTransaction.setWrappedMessage(bankRequest);
-		    BankingRequestMessageSet bankingRequest = new BankingRequestMessageSet();
-		    bankingRequest.setStatementRequest((BankStatementRequestTransaction) requestTransaction);
-		    request.getMessageSets().add(bankingRequest);
-
-		    ResponseEnvelope response = new OFXV1Connection().sendRequest(request, data.getOFXURL());
-			OFXV2Writer writer = new OFXV2Writer(fileWriter);
-			AggregateMarshaller marshaller = new AggregateMarshaller();
-			marshaller.marshal(response, writer);
-		} finally {
-			if (fileWriter != null) {
-				fileWriter.close();
-			}
-		}
-		*/
-
 		return new TransactionFetchResult(
 				statement.getLedgerBalance().getAmount(),
 				endDate,

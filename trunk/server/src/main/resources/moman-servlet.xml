@@ -121,9 +121,9 @@
         <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
           <property name="mappings">
             <value>
-              /check=checkJobStatusController
-              /undo=undoCommandController
-              /redo=redoCommandController
+              */check/*=checkJobStatusController
+              */undo=undoCommandController
+              */redo=redoCommandController
             </value>
           </property>
         </bean>

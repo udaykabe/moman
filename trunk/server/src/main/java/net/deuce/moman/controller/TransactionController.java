@@ -37,7 +37,7 @@ public class TransactionController extends DispatcherController {
     Document doc = buildResponse();
     Element root = doc.getRootElement().addElement("transactions");
 
-    for (InternalTransaction trans : transactionService.getCustomTransactions(getUserService().getStaticUser(), reverse)) {
+    for (InternalTransaction trans : transactionService.getCustomTransactions(getUserService().getDefaultUser(), reverse)) {
       transactionService.toXml(trans, root);
     }
     sendResponse(res, doc);
