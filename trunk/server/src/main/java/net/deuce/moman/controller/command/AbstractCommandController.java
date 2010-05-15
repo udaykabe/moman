@@ -130,7 +130,10 @@ public abstract class AbstractCommandController implements Controller, Applicati
   protected void sendResult(Result result, HttpServletResponse res) throws IOException {
     if (result != null && result.getResult() != null) {
       Document doc = buildResponse();
-      doc.getRootElement().add(result.getResult());
+
+      for (Element el : result.getResult()) {
+        doc.getRootElement().add(el);
+      }
       sendResponse(res, doc);
     }
   }

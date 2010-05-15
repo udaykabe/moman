@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Arrays;
+
 public class JobController extends DispatcherController implements InitializingBean, CommandListener {
 
   private Logger logger = LoggerFactory.getLogger(getClass());
@@ -52,7 +54,7 @@ public class JobController extends DispatcherController implements InitializingB
       logger.error("Command (" + command.getId() + ") failed", command.getException());
       Element error = DocumentHelper.createElement("error");
       error.addElement("message").setText(command.getException().getMessage());
-      result = new CommandResult(JobStatus.ERROR, error);
+      result = new CommandResult(JobStatus.ERROR, Arrays.asList(new Element[]{error}));
     } else {
       result = new CommandResult(JobStatus.COMPLETED, command.getResult());
     }

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -95,7 +96,7 @@ public class AccountService extends UserBasedService<Account, AccountDao> {
     return new AbstractCommand(Account.class.getSimpleName() + " getAvailableAccounts(" + financialInstitution.getUuid() + ")", true) {
       public void doExecute() throws Exception {
         List<Account> accounts = getAvailableAccounts(financialInstitution, username, password);
-        setResult(toXml(accounts));
+        setResult(Arrays.asList(new Element[]{toXml(accounts)}));
       }
     };
   }

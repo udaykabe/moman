@@ -49,7 +49,7 @@ public class UndoManager implements InitializingBean, Runnable {
   }
 
   public Result execute(User user, Command command, Command undoCommand) throws Exception {
-    Element result = doExecute(user, command);
+    List<Element> result = doExecute(user, command);
     if (undoCommand == null) {
       undoCommand = command.getUndo();
     }
@@ -60,15 +60,15 @@ public class UndoManager implements InitializingBean, Runnable {
     return new Result(command.getResultCode(), result);
   }
 
-  private Element buildResponse(User user, Element result) {
+  private List<Element> buildResponse(User user, Element result) {
     Element response = DocumentHelper.createElement("job")
         .addAttribute("undo-count", Integer.toString(getUndoStack(user).size()))
         .addAttribute("redo-count", Integer.toString(getRedoStack(user).size()));
     response.add(result);
-    return response;
+    return Arrays.asList(new Element[]{response});
   }
 
-  private Element doExecute(User user, Command command) throws Exception {
+  private List<Element> doExecute(User user, Command command) throws Exception {
     if (command.isImmedidate()) {
       command.doExecute();
       return command.getResult();
@@ -89,7 +89,7 @@ public class UndoManager implements InitializingBean, Runnable {
     return id;
   }
 
-  public Element undo(User user) throws Exception {
+  public List<Element> undo(User user) throws Exception {
     Stack<CommandHolder> stack = getUndoStack(user);
     if (stack.size() == 0) return null;
 
@@ -98,7 +98,7 @@ public class UndoManager implements InitializingBean, Runnable {
     return doExecute(user, holder.undo);
   }
 
-  public Element redo(User user) throws Exception {
+  public List<Element> redo(User user) throws Exception {
     Stack<CommandHolder> stack = getRedoStack(user);
     if (stack.size() == 0) return null;
 

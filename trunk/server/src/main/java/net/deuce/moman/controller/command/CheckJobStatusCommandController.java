@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLDecoder;
+import java.util.List;
 
 public class CheckJobStatusCommandController extends AbstractJobCommandController {
 
@@ -30,7 +31,7 @@ public class CheckJobStatusCommandController extends AbstractJobCommandControlle
   protected void checkJobStatus(String uuid, HttpServletResponse res) throws IOException {
     net.sf.ehcache.Element element = getCache().get(uuid);
     JobStatus status = JobStatus.NONE;
-    Element result = null;
+    List<Element> result = null;
     if (element != null) {
       status = ((CommandResult) element.getValue()).getJobStatus();
       result = ((CommandResult) element.getValue()).getResult();
@@ -42,11 +43,15 @@ public class CheckJobStatusCommandController extends AbstractJobCommandControlle
         .addAttribute("uuid", uuid)
         .addAttribute("status", status.name());
     if (result != null) {
-      root.add(result);
+      for (Element el : result) {
+        root.add(el);
+      }
     }
     sendResponse(res, doc);
     if (result != null) {
-      result.detach();
+      for (Element el : result) {
+        el.detach();
+      }
     }
   }
 }

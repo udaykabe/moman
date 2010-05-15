@@ -252,7 +252,7 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
 
         List<InternalTransaction> transactions = (List<InternalTransaction>) cacheElement.getValue();
 
-        setResult(toXml(transactions, from, count));
+        setResult(Arrays.asList(new Element[]{toXml(transactions, from, count)}));
       }
     };
   }
@@ -299,7 +299,7 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
   public Command getAccountTransactionsWithRangeCommand(final Envelope envelope, final Account account, final DataDateRange dateRange, final Boolean deep) {
     return new AbstractCommand(Envelope.class.getSimpleName() + " getAccountTransactions()", true) {
       public void doExecute() throws Exception {
-        setResult(toXml(getAccountTransactions(envelope, account, dateRange, deep)));
+        setResult(Arrays.asList(new Element[]{toXml(getAccountTransactions(envelope, account, dateRange, deep))}));
       }
     };
   }
@@ -312,7 +312,7 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
   public Command getAccountTransactionsCommand(final Envelope envelope, final Account account, final Boolean deep) {
     return new AbstractCommand(Envelope.class.getSimpleName() + " getAccountTransactions()", true) {
       public void doExecute() throws Exception {
-        setResult(toXml(getAccountTransactions(envelope, account, null, deep)));
+        setResult(Arrays.asList(new Element[]{toXml(getAccountTransactions(envelope, account, null, deep))}));
       }
     };
   }

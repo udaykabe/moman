@@ -5,12 +5,14 @@ import net.deuce.moman.job.AbstractCommand;
 import net.deuce.moman.job.Command;
 import net.deuce.moman.job.Result;
 import net.deuce.moman.om.*;
+import org.dom4j.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLDecoder;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -57,7 +59,7 @@ public class NewEntityController extends EntityAccessingController {
           EntityResult entityResult = getEntityAdapter().setProperty(service, entity, p.getName(), p.getValue());
           if (entityResult.getException() != null || entityResult.getMessage() != null) {
             setResultCode(entityResult.getResponseCode());
-            setResult(buildErrorResponse(entityResult.getException(), entityResult.getMessage()));
+            setResult(Arrays.asList(new Element[]{buildErrorResponse(entityResult.getException(), entityResult.getMessage())}));
             return;
           }
         }
@@ -79,7 +81,7 @@ public class NewEntityController extends EntityAccessingController {
         }
 
         setResultCode(HttpServletResponse.SC_OK);
-        setResult(buildEntitiesElement(entity, service));
+        setResult(Arrays.asList(new Element[]{buildEntitiesElement(entity, service)}));
 
         if (undoCommand != null) {
           setUndo(undoCommand);
