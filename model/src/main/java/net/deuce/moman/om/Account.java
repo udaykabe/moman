@@ -11,7 +11,7 @@ import java.util.TreeSet;
 
 @Entity
 @Table(name = "Account",  uniqueConstraints = {@UniqueConstraint(columnNames = {"uuid"})})
-public class Account extends AbstractEntity<Account> {
+public class Account extends AbstractEntity<Account> implements UserBasedEntity {
 	
 	private static final long serialVersionUID = 1L;
 

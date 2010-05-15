@@ -19,6 +19,9 @@ public class NewEntityController extends EntityAccessingController {
   @Autowired
   private EnvelopeService envelopeService;
 
+  @Autowired
+  private UserService userService;
+
   public ModelAndView handleRequest(HttpServletRequest request, final HttpServletResponse response) throws Exception {
 
     String[] pathInfo = request.getPathInfo().split("/");
@@ -69,6 +72,10 @@ public class NewEntityController extends EntityAccessingController {
           cmd.doExecute();
         } else {
           entity = service.saveOrUpdate(entity);
+        }
+
+        if (entity instanceof UserBasedEntity) {
+          ((UserBasedEntity)entity).setUser(userService.getDefaultUser());
         }
 
         setResultCode(HttpServletResponse.SC_OK);

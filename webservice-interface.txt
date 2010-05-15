@@ -231,6 +231,66 @@ http://localhost:9085/service/transaction/delete/34780c6b-6170-3483-aa95-d77b9b3
 
 ------------------------------------------------
 
+Creating a new account
+
+account.setInitialBalance(0.0);
+    account.setAccountId("123456789");
+    account.setBalance(0.0);
+    account.setBankId("987654321");
+    account.setFinancialInstitution(fi);
+    account.setNickname("Test Account");
+    account.setPassword("1234");
+    account.setSelected(true);
+    account.setStatus(AccountStatus.ACTIVE);
+    account.setSupportsDownloading(true);
+    account.setUser(user);
+    account.setUsername("username");
+
+http://localhost:9085/service/account/new/nickname/<NICKNAME>/status/PEND
+
+http://localhost:9085/service/account/new/nickname/Cash/status/PEND
+
+<moman>
+  <accounts>
+    <account id="a1634b21-df9c-3a6d-a3da-2cf35af80e81">
+      <bankId></bankId>
+      <accountId></accountId>
+      <username></username>
+      <password></password>
+      <nickname>Cash</nickname>
+      <balance>0</balance>
+      <online-balance>0</online-balance>
+      <last-reconciled-ending-balance>0</last-reconciled-ending-balance>
+      <status>PEND</status>
+      <supports-downloading>false</supports-downloading>
+    </account>
+  </accounts>
+</moman>
+
+http://localhost:9085/service/account/new/nickname/<NICKNAME>/status/<ONLINE BANKING STATUS>/financialInstitution/<FI_UUID>/bankId/<BANK ROUTING #>/accountId/<ACCOUNT #>/username/<USERNAME>/password/<PASSWORD>/supportsDownloading/<true|false>
+
+http://localhost:9085/service/account/new/nickname/Checking/status/ACTIVE/financialInstitution/281f5b66-df4a-30a8-a7c7-908e8e55c61b/bankId/122100024/accountId/123456789/username/bankUsername/password/bankPassword/supportsDownloading/true
+
+<moman>
+  <accounts>
+    <account id="1e670121-fd02-33a7-8dc6-020eda3e4383">
+      <bankId>122100024</bankId>
+      <accountId>123456789</accountId>
+      <username>bankUsername</username>
+      <password>bankPassword</password>
+      <nickname>Checking</nickname>
+      <balance>0</balance>
+      <online-balance>0</online-balance>
+      <last-reconciled-ending-balance>0</last-reconciled-ending-balance>
+      <status>ACTIVE</status>
+      <supports-downloading>true</supports-downloading>
+      <financialInstitution id="281f5b66-df4a-30a8-a7c7-908e8e55c61b"/>
+    </account>
+  </accounts>
+</moman>
+
+------------------------------------------------
+
 Save default user's envelopes as the template
 
 http://localhost:9085/service/envelope/executeCommand/saveAsTemplateCommand
@@ -238,3 +298,43 @@ http://localhost:9085/service/envelope/executeCommand/saveAsTemplateCommand
 Replace default user's envelopes with the template
 
 http://localhost:9085/service/envelope/executeCommand/importTemplateEnvelopesCommand
+
+-------------------------------------------------
+
+Get available accounts from financial institution
+
+http://localhost:9085/service/account/executeCommand/getAvailableAccounts/<FI UUID>/<ONLINE BANKING USERNAME>/<PASSWORD>
+
+http://localhost:9085/service/account/executeCommand/getAvailableAccountsCommand/281f5b66-df4a-30a8-a7c7-908e8e55c61b/bankUsername/bankPassword
+
+<moman>
+  <accounts from="0" totalSize="2" pageSize="2">
+    <account>
+      <selected>true</selected>
+      <bankId>122100024</bankId>
+      <accountId>123456789</accountId>
+      <username>bankUsername</username>
+      <password>bankPassword</password>
+      <nickname>CHASE CHECKING</nickname>
+      <balance>0</balance>
+      <onlineBalance>0</onlineBalance>
+      <lastReconciledEndingBalance>0</lastReconciledEndingBalance>
+      <status>ACTIVE</status>
+      <supportsDownloading>true</supportsDownloading>
+    </account>
+    <account>
+      <selected>true</selected>
+      <bankId>122100024</bankId>
+      <accountId>987654321</accountId>
+      <username>bankUsername</username>
+      <password>bankPassword</password>
+      <nickname>Checking</nickname>
+      <balance>0</balance>
+      <onlineBalance>0</onlineBalance>
+      <lastReconciledEndingBalance>0</lastReconciledEndingBalance>
+      <status>ACTIVE</status>
+      <supportsDownloading>true</supportsDownloading>
+    </account>
+  </accounts>
+</moman>
+

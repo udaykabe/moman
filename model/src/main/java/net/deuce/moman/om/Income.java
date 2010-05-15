@@ -9,7 +9,7 @@ import java.util.GregorianCalendar;
 
 @Entity
 @Table(name = "Income", uniqueConstraints = {@UniqueConstraint(columnNames = {"uuid"})})
-public class Income extends AbstractEntity<Income> {
+public class Income extends AbstractEntity<Income> implements UserBasedEntity {
 
 	private static final long serialVersionUID = 1L;
 
@@ -18,6 +18,7 @@ public class Income extends AbstractEntity<Income> {
 	private Double amount;
 	private Date nextPayday;
 	private Frequency frequency;
+  private User user;
 
 	public Income() {
 		super();
@@ -27,11 +28,20 @@ public class Income extends AbstractEntity<Income> {
 		return compare(this, o);
 	}
 
-	
 	public int compare(Income o1, Income o2) {
     return compareObjects(o1.name, o2.name);
 	}
 
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id")
+  public User getUser() {
+    return user;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
+  }
+  
   @Basic
 	public boolean isEnabled() {
 		return evaluateBoolean(enabled);
