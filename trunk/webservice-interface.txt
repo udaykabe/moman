@@ -229,3 +229,12 @@ http://localhost:9085/service/transaction/delete/<TRANSACTION UUID>
 http://localhost:9085/service/transaction/delete/34780c6b-6170-3483-aa95-d77b9b3f86d3
 (empty response body, but 200 response code)
 
+------------------------------------------------
+
+Save default user's envelopes as the template
+
+http://localhost:9085/service/envelope/executeCommand/saveAsTemplateCommand
+
+Replace default user's envelopes with the template
+
+http://localhost:9085/service/envelope/executeCommand/importTemplateEnvelopesCommand
