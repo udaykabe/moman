@@ -105,6 +105,7 @@ public abstract class AbstractEntity<E> implements Comparator<E>, Comparable<E> 
     if (o1 != null && o2 == null) return -1;
     if (o1 == null && o2 != null) return 1;
     if (o1 == null && o2 == null) return 0;
+    if (o1 == o2) return 0;
     return o1.compareTo(o2);
   }
 	

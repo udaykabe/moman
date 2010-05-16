@@ -34,6 +34,10 @@ public abstract class EntityService<E extends AbstractEntity, ED extends EntityD
     return Utils.createUuid();
   }
 
+  public void flush() {
+    getDao().flush();
+  }
+
   /**
    * Delete checks the delete permission and sets the delete flag.
    */
@@ -56,12 +60,13 @@ public abstract class EntityService<E extends AbstractEntity, ED extends EntityD
     }
   }
 
-  /**
-   * Delete checks the delete permission and sets the delete flag.
-   */
   @Transactional
   public boolean delete(E entity) {
-    return getDao().delete(get(entity.getId()));
+    entity = get(entity.getId());
+    if (entity != null) {
+      return getDao().delete(entity);
+    }
+    return false;
   }
 
   /**
@@ -102,6 +107,11 @@ public abstract class EntityService<E extends AbstractEntity, ED extends EntityD
   @Transactional(readOnly = true)
   public List<E> list() {
     return getDao().list();
+  }
+
+  @Transactional(rollbackFor = Exception.class)
+  public E merge(E entity) {
+    return getDao().merge(entity);
   }
 
   @Transactional(rollbackFor = Exception.class)

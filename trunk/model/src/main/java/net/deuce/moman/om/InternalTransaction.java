@@ -8,8 +8,8 @@ import javax.persistence.*;
 import java.util.*;
 
 @Entity
-@Table(name = "Transaction", uniqueConstraints = {@UniqueConstraint(columnNames = {"uuid"})})
-public class InternalTransaction extends AbstractEntity<InternalTransaction> {
+@Table(name = "transaction", uniqueConstraints = {@UniqueConstraint(columnNames = {"uuid"})})
+public class InternalTransaction extends AbstractEntity<InternalTransaction> implements UserBasedEntity {
 
   private static final long serialVersionUID = 1L;
 
@@ -25,10 +25,12 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
   private Boolean initialBalance = Boolean.FALSE;
   private TransactionStatus status = TransactionStatus.open;
   private Boolean custom = Boolean.FALSE;
+  private User user;
 
   private InternalTransaction transferTransaction;
 
   private SortedSet<Split> split = new TreeSet<Split>();
+  private SortedSet<Tag> tags = new TreeSet<Tag>();
   private transient Map<Envelope, Split> envelopeSplitMap = null;
 
   private Account account;
@@ -96,6 +98,16 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
     this.transferTransactionId = transferTransactionId;
   }
 
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id")
+  public User getUser() {
+    return user;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
+  }
+  
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "transfer_id")
   public InternalTransaction getTransferTransaction() {
@@ -265,6 +277,29 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
     this.account = account;
   }
 
+  @OneToMany(fetch = FetchType.LAZY)
+  @Column(name = "id")
+  @Sort(type = SortType.NATURAL)
+  public SortedSet<Tag> getTags() {
+    return tags;
+  }
+
+  public void setTags(SortedSet<Tag> tags) {
+    this.tags = tags;
+  }
+
+  public void addTag(Tag t) {
+    tags.add(t);
+  }
+
+  public boolean removeTag(Tag t) {
+    return tags.remove(t);
+  }
+
+  public void clearTags() {
+    tags.clear();
+  }
+
   @OneToMany(mappedBy = "transaction", fetch = FetchType.LAZY)
   @Column(name = "id")
   @Sort(type = SortType.NATURAL)
@@ -276,8 +311,7 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> {
   }
 
   public void setSplit(SortedSet<Split> split) {
-    this.split.clear();
-    this.split.addAll(split);
+    this.split = split;
   }
 
   public void addSplit(Split s) {

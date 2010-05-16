@@ -3,7 +3,7 @@ package net.deuce.moman.om;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "Allocation", uniqueConstraints = {@UniqueConstraint(columnNames = {"uuid"})})
+@Table(name = "allocation", uniqueConstraints = {@UniqueConstraint(columnNames = {"uuid"})})
 public class Allocation extends AbstractEntity<Allocation> {
 
   private static final long serialVersionUID = 1L;

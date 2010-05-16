@@ -30,6 +30,10 @@ public abstract class EntityDao<E extends AbstractEntity> extends HibernateDaoSu
   }
   */
 
+  public void flush() {
+    getHibernateTemplate().flush();
+  }
+  
   @Transactional(propagation = Propagation.MANDATORY)
   public boolean delete(E entity) {
 //    em.remove(entity);
@@ -83,6 +87,11 @@ public abstract class EntityDao<E extends AbstractEntity> extends HibernateDaoSu
 
   public List<E> list() {
     return getSession().createQuery(String.format("select e from %s e", getEntityClass().getName())).list();
+  }
+
+  @Transactional(propagation = Propagation.MANDATORY)
+  public E merge(E entity) {
+    return (E) getHibernateTemplate().merge(entity);
   }
 
   @Transactional(propagation = Propagation.MANDATORY)
