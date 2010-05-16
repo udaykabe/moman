@@ -36,6 +36,9 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
   @Autowired
   private UserService userService;
 
+  @Autowired
+  private TagService tagService;
+
   private CacheManager cacheManager;
   private Cache queryCache;
 
@@ -59,9 +62,6 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
     addElement(el, "checkNo", trans.getCheckNo());
     addElement(el, "ref", trans.getRef());
     addElement(el, "status", trans.getStatus().name());
-    if ("201005062".equals(trans.getExternalId())) {
-      System.out.println("ZZZ");
-    }
     if (trans.isMatched()) {
       el.addElement("matchedTransaction").addAttribute("id", trans.getMatchedTransaction().getUuid());
     }
@@ -78,6 +78,10 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
       }
     } catch (LazyInitializationException e) {
       throw e;
+    }
+    Element tags = el.addElement(tagService.getRootElementName());
+    for (Tag tag : trans.getTags()) {
+      tagService.toXml(tag, tags);
     }
   }
 
@@ -543,14 +547,15 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
   @Transactional
   public void undoAddSplit(Split splitItem) {
     removeSplit(splitItem.getTransaction(), splitItem.getEnvelope());
-    splitService.delete(splitItem);
   }
 
   @Transactional
   public Split addSplit(InternalTransaction transaction, Envelope envelope, Double amount) {
     Split item = new Split();
     item.setAmount(amount);
+    item.setUser(transaction.getUser());
     item.setEnvelope(envelope);
+    item.setUuid(createUuid());
     item.setTransaction(transaction);
 
     SortedSet<Split> split = transaction.getSplit();
@@ -558,7 +563,8 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
       throw new RuntimeException("Duplicate split item (" + item + ") added to " + transaction);
     }
 
-    splitService.saveOrUpdate(item);
+    item = splitService.saveOrUpdate(item);
+    splitService.flush();
     transaction.addSplit(item);
     saveOrUpdate(transaction);
     queryCache.removeAll();
@@ -587,13 +593,125 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
   @Transactional
   public void removeSplit(InternalTransaction transaction, Envelope envelope) {
 
-    Split item = transaction.getEnvelopeSplit(envelope);
+    Split item = splitService.merge(transaction.getEnvelopeSplit(envelope));
 
     if (item != null && transaction.removeSplit(item)) {
       envelopeService.resetBalance(envelope);
+      saveOrUpdate(transaction);
+      splitService.delete(item);
+      queryCache.removeAll();
     }
+  }
+
+  public Command clearTagsCommand(final InternalTransaction transaction) {
+    return new AbstractCommand(InternalTransaction.class.getSimpleName() + " clearTags(" + transaction.getUuid() + ")", true) {
+
+      public void doExecute() throws Exception {
+
+        final List<Tag> affectedTags = new LinkedList<Tag>();
+        affectedTags.addAll(transaction.getTags());
+
+        clearTags(transaction);
+
+        setUndo(new AbstractCommand("Undo " + getName(), true) {
+          public void doExecute() throws Exception {
+            undoClearTags(transaction, affectedTags);
+          }
+        });
+      }
+    };
+  }
+
+  @Transactional
+  public void undoClearTags(InternalTransaction transaction, List<Tag> affectedTags) {
+    transaction.clearTags();
+    for (Tag tag : affectedTags) {
+      addTag(transaction, tag.getName());
+    }
+  }
+
+  @Transactional
+  public void clearTags(InternalTransaction transaction) {
+
+    for (Tag tag : transaction.getTags()) {
+      tagService.delete(tag);
+    }
+
+    transaction.clearTags();
     saveOrUpdate(transaction);
-    splitService.delete(item);
+
+    queryCache.removeAll();
+  }
+
+  public Command addTagCommand(final InternalTransaction transaction, final String name) {
+    return new AbstractCommand(InternalTransaction.class.getSimpleName() + " addTag(" + transaction.getUuid() + ")", true) {
+
+      public void doExecute() throws Exception {
+
+        final Tag addedTag = addTag(transaction, name);
+
+        setUndo(new AbstractCommand("Undo " + getName(), true) {
+          public void doExecute() throws Exception {
+            undoAddTag(transaction, addedTag);
+          }
+        });
+      }
+    };
+  }
+
+  @Transactional
+  public void undoAddTag(InternalTransaction transaction, Tag tag) {
+    removeTag(transaction, tag);
+  }
+
+  @Transactional
+  public Tag addTag(InternalTransaction transaction, String name) {
+    Tag tag = new Tag();
+    tag.setName(name);
+    tag.setUser(transaction.getUser());
+    tag.setUuid(createUuid());
+
+    SortedSet<Tag> tags = transaction.getTags();
+    if (tags.contains(tag)) {
+      throw new RuntimeException("Duplicate tag (" + name + ") added to " + transaction);
+    }
+
+    tag = tagService.saveOrUpdate(tag);
+    tagService.flush();
+
+    // grab the accounts and devices of the user object because
+    // they won't be initialized in the session by the time of the session flush
+    tag.getUser().getAccounts();
+    tag.getUser().getDevices();
+
+    transaction.addTag(tag);
+    saveOrUpdate(transaction);
+    queryCache.removeAll();
+
+    return tag;
+  }
+
+  public Command removeTagCommand(final InternalTransaction transaction, final Tag tag) {
+    return new AbstractCommand(InternalTransaction.class.getSimpleName() + " removeTag(" + transaction.getUuid() + ")", true) {
+
+      public void doExecute() throws Exception {
+
+        removeTag(transaction, tag);
+
+        setUndo(new AbstractCommand("Undo " + getName(), true) {
+          public void doExecute() throws Exception {
+            addTag(transaction, tag.getName());
+          }
+        });
+      }
+    };
+  }
+
+  @Transactional
+  public void removeTag(InternalTransaction transaction, Tag tag) {
+    transaction.removeTag(tag);
+    saveOrUpdate(transaction);
+    tagService.delete(tag);
     queryCache.removeAll();
   }
 

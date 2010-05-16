@@ -7,7 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 @Entity
-@Table(name = "Transaction", uniqueConstraints = {@UniqueConstraint(columnNames = {"uuid"})})
+@Table(name = "transaction", uniqueConstraints = {@UniqueConstraint(columnNames = {"uuid"})})
 public class RepeatingTransaction extends InternalTransaction {
 
   private static final long serialVersionUID = 1L;

@@ -83,6 +83,7 @@
         /rt/**=rtController
         /rule/**=ruleController
         /sg/**=sgController
+        /tag/**=tagController
         /transaction/**=transactionController
         /job/**=jobController
         /device/**=deviceController
@@ -106,6 +107,7 @@
         class="net.deuce.moman.controller.FinancialInstitutionController"/>
   <bean id="incomeController" parent="dispatcherController" class="net.deuce.moman.controller.IncomeController"/>
   <bean id="payeeController" parent="dispatcherController" class="net.deuce.moman.controller.PayeeController"/>
+  <bean id="tagController" parent="dispatcherController" class="net.deuce.moman.controller.TagController"/>
   <bean id="rtController" parent="dispatcherController"
         class="net.deuce.moman.controller.RepeatingTransactionController"/>
   <bean id="ruleController" parent="dispatcherController" class="net.deuce.moman.controller.RuleController"/>
@@ -187,6 +189,7 @@
   <bean id="allocationSetDao" class="net.deuce.moman.om.AllocationSetDao" parent="userBasedDao"/>
   <bean id="envelopeDao" class="net.deuce.moman.om.EnvelopeDao" parent="userBasedDao"/>
   <bean id="incomeDao" class="net.deuce.moman.om.IncomeDao" parent="userBasedDao"/>
+  <bean id="tagDao" class="net.deuce.moman.om.TagDao" parent="userBasedDao"/>
   <bean id="payeeDao" class="net.deuce.moman.om.PayeeDao" parent="userBasedDao"/>
   <bean id="repeatingTransactionDao" class="net.deuce.moman.om.RepeatingTransactionDao" parent="userBasedDao"/>
   <bean id="ruleDao" class="net.deuce.moman.om.RuleDao" parent="userBasedDao"/>

@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 @Entity
-@Table(name = "Income", uniqueConstraints = {@UniqueConstraint(columnNames = {"uuid"})})
+@Table(name = "income", uniqueConstraints = {@UniqueConstraint(columnNames = {"uuid"})})
 public class Income extends AbstractEntity<Income> implements UserBasedEntity {
 
 	private static final long serialVersionUID = 1L;

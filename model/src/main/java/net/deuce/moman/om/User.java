@@ -8,7 +8,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 @Entity
-@Table(name = "User", uniqueConstraints = {@UniqueConstraint(columnNames = {"uuid"})})
+@Table(name = "user", uniqueConstraints = {@UniqueConstraint(columnNames = {"uuid"})})
 public class User extends AbstractEntity<User> {
 
   private static final long serialVersionUID = 1L;

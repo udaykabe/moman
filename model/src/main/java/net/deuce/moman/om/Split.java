@@ -3,16 +3,28 @@ package net.deuce.moman.om;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "Split", uniqueConstraints = {@UniqueConstraint(columnNames = {"uuid"}), @UniqueConstraint(columnNames = {"envelope_id", "transaction_id"})})
+@Table(name = "split", uniqueConstraints = {@UniqueConstraint(columnNames = {"uuid"}), @UniqueConstraint(columnNames = {"envelope_id", "transaction_id"})})
 public class Split extends AbstractEntity<Split> {
 
   private Envelope envelope;
   private Double amount;
   private InternalTransaction transaction;
+  private User user;
 
   public Split() {
     super();
   }
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id")
+  public User getUser() {
+    return user;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
+  }
+
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "envelope_id")

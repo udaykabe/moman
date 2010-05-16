@@ -353,6 +353,7 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
   @Transactional
   public void resetBalance(Envelope envelope) {
     if (envelope != null) {
+      envelope = merge(envelope);
       envelope.clearBalance();
       saveOrUpdate(envelope);
       resetBalance(envelope.getParent());

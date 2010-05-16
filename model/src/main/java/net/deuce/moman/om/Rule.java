@@ -3,7 +3,7 @@ package net.deuce.moman.om;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "Rule", uniqueConstraints = {@UniqueConstraint(columnNames = {"uuid"})})
+@Table(name = "rule", uniqueConstraints = {@UniqueConstraint(columnNames = {"uuid"})})
 public class Rule extends AbstractEntity<Rule> implements UserBasedEntity {
 
   private static final long serialVersionUID = 1L;

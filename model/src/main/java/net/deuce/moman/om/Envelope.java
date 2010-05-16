@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.util.*;
 
 @Entity
-@Table(name = "Envelope", uniqueConstraints = {@UniqueConstraint(columnNames = {"uuid"}), @UniqueConstraint(columnNames = {"parent_id", "name"})})
+@Table(name = "envelope", uniqueConstraints = {@UniqueConstraint(columnNames = {"uuid"}), @UniqueConstraint(columnNames = {"parent_id", "name"})})
 public class Envelope extends AbstractEntity<Envelope> implements UserBasedEntity {
 
   private static final long serialVersionUID = 1L;
