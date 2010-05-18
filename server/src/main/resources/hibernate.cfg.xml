@@ -35,6 +35,7 @@
     <mapping class="net.deuce.moman.om.User" />
     <mapping class="net.deuce.moman.om.Device" />
     <mapping class="net.deuce.moman.om.Tag" />
+    <mapping class="net.deuce.moman.om.Preference" />
 
 
   </session-factory>

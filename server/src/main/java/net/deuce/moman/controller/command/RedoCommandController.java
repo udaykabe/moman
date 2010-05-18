@@ -11,7 +11,8 @@ public class RedoCommandController extends AbstractJobCommandController {
 
   public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
     Result result = redo();
-    if (result != null && result.getResult() != null) {
+
+    if (result != null && (result.getResult() != null || result.getResultCode() == HttpServletResponse.SC_OK)) {
       sendResult(result, response);
     } else {
       response.setStatus(HttpServletResponse.SC_NOT_FOUND);
