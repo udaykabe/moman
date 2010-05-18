@@ -7,7 +7,6 @@ import net.sf.ofx4j.domain.data.common.Transaction;
 import net.sf.ofx4j.domain.data.common.TransactionType;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
@@ -252,7 +251,7 @@ public class FinancialInstitutionImportTransactionCommand extends AbstractComman
         Collections.sort(transactions, transactions.get(0).getReverseComparator());
 
         initialDownloadCheck(transactions);
-        matchPreviouslyDownloadedTransactions(transactions);
+        removePreviouslyDownloadedTransactions(transactions);
         findMatchedTransactions(transactions);
         addUnmatchedTransactions(transactions);
         applyRules(transactions);
@@ -352,7 +351,7 @@ public class FinancialInstitutionImportTransactionCommand extends AbstractComman
     }
   }
 
-  private void matchPreviouslyDownloadedTransactions(List<InternalTransaction> transactions) {
+  private void removePreviouslyDownloadedTransactions(List<InternalTransaction> transactions) {
 
     for (InternalTransaction t : transactions) {
       InternalTransaction existingTransaction =
@@ -360,17 +359,13 @@ public class FinancialInstitutionImportTransactionCommand extends AbstractComman
       System.out.println("ZZZ checking downlaoded " + t);
       System.out.println("ZZZ existing " + existingTransaction);
       if (existingTransaction != null && t.getAmount().doubleValue() == existingTransaction.getAmount().doubleValue()) {
-        System.out.println("ZZZ matched " + t);
-        t.setMatchedTransaction(existingTransaction);
-//        t.setSplit(existingTransaction.getSplit());
-        transactionService.saveOrUpdate(t);
+        System.out.println("ZZZ removing matched " + t);
+        transactionService.delete(t);
       }
     }
   }
 
   private void findMatchedTransactions(List<InternalTransaction> transactions) {
-
-//		int threshold = preferenceService.getInt("ACCOUNT_IMPORT_MATCHING_DAY_THRESHOLD");
 
     List<InternalTransaction> register = transactionService.getAccountTransactions(account, true);
     for (InternalTransaction importedTransaction : transactions) {
@@ -397,9 +392,9 @@ public class FinancialInstitutionImportTransactionCommand extends AbstractComman
 
             if (t.getAmount().doubleValue() == importedTransaction.getAmount().doubleValue() && !t.isEnvelopeTransfer()) {
               importedTransaction.setMatchedTransaction(t);
-//              importedTransaction.setSplit(t.getSplit());
+              importedTransaction.setStatus(TransactionStatus.unresolved);
               t.setExternalId(importedTransaction.getExternalId());
-              t.setStatus(TransactionStatus.cleared);
+              t.setStatus(TransactionStatus.unresolved);
               transactionService.saveOrUpdate(importedTransaction);
               transactionService.saveOrUpdate(t);
             }
@@ -408,5 +403,4 @@ public class FinancialInstitutionImportTransactionCommand extends AbstractComman
       }
     }
   }
-
 }

@@ -56,7 +56,7 @@
 
   <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
     <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
-    <property name="url" value="jdbc:mysql://localhost:3306/moman"/>
+    <property name="url" value="jdbc:mysql://localhost:3306/moman?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF-8"/>
     <property name="username" value="jboss"/>
     <property name="password" value="D0G@larg3"/>
 
@@ -80,6 +80,7 @@
         /fi/**=fiController
         /income/**=incomeController
         /payee/**=payeeController
+        /pref/**=preferenceController
         /rt/**=rtController
         /rule/**=ruleController
         /sg/**=sgController
@@ -107,6 +108,7 @@
         class="net.deuce.moman.controller.FinancialInstitutionController"/>
   <bean id="incomeController" parent="dispatcherController" class="net.deuce.moman.controller.IncomeController"/>
   <bean id="payeeController" parent="dispatcherController" class="net.deuce.moman.controller.PayeeController"/>
+  <bean id="preferenceController" parent="dispatcherController" class="net.deuce.moman.controller.PreferenceController"/>
   <bean id="tagController" parent="dispatcherController" class="net.deuce.moman.controller.TagController"/>
   <bean id="rtController" parent="dispatcherController"
         class="net.deuce.moman.controller.RepeatingTransactionController"/>
@@ -191,6 +193,7 @@
   <bean id="incomeDao" class="net.deuce.moman.om.IncomeDao" parent="userBasedDao"/>
   <bean id="tagDao" class="net.deuce.moman.om.TagDao" parent="userBasedDao"/>
   <bean id="payeeDao" class="net.deuce.moman.om.PayeeDao" parent="userBasedDao"/>
+  <bean id="preferenceDao" class="net.deuce.moman.om.PreferenceDao" parent="userBasedDao"/>
   <bean id="repeatingTransactionDao" class="net.deuce.moman.om.RepeatingTransactionDao" parent="userBasedDao"/>
   <bean id="ruleDao" class="net.deuce.moman.om.RuleDao" parent="userBasedDao"/>
   <bean id="splitDao" class="net.deuce.moman.om.SplitDao" parent="userBasedDao"/>
