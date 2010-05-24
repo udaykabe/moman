@@ -39,6 +39,9 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
   @Autowired
   private TagService tagService;
 
+  @Autowired
+  private AlertService alertService;
+
   private CacheManager cacheManager;
   private Cache queryCache;
 
@@ -55,6 +58,7 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
       addElement(el, "date", Constants.DATE_FORMAT.format(trans.getDate()));
     }
     addElement(el, "description", trans.getDescription());
+    addElement(el, "viewed", trans.getViewed());
     addOptionalElement(el, "externalId", trans.getExternalId());
     addOptionalBooleanElement(el, "initialBalance", trans.isInitialBalance());
     addOptionalElement(el, "balance", Utils.formatDouble(trans.getBalance()));
@@ -70,18 +74,18 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
     }
     Element sel = el.addElement("split");
     Element eel;
-    try {
-      for (Split item : trans.getSplit()) {
-        eel = sel.addElement("envelope");
-        eel.addAttribute("id", item.getEnvelope().getUuid());
-        eel.addAttribute("amount", Utils.formatDouble(item.getAmount()));
-      }
-    } catch (LazyInitializationException e) {
-      throw e;
+    for (Split item : trans.getSplit()) {
+      eel = sel.addElement("envelope");
+      eel.addAttribute("id", item.getEnvelope().getUuid());
+      eel.addAttribute("amount", Utils.formatDouble(item.getAmount()));
     }
     Element tags = el.addElement(tagService.getRootElementName());
     for (Tag tag : trans.getTags()) {
       tagService.toXml(tag, tags);
+    }
+    Element alerts = el.addElement(alertService.getRootElementName());
+    for (Alert alert : trans.getAlerts()) {
+      alertService.toXml(alert, alerts);
     }
   }
 
@@ -257,8 +261,22 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
         List<InternalTransaction> transactions = (List<InternalTransaction>) cacheElement.getValue();
 
         setResult(Arrays.asList(new Element[]{toXml(transactions, from, count)}));
+
+        updateUnviewedTransactions(transactions, from, count);
       }
     };
+  }
+
+  @Transactional
+  public void updateUnviewedTransactions(List<InternalTransaction> transactions, int from, int count) {
+    InternalTransaction t;
+    for (int i=from; i<from+count; i++) {
+      t = transactions.get(i);
+      if (!t.isViewed()) {
+        t.setViewed(true);
+        saveOrUpdate(t);
+      }
+    }
   }
 
   @Transactional(readOnly = true)
@@ -626,33 +644,27 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
   public void undoClearTags(InternalTransaction transaction, List<Tag> affectedTags) {
     transaction.clearTags();
     for (Tag tag : affectedTags) {
-      addTag(transaction, tag.getName());
+      addTag(transaction, tag);
     }
   }
 
   @Transactional
   public void clearTags(InternalTransaction transaction) {
-
-    for (Tag tag : transaction.getTags()) {
-      tagService.delete(tag);
-    }
-
     transaction.clearTags();
     saveOrUpdate(transaction);
-
     queryCache.removeAll();
   }
 
-  public Command addTagCommand(final InternalTransaction transaction, final String name) {
+  public Command addTagCommand(final InternalTransaction transaction, final Tag tag) {
     return new AbstractCommand(InternalTransaction.class.getSimpleName() + " addTag(" + transaction.getUuid() + ")", true) {
 
       public void doExecute() throws Exception {
 
-        final Tag addedTag = addTag(transaction, name);
+        addTag(transaction, tag);
 
         setUndo(new AbstractCommand("Undo " + getName(), true) {
           public void doExecute() throws Exception {
-            undoAddTag(transaction, addedTag);
+            undoAddTag(transaction, tag);
           }
         });
       }
@@ -664,31 +676,14 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
     removeTag(transaction, tag);
   }
 
-  @Transactional
-  public Tag addTag(InternalTransaction transaction, String name) {
-    Tag tag = new Tag();
-    tag.setName(name);
-    tag.setUser(transaction.getUser());
-    tag.setUuid(createUuid());
-
-    SortedSet<Tag> tags = transaction.getTags();
-    if (tags.contains(tag)) {
-      throw new RuntimeException("Duplicate tag (" + name + ") added to " + transaction);
-    }
-
-    tag = tagService.saveOrUpdate(tag);
-    tagService.flush();
-
-    // grab the accounts and devices of the user object because
-    // they won't be initialized in the session by the time of the session flush
-    tag.getUser().getAccounts();
-    tag.getUser().getDevices();
-
+  @Transactional(rollbackFor = Exception.class)
+  public void addTag(InternalTransaction transaction, Tag tag) {
+    transaction.getUser().getAccounts();
+    tag.addTransaction(transaction);
+    tagService.saveOrUpdate(tag);
     transaction.addTag(tag);
     saveOrUpdate(transaction);
     queryCache.removeAll();
-
-    return tag;
   }
 
   public Command removeTagCommand(final InternalTransaction transaction, final Tag tag) {
@@ -700,7 +695,7 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
 
         setUndo(new AbstractCommand("Undo " + getName(), true) {
           public void doExecute() throws Exception {
-            addTag(transaction, tag.getName());
+            addTag(transaction, tag);
           }
         });
       }
@@ -711,7 +706,109 @@ public class TransactionService extends UserBasedService<InternalTransaction, Tr
   public void removeTag(InternalTransaction transaction, Tag tag) {
     transaction.removeTag(tag);
     saveOrUpdate(transaction);
-    tagService.delete(tag);
+    queryCache.removeAll();
+  }
+
+  public Command clearAlertsCommand(final InternalTransaction transaction) {
+    return new AbstractCommand(InternalTransaction.class.getSimpleName() + " clearAlerts(" + transaction.getUuid() + ")", true) {
+
+      public void doExecute() throws Exception {
+
+        final List<Alert> affectedAlerts = new LinkedList<Alert>();
+        affectedAlerts.addAll(transaction.getAlerts());
+
+        clearAlerts(transaction);
+
+        setUndo(new AbstractCommand("Undo " + getName(), true) {
+          public void doExecute() throws Exception {
+            undoClearAlerts(transaction, affectedAlerts);
+          }
+        });
+      }
+    };
+  }
+
+  @Transactional
+  public void undoClearAlerts(InternalTransaction transaction, List<Alert> affectedAlerts) {
+    transaction.clearAlerts();
+    for (Alert alert : affectedAlerts) {
+      addAlert(transaction, alert.getAlertType());
+    }
+  }
+
+  @Transactional
+  public void clearAlerts(InternalTransaction transaction) {
+
+    for (Alert alert : transaction.getAlerts()) {
+      alertService.delete(alert);
+    }
+
+    transaction.clearAlerts();
+    saveOrUpdate(transaction);
+
+    queryCache.removeAll();
+  }
+
+  public Command addAlertCommand(final InternalTransaction transaction, final AlertType alertType) {
+    return new AbstractCommand(InternalTransaction.class.getSimpleName() + " addAlert(" + transaction.getUuid() + ")", true) {
+
+      public void doExecute() throws Exception {
+
+        final Alert addedAlert = addAlert(transaction, alertType);
+
+        setUndo(new AbstractCommand("Undo " + getName(), true) {
+          public void doExecute() throws Exception {
+            undoAddAlert(transaction, addedAlert);
+          }
+        });
+      }
+    };
+  }
+
+  @Transactional
+  public void undoAddAlert(InternalTransaction transaction, Alert alert) {
+    removeAlert(transaction, alert);
+  }
+
+  @Transactional
+  public Alert addAlert(InternalTransaction transaction, AlertType alertType) {
+    Alert alert = new Alert();
+    alert.setAlertType(alertType);
+    alert.setUser(transaction.getUser());
+    alert.setTransaction(transaction);
+    alert.setUuid(createUuid());
+
+    alert = alertService.saveOrUpdate(alert);
+    alertService.flush();
+
+    transaction.addAlert(alert);
+    saveOrUpdate(transaction);
+    queryCache.removeAll();
+
+    return alert;
+  }
+
+  public Command removeAlertCommand(final InternalTransaction transaction, final Alert alert) {
+    return new AbstractCommand(InternalTransaction.class.getSimpleName() + " removeAlert(" + transaction.getUuid() + ")", true) {
+
+      public void doExecute() throws Exception {
+
+        removeAlert(transaction, alert);
+
+        setUndo(new AbstractCommand("Undo " + getName(), true) {
+          public void doExecute() throws Exception {
+            addAlert(transaction, alert.getAlertType());
+          }
+        });
+      }
+    };
+  }
+
+  @Transactional
+  public void removeAlert(InternalTransaction transaction, Alert alert) {
+    transaction.removeAlert(alert);
+    saveOrUpdate(transaction);
+    alertService.delete(alert);
     queryCache.removeAll();
   }
 

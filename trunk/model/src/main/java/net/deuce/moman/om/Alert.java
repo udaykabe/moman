@@ -3,27 +3,27 @@ package net.deuce.moman.om;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "payee", uniqueConstraints = {@UniqueConstraint(columnNames = {"uuid"})})
-public class Payee extends AbstractEntity<Payee> implements UserBasedEntity {
+@Table(name = "alert", uniqueConstraints = {@UniqueConstraint(columnNames = {"uuid"})})
+public class Alert extends AbstractEntity<Alert> implements UserBasedEntity {
 
   private static final long serialVersionUID = 1L;
 
-  private String description;
   private Envelope envelope;
-  private Double amount;
+  private InternalTransaction transaction;
   private User user;
+  private AlertType alertType;
 
-  public Payee() {
+  public Alert() {
     super();
   }
 
-  public int compareTo(Payee o) {
+  public int compareTo(Alert o) {
     return compare(this, o);
   }
 
 
-  public int compare(Payee o1, Payee o2) {
-    return compareObjects(o1.description, o2.description);
+  public int compare(Alert o1, Alert o2) {
+    return compareObjects(o1.alertType, o2.alertType);
   }
 
   @ManyToOne(fetch = FetchType.LAZY)
@@ -37,12 +37,12 @@ public class Payee extends AbstractEntity<Payee> implements UserBasedEntity {
   }
 
   @Basic
-  public String getDescription() {
-    return description;
+  public AlertType getAlertType() {
+    return alertType;
   }
 
-  public void setDescription(String description) {
-    this.description = description;
+  public void setAlertType(AlertType alertType) {
+    this.alertType = alertType;
   }
 
   @ManyToOne(fetch = FetchType.LAZY)
@@ -55,13 +55,14 @@ public class Payee extends AbstractEntity<Payee> implements UserBasedEntity {
     this.envelope = envelope;
   }
 
-  @Basic
-  public Double getAmount() {
-    return amount;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "transaction_id")
+  public InternalTransaction getTransaction() {
+    return transaction;
   }
 
-  public void setAmount(Double amount) {
-    this.amount = amount;
+  public void setTransaction(InternalTransaction transaction) {
+    this.transaction = transaction;
   }
 
   @Id

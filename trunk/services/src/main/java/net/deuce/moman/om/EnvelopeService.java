@@ -34,6 +34,9 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
   @Autowired
   private SplitService splitService;
 
+  @Autowired
+  private AlertService alertService;
+
   protected EnvelopeDao getDao() {
     return envelopeDao;
   }
@@ -116,6 +119,105 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
   @Transactional(readOnly = true)
   public Envelope getSavingsGoalsEnvelope(User user) {
     return envelopeDao.getSavingsGoalsEnvelope(user);
+  }
+
+  public Command clearAlertsCommand(final Envelope envelope) {
+    return new AbstractCommand(Envelope.class.getSimpleName() + " clearAlerts(" + envelope.getUuid() + ")", true) {
+
+      public void doExecute() throws Exception {
+
+        final List<Alert> affectedAlerts = new LinkedList<Alert>();
+        affectedAlerts.addAll(envelope.getAlerts());
+
+        clearAlerts(envelope);
+
+        setUndo(new AbstractCommand("Undo " + getName(), true) {
+          public void doExecute() throws Exception {
+            undoClearAlerts(envelope, affectedAlerts);
+          }
+        });
+      }
+    };
+  }
+
+  @Transactional
+  public void undoClearAlerts(Envelope envelope, List<Alert> affectedAlerts) {
+    envelope.clearAlerts();
+    for (Alert alert : affectedAlerts) {
+      addAlert(envelope, alert.getAlertType());
+    }
+  }
+
+  @Transactional
+  public void clearAlerts(Envelope envelope) {
+
+    for (Alert alert : envelope.getAlerts()) {
+      alertService.delete(alert);
+    }
+
+    envelope.clearAlerts();
+    saveOrUpdate(envelope);
+  }
+
+  public Command addAlertCommand(final Envelope envelope, final AlertType alertType) {
+    return new AbstractCommand(Envelope.class.getSimpleName() + " addAlert(" + envelope.getUuid() + ")", true) {
+
+      public void doExecute() throws Exception {
+
+        final Alert addedAlert = addAlert(envelope, alertType);
+
+        setUndo(new AbstractCommand("Undo " + getName(), true) {
+          public void doExecute() throws Exception {
+            undoAddAlert(envelope, addedAlert);
+          }
+        });
+      }
+    };
+  }
+
+  @Transactional
+  public void undoAddAlert(Envelope envelope, Alert alert) {
+    removeAlert(envelope, alert);
+  }
+
+  @Transactional
+  public Alert addAlert(Envelope envelope, AlertType alertType) {
+    Alert alert = new Alert();
+    alert.setAlertType(alertType);
+    alert.setUser(envelope.getUser());
+    alert.setEnvelope(envelope);
+    alert.setUuid(createUuid());
+
+    alert = alertService.saveOrUpdate(alert);
+    alertService.flush();
+
+    envelope.addAlert(alert);
+    saveOrUpdate(envelope);
+
+    return alert;
+  }
+
+  public Command removeAlertCommand(final Envelope envelope, final Alert alert) {
+    return new AbstractCommand(Envelope.class.getSimpleName() + " removeAlert(" + envelope.getUuid() + ")", true) {
+
+      public void doExecute() throws Exception {
+
+        removeAlert(envelope, alert);
+
+        setUndo(new AbstractCommand("Undo " + getName(), true) {
+          public void doExecute() throws Exception {
+            addAlert(envelope, alert.getAlertType());
+          }
+        });
+      }
+    };
+  }
+
+  @Transactional
+  public void removeAlert(Envelope envelope, Alert alert) {
+    envelope.removeAlert(alert);
+    saveOrUpdate(envelope);
+    alertService.delete(alert);
   }
 
   public Command getUnassignedEnvelopeCommand(final User user) {
@@ -341,7 +443,7 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
   @Transactional
   public void restoreBalances(Envelope env, List<Double> balances) {
 
-    int i=0;
+    int i = 0;
     Envelope parent = env;
     while (parent != null) {
       parent.setBalance(balances.get(i++));
@@ -379,7 +481,7 @@ public class EnvelopeService extends UserBasedService<Envelope, EnvelopeDao> {
   }
 
   public Command transferCommand(final Account account,
-                       final Envelope source, final Envelope target, final Double amount) {
+                                 final Envelope source, final Envelope target, final Double amount) {
     return new AbstractCommand(Envelope.class.getSimpleName() + " transfer(" + source.getUuid() + ", " + target.getUuid() + ")", true) {
 
       public void doExecute() throws Exception {

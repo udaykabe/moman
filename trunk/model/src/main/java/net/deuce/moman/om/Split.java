@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "split", uniqueConstraints = {@UniqueConstraint(columnNames = {"uuid"}), @UniqueConstraint(columnNames = {"envelope_id", "transaction_id"})})
-public class Split extends AbstractEntity<Split> {
+public class Split extends AbstractEntity<Split> implements UserBasedEntity {
 
   private Envelope envelope;
   private Double amount;

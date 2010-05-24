@@ -1,6 +1,11 @@
 package net.deuce.moman.om;
 
+import org.hibernate.annotations.Sort;
+import org.hibernate.annotations.SortType;
+
 import javax.persistence.*;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 @Entity
 @Table(name = "tag", uniqueConstraints = {@UniqueConstraint(columnNames = {"uuid"})})
@@ -11,8 +16,9 @@ public class Tag extends AbstractEntity<Tag> implements UserBasedEntity {
   private String name;
   private Boolean enabled = Boolean.TRUE;
   private User user;
+  private SortedSet<InternalTransaction> transactions = new TreeSet<InternalTransaction>();
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
   @JoinColumn(name = "user_id")
   public User getUser() {
     return user;
@@ -20,6 +26,29 @@ public class Tag extends AbstractEntity<Tag> implements UserBasedEntity {
 
   public void setUser(User user) {
     this.user = user;
+  }
+
+  @OneToMany(fetch = FetchType.LAZY)
+  @Column(name = "id")
+  @Sort(type = SortType.NATURAL)
+  public SortedSet<InternalTransaction> getTransactions() {
+    return transactions;
+  }
+
+  public void setTransactions(SortedSet<InternalTransaction> transactions) {
+    this.transactions = transactions;
+  }
+
+  public void addTransaction(InternalTransaction t) {
+    transactions.add(t);
+  }
+
+  public boolean removeTransaction(InternalTransaction t) {
+    return transactions.remove(t);
+  }
+
+  public void clearTransactions() {
+    transactions.clear();
   }
 
   @Basic

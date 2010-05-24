@@ -5,7 +5,7 @@ import org.hibernate.Query;
 public class EnvelopeDao extends UserBasedDao<Envelope> {
 
   private Envelope getSpecialEnvelope(User user, String attr) {
-    Query query = getSession().createQuery(String.format("select e from %s e e.user = :user and e.%s = :bool",
+    Query query = getSession().createQuery(String.format("select e from %s e where e.user = :user and e.%s = :bool",
         Envelope.class.getName(), attr));
     query.setParameter("user", user);
     query.setParameter("bool", true);
