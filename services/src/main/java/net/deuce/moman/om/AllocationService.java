@@ -20,9 +20,9 @@ public class AllocationService extends UserBasedService<Allocation, AllocationDa
     el.addAttribute("id", allocation.getUuid());
     addElement(el, "index", allocation.getIndex());
     addElement(el, "amount", Utils.formatDouble(allocation.getAmount()));
-    addElement(el, "amount-type", allocation.getAmountType().name());
+    addElement(el, "amountType", allocation.getAmountType().name());
     addElement(el, "limit", Utils.formatDouble(allocation.getLimit()));
-    addElement(el, "limit-type", allocation.getLimitType().name());
+    addElement(el, "limitType", allocation.getLimitType().name());
     addElement(el, "enabled", allocation.getEnabled());
     el.addElement("envelope").addAttribute("id", allocation.getEnvelope().getUuid());
   }

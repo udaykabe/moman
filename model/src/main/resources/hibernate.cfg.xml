@@ -34,6 +34,7 @@
     <mapping class="net.deuce.moman.om.Device" />
     <mapping class="net.deuce.moman.om.Tag" />
     <mapping class="net.deuce.moman.om.Preference" />
+    <mapping class="net.deuce.moman.om.Alert" />
 
   </session-factory>
 </hibernate-configuration>

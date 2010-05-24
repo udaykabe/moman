@@ -1,5 +1,6 @@
 package net.deuce.moman.client;
 
+import net.deuce.moman.client.HttpRequest;
 import org.apache.commons.httpclient.*;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.ccil.cowan.tagsoup.Parser;

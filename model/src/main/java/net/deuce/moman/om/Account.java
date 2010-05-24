@@ -131,7 +131,7 @@ public class Account extends AbstractEntity<Account> implements UserBasedEntity 
     this.selected = selected;
 	}
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
   @JoinColumn(name = "user_id")
   public User getUser() {
     return user;

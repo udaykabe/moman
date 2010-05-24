@@ -30,7 +30,7 @@ public class UserService extends EntityService<User, UserDao> implements Initial
 
   public void toXml(User user, Element parent) {
     Element el = parent.addElement("user");
-    addElement(el, "id", user.getUuid());
+    el.addAttribute("id", user.getUuid());
     addElement(el, "username", user.getUsername());
   }
 

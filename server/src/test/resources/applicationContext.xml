@@ -1,0 +1,85 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+    http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-2.5.xsd
+       ">
+
+
+  <!--bean name="multicastThread" class="net.deuce.moman.multicast.MulticastServerThread" init-method="start">
+    <property name="waitSeconds" value="5000"/>
+    <property name="daemon" value="true"/>
+  </bean-->
+
+  <bean name="WebServer" class="org.mortbay.jetty.Server" init-method="start">
+    <property name="connectors">
+      <list>
+        <bean name="LocalSocket" class="org.mortbay.jetty.nio.SelectChannelConnector">
+          <property name="host" value="localhost"/>
+          <property name="port" value="10085"/>
+        </bean>
+      </list>
+    </property>
+    <property name="handlers">
+      <list>
+        <bean id="webContext" class="org.mortbay.jetty.servlet.Context">
+          <property name="contextPath" value="/"/>
+          <property name="sessionHandler">
+            <bean class="org.mortbay.jetty.servlet.SessionHandler"/>
+          </property>
+          <property name="resourceBase" value="/var/www"/>
+          <property name="servletHandler">
+            <bean class="org.mortbay.jetty.servlet.ServletHandler">
+              <property name="servlets"> <!-- servlet definition -->
+                <list>
+                  <!-- default servlet -->
+                  <bean class="org.mortbay.jetty.servlet.ServletHolder">
+                    <property name="name" value="moman"/>
+                    <property name="servlet">
+                      <bean class="org.springframework.web.servlet.DispatcherServlet"/>
+                    </property>
+                    <property name="initParameters">
+                      <map>
+                        <entry key="contextConfigLocation" value="classpath:/moman-servlet.xml"/>
+                      </map>
+                    </property>
+                  </bean>
+                </list>
+              </property>
+              <property name="servletMappings">
+                <list><!-- servlet mapping -->
+                  <bean class="org.mortbay.jetty.servlet.ServletMapping">
+                    <property name="pathSpecs">
+                      <list>
+                        <value>/service/*</value>
+                      </list>
+                    </property>
+                    <property name="servletName" value="moman"/>
+                  </bean>
+                </list>
+              </property>
+            </bean>
+          </property>
+        </bean>
+        <!-- log handler -->
+        <bean class="org.mortbay.jetty.handler.RequestLogHandler">
+          <property name="requestLog">
+            <bean class="org.mortbay.jetty.NCSARequestLog">
+              <property name="append" value="true"/>
+              <property name="filename" value="/var/log/jetty/request.log.yyyy_mm_dd"/>
+              <property name="extended" value="true"/>
+              <property name="retainDays" value="999"/>
+              <property name="filenameDateFormat" value="yyyy-MM-dd"/>
+            </bean>
+          </property>
+        </bean>
+      </list>
+    </property>
+  </bean>
+</beans>

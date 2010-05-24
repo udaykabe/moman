@@ -26,9 +26,9 @@ public class Envelope extends AbstractEntity<Envelope> implements UserBasedEntit
   private Envelope parent;
   private SortedSet<Envelope> children = new TreeSet<Envelope>();
   private transient Map<String, Envelope> childrenByName = null;
-  private Boolean editable;
+  private Boolean editable = Boolean.TRUE;
   private Boolean selected = Boolean.FALSE;
-  private Boolean expanded = Boolean.TRUE;
+  private Boolean expanded = Boolean.FALSE;
   private Boolean enabled = Boolean.TRUE;
   private Boolean root = Boolean.FALSE;
   private Boolean monthly = Boolean.FALSE;
@@ -40,6 +40,7 @@ public class Envelope extends AbstractEntity<Envelope> implements UserBasedEntit
   private Date savingsGoalDate;
   private Double savingsGoalOverrideAmount;
   private User user;
+  private SortedSet<Alert> alerts = new TreeSet<Alert>();
 
   public Envelope() {
   }
@@ -100,6 +101,29 @@ public class Envelope extends AbstractEntity<Envelope> implements UserBasedEntit
 
   public void setSavingsGoalDate(Date savingsGoalDate) {
     this.savingsGoalDate = savingsGoalDate;
+  }
+
+  @OneToMany(fetch = FetchType.LAZY)
+  @Column(name = "id")
+  @Sort(type = SortType.NATURAL)
+  public SortedSet<Alert> getAlerts() {
+    return alerts;
+  }
+
+  public void setAlerts(SortedSet<Alert> alerts) {
+    this.alerts = alerts;
+  }
+
+  public void addAlert(Alert t) {
+    alerts.add(t);
+  }
+
+  public boolean removeAlert(Alert t) {
+    return alerts.remove(t);
+  }
+
+  public void clearAlerts() {
+    alerts.clear();
   }
 
   @Basic

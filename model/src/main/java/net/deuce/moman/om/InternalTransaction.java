@@ -26,11 +26,13 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> imp
   private TransactionStatus status = TransactionStatus.open;
   private Boolean custom = Boolean.FALSE;
   private User user;
+  private Boolean viewed = Boolean.FALSE;
 
   private InternalTransaction transferTransaction;
 
   private SortedSet<Split> split = new TreeSet<Split>();
   private SortedSet<Tag> tags = new TreeSet<Tag>();
+  private SortedSet<Alert> alerts = new TreeSet<Alert>();
   private transient Map<Envelope, Split> envelopeSplitMap = null;
 
   private Account account;
@@ -98,7 +100,7 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> imp
     this.transferTransactionId = transferTransactionId;
   }
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
   @JoinColumn(name = "user_id")
   public User getUser() {
     return user;
@@ -146,6 +148,20 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> imp
     } else {
       setType(TransactionType.CHECK);
     }
+  }
+
+  @Basic
+  public boolean isViewed() {
+    return evaluateBoolean(viewed);
+  }
+
+  @Transient
+  public Boolean getViewed() {
+    return viewed;
+  }
+
+  public void setViewed(Boolean viewed) {
+    this.viewed = viewed;
   }
 
   @Basic
@@ -298,6 +314,29 @@ public class InternalTransaction extends AbstractEntity<InternalTransaction> imp
 
   public void clearTags() {
     tags.clear();
+  }
+
+  @OneToMany(fetch = FetchType.LAZY)
+  @Column(name = "id")
+  @Sort(type = SortType.NATURAL)
+  public SortedSet<Alert> getAlerts() {
+    return alerts;
+  }
+
+  public void setAlerts(SortedSet<Alert> alerts) {
+    this.alerts = alerts;
+  }
+
+  public void addAlert(Alert t) {
+    alerts.add(t);
+  }
+
+  public boolean removeAlert(Alert t) {
+    return alerts.remove(t);
+  }
+
+  public void clearAlerts() {
+    alerts.clear();
   }
 
   @OneToMany(mappedBy = "transaction", fetch = FetchType.LAZY)
